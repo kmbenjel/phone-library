@@ -12,7 +12,7 @@ from textnorm import norm
 from rename_plan import COLLECTION, clean, fit, short_title
 from build_catalog import split_folder
 
-SKIP_SECTIONS = {'المجلات والدوريات والسلاسل الكبرى', 'أدب عالمي ومترجم', 'أدباء ومفكرو العصر الحديث', 'فهارس الويب'}
+SKIP_SECTIONS = {'المجلات والدوريات والسلاسل الكبرى', 'أدب عالمي - فرنسي (Littérature française)', 'أدب عالمي - إنجليزي (English Literature)', 'أدب عالمي - ألماني (Deutsche Literatur)', 'أدب عالمي - إسباني (Literatura en español)', 'أدب عالمي - مترجم', 'أدباء ومفكرو العصر الحديث', 'فهارس الويب'}
 JUNK = re.compile(r'^(اضغط هنا|كاملا?|كامل|الإسلامي|الكتاب|الملف|تحميل|pdf|\d+)$')
 USEFUL = re.compile(r'نسخة|تحقيق|\bت\s|شرح|الشاملة|المجلد|الجزء|القسم|مقدمة|فهارس')
 W = lambda t: {w for w in norm(t).split() if len(w) > 2}

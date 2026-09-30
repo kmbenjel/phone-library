@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from rename_plan import COLLECTION
 J = lambda p: os.path.join(ROOT, p)
 
-EXEMPT = {'كتب ابن تيمية وابن القيم', 'أدباء ومفكرو العصر الحديث', 'أدب عالمي ومترجم',
+EXEMPT = {'كتب ابن تيمية وابن القيم', 'أدباء ومفكرو العصر الحديث', 'أدب عالمي - فرنسي (Littérature française)', 'أدب عالمي - إنجليزي (English Literature)', 'أدب عالمي - ألماني (Deutsche Literatur)', 'أدب عالمي - إسباني (Literatura en español)', 'أدب عالمي - مترجم',
           'المجلات والدوريات والسلاسل الكبرى', 'علم النفس وتطوير الذات', 'فهارس الويب'}
 NEIGHBOURS = [  # either section is acceptable for books that sit on the border
     {'الدواوين الشعرية', 'الأدب والبلاغة ونقد الشعر'},

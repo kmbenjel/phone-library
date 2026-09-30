@@ -100,13 +100,21 @@ Categories follow Shamela's classification loosely; the mappings in `data/mappin
 
 ## 4b. Sections (categories)
 
+- **World literature** (not a Shamela category; the owner's own) is split by the language of the text:
+  `أدب عالمي - فرنسي (Littérature française)`, `أدب عالمي - إنجليزي (English Literature)`,
+  `أدب عالمي - ألماني (Deutsche Literatur)`, `أدب عالمي - إسباني (Literatura en español)`, and
+  `أدب عالمي - مترجم` for works read in translation (Homer in English, Hugo in English…). Folder and file names
+  are in the book's own language (`Les Misérables - Victor Hugo/01 - Les Misérables (Tome I - Fantine).pdf`); the
+  language was verified from each PDF's text. A translated non-literary work goes to its subject section
+  (قصة الحضارة → التاريخ). New public-domain books come from Project Gutenberg as A5 PDFs (`fetch_gutenberg.py`).
+
 - A book moves to another section only when its current section matches **neither** Shamela's section for the same
   title nor Waqfeya's category (both mapped to phone sections via `data/mappings/`), nor a close neighbour
   (diwans↔literature, rijal↔biographies, tafsir↔Qur'anic sciences, usul↔comparative fiqh, sira↔biographies,
   dictionaries↔grammar/literature).
 - When the sources disagree, **Shamela wins** (owner's instruction). Commentaries (شروح) move to hadith texts
   (متون) only with Shamela's confirmation; a book never leaves a madhhab section for general fiqh.
-- Never moved: `كتب ابن تيمية وابن القيم`, `أدباء ومفكرو العصر الحديث`, `أدب عالمي ومترجم`,
+- Never moved: `كتب ابن تيمية وابن القيم`, `أدباء ومفكرو العصر الحديث`, the `أدب عالمي - …` sections,
   `المجلات والدوريات والسلاسل الكبرى`, `علم النفس وتطوير الذات`, and collection folders. Planner: `scripts/recat_plan.py`.
 
 ## 5. Expanding the library
@@ -146,6 +154,7 @@ are in `فهارس الويب/md/` and the data tables in `فهارس الويب
 | `check_magic.py`, `check_pdf_tail.py` | is every ".pdf" a real, complete PDF? |
 | `delete_files.py` | logged deletion (owner-approved only), removes emptied folders |
 | `replacement_plan.py`, `fetch_replacements.py` | find Waqfeya replacements for removed files; download, verify, upload, log |
+| `fetch_gutenberg.py` | public-domain books from Project Gutenberg: EPUB → A5 PDF (calibre), checked, uploaded, logged |
 | `fetch_new_books.py` | adds chosen archive.org items as new books (parallel, ZIPs extracted, `%PDF` check) |
 | `additions_audit.py` | audits files added from Waqfeya/archive.org: removes other books of a bundled item and copies already in the library, names the rest from Waqfeya labels |
 | `renumber_plan.py`, `tail_numbering_plan.py`, `label_numbering_plan.py`, `companion_plan.py` | numbering passes (independent books vs volumes; Waqfeya per-file labels are the authority) |
