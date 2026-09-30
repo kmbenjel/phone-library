@@ -115,6 +115,15 @@ Categories follow Shamela's classification loosely; the mappings in `data/mappin
   their own titles there too. What to take from the broad catalogues (Hindawi VSI, OpenStax, Hesperian) is the owner's
   choice, made on the selection page https://claude.ai/artifact/65hgeqWwbTengz9NTxJ1CP (read it with ArtifactData
   `get selections/current`); catalogues are in `data/sources/` and `selection/catalog.json`.
+- **Choosing what to download.** The owner ticks books in two places: (1) the phone's comparison reports (01 Shamela,
+  02 Waqfeya, 03 recommendations) have a checkbox on every missing or incomplete book; ticks are kept in that
+  phone's browser (shared by the three reports) and «انسخ القائمة» copies lines `w:<waqfeya id> <title>` /
+  `s:<shamela id> <title>` that the owner pastes in the chat or in the selection page's import box; (2) the
+  selection page itself (tabs for Hindawi, OpenStax, Hesperian, Siyavula, الوقفية, الشاملة). What was already
+  downloaded is recorded in `selection/selection-YYYY-MM-DD.json` — diff the live selection against those files.
+  `w:` items are fetched from their Waqfeya record's links (all volumes, or only the missing ones for an incomplete
+  book); `s:` items through their Waqfeya match when the page marks one, otherwise searched on archive.org.
+  `scripts/build_selection.py` (run by refresh.sh) rebuilds the page; republish it with the Artifact tool.
 - Sources that block scripts: UNESDOC (Cloudflare; use archive.org copies), hindawi.org/safahat.org pages (a fresh
   browser context per page passes; `downloads.hindawi.org/books/<id>.pdf` downloads directly), StoryWeaver (account
   needed), CK-12 (403).
@@ -167,6 +176,7 @@ are in `فهارس الويب/md/` and the data tables in `فهارس الويب
 | `replacement_plan.py`, `fetch_replacements.py` | find Waqfeya replacements for removed files; download, verify, upload, log |
 | `fetch_gutenberg.py` | public-domain books from Project Gutenberg: EPUB → A5 PDF (calibre), checked, uploaded, logged |
 | `fetch_archive_pdfs.py` | chosen archive.org items as named PDFs (LIST file; `UPLOAD=0` downloads and prints first/last text to check content first) |
+| `build_selection.py` | rebuilds the selection page (catalogue + Waqfeya/Shamela missing lists) from the comparisons |
 | `fetch_selection.py` | downloads what the owner ticked on the selection page (saved `selections/current` → JSON): Hindawi, OpenStax, Hesperian, Siyavula; one uploader connection |
 | `fetch_chapter_book.py` | a book its publisher offers only as chapter PDFs (Hesperian): download in order, join with pdfunite, upload, log |
 | `fetch_new_books.py` | adds chosen archive.org items as new books (parallel, ZIPs extracted, `%PDF` check) |

@@ -61,7 +61,7 @@ R.h2(f'كتب ناقصة المجلدات على الهاتف ({len(part):,})', 
 R.p(f'إكمالها يحتاج نحو {sum(r["missing_mb"] for r in part) / 1024:,.1f} GB. الرابط يفتح صفحة الكتاب في الوقفية.')
 R.table(['الكتاب', 'المؤلف', 'قسم الهاتف', 'على الهاتف', 'المجلدات', 'الناقص (MB)', 'مكانه'],
         [[r['name'], r['author'].split('؛')[0], r['phone_category'], r['volumes_on_phone'], r['volumes'], round(r['missing_mb']), r['phone_folders'].split(' | ')[0].split('/', 1)[-1]] for r in part],
-        numeric=(3, 4, 5), links={0: [r['url'] for r in part]})
+        numeric=(3, 4, 5), links={0: [r['url'] for r in part]}, pick=[(f"w:{r['waqfeya_id']}", r['name'] + ' (إكمال)') for r in part])
 
 R.h2(f'كتب الهاتف التي ليست من الوقفية ({len(other_src):,})', 'other-sources')
 R.p('كتب لم تُطابق ملفاتها أي ملف في الوقفية: مصدرها رفوع أخرى على archive.org أو مواقع أخرى، أو طبعات بأحجام مختلفة.')
@@ -75,7 +75,8 @@ for c in [t[0] for t in sorted(((c, sum(by[c].values())) for c in by), key=lambd
     if not miss: continue
     R.table(['#', 'الكتاب', 'المؤلف', 'القرن', 'مج', 'MB', 'زيارات'],
             [[i, r['name'], r['author'].split('؛')[0], r['century'].replace('القرن ', ''), r['volumes'], round(r['size_mb']), r['visits']] for i, r in enumerate(miss, 1)],
-            numeric=(0, 4, 5, 6), links={1: [r['url'] for r in miss]}, fold=f'{c} — {len(miss):,} غير موجود', md_limit=30)
+            numeric=(0, 4, 5, 6), links={1: [r['url'] for r in miss]}, fold=f'{c} — {len(miss):,} غير موجود', md_limit=30,
+            pick=[(f"w:{r['waqfeya_id']}", r['name']) for r in miss])
 
 R.h2('تفصيل: كتب الوقفية الموجودة على الهاتف', 'present')
 pres = sorted([r for r in scope if on(r)], key=lambda r: (r['phone_category'], r['name']))

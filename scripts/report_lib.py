@@ -31,7 +31,38 @@ summary{cursor:pointer;font-weight:700}
 .note{background:var(--card);border-inline-start:3px solid var(--accent);padding:6px 10px;border-radius:6px;margin:8px 0;font-size:.92rem}
 .good{color:var(--good)} .warn{color:var(--warn)} .bad{color:var(--bad)}
 ul{padding-inline-start:1.3em}
+td.pk{width:2em;text-align:center}td.pk input{width:1.15em;height:1.15em;accent-color:var(--accent)}
+tr:has(input.pk:checked){background:color-mix(in srgb,var(--accent) 12%,transparent)}
+#pickbar{position:fixed;inset-inline:0;bottom:0;z-index:9;background:var(--card);border-top:1px solid var(--line);padding:8px 14px calc(8px + env(safe-area-inset-bottom,0px));display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.9rem}
+#pickbar b{font-variant-numeric:tabular-nums}
+#pickbar button{font:inherit;font-size:.85rem;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:8px;padding:3px 10px}
+#pickbar button.main{background:var(--accent);color:var(--bg)}
+#pickbar textarea{flex:1 1 100%;min-height:7em;font:13px/1.5 monospace;direction:ltr;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px}
+#pickbar .hint{flex:1 1 100%;color:var(--muted);font-size:.8rem}
 """
+
+SELECTION_PAGE = 'https://claude.ai/artifact/65hgeqWwbTengz9NTxJ1CP'
+PICK_BAR = ('<div id="pickbar" hidden><span>المحدَّد للتحميل: <b id="pk-n">0</b></span>'
+            '<button class="main" type="button" id="pk-copy">انسخ القائمة</button><button type="button" id="pk-show">اعرض القائمة</button>'
+            '<button type="button" id="pk-clear">امسح التحديد</button>'
+            '<span class="hint">التحديد محفوظ في هذا الهاتف ومشترك بين تقارير المقارنة. أرسل القائمة المنسوخة في المحادثة، أو الصقها في '
+            f'<a href="{SELECTION_PAGE}">صفحة التحديد</a> (خانة «استيراد من فهارس الهاتف») فتصلني مباشرة.</span>'
+            '<textarea id="pk-list" readonly hidden></textarea></div>')
+PICK_JS = r'''<script>(function(){
+var KEY='library-picks-v1',P={};try{P=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){}
+var B=[].slice.call(document.querySelectorAll('input.pk')),bar=document.getElementById('pickbar');if(!B.length)return;bar.hidden=false;
+var n=document.getElementById('pk-n'),ta=document.getElementById('pk-list'),cl=document.getElementById('pk-clear');
+function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
+function txt(){return Object.keys(P).map(function(k){return k+' '+P[k]}).join('\n')}
+function paint(){n.textContent=Object.keys(P).length.toLocaleString('ar');B.forEach(function(b){b.checked=!!P[b.dataset.k]});if(!ta.hidden)ta.value=txt()}
+B.forEach(function(b){b.onchange=function(){if(b.checked)P[b.dataset.k]=b.dataset.t;else delete P[b.dataset.k];save();paint()}});
+document.getElementById('pk-show').onclick=function(){ta.hidden=!ta.hidden;ta.value=txt()};
+document.getElementById('pk-copy').onclick=function(){var t=txt(),btn=this;function ok(){btn.textContent='نُسخت ✓';setTimeout(function(){btn.textContent='انسخ القائمة'},2000)}
+ function fb(){ta.hidden=false;ta.value=t;ta.focus();ta.select();try{document.execCommand('copy');ok()}catch(e){}}
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,fb);else fb()};
+cl.onclick=function(){if(cl.dataset.c){P={};save();paint();delete cl.dataset.c;cl.textContent='امسح التحديد'}else{cl.dataset.c=1;cl.textContent='اضغط للتأكيد';setTimeout(function(){delete cl.dataset.c;cl.textContent='امسح التحديد'},4000)}};
+window.addEventListener('storage',function(){try{P=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){}paint()});paint()})();</script>'''
+
 
 class Report:
     def __init__(self, title, subtitle=''):
@@ -58,9 +89,11 @@ class Report:
         self.h.append('<div class="kpis">' + ''.join(f'<div class="kpi"><b>{esc(v)}</b><span>{esc(k)}</span></div>' for k, v in pairs) + '</div>')
         self.m += [f'- **{k}:** {v}' for k, v in pairs] + ['']
 
-    def table(self, head, rows, numeric=(), links=None, bar_col=None, fold=None, md_limit=None):
-        """rows: list of lists. links: {col: row->url}. bar_col: (col, max). fold: summary text -> wrap in <details>."""
-        th = ''.join(f'<th>{esc(h)}</th>' for h in head)
+    def table(self, head, rows, numeric=(), links=None, bar_col=None, fold=None, md_limit=None, pick=None):
+        """rows: list of lists. links: {col: row->url}. bar_col: (col, max). fold: summary text -> wrap in <details>.
+        pick: per row (code, label) or None — adds a download checkbox (HTML only; codes w:<waqfeya id>, s:<shamela id>)."""
+        th = ('<th>✓</th>' if pick else '') + ''.join(f'<th>{esc(h)}</th>' for h in head)
+        if pick: self.has_pick = True
         L = lambda i, n, r: (links[i][n] if isinstance(links[i], list) else links[i](r)) if links and i in links else None
         body = []
         for n, r in enumerate(rows):
@@ -71,8 +104,11 @@ class Report:
                 if bar_col and i == bar_col[0] and bar_col[1]:
                     w = max(1, round(80 * float(c or 0) / bar_col[1])); txt += f'<span class="bar" style="width:{w}px"></span>'
                 tds.append(f'<td class="n">{txt}</td>' if i in numeric else f'<td>{txt}</td>')
+            if pick:
+                pk = pick[n]
+                tds.insert(0, f'<td class="pk"><input type="checkbox" class="pk" data-k="{esc(pk[0])}" data-t="{esc(pk[1])}" aria-label="حدّد للتحميل"></td>' if pk else '<td class="pk"></td>')
             body.append('<tr>' + ''.join(tds) + '</tr>')
-        cls = ' class="wide"' if len(head) >= 5 else ''
+        cls = ' class="wide"' if len(head) + bool(pick) >= 5 else ''
         t = f'<div class="tw"><table{cls}><thead><tr>{th}</tr></thead><tbody>{"".join(body)}</tbody></table></div>'
         self.h.append(f'<details><summary>{esc(fold)}</summary>{t}</details>' if fold else t)
         if fold: self.m += [f'**{fold}**', '']
@@ -93,7 +129,8 @@ class Report:
         page = (f'<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8">'
                 f'<meta name="viewport" content="width=device-width, initial-scale=1"><title>{esc(self.title)}</title>'
                 f'<style>{CSS}</style></head><body><main><div class="back"><a href="00 - الفهرس العام.html">→ الفهرس العام</a></div>'
-                f'<h1>{esc(self.title)}</h1><div class="sub">{esc(self.subtitle)} · أُنشئ {stamp}</div>' + '\n'.join(self.h) + '</main></body></html>')
+                f'<h1>{esc(self.title)}</h1><div class="sub">{esc(self.subtitle)} · أُنشئ {stamp}</div>' + '\n'.join(self.h) + '</main>'
+                + (PICK_BAR + PICK_JS if getattr(self, 'has_pick', False) else '') + '</body></html>')
         os.makedirs(os.path.join(ROOT, 'site'), exist_ok=True); os.makedirs(os.path.join(ROOT, 'reports'), exist_ok=True)
         open(os.path.join(ROOT, 'site', name + '.html'), 'w').write(page)
         open(os.path.join(ROOT, 'reports', name + '.md'), 'w').write('\n'.join(self.m + ['', f'_Generated {stamp}_', '']))

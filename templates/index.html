@@ -68,7 +68,7 @@ const TABS=[{id:'home',title:'الفهرس'}].concat(R.map((r,i)=>({id:'r'+i,tit
 function tabs(cur){$('tabs').innerHTML=TABS.map(t=>`<button data-t="${t.id}" aria-current="${t.id===cur}">${esc(t.title)}</button>`).join('');}
 function show(id){tabs(id);const home=id==='home';$('home').hidden=!home;$('q').hidden=!home;$('cats').hidden=!home;
  const v=$('viewer');v.hidden=home;
- if(!home){const src=document.getElementById('src-'+id);if(v.dataset.cur!==id){v.srcdoc=src.textContent;v.dataset.cur=id;}
+ if(!home){const src=document.getElementById('src-'+id);if(v.dataset.cur!==id){v.srcdoc=src.textContent.split('<\\/script').join('<'+'/script');v.dataset.cur=id;}
   v.style.height=(innerHeight-document.querySelector('header').offsetHeight)+'px';}
  try{history.replaceState(null,'','#'+id)}catch(_){} scrollTo(0,0);}
 $('tabs').onclick=e=>{const b=e.target.closest('button');if(b)show(b.dataset.t);};

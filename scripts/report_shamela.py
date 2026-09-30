@@ -4,6 +4,7 @@ from collections import defaultdict, Counter
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from report_lib import Report, pct
+from textnorm import title_key
 J = lambda p: os.path.join(ROOT, p)
 
 cat = json.load(open(J('data/catalog.json')))
@@ -17,6 +18,11 @@ order = list(smap)                     # Shamela's own section order (mapping fi
 for r in rows:
     if r['category'] not in order: order.append(r['category'])
 order = [c for c in order if any(r['category'] == c for r in rows)]
+wq = {}
+for w in csv.DictReader(open(J('data/compare/waqfeya-matches.tsv')), delimiter='\t'):
+    k = title_key(w['name'])
+    if k and (k not in wq or int(w['visits'] or 0) > int(wq[k]['visits'] or 0)): wq[k] = w
+waq_of = lambda r: wq.get(title_key(r['title']))
 total = len(rows); present = [r for r in rows if r['phone_book_ids']]
 matched_phone = {int(i) for r in present for i in r['phone_book_ids'].split()}
 not_in_shamela = [b for b in cat['books'] if b['id'] not in matched_phone]
@@ -53,13 +59,15 @@ cc = Counter(b['cat'] for b in not_in_shamela); tc = Counter(b['cat'] for b in c
 R.table(['قسم الهاتف', 'كتب القسم', 'ليست في الشاملة', 'النسبة'], [[c, tc[c], n, pct(n, tc[c])] for c, n in sorted(cc.items(), key=lambda x: -x[1])], numeric=(1, 2, 3))
 
 R.h2('تفصيل: كتب الشاملة غير الموجودة على الهاتف', 'missing')
-R.p('مرتبة داخل كل قسم بسنة وفاة المؤلف (الأقدم أولًا). القائمة الكاملة بصيغة جدول في data/shamela-matches.tsv.')
+R.p('مرتبة داخل كل قسم بسنة وفاة المؤلف (الأقدم أولًا). «في الوقفية» يعني أن له نسخة مصوّرة (PDF) في الوقفية بالعنوان نفسه، فيمكن تحميله؛ وما ليس في الوقفية قد يوجد مصوّرًا في مكان آخر. القائمة الكاملة في data/shamela-matches.tsv.')
 for c in order:
     miss = [r for r in rows if r['category'] == c and not r['phone_book_ids']]
     if not miss: continue
     miss.sort(key=lambda r: (int(r['death']) if r['death'].isdigit() and int(r['death']) > 0 else 9999, r['title']))
-    R.table(['#', 'الكتاب', 'المؤلف', 'الوفاة'], [[i, r['title'], r['author'], r['death'] or ''] for i, r in enumerate(miss, 1)],
-            numeric=(0, 3), fold=f'{c} — {len(miss):,} غير موجود من {sum(1 for r in rows if r["category"] == c):,}', md_limit=40)
+    R.table(['#', 'الكتاب', 'المؤلف', 'الوفاة', 'في الوقفية'], [[i, r['title'], r['author'], r['death'] or '', 'نعم' if waq_of(r) else ''] for i, r in enumerate(miss, 1)],
+            numeric=(0, 3), links={4: [waq_of(r)['url'] if waq_of(r) else None for r in miss]},
+            fold=f'{c} — {len(miss):,} غير موجود من {sum(1 for r in rows if r["category"] == c):,} (منها {sum(1 for r in miss if waq_of(r)):,} في الوقفية)', md_limit=40,
+            pick=[(f"s:{r['shamela_id']}", r['title']) for r in miss])
 
 R.h2('تفصيل: كتب الشاملة الموجودة على الهاتف', 'present')
 R.table(['الكتاب', 'المؤلف', 'قسم الشاملة', 'مكانه على الهاتف'],

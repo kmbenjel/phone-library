@@ -77,9 +77,9 @@ part = sorted([r for r in scope if r['status'] == 'partial'], key=lambda r: (-(r
 core_rows = []
 for d, t, h in CORE:
     b = on_phone(t, h)
-    if b: core_rows.append([d, t.split('|')[0], 'موجود', f"{b['cat']} / {b['folder']}", '', '']); continue
+    if b: core_rows.append([d, t.split('|')[0], 'موجود', f"{b['cat']} / {b['folder']}", '', '', None]); continue
     w = best_waqfeya(t, h)
-    core_rows.append([d, t.split('|')[0], 'غير موجود', w['name'] if w else '— لم يوجد في الوقفية', round(w['size_mb']) if w else '', w['url'] if w else ''])
+    core_rows.append([d, t.split('|')[0], 'غير موجود', w['name'] if w else '— لم يوجد في الوقفية', round(w['size_mb']) if w else '', w['url'] if w else '', (f"w:{w['waqfeya_id']}", w['name']) if w else None])
 core_missing = [r for r in core_rows if r[2] != 'موجود']
 # classical works: missing on phone, present in Waqfeya and Shamela, early authors
 def century_n(c):
@@ -103,12 +103,12 @@ R.h2(f'2. إكمال الكتب الناقصة ({len(part):,})', 'partial')
 R.p('مرتبة بشهرة الكتاب في الوقفية. التحميل من صفحة الكتاب في الوقفية (أو من archive.org مباشرة)، ثم وضع المجلدات في مجلد الكتاب نفسه بالترقيم المعتمد (انظر AGENTS.md).')
 R.table(['الكتاب', 'قسم الهاتف', 'على الهاتف', 'المجلدات', 'الناقص (MB)', 'مكانه'],
         [[r['name'], r['phone_category'], r['volumes_on_phone'], r['volumes'], round(r['missing_mb']), r['phone_folders'].split(' | ')[0].split('/', 1)[-1]] for r in part],
-        numeric=(2, 3, 4), links={0: [r['url'] for r in part]}, md_limit=50)
+        numeric=(2, 3, 4), links={0: [r['url'] for r in part]}, md_limit=50, pick=[(f"w:{r['waqfeya_id']}", r['name'] + ' (إكمال)') for r in part])
 
 R.h2('3. قائمة الأمهات والمراجع الأساسية', 'core')
 R.p('قائمة مقترحة قابلة للتعديل (في scripts/report_recommend.py → CORE). «غير موجود» يعني أنه لم يُعثر على عنوانه في المكتبة؛ والرابط لأشهر طبعة له في الوقفية.')
 R.table(['الفن', 'الكتاب', 'الحالة', 'على الهاتف / المقترح من الوقفية', 'MB'],
-        [r[:5] for r in core_rows], numeric=(4,), links={3: [r[5] or None for r in core_rows]})
+        [r[:5] for r in core_rows], numeric=(4,), links={3: [r[5] or None for r in core_rows]}, pick=[r[6] for r in core_rows])
 
 R.h2(f'4. كتب المتقدمين الناقصة (حتى القرن 9هـ، موجودة في الشاملة والوقفية) — {len(classics):,}', 'classics')
 R.p(f'الحجم الكلي نحو {sum(r["size_mb"] for r in classics) / 1024:,.0f} GB. مقسمة على أقسام الهاتف، الأشهر أولًا.')
@@ -118,7 +118,8 @@ for c in sorted(by, key=lambda c: -len(by[c])):
     xs = by[c]
     R.table(['#', 'الكتاب', 'المؤلف', 'القرن', 'مج', 'MB', 'زيارات'],
             [[i, r['name'], r['author'].split('؛')[0], r['century'].replace('القرن ', ''), r['volumes'], round(r['size_mb']), r['visits']] for i, r in enumerate(xs, 1)],
-            numeric=(0, 4, 5, 6), links={1: [r['url'] for r in xs]}, fold=f'{c} — {len(xs):,} كتابًا، {sum(r["size_mb"] for r in xs) / 1024:,.1f} GB', md_limit=15)
+            numeric=(0, 4, 5, 6), links={1: [r['url'] for r in xs]}, fold=f'{c} — {len(xs):,} كتابًا، {sum(r["size_mb"] for r in xs) / 1024:,.1f} GB', md_limit=15,
+            pick=[(f"w:{r['waqfeya_id']}", r['name']) for r in xs])
 
 absent = json.load(open(J('data/phone/absent-books.json'))) if os.path.exists(J('data/phone/absent-books.json')) else []
 if absent:

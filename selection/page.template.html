@@ -34,6 +34,13 @@ h1 { font-family: var(--display); font-size: clamp(28px, 5vw, 40px); line-height
 .tools input[type=search] { font: inherit; flex: 1 1 220px; min-width: 0; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); }
 .about { color: var(--muted); font-size: 14px; margin: 4px 0 0; max-width: 70ch; }
 section.group { margin-top: 22px; }
+details.grp { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); margin-top: 8px; }
+details.grp > summary { cursor: pointer; padding: 10px 14px; font-weight: 600; display: flex; gap: 10px; justify-content: space-between; list-style: none; }
+details.grp > summary::-webkit-details-marker { display: none; }
+details.grp > summary .c { font-weight: 400; color: var(--muted); font-variant-numeric: tabular-nums; }
+details.grp[open] > summary { border-bottom: 1px solid var(--line); }
+details.grp ul.items { padding: 10px; }
+.more { color: var(--muted); font-size: 14px; margin: 10px 0 0; }
 section.group h2 { font-family: var(--display); font-size: 22px; margin: 0 0 8px; display: flex; gap: 10px; align-items: baseline; }
 section.group h2 small { font-family: var(--body); font-size: 13px; color: var(--muted); font-weight: 400; }
 ul.items { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px; }
@@ -56,7 +63,7 @@ textarea { width: 100%; box-sizing: border-box; min-height: 90px; font: inherit;
 
 <div class="wrap" dir="rtl">
   <h1>اختيار كتب المؤسسات</h1>
-  <p class="lede">حدِّد ما تريد تحميله إلى مكتبة الهاتف من المصادر الواسعة. المقترح (★) محدَّد مسبقًا؛ عدِّل كما تشاء. يُحفظ اختيارك تلقائيًا ويصلني مباشرة، ثم أحمِّل المحدَّد فقط.</p>
+  <p class="lede">حدِّد ما تريد تحميله إلى مكتبة الهاتف: من المصادر الواسعة، ومن كتب الوقفية والشاملة غير الموجودة عندك. المقترح (★) محدَّد مسبقًا في المصادر الأربعة الأولى؛ عدِّل كما تشاء. يُحفظ اختيارك تلقائيًا ويصلني مباشرة، ثم أحمِّل المحدَّد فقط.</p>
 
   <div class="bar">
     <div class="tabs" role="tablist" id="tabs"></div>
@@ -68,9 +75,9 @@ textarea { width: 100%; box-sizing: border-box; min-height: 90px; font: inherit;
 
   <div class="tools">
     <input type="search" id="q" placeholder="ابحث في العناوين…" aria-label="ابحث في العناوين">
-    <button class="btn" type="button" data-act="rec">المقترح فقط</button>
-    <button class="btn" type="button" data-act="all">الكل</button>
-    <button class="btn" type="button" data-act="none">لا شيء</button>
+    <button class="btn" type="button" data-act="rec" id="actRec">المقترح فقط</button>
+    <button class="btn" type="button" data-act="all" id="actAll">الكل</button>
+    <button class="btn" type="button" data-act="none" id="actNone">لا شيء</button>
   </div>
   <p class="about" id="about"></p>
   <div id="list"></div>
@@ -83,6 +90,12 @@ textarea { width: 100%; box-sizing: border-box; min-height: 90px; font: inherit;
     <div class="card warn">
       <h3>CK-12 وبقية Siyavula</h3>
       <p>موقع CK-12 يمنع التحميل الآلي، وكتب Siyavula الأخرى لم تعد منشورة ملفاتٍ؛ المتاح منها مجلدا الرياضيات أعلاه. كتب OpenStax تغطي المجال نفسه وأوسع.</p>
+    </div>
+    <div class="card">
+      <h3>استيراد من فهارس الهاتف</h3>
+      <p>في تقارير المقارنة على الهاتف زر «انسخ القائمة». الصق ما نسخته هنا ثم اضغط «أضف إلى الاختيار».</p>
+      <textarea id="imp" dir="ltr" placeholder="w:66a88d… اسم الكتاب&#10;s:1234 اسم الكتاب"></textarea>
+      <div class="tools"><button class="btn primary" type="button" id="impBtn">أضف إلى الاختيار</button><span class="status" id="impMsg"></span></div>
     </div>
     <div class="card">
       <h3>ملاحظات لي</h3>
@@ -98,13 +111,22 @@ const SOURCES = [
   { key: 'openstax', name: 'OpenStax', about: 'كتب جامعية محكَّمة بالإنجليزية من جامعة رايس، تمولها مؤسسات خيرية. حجم الكتاب الواحد بين 20 و200 ميغابايت.' },
   { key: 'hesperian', name: 'Hesperian', about: 'أدلة صحية عملية لغير المختصين. «حيث لا يوجد طبيب» (طبعة 2025) أضفتُه سلفًا. كل كتاب يُجمَع من فصوله في ملف واحد.' },
   { key: 'siyavula', name: 'Siyavula', about: 'كتب رياضيات مدرسية مفتوحة (جنوب أفريقيا، مؤسسة Shuttleworth).' },
+  { key: 'waqfeya', name: 'الوقفية', big: true, about: 'كتب الوقفية في أقسام مكتبتك غير الموجودة على الهاتف، والناقصة المجلدات (في أول كل قسم، مع ما ينقصها). مرتبة بشهرتها في الوقفية. افتح القسم لتحدِّد، أو ابحث بالعنوان أو المؤلف.' },
+  { key: 'shamela', name: 'الشاملة', big: true, about: 'كتب المكتبة الشاملة غير الموجودة على الهاتف، مرتبة داخل كل قسم بوفاة المؤلف. «في الوقفية ✓» يعني أن له نسخة مصوّرة هناك؛ غيره أبحث له عن نسخة مصوّرة في مكان آخر.' },
 ];
+const IDX = {}; for (const s of SOURCES) IDX[s.key] = new Map(DATA[s.key].map(x => [String(x.id), x]));
 let current = 'hindawi';
-const sel = {}; for (const s of SOURCES) sel[s.key] = new Set(DATA[s.key].filter(x => x.r).map(x => x.id));
+const sel = {}; for (const s of SOURCES) sel[s.key] = new Set(DATA[s.key].filter(x => x.r).map(x => String(x.id)));
 let note = '';
-let db = null, ref = null, dirty = false, saving = false, timer = null, canSave = false;
+let db = null, ref = null, saving = false, timer = null, canSave = false;
 const $ = id => document.getElementById(id);
 const status = t => { $('status').textContent = t; };
+const ar = n => n.toLocaleString('ar');
+const meta = (k, x) => {
+  if (k === 'waqfeya') return [x.p ? `ناقص: على الهاتف ${x.p}` : '', x.a, x.c ? `ق ${x.c}` : '', x.n ? `${ar(x.n)} مج` : '', x.mb ? `${ar(x.mb)} MB` : '', `${ar(x.v)} زيارة`];
+  if (k === 'shamela') return [x.a, x.d ? `ت ${x.d}هـ` : '', x.w ? 'في الوقفية ✓' : 'ليس في الوقفية'];
+  return [x.a, x.n ? `${x.n} فصلًا` : ''];
+};
 
 function renderTabs() {
   $('tabs').innerHTML = '';
@@ -112,45 +134,72 @@ function renderTabs() {
     const b = document.createElement('button');
     b.className = 'tab'; b.type = 'button'; b.setAttribute('role', 'tab');
     b.setAttribute('aria-selected', String(s.key === current));
-    b.innerHTML = `<span></span><span class="n"></span>`;
+    b.innerHTML = '<span></span><span class="n"></span>';
     b.children[0].textContent = s.name;
-    b.children[1].textContent = `${sel[s.key].size.toLocaleString('ar')}/${DATA[s.key].length.toLocaleString('ar')}`;
-    b.onclick = () => { current = s.key; renderTabs(); renderList(); };
+    b.children[1].textContent = `${ar(sel[s.key].size)}/${ar(DATA[s.key].length)}`;
+    b.onclick = () => { current = s.key; $('q').value = ''; renderTabs(); renderList(); };
     $('tabs').appendChild(b);
   }
 }
+function itemEl(k, x, onToggle) {
+  const li = document.createElement('li');
+  const lab = document.createElement('label'); lab.className = 'item';
+  const cb = document.createElement('input'); cb.type = 'checkbox'; cb.id = `cb-${k}-${x.id}`; cb.checked = sel[k].has(String(x.id));
+  cb.onchange = () => { cb.checked ? sel[k].add(String(x.id)) : sel[k].delete(String(x.id)); changed(); if (onToggle) onToggle(); };
+  const body = document.createElement('span');
+  const t = document.createElement('bdi'); t.className = 't'; t.dir = 'auto'; t.textContent = x.t;
+  body.appendChild(t);
+  if (x.r) { const s = document.createElement('span'); s.className = 'star'; s.textContent = ' ★ مقترح'; body.appendChild(s); }
+  const m = meta(k, x).filter(Boolean).join(' · ');
+  if (m) { const e = document.createElement('span'); e.className = 'm'; e.textContent = m; body.appendChild(e); }
+  lab.append(cb, body); li.appendChild(lab); return li;
+}
 function renderList() {
-  const src = SOURCES.find(s => s.key === current);
+  const src = SOURCES.find(s => s.key === current), k = current;
   $('about').textContent = src.about;
+  $('actRec').hidden = $('actAll').hidden = !!src.big;
   const q = $('q').value.trim().toLowerCase();
-  const items = DATA[current].filter(x => !q || (x.t + ' ' + (x.a || '')).toLowerCase().includes(q));
+  const list = $('list'); list.innerHTML = '';
+  const all = DATA[k];
+  if (src.big && q) {
+    const hits = all.filter(x => (x.t + ' ' + (x.a || '')).toLowerCase().includes(q));
+    if (!hits.length) { list.innerHTML = '<p class="about">لا نتائج لهذا البحث.</p>'; return; }
+    const ul = document.createElement('ul'); ul.className = 'items';
+    hits.slice(0, 300).forEach(x => ul.appendChild(itemEl(k, x)));
+    list.appendChild(ul);
+    if (hits.length > 300) { const p = document.createElement('p'); p.className = 'more'; p.textContent = `و${ar(hits.length - 300)} نتيجة أخرى؛ ضيِّق البحث.`; list.appendChild(p); }
+    return;
+  }
+  const items = all.filter(x => !q || (x.t + ' ' + (x.a || '')).toLowerCase().includes(q));
+  if (!items.length) { list.innerHTML = '<p class="about">لا نتائج لهذا البحث.</p>'; return; }
   const groups = new Map();
   for (const x of items) { if (!groups.has(x.g)) groups.set(x.g, []); groups.get(x.g).push(x); }
-  const list = $('list'); list.innerHTML = '';
-  if (!items.length) { list.innerHTML = '<p class="about">لا نتائج لهذا البحث.</p>'; return; }
   for (const [g, xs] of groups) {
-    const sec = document.createElement('section'); sec.className = 'group';
-    const h = document.createElement('h2'); h.textContent = g;
-    const sm = document.createElement('small'); sm.textContent = `${xs.filter(x => sel[current].has(x.id)).length.toLocaleString('ar')} من ${xs.length.toLocaleString('ar')}`;
-    h.appendChild(sm); sec.appendChild(h);
-    const ul = document.createElement('ul'); ul.className = 'items';
-    for (const x of xs) {
-      const li = document.createElement('li');
-      const lab = document.createElement('label'); lab.className = 'item';
-      const cb = document.createElement('input'); cb.type = 'checkbox'; cb.id = `cb-${current}-${x.id}`; cb.checked = sel[current].has(x.id);
-      cb.onchange = () => { cb.checked ? sel[current].add(x.id) : sel[current].delete(x.id); changed(); sm.textContent = `${xs.filter(y => sel[current].has(y.id)).length.toLocaleString('ar')} من ${xs.length.toLocaleString('ar')}`; };
-      const body = document.createElement('span');
-      const t = document.createElement('bdi'); t.className = 't'; t.dir = 'auto'; t.textContent = x.t;
-      body.appendChild(t);
-      if (x.r) { const s = document.createElement('span'); s.className = 'star'; s.textContent = ' ★ مقترح'; body.appendChild(s); }
-      const meta = [x.a, x.n ? `${x.n} فصلًا` : ''].filter(Boolean).join(' · ');
-      if (meta) { const m = document.createElement('span'); m.className = 'm'; m.textContent = meta; body.appendChild(m); }
-      lab.append(cb, body); li.appendChild(lab); ul.appendChild(li);
+    const count = () => `${ar(xs.filter(x => sel[k].has(String(x.id))).length)} من ${ar(xs.length)}`;
+    if (src.big) {
+      const d = document.createElement('details'); d.className = 'grp';
+      const sm = document.createElement('summary'); const n1 = document.createElement('span'); n1.textContent = g;
+      const n2 = document.createElement('span'); n2.className = 'c'; n2.textContent = count(); sm.append(n1, n2); d.appendChild(sm);
+      d.addEventListener('toggle', () => {
+        if (!d.open || d.dataset.done) return; d.dataset.done = '1';
+        const ul = document.createElement('ul'); ul.className = 'items';
+        const upd = () => { n2.textContent = count(); };
+        xs.slice(0, 400).forEach(x => ul.appendChild(itemEl(k, x, upd)));
+        d.appendChild(ul);
+        if (xs.length > 400) { const p = document.createElement('p'); p.className = 'more'; p.style.padding = '0 14px 12px'; p.textContent = `يظهر أول 400 (الأشهر)؛ و${ar(xs.length - 400)} غيرها، ابحث عنها بالعنوان.`; d.appendChild(p); }
+      });
+      list.appendChild(d);
+    } else {
+      const sec = document.createElement('section'); sec.className = 'group';
+      const h = document.createElement('h2'); h.textContent = g;
+      const sm = document.createElement('small'); sm.textContent = count(); h.appendChild(sm); sec.appendChild(h);
+      const ul = document.createElement('ul'); ul.className = 'items';
+      xs.forEach(x => ul.appendChild(itemEl(k, x, () => { sm.textContent = count(); })));
+      sec.appendChild(ul); list.appendChild(sec);
     }
-    sec.appendChild(ul); list.appendChild(sec);
   }
 }
-function changed() { dirty = true; renderTabs(); status(canSave ? 'لم يُحفظ بعد' : 'محفوظ في هذا المتصفح فقط'); clearTimeout(timer); timer = setTimeout(save, 1200); }
+function changed() { renderTabs(); status(canSave ? 'لم يُحفظ بعد' : 'محفوظ في هذا المتصفح فقط'); clearTimeout(timer); timer = setTimeout(save, 1200); }
 function payload() { const o = { note, updatedAt: new Date().toISOString() }; for (const s of SOURCES) o[s.key] = [...sel[s.key]]; return o; }
 async function save() {
   clearTimeout(timer);
@@ -159,7 +208,7 @@ async function save() {
   if (!ref || !canSave) { status('محفوظ في هذا المتصفح فقط'); return; }
   if (saving) { timer = setTimeout(save, 800); return; }
   saving = true; status('يُحفظ…');
-  try { await ref.set(p); dirty = false; status('محفوظ ✓'); }
+  try { await ref.set(p); status('محفوظ ✓'); }
   catch (e) {
     if (e && e.code === 'unavailable') { saving = false; timer = setTimeout(save, 1500 + Math.random() * 1000); return; }
     canSave = false; status('تعذّر الحفظ هنا');
@@ -173,9 +222,24 @@ function apply(o) {
 }
 document.querySelectorAll('[data-act]').forEach(b => b.onclick = () => {
   const xs = DATA[current], a = b.dataset.act;
-  sel[current] = new Set(a === 'all' ? xs.map(x => x.id) : a === 'rec' ? xs.filter(x => x.r).map(x => x.id) : []);
+  if (a === 'none' && SOURCES.find(s => s.key === current).big && sel[current].size > 5 && !b.dataset.c) {
+    b.dataset.c = '1'; b.textContent = 'اضغط للتأكيد'; setTimeout(() => { delete b.dataset.c; b.textContent = 'لا شيء'; }, 4000); return;
+  }
+  delete b.dataset.c; if (a === 'none') b.textContent = 'لا شيء';
+  sel[current] = new Set(a === 'all' ? xs.map(x => String(x.id)) : a === 'rec' ? xs.filter(x => x.r).map(x => String(x.id)) : []);
   renderList(); changed();
 });
+$('impBtn').onclick = () => {
+  let added = 0, known = 0, unknown = 0;
+  for (const line of $('imp').value.split(/\n+/)) {
+    const m = line.trim().match(/^([ws]):(\S+)/); if (!m) continue;
+    const k = m[1] === 'w' ? 'waqfeya' : 'shamela';
+    if (!IDX[k].has(m[2])) { unknown++; continue; }
+    if (sel[k].has(m[2])) known++; else { sel[k].add(m[2]); added++; }
+  }
+  $('impMsg').textContent = `أُضيف ${ar(added)}` + (known ? `، ومحدَّد سلفًا ${ar(known)}` : '') + (unknown ? `، وغير موجود في الفهرس الحالي ${ar(unknown)}` : '');
+  if (added) { $('imp').value = ''; renderList(); changed(); }
+};
 $('q').oninput = renderList;
 $('note').oninput = () => { note = $('note').value; changed(); };
 $('saveBtn').onclick = save;
