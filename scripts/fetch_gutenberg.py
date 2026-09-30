@@ -4,7 +4,8 @@ Gutenberg gives EPUB/HTML, not PDF, so each book's EPUB (with its illustrations)
 ebook-convert: A5 pages, serif 13 pt, page numbers, the book's own table of contents as PDF bookmarks.
 Every PDF is checked (%PDF + page count) before upload; uploads use one FTP connection; every file is logged
 (action 'add', plan 035-gutenberg). Already-added targets are skipped, so the script can be re-run.
-Edit BOOKS: (section, folder, file name, Gutenberg ebook number). Usage: python3 scripts/fetch_gutenberg.py"""
+Books: the BOOKS list below, or LIST=lists/NNN.tsv (section<TAB>folder<TAB>file<TAB>ebook number; section may be
+FR/EN/DE/ES/TR). Usage: [PLAN=NNN-name LIST=lists/NNN.tsv] python3 scripts/fetch_gutenberg.py"""
 import csv, os, subprocess, sys, threading, time
 from concurrent.futures import ThreadPoolExecutor
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -37,6 +38,10 @@ BOOKS = [
  (ES, 'La Edad de Oro - José Martí', 'La Edad de Oro.pdf', 19898),
  (ES, 'Fábulas y cuentos en verso - selección de María Goyri (Biblioteca Literaria del Estudiante)', 'Fábulas y cuentos en verso.pdf', 64058),
 ]
+TR = 'أدب عالمي - مترجم'
+if os.environ.get('LIST'):
+    SEC = {'FR': FR, 'EN': EN, 'DE': DE, 'ES': ES, 'TR': TR}
+    BOOKS = [(SEC.get(r[0], r[0]), r[1], r[2], int(r[3])) for r in csv.reader(open(os.environ['LIST']), delimiter='\t') if r and not r[0].startswith('#')]
 DL = J('downloads/gutenberg'); os.makedirs(DL, exist_ok=True)
 done = {r[3] for r in csv.reader(open(J('data/changes/changes.tsv')), delimiter='\t') if r and r[1] == 'add'}
 lock = threading.Lock(); stats = {'ok': 0, 'bad': 0}

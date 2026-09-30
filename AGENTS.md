@@ -107,6 +107,17 @@ Categories follow Shamela's classification loosely; the mappings in `data/mappin
   are in the book's own language (`Les Misérables - Victor Hugo/01 - Les Misérables (Tome I - Fantine).pdf`); the
   language was verified from each PDF's text. A translated non-literary work goes to its subject section
   (قصة الحضارة → التاريخ). New public-domain books come from Project Gutenberg as A5 PDFs (`fetch_gutenberg.py`).
+- A work kept in two forms gets two folders: the complete text edition (`Les Misérables - Victor Hugo`, Gutenberg) and
+  the owner's scanned edition, completed with the other tomes of the SAME edition (`Les Misérables - Victor Hugo
+  (Bruxelles, Lacroix-Verboeckhoven 1862)`). The scan's archive.org id is in its PDF metadata (`pdfinfo` → Keywords).
+- Modern educational books from charitable foundations have their own sections: `الطب والصحة` (Hesperian, Facts for
+  Life) and `العلوم والرياضيات (Science and Mathematics)` (OpenStax, Strang, Siyavula). Books in another language keep
+  their own titles there too. What to take from the broad catalogues (Hindawi VSI, OpenStax, Hesperian) is the owner's
+  choice, made on the selection page https://claude.ai/artifact/65hgeqWwbTengz9NTxJ1CP (read it with ArtifactData
+  `get selections/current`); catalogues are in `data/sources/` and `selection/catalog.json`.
+- Sources that block scripts: UNESDOC (Cloudflare; use archive.org copies), hindawi.org/safahat.org pages (a fresh
+  browser context per page passes; `downloads.hindawi.org/books/<id>.pdf` downloads directly), StoryWeaver (account
+  needed), CK-12 (403).
 
 - A book moves to another section only when its current section matches **neither** Shamela's section for the same
   title nor Waqfeya's category (both mapped to phone sections via `data/mappings/`), nor a close neighbour
@@ -155,6 +166,8 @@ are in `فهارس الويب/md/` and the data tables in `فهارس الويب
 | `delete_files.py` | logged deletion (owner-approved only), removes emptied folders |
 | `replacement_plan.py`, `fetch_replacements.py` | find Waqfeya replacements for removed files; download, verify, upload, log |
 | `fetch_gutenberg.py` | public-domain books from Project Gutenberg: EPUB → A5 PDF (calibre), checked, uploaded, logged |
+| `fetch_archive_pdfs.py` | chosen archive.org items as named PDFs (LIST file; `UPLOAD=0` downloads and prints first/last text to check content first) |
+| `fetch_chapter_book.py` | a book its publisher offers only as chapter PDFs (Hesperian): download in order, join with pdfunite, upload, log |
 | `fetch_new_books.py` | adds chosen archive.org items as new books (parallel, ZIPs extracted, `%PDF` check) |
 | `additions_audit.py` | audits files added from Waqfeya/archive.org: removes other books of a bundled item and copies already in the library, names the rest from Waqfeya labels |
 | `renumber_plan.py`, `tail_numbering_plan.py`, `label_numbering_plan.py`, `companion_plan.py` | numbering passes (independent books vs volumes; Waqfeya per-file labels are the authority) |

@@ -1,0 +1,197 @@
+<title>اختيار كتب المؤسسات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<style>
+/* Layout: a reading-room checklist — one column of shelves per source, tabs to switch source, a sticky tally bar. */
+:root {
+  --bg: #f3f6f5; --panel: #ffffff; --ink: #14302b; --muted: #5a716c; --line: #d5e0dd;
+  --accent: #0b6b62; --accent-soft: #e0efec; --star: #a86a00; --warn-bg: #fbf3e2; --warn-ink: #6b4a00;
+  --display: "Amiri", "Noto Naskh Arabic", "Times New Roman", serif;
+  --body: "IBM Plex Sans Arabic", "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1a18; --panel: #16241f; --ink: #e3eeeb; --muted: #9ab1ab; --line: #2a3d38;
+  --accent: #4fc2b3; --accent-soft: #1d3a35; --star: #f0b74a; --warn-bg: #2e2717; --warn-ink: #f1d9a3; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f1a18; --panel: #16241f; --ink: #e3eeeb; --muted: #9ab1ab; --line: #2a3d38;
+  --accent: #4fc2b3; --accent-soft: #1d3a35; --star: #f0b74a; --warn-bg: #2e2717; --warn-ink: #f1d9a3; color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.6; }
+.wrap { max-width: 980px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 64px; }
+h1 { font-family: var(--display); font-size: clamp(28px, 5vw, 40px); line-height: 1.2; margin: 0 0 6px; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 62ch; margin: 0 0 18px; }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 10px; border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; flex: 1 1 auto; }
+.tab { font: inherit; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 999px; padding: 6px 14px; cursor: pointer; display: inline-flex; gap: 8px; align-items: center; }
+.tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.tab .n { font-variant-numeric: tabular-nums; font-size: 13px; opacity: .85; }
+.save { display: flex; gap: 10px; align-items: center; }
+.status { font-size: 13px; color: var(--muted); min-width: 9ch; }
+.btn { font: inherit; border: 1px solid var(--accent); color: var(--accent); background: transparent; border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+.btn.primary { background: var(--accent); color: var(--bg); }
+.btn:focus-visible, .tab:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-block: 16px 6px; }
+.tools input[type=search] { font: inherit; flex: 1 1 220px; min-width: 0; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); }
+.about { color: var(--muted); font-size: 14px; margin: 4px 0 0; max-width: 70ch; }
+section.group { margin-top: 22px; }
+section.group h2 { font-family: var(--display); font-size: 22px; margin: 0 0 8px; display: flex; gap: 10px; align-items: baseline; }
+section.group h2 small { font-family: var(--body); font-size: 13px; color: var(--muted); font-weight: 400; }
+ul.items { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px; }
+ul.items li { min-width: 0; }
+label.item { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); cursor: pointer; }
+label.item:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+label.item input { margin-top: 5px; accent-color: var(--accent); width: 17px; height: 17px; }
+.t { font-weight: 500; overflow-wrap: anywhere; }
+.m { display: block; font-size: 13px; color: var(--muted); }
+.star { color: var(--star); font-size: 13px; white-space: nowrap; }
+.notes { margin-top: 36px; display: grid; gap: 14px; }
+.card { border: 1px solid var(--line); background: var(--panel); border-radius: 10px; padding: 14px 16px; }
+.card h3 { margin: 0 0 6px; font-size: 16px; }
+.card p { margin: 0; color: var(--muted); font-size: 14px; }
+.card.warn { background: var(--warn-bg); border-color: transparent; }
+.card.warn p, .card.warn h3 { color: var(--warn-ink); }
+textarea { width: 100%; box-sizing: border-box; min-height: 90px; font: inherit; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); }
+@media (prefers-reduced-motion: no-preference) { label.item { transition: background .15s, border-color .15s; } }
+</style>
+
+<div class="wrap" dir="rtl">
+  <h1>اختيار كتب المؤسسات</h1>
+  <p class="lede">حدِّد ما تريد تحميله إلى مكتبة الهاتف من المصادر الواسعة. المقترح (★) محدَّد مسبقًا؛ عدِّل كما تشاء. يُحفظ اختيارك تلقائيًا ويصلني مباشرة، ثم أحمِّل المحدَّد فقط.</p>
+
+  <div class="bar">
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="save">
+      <span class="status" id="status" aria-live="polite">لم يُحفظ بعد</span>
+      <button class="btn primary" id="saveBtn" type="button">اعتماد الاختيار</button>
+    </div>
+  </div>
+
+  <div class="tools">
+    <input type="search" id="q" placeholder="ابحث في العناوين…" aria-label="ابحث في العناوين">
+    <button class="btn" type="button" data-act="rec">المقترح فقط</button>
+    <button class="btn" type="button" data-act="all">الكل</button>
+    <button class="btn" type="button" data-act="none">لا شيء</button>
+  </div>
+  <p class="about" id="about"></p>
+  <div id="list"></div>
+
+  <div class="notes">
+    <div class="card warn">
+      <h3>StoryWeaver (قصص الأطفال المصوّرة)</h3>
+      <p>التحميل هناك يتطلب حسابًا مجانيًا، ولا أنشئ حسابات باسمك. إن أردتها: أنشئ حسابًا من هاتفك وحمِّل ما تشاء مباشرة، أو اكتب لي في الملاحظات لنبحث عن بديل مفتوح.</p>
+    </div>
+    <div class="card warn">
+      <h3>CK-12 وبقية Siyavula</h3>
+      <p>موقع CK-12 يمنع التحميل الآلي، وكتب Siyavula الأخرى لم تعد منشورة ملفاتٍ؛ المتاح منها مجلدا الرياضيات أعلاه. كتب OpenStax تغطي المجال نفسه وأوسع.</p>
+    </div>
+    <div class="card">
+      <h3>ملاحظات لي</h3>
+      <textarea id="note" placeholder="مثال: أريد كل كتب الرياضيات من OpenStax، ولا حاجة لكتب التمريض."></textarea>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = /*DATA*/;
+const SOURCES = [
+  { key: 'hindawi', name: 'هنداوي: مقدمات قصيرة جدًّا', about: 'ترجمات عربية كاملة لسلسلة Very Short Introductions (أكسفورد)، منشورة مجانًا باتفاق بين مؤسسة هنداوي والناشر. كل كتاب نحو 150 صفحة.' },
+  { key: 'openstax', name: 'OpenStax', about: 'كتب جامعية محكَّمة بالإنجليزية من جامعة رايس، تمولها مؤسسات خيرية. حجم الكتاب الواحد بين 20 و200 ميغابايت.' },
+  { key: 'hesperian', name: 'Hesperian', about: 'أدلة صحية عملية لغير المختصين. «حيث لا يوجد طبيب» (طبعة 2025) أضفتُه سلفًا. كل كتاب يُجمَع من فصوله في ملف واحد.' },
+  { key: 'siyavula', name: 'Siyavula', about: 'كتب رياضيات مدرسية مفتوحة (جنوب أفريقيا، مؤسسة Shuttleworth).' },
+];
+let current = 'hindawi';
+const sel = {}; for (const s of SOURCES) sel[s.key] = new Set(DATA[s.key].filter(x => x.r).map(x => x.id));
+let note = '';
+let db = null, ref = null, dirty = false, saving = false, timer = null, canSave = false;
+const $ = id => document.getElementById(id);
+const status = t => { $('status').textContent = t; };
+
+function renderTabs() {
+  $('tabs').innerHTML = '';
+  for (const s of SOURCES) {
+    const b = document.createElement('button');
+    b.className = 'tab'; b.type = 'button'; b.setAttribute('role', 'tab');
+    b.setAttribute('aria-selected', String(s.key === current));
+    b.innerHTML = `<span></span><span class="n"></span>`;
+    b.children[0].textContent = s.name;
+    b.children[1].textContent = `${sel[s.key].size.toLocaleString('ar')}/${DATA[s.key].length.toLocaleString('ar')}`;
+    b.onclick = () => { current = s.key; renderTabs(); renderList(); };
+    $('tabs').appendChild(b);
+  }
+}
+function renderList() {
+  const src = SOURCES.find(s => s.key === current);
+  $('about').textContent = src.about;
+  const q = $('q').value.trim().toLowerCase();
+  const items = DATA[current].filter(x => !q || (x.t + ' ' + (x.a || '')).toLowerCase().includes(q));
+  const groups = new Map();
+  for (const x of items) { if (!groups.has(x.g)) groups.set(x.g, []); groups.get(x.g).push(x); }
+  const list = $('list'); list.innerHTML = '';
+  if (!items.length) { list.innerHTML = '<p class="about">لا نتائج لهذا البحث.</p>'; return; }
+  for (const [g, xs] of groups) {
+    const sec = document.createElement('section'); sec.className = 'group';
+    const h = document.createElement('h2'); h.textContent = g;
+    const sm = document.createElement('small'); sm.textContent = `${xs.filter(x => sel[current].has(x.id)).length.toLocaleString('ar')} من ${xs.length.toLocaleString('ar')}`;
+    h.appendChild(sm); sec.appendChild(h);
+    const ul = document.createElement('ul'); ul.className = 'items';
+    for (const x of xs) {
+      const li = document.createElement('li');
+      const lab = document.createElement('label'); lab.className = 'item';
+      const cb = document.createElement('input'); cb.type = 'checkbox'; cb.id = `cb-${current}-${x.id}`; cb.checked = sel[current].has(x.id);
+      cb.onchange = () => { cb.checked ? sel[current].add(x.id) : sel[current].delete(x.id); changed(); sm.textContent = `${xs.filter(y => sel[current].has(y.id)).length.toLocaleString('ar')} من ${xs.length.toLocaleString('ar')}`; };
+      const body = document.createElement('span');
+      const t = document.createElement('bdi'); t.className = 't'; t.dir = 'auto'; t.textContent = x.t;
+      body.appendChild(t);
+      if (x.r) { const s = document.createElement('span'); s.className = 'star'; s.textContent = ' ★ مقترح'; body.appendChild(s); }
+      const meta = [x.a, x.n ? `${x.n} فصلًا` : ''].filter(Boolean).join(' · ');
+      if (meta) { const m = document.createElement('span'); m.className = 'm'; m.textContent = meta; body.appendChild(m); }
+      lab.append(cb, body); li.appendChild(lab); ul.appendChild(li);
+    }
+    sec.appendChild(ul); list.appendChild(sec);
+  }
+}
+function changed() { dirty = true; renderTabs(); status(canSave ? 'لم يُحفظ بعد' : 'محفوظ في هذا المتصفح فقط'); clearTimeout(timer); timer = setTimeout(save, 1200); }
+function payload() { const o = { note, updatedAt: new Date().toISOString() }; for (const s of SOURCES) o[s.key] = [...sel[s.key]]; return o; }
+async function save() {
+  clearTimeout(timer);
+  const p = payload();
+  try { localStorage.setItem('selection', JSON.stringify(p)); } catch (e) {}
+  if (!ref || !canSave) { status('محفوظ في هذا المتصفح فقط'); return; }
+  if (saving) { timer = setTimeout(save, 800); return; }
+  saving = true; status('يُحفظ…');
+  try { await ref.set(p); dirty = false; status('محفوظ ✓'); }
+  catch (e) {
+    if (e && e.code === 'unavailable') { saving = false; timer = setTimeout(save, 1500 + Math.random() * 1000); return; }
+    canSave = false; status('تعذّر الحفظ هنا');
+  }
+  saving = false;
+}
+function apply(o) {
+  for (const s of SOURCES) if (Array.isArray(o[s.key])) sel[s.key] = new Set(o[s.key].map(String));
+  note = typeof o.note === 'string' ? o.note : ''; $('note').value = note;
+  renderTabs(); renderList();
+}
+document.querySelectorAll('[data-act]').forEach(b => b.onclick = () => {
+  const xs = DATA[current], a = b.dataset.act;
+  sel[current] = new Set(a === 'all' ? xs.map(x => x.id) : a === 'rec' ? xs.filter(x => x.r).map(x => x.id) : []);
+  renderList(); changed();
+});
+$('q').oninput = renderList;
+$('note').oninput = () => { note = $('note').value; changed(); };
+$('saveBtn').onclick = save;
+renderTabs(); renderList();
+try { const l = JSON.parse(localStorage.getItem('selection') || 'null'); if (l) apply(l); } catch (e) {}
+(async () => {
+  db = window.claude && window.claude.use ? await window.claude.use('db') : null;
+  if (!db) { status('محفوظ في هذا المتصفح فقط'); return; }
+  const user = await window.claude.use('user');
+  const can = user ? await user.can('data.write') : null;
+  canSave = can !== false;
+  ref = db.doc('selections/current');
+  try {
+    const snap = await ref.get();
+    if (snap.exists) { apply(snap.data()); status('محفوظ ✓'); }
+    else status(canSave ? 'لم يُحفظ بعد' : 'للعرض فقط');
+  } catch (e) { status('تعذّر قراءة الاختيار'); }
+})();
+</script>
