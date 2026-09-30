@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>فهرس المكتبة</title>
+<style>
+:root{--bg:#f7f4ee;--card:#fffdf8;--ink:#1f1b16;--muted:#6b6358;--line:#e4ddd0;--accent:#7a4b1e;--chip:#efe7d8;--hl:#fff1c2}
+@media (prefers-color-scheme:dark){:root{--bg:#16140f;--card:#1f1c16;--ink:#ece6da;--muted:#a59c8d;--line:#332e25;--accent:#e0a86a;--chip:#2a261e;--hl:#4a3d1a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 "Noto Naskh Arabic","Amiri","Scheherazade New","Traditional Arabic",serif}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 14px 8px}
+h1{font-size:1.25rem;margin:0 0 2px}
+.stats{color:var(--muted);font-size:.85rem}
+nav.rep{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0}
+nav.rep a{font-size:.8rem;color:var(--accent);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:1px 10px}
+input[type=search]{width:100%;margin:8px 0 6px;padding:10px 12px;font:inherit;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:999px;padding:3px 11px;font:inherit;font-size:.85rem;cursor:pointer;white-space:nowrap}
+.chip[aria-pressed=true]{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.chip small{opacity:.7}
+main{padding:10px 12px 60px;max-width:900px;margin:auto}
+.book{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:0 0 8px;padding:9px 12px}
+.book summary{cursor:pointer;list-style:none}
+.book summary::-webkit-details-marker{display:none}
+.t{font-weight:700;font-size:1.02rem}
+.m{color:var(--muted);font-size:.85rem}
+.m b{font-weight:400;color:var(--accent)}
+ul.files{margin:6px 0 2px;padding:0;list-style:none;font-size:.92rem}
+ul.files li{padding:2px 0;border-top:1px dashed var(--line)}
+ul.files a{color:var(--ink);text-decoration:none}
+.sz{color:var(--muted);font-size:.78rem;margin-inline-start:6px}
+.src{font-size:.78rem;margin-top:4px}
+.src a{color:var(--accent)}
+mark{background:var(--hl);color:inherit}
+#more{display:block;margin:12px auto;padding:8px 22px;font:inherit;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.empty{color:var(--muted);text-align:center;padding:30px}
+</style>
+</head>
+<body>
+<header>
+  <h1>فهرس المكتبة</h1>
+  <div class="stats" id="stats"></div>
+  <nav class="rep" id="reports"></nav>
+  <input type="search" id="q" placeholder="ابحث بالعنوان أو المؤلف أو المحقق أو الناشر…" autocomplete="off">
+  <div class="chips" id="cats"></div>
+</header>
+<main><div id="list"></div><button id="more" hidden>عرض المزيد</button></main>
+<script id="data" type="application/json">__CATALOG__</script>
+<script id="reports-data" type="application/json">__REPORTS__</script>
+<script>
+const D=JSON.parse(document.getElementById('data').textContent);
+const R=JSON.parse(document.getElementById('reports-data').textContent);
+const $=id=>document.getElementById(id);
+const norm=s=>(s||'').replace(/[ً-ْـ]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي').toLowerCase();
+const gb=b=>b>=2**30?(b/2**30).toFixed(1)+' غ.ب':(b/2**20).toFixed(b<2**24?1:0)+' م.ب';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const href=(b,f)=>'../'+[b.cat,...b.folder.split('/'),f].map(encodeURIComponent).join('/');
+D.books.forEach(b=>b._k=norm([b.title,b.author,b.edition,b.folder,b.researcher,b.publisher,b.cat].join(' ')));
+$('stats').textContent=`${D.stats.books.toLocaleString('ar')} كتابًا · ${D.stats.files.toLocaleString('ar')} ملفًّا · ${gb(D.stats.bytes)} · ${D.stats.categories.toLocaleString('ar')} قسمًا · حُدِّث ${D.generated}`;
+$('reports').innerHTML=R.map(r=>`<a href="${encodeURI(r.href)}">${esc(r.title)}</a>`).join('');
+let cat='',shown=0,res=[];const PAGE=60;
+function chips(){const all=[{name:'',books:D.stats.books}].concat(D.categories);
+ $('cats').innerHTML=all.map(c=>`<button class="chip" data-c="${esc(c.name)}" aria-pressed="${c.name===cat}">${esc(c.name||'الكل')} <small>${c.books.toLocaleString('ar')}</small></button>`).join('');}
+$('cats').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;cat=b.dataset.c;chips();run();try{localStorage.setItem('cat',cat)}catch(_){}};
+function hl(s,terms){s=esc(s);return s}
+function card(b){
+ const meta=[b.author,b.edition||[b.researcher&&('ت '+b.researcher),b.publisher].filter(Boolean).join(' - ')].filter(Boolean).join(' · ');
+ const files=b.files.map(([f,s])=>`<li><a href="${href(b,f)}">${esc(f.replace(/\.pdf$/i,''))}</a><span class="sz">${gb(s)}</span></li>`).join('');
+ const src=(b.waqfeya||[]).map(w=>`<a href="${esc(w.url)}">الوقفية</a>`).concat((b.archive||[]).slice(0,3).map(a=>`<a href="https://archive.org/details/${encodeURIComponent(a)}">archive.org</a>`)).join(' · ');
+ return `<details class="book"><summary><div class="t">${esc(b.title)}</div><div class="m">${meta?esc(meta)+' · ':''}${cat?'':'<b>'+esc(b.cat)+'</b> · '}${b.files.length>1?b.files.length.toLocaleString('ar')+' مجلدات · ':''}${gb(b.bytes)}${b.century?' · '+esc(b.century):''}</div></summary><ul class="files">${files}</ul>${src?`<div class="src">المصدر: ${src}</div>`:''}</details>`;}
+function run(){const t=norm($('q').value).split(/\s+/).filter(Boolean);
+ res=D.books.filter(b=>(!cat||b.cat===cat)&&t.every(w=>b._k.includes(w)));shown=0;$('list').innerHTML='';more();}
+function more(){const chunk=res.slice(shown,shown+PAGE);shown+=chunk.length;
+ $('list').insertAdjacentHTML('beforeend',chunk.map(card).join('')||(shown?'':'<div class="empty">لا نتائج</div>'));$('more').hidden=shown>=res.length;}
+$('more').onclick=more;let tm;$('q').oninput=()=>{clearTimeout(tm);tm=setTimeout(run,150)};
+try{cat=localStorage.getItem('cat')||''}catch(_){}
+if(!D.categories.some(c=>c.name===cat))cat='';chips();run();
+</script>
+</body>
+</html>

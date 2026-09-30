@@ -2,16 +2,18 @@
 import json, os, re, sys, time, urllib.request, urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = os.path.join(ROOT, 'data/waqfeya/details.jsonl')
+OUT = os.path.join(ROOT, os.environ.get('OUT', 'data/waqfeya/details.jsonl'))
 def rsc_text(h):
     return ''.join(json.loads('"' + m.group(1) + '"') for m in re.finditer(r'self\.__next_f\.push\(\[1,"((?:[^"\\]|\\.)*)"\]\)', h, flags=re.S))
 books = [json.loads(l) for l in open(os.path.join(ROOT, 'data/waqfeya/books.jsonl'))]
 done = set()
-if os.path.exists(OUT):
-    for l in open(OUT):
+for OUTX in [os.path.join(ROOT, 'data/waqfeya', x) for x in ('details.jsonl', 'details2.jsonl')]:
+  if os.path.exists(OUTX):
+    for l in open(OUTX):
         try: done.add(json.loads(l)['_id'])
         except Exception: pass
 todo = [b for b in books if b['_id'] not in done]
+if os.environ.get('REVERSE'): todo.reverse()
 print('todo', len(todo), flush=True)
 def one(b):
     url = 'https://waqfeya.net/books/' + urllib.parse.quote(b['permalink'])

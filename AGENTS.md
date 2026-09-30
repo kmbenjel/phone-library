@@ -1,0 +1,101 @@
+# Phone Library — guide for AI agents (and humans)
+
+This workspace manages a large Arabic PDF library on an Android phone: `Books/` on the phone's
+internal storage, reached over FTP. The laptop keeps the scripts, the source catalogs and the
+change log; the phone keeps the books and a copy of the indexes in `Books/فهارس الويب/`.
+
+Read this file first. Keep it current when you change a convention.
+
+## 1. Where things are
+
+| What | Where |
+|------|-------|
+| Books (source of truth) | phone `Books/<category>/<book folder>/<file>.pdf` |
+| Human + AI indexes on the phone | phone `Books/فهارس الويب/` (HTML indexes, reports, `catalog.json`, this guide) |
+| Duplicate copies set aside (not deleted) | phone `Books-مكررات/<original path>` — review, then delete by hand |
+| Workspace (scripts, data, reports) | laptop `~/projects/phone-library/` (local git repo) |
+| Work log (what was done, when) | `WORKLOG.md` |
+| Every move/rename ever applied | `data/changes/changes.tsv` (time, action, from, to, reason, plan) |
+| Plans (one TSV per batch of moves) | `plans/NNN-name.tsv` |
+| Full catalog | `data/catalog.json` / `data/catalog.tsv` (rebuilt from the phone index) |
+| Shamela catalog (local install, read-only) | `data/shamela/books.tsv` ← `~/.local/share/shamela/database/master.db` |
+| Waqfeya catalog | `data/waqfeya/books.jsonl` (list) + `details.jsonl` (volumes, investigator, publisher, century, links) |
+| archive.org file lists (exact sizes) | `data/archive/files.jsonl`, `items.jsonl`, `titles.jsonl` |
+| Provenance (phone file → source file) | `data/phone/provenance.tsv` |
+| Category mappings | `data/mappings/shamela-to-phone.tsv`, `waqfeya-to-phone.tsv` |
+
+## 2. Connecting to the phone
+
+- The phone runs an FTP server app: `192.168.11.100:2221`, anonymous login. The IP is DHCP; if it
+  changes, find it with `ip neigh` and `nc -z <ip> 2221`, then set `PHONE_HOST=<ip>` for the scripts
+  and `rclone config update phone host <ip>`.
+- rclone remote: `phone:` (library = `phone:Books`). Optional mount:
+  `rclone mount phone:Books ~/phone-books --daemon --vfs-cache-mode writes --dir-cache-time 1h`.
+- Moves and renames are server-side (FTP RNFR/RNTO): nothing is re-uploaded, so they are instant.
+- FTP has no checksums. Duplicates are verified with a head+tail 64 KB fingerprint plus the exact
+  size (`scripts/dup_check.py`).
+
+## 3. Rules
+
+1. **Never delete on the phone.** Move unwanted copies to `Books-مكررات/` (same relative path). The owner deletes.
+2. **Every change goes through a plan** (`plans/NNN-*.tsv`: `from<TAB>to<TAB>reason`) applied with
+   `scripts/apply_plan.py` (dry-run first). It never overwrites, removes emptied folders and logs to
+   `data/changes/changes.tsv`. Undo a plan: `python3 scripts/apply_plan.py --undo NNN-name`.
+3. **Names come from evidence, not guesses.** Priority: exact-size provenance → Waqfeya record →
+   archive.org item title → Shamela title/author → the existing name. If unsure, leave the name and
+   list it under "needs review" in the report.
+4. After changes: re-index (`rclone lsf -R --files-only --format ps --separator $'\t' phone:Books`),
+   rebuild the catalog, the site and the reports, publish them to the phone, add a WORKLOG line.
+
+## 4. Naming conventions
+
+Layout: `Books/<category>/<book folder>/<files>`. Every book has its own folder, even single-file books.
+
+**Category** — one of the existing category folders (see `data/catalog.json` → `categories`).
+Categories follow Shamela's classification loosely; the mappings in `data/mappings/` are the reference.
+
+**Book folder** — `<title> - <author> (<edition>)`
+- `<title>`: the full title, never cut. No `...`, no half words.
+- `<author>`: the commonly used name (e.g. `ابن قدامة`, `الإمام الغزالي`). Omit for periodicals/series.
+- `<edition>`: `ت <investigator> - <publisher>` or `ط <publisher>`; omit when unknown.
+- Collections: `مؤلفات <author> (<publisher>)`; periodicals: `مجلة <name> (<publisher>)`; series: `سلسلة <name> (<publisher>)`.
+- Different editions of the same book are separate folders that differ only in `(<edition>)`.
+
+**Files**
+- Multi-volume: `NN - <title> (<volume label>).pdf` — `NN` zero-padded to the same width in the folder
+  (`01…31`, `001…101`), numbered in reading order, never repeated. `00` = introduction/مقدمة;
+  the last numbers = indexes/فهارس. The label is optional and describes the contents
+  (e.g. `(الطهارة - الصلاة)`, `(ج 3)`), with balanced parentheses.
+- Single file: `<title>.pdf`.
+- Items inside a collection/series folder: `<title> - <author>.pdf` or `NNN - <title>.pdf` for numbered issues.
+
+**Characters** (the files are also copied to FAT/Windows sometimes):
+- no `\ / : * ? " < > |`: `ت: فلان` → `ت فلان`, `?` → `؟`, `"` → `«»`
+- no `_` used as a stand-in for `:` or `/`, no `_alt`, no `(نسخة ثانية)` (that is a duplicate → quarantine)
+- single spaces, no leading/trailing spaces or dots; ≤ 200 bytes per name (≈ 95 Arabic letters)
+
+## 5. Expanding the library
+
+1. Pick candidates from `Books/فهارس الويب/03 - توصيات التوسعة.html` (or its `.md`). Each lists the Waqfeya
+   page and the archive.org item.
+2. Check it is not already present: search `data/catalog.tsv` by normalized title and check exact sizes
+   in `data/phone/provenance.tsv`.
+3. Download from archive.org (`https://archive.org/download/<id>/<file>`), name it per §4, upload
+   with `rclone copyto <local> "phone:Books/<category>/<folder>/<file>"`.
+4. Re-index and republish (rule 4). Add the new book's source to the WORKLOG line.
+
+## 6. Scripts (all in `scripts/`, Python 3, stdlib only)
+
+| Script | Does |
+|--------|------|
+| `fetch_waqfeya.py` | Waqfeya book list via `waqfeya.net/books/books-api?page=N&pageSize=100` |
+| `fetch_waqfeya_details.py` | each Waqfeya book page's full record (links, volumes, investigator…) |
+| `fetch_archive_files.py` | archive.org `<id>_files.xml` → file names + exact sizes (fast) |
+| `fetch_archive_titles.py` | archive.org titles in bulk (advancedsearch) |
+| `export_shamela.py` | local Shamela `master.db` → `data/shamela/books.tsv` |
+| `dup_check.py` | fingerprints same-size files on the phone |
+| `provenance.py` | phone file → archive.org file → Waqfeya book |
+| `dedup_plan.py` | picks the copy to keep, writes a quarantine plan |
+| `apply_plan.py` | applies/undoes a plan over FTP, logs every change |
+| `build_catalog.py` | `data/catalog.json` + `.tsv` |
+| `build_site.py` | HTML indexes in `site/` |
