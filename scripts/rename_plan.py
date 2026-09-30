@@ -15,7 +15,8 @@ def redundant(author, title):
 J = lambda p: os.path.join(ROOT, p)
 INDEX_DIR = 'فهارس الويب'
 MAXB = 200                                   # max bytes per name component
-COLLECTION = re.compile(r'^(مؤلفات|سلسلة|مجلة|موسوعة|مجموع|آثار|أعمال|رسائل|فتاوى|دواوين|الأعمال)')
+VERIFIED_OTHER = []
+COLLECTION = re.compile(r'^(مؤلفات|سلسلة|مجلة|موسوعة|مجموع|آثار|أعمال|رسائل|فتاوى|دواوين|الأعمال|المنظومات|تحقيقات)')
 PARTICLES = {'في', 'من', 'على', 'عن', 'الى', 'إلى', 'بين', 'مع', 'ويليه', 'ومعه', 'وبهامشه', 'وبذيله', 'وذيله', 'المسمى', 'المسماة', 'وهو', 'او', 'أو'}
 
 # ---------- text helpers ----------
@@ -87,14 +88,19 @@ def short_title(t, author=''):
             if norm(w[i]) in PARTICLES: w = w[:i]; break
         w = w[:6]
     s = ' '.join(w)
-    if len(w) == 1 and author and not redundant(author, s): s = f'{s} - {author}'
+    if len(w) == 1 and author and not redundant(author, s):
+        last = author.split()[-1]
+        s = f'{s} - {last if last.startswith("ال") and len(last) > 3 else author}'
     return balance(s)
 
 # ---------- volume labels ----------
 def vol_from_orig(orig):
     """archive.org Waqfeya naming: 00_xxxx = front, NN_xxxx = vol NN, NN_xxxxp = front of vol NN."""
     b = orig.rsplit('/', 1)[-1]
-    m = re.match(r'^(\d{1,3})_\d+(p?)(?:_\d+)?\.pdf$', b, re.I) or re.match(r'^(\d{1,3})(p?)\.pdf$', b, re.I)
+    m = (re.match(r'^(\d{1,3})_\d+(p?)(?:_\d+)?\.pdf$', b, re.I)            # 03_144599.pdf, 01_16678p.pdf
+         or re.match(r'^(\d{1,3})-\d{1,3}_\d+(p?)\.pdf$', b, re.I)             # 01-02_44056.pdf (two volumes in one file)
+         or re.match(r'^(\d{1,3})(p?)\.pdf$', b, re.I)                          # 75.pdf
+         or re.match(r'^[a-z][a-z_-]{1,15}?(\d{1,3})(p?)\.pdf$', b, re.I))       # thtn03.pdf, shts1p.pdf, mkdsalah0.pdf
     if not m: return None
     n = int(m.group(1)); p = bool(m.group(2))
     return (0, 'front') if n == 0 else ((n, 'front') if p else (n, 'vol'))
@@ -122,6 +128,14 @@ def load():
             m = re.search(r'archive\.org/download/([^/]+)/(.+?)\s*$', x.get('url', ''))
             if m: link_label[(m.group(1), m.group(2))] = x.get('title', '')
     prov = {r['path']: r for r in csv.DictReader(open(J('data/phone/provenance.tsv')), delimiter='\t')}
+    # doubtful matches (source title disagrees with the phone name) count only once verified byte-for-byte
+    suspect = {l.split('\t')[0] for l in open(J('data/phone/provenance-suspect.tsv'))} if os.path.exists(J('data/phone/provenance-suspect.tsv')) else set()
+    ok = set()
+    if os.path.exists(J('data/phone/provenance-verified.tsv')):
+        ok = {r[0] for r in csv.reader(open(J('data/phone/provenance-verified.tsv')), delimiter='\t') if r[3] == 'same'}
+    VERIFIED_OTHER[:] = sorted(suspect & ok)
+    for p in suspect:
+        prov.pop(p, None)
     return books, link_label, prov
 
 def canonical_folder(b):
@@ -179,7 +193,7 @@ def main(index, out):
             continue
         top, topn = src.most_common(1)[0]
         is_collection = bool(COLLECTION.match(name))
-        if kinds == 1 or (topn >= 0.8 * matched and not is_collection):
+        if kinds == 1 or (topn >= 0.8 * matched and not is_collection) or (kinds == 2 and not is_collection):
             b = books[top]
             canon, title, a = canonical_folder(b)
             if top in target_of_book:
@@ -234,6 +248,8 @@ def main(index, out):
     with open(out, 'w') as f:
         for a, b, why in final:
             if a != b: f.write(f'{a}\t{b}\t{why}\n')
+    for p in VERIFIED_OTHER:
+        review.append((p, 'file is byte-identical to a file in an archive.org item with a different title (bundled works?) — name left as is'))
     with open(J('data/phone/rename-review.tsv'), 'w') as f:
         for x, why in review: f.write(f'{x}\t{why}\n')
     c = Counter(w.split(' «')[0] for a, b, w in final if a != b)
@@ -288,6 +304,9 @@ def plan_files(ps, prov, link_label, b, dest, why, add, review):
         v = vol_from_orig(r['orig_name'])
         lab = label_from_link(link_label.get((r['archive_id'], r['orig_name']), ''))
         info.append((p, v, lab, fn))
+    unnumbered = [i for i, (p, v, lab, fn) in enumerate(info) if v is None and p in prov and prov[p]['waqfeya_id'] == b['_id']]
+    if len(unnumbered) == 1 and not any(v and v[1] == 'vol' for p, v, lab, fn in info):
+        i = unnumbered[0]; info[i] = (info[i][0], (1, 'vol'), info[i][2], info[i][3])
     vols = [v for p, v, lab, fn in info if v and v[1] == 'vol']
     nvol = len(vols); width = max(2, len(str(max([v[0] for v in vols], default=1))))
     names = Counter()

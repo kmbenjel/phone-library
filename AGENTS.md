@@ -62,11 +62,16 @@ Categories follow Shamela's classification loosely; the mappings in `data/mappin
 - Different editions of the same book are separate folders that differ only in `(<edition>)`.
 
 **Files**
-- Multi-volume: `NN - <title> (<volume label>).pdf` — `NN` zero-padded to the same width in the folder
-  (`01…31`, `001…101`), numbered in reading order, never repeated. `00` = introduction/مقدمة;
-  the last numbers = indexes/فهارس. The label is optional and describes the contents
-  (e.g. `(الطهارة - الصلاة)`, `(ج 3)`), with balanced parentheses.
-- Single file: `<title>.pdf`.
+- Multi-volume: `NN - <short title> (<volume label>).pdf` — `NN` = the volume number, zero-padded to the
+  same width in the folder (`01…31`, `001…101`). Volume numbers are never repeated. `00` is reserved for
+  front matter and may appear more than once: `00 - <short title> (الواجهة).pdf` (cover/title pages),
+  `00 - <short title> (المقدمة).pdf`. A preface belonging to one volume keeps that volume's number with
+  `(المقدمة)`. The label describes the contents (`(الطهارة - الصلاة)`, `(الفهارس)`), balanced parentheses.
+- `<short title>` = the title up to its first subtitle marker (`=`, ` - `, `ويليه`, `ومعه`, `المسمى`,
+  `الموسوم`, `،`) or its first particle after two words; a one-word title gets ` - <author>`.
+- Waqfeya's archive.org files follow `00_<id>.pdf` (front), `NN_<id>.pdf` (volume NN), `NN_<id>p.pdf`
+  (preface pages of volume NN); the labels come from the Waqfeya book page links (`data/waqfeya/details*.jsonl`).
+- Single file: `<title>.pdf` (front matter beside it: `<title> (الواجهة).pdf`).
 - Items inside a collection/series folder: `<title> - <author>.pdf` or `NNN - <title>.pdf` for numbered issues.
 
 **Characters** (the files are also copied to FAT/Windows sometimes):
@@ -86,6 +91,11 @@ Categories follow Shamela's classification loosely; the mappings in `data/mappin
 
 ## 6. Scripts (all in `scripts/`, Python 3, stdlib only)
 
+**One command after any change on the phone:** `scripts/refresh.sh --publish` (re-index → provenance →
+catalog → comparisons → reports → HTML → upload to `Books/فهارس الويب/`). Reports are written twice:
+`site/*.html` (phone, Arabic, offline) and `reports/*.md` (for agents); on the phone the Markdown copies
+are in `فهارس الويب/md/` and the data tables in `فهارس الويب/data/`.
+
 | Script | Does |
 |--------|------|
 | `fetch_waqfeya.py` | Waqfeya book list via `waqfeya.net/books/books-api?page=N&pageSize=100` |
@@ -98,4 +108,10 @@ Categories follow Shamela's classification loosely; the mappings in `data/mappin
 | `dedup_plan.py` | picks the copy to keep, writes a quarantine plan |
 | `apply_plan.py` | applies/undoes a plan over FTP, logs every change |
 | `build_catalog.py` | `data/catalog.json` + `.tsv` |
-| `build_site.py` | HTML indexes in `site/` |
+| `build_site.py` | the main index page `site/00 - الفهرس العام.html` (offline search/browse, data embedded) |
+| `compare_shamela.py`, `compare_waqfeya.py` | status of every Shamela / Waqfeya book vs the phone → `data/compare/*.tsv` |
+| `report_shamela.py`, `report_waqfeya.py`, `report_recommend.py`, `report_changes.py` | reports 01–04 (HTML + MD) |
+| `rename_plan.py` | the rename/merge/split planner (evidence-based; writes `plans/NNN-*.tsv` + review list) |
+| `buckets.py`, `textnorm.py`, `report_lib.py` | helpers |
+| `publish.py` | uploads `site/`, `reports/`, data tables and this guide to the phone (copy, never deletes) |
+| `refresh.sh` | everything above in order |

@@ -18,7 +18,7 @@ def sim(a, b):
 
 def load_items():
     files = {}
-    for fn in ('data/archive/items.jsonl', 'data/archive/files.jsonl', 'data/archive/files2.jsonl'):
+    for fn in ['data/archive/items.jsonl'] + sorted(os.path.relpath(p, ROOT) for p in __import__('glob').glob(os.path.join(ROOT, 'data/archive/files*.jsonl'))):
         if os.path.exists(J(fn)):
             for l in open(J(fn)):
                 d = json.loads(l)
@@ -51,6 +51,10 @@ if __name__ == '__main__':
         for f in fs:
             if f['name'].lower().endswith('.pdf') and f['size'] > 0: by_size[f['size']].append((i, f['name']))
     rows = list(csv.reader(open(index), delimiter='\t'))
+    reject = set()   # (path, archive id, file) proven different by scripts/verify_provenance.py
+    vf = J('data/phone/provenance-verified.tsv')
+    if os.path.exists(vf):
+        reject = {(r[0], r[1], r[2]) for r in csv.reader(open(vf), delimiter='\t') if r[3] == 'different'}
     folder_items = defaultdict(Counter)
     for p, s in rows:
         c = by_size.get(int(s), [])
@@ -59,7 +63,7 @@ if __name__ == '__main__':
     out.writerow(['path', 'size', 'match', 'archive_id', 'orig_name', 'waqfeya_id', 'waqfeya_name', 'waqfeya_author', 'waqfeya_category', 'archive_title'])
     stats = Counter()
     for p, s in rows:
-        folder = p.rsplit('/', 1)[0]; c = by_size.get(int(s), [])
+        folder = p.rsplit('/', 1)[0]; c = [x for x in by_size.get(int(s), []) if (p, x[0], x[1]) not in reject]
         if not c: stats['none'] += 1; out.writerow([p, s, 'none'] + [''] * 7); continue
         if len(c) == 1: pick, kind = c[0], 'unique'
         else:

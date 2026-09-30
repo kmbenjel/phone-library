@@ -7,7 +7,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, os.environ.get('OUT', 'data/archive/files.jsonl'))
 ids = list(dict.fromkeys(l.strip() for f in sys.argv[1:] for l in open(f) if l.strip()))
 done = set()
-for src in [os.path.join(ROOT, 'data/archive', x) for x in ('files.jsonl', 'files2.jsonl', 'items.jsonl')]:
+for src in __import__('glob').glob(os.path.join(ROOT, 'data/archive/files*.jsonl')) + [os.path.join(ROOT, 'data/archive/items.jsonl')]:
     if os.path.exists(src):
         for l in open(src):
             try:

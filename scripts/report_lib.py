@@ -20,6 +20,8 @@ h3{font-size:1rem;margin:1.1em 0 .3em}
 .kpi span{color:var(--muted);font-size:.8rem}
 .tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card);margin:8px 0}
 table{border-collapse:collapse;width:100%;font-size:.88rem}
+table.wide{min-width:620px}
+table.wide td:nth-child(-n+2){min-width:9em}
 th,td{padding:5px 8px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
 th{position:sticky;top:0;background:var(--card);font-weight:700;white-space:nowrap}
 td.n{white-space:nowrap;font-variant-numeric:tabular-nums}
@@ -59,26 +61,28 @@ class Report:
     def table(self, head, rows, numeric=(), links=None, bar_col=None, fold=None, md_limit=None):
         """rows: list of lists. links: {col: row->url}. bar_col: (col, max). fold: summary text -> wrap in <details>."""
         th = ''.join(f'<th>{esc(h)}</th>' for h in head)
+        L = lambda i, n, r: (links[i][n] if isinstance(links[i], list) else links[i](r)) if links and i in links else None
         body = []
-        for r in rows:
+        for n, r in enumerate(rows):
             tds = []
             for i, c in enumerate(r):
                 txt = esc(fmt(c))
-                if links and i in links and links[i](r): txt = f'<a href="{esc(links[i](r))}">{txt}</a>'
+                if L(i, n, r): txt = f'<a href="{esc(L(i, n, r))}">{txt}</a>'
                 if bar_col and i == bar_col[0] and bar_col[1]:
                     w = max(1, round(80 * float(c or 0) / bar_col[1])); txt += f'<span class="bar" style="width:{w}px"></span>'
                 tds.append(f'<td class="n">{txt}</td>' if i in numeric else f'<td>{txt}</td>')
             body.append('<tr>' + ''.join(tds) + '</tr>')
-        t = f'<div class="tw"><table><thead><tr>{th}</tr></thead><tbody>{"".join(body)}</tbody></table></div>'
+        cls = ' class="wide"' if len(head) >= 5 else ''
+        t = f'<div class="tw"><table{cls}><thead><tr>{th}</tr></thead><tbody>{"".join(body)}</tbody></table></div>'
         self.h.append(f'<details><summary>{esc(fold)}</summary>{t}</details>' if fold else t)
         if fold: self.m += [f'**{fold}**', '']
         mrows = rows if md_limit is None else rows[:md_limit]
         self.m += ['| ' + ' | '.join(head) + ' |', '|' + '---|' * len(head)]
-        for r in mrows:
+        for n, r in enumerate(mrows):
             cells = []
             for i, c in enumerate(r):
                 s = fmt(c).replace('|', '/')
-                if links and i in links and links[i](r): s = f'[{s}]({links[i](r)})'
+                if L(i, n, r): s = f'[{s}]({L(i, n, r).replace(" ", "%20").replace(")", "%29")})'
                 cells.append(s)
             self.m.append('| ' + ' | '.join(cells) + ' |')
         if md_limit is not None and len(rows) > md_limit: self.m.append(f'| … {len(rows) - md_limit} more rows in the TSV data file |' + ' |' * (len(head) - 1))
