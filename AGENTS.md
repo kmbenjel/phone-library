@@ -46,7 +46,12 @@ Read this file first. Keep it current when you change a convention.
 3. **Names come from evidence, not guesses.** Priority: exact-size provenance → Waqfeya record →
    archive.org item title → Shamela title/author → the existing name. If unsure, leave the name and
    list it under "needs review" in the report.
-4. After changes: re-index (`rclone lsf -R --files-only --format ps --separator $'\t' phone:Books`),
+4. **Only real PDFs belong in `Books/`.** A file named `.pdf` must start with `%PDF` and open. Earlier download
+   scripts saved web pages (shamela.ws, archive.org error pages, «الرق المنشور»), MP3s and Word files as `.pdf`
+   (392 removed on 2026-09-30 by the owner's decision). Check with `scripts/check_magic.py` (first bytes) and
+   `scripts/check_pdf_tail.py` (end marker). When downloading, verify exact size + `%PDF` before uploading
+   (`scripts/fetch_replacements.py` does). Missing books are replaced only from Waqfeya; otherwise left out.
+5. After changes: re-index (`rclone lsf -R --files-only --format ps --separator $'\t' phone:Books`),
    rebuild the catalog, the site and the reports, publish them to the phone, add a WORKLOG line.
 
 ## 4. Naming conventions
@@ -64,6 +69,11 @@ Categories follow Shamela's classification loosely; the mappings in `data/mappin
 - Different editions of the same book are separate folders that differ only in `(<edition>)`.
 
 **Files**
+- Independent books collected in one folder (a series such as «سلسلة أعلام المسلمين», «مؤلفات فلان») carry **no
+  number**: each file is `<its own title>.pdf`. Only a series whose issues are really numbered keeps the issue
+  number (e.g. «عالم المعرفة»: `003 - التفكير العلمي.pdf`). Never "01 -" in front of every item.
+- Indexes (الفهارس) take the number after the last volume, never 99. For a periodical they take `00`.
+- A companion that is not a volume (نسخة أخرى، صور المخطوطات، ملحق، the whole book in one file) has no number.
 - Multi-volume: `NN - <short title> (<volume label>).pdf` — `NN` = the volume number, zero-padded to the
   same width in the folder (`01…31`, `001…101`). Volume numbers are never repeated. `00` is reserved for
   front matter and may appear more than once: `00 - <short title> (الواجهة).pdf` (cover/title pages),
@@ -124,6 +134,12 @@ are in `فهارس الويب/md/` and the data tables in `فهارس الويب
 | `build_site.py` | the main index page `site/00 - الفهرس العام.html` (offline search/browse, data embedded) |
 | `compare_shamela.py`, `compare_waqfeya.py` | status of every Shamela / Waqfeya book vs the phone → `data/compare/*.tsv` |
 | `report_shamela.py`, `report_waqfeya.py`, `report_recommend.py`, `report_changes.py` | reports 01–04 (HTML + MD) |
+| `check_magic.py`, `check_pdf_tail.py` | is every ".pdf" a real, complete PDF? |
+| `delete_files.py` | logged deletion (owner-approved only), removes emptied folders |
+| `replacement_plan.py`, `fetch_replacements.py` | find Waqfeya replacements for removed files; download, verify, upload, log |
+| `renumber_plan.py`, `tail_numbering_plan.py`, `label_numbering_plan.py`, `companion_plan.py` | numbering passes (independent books vs volumes; Waqfeya per-file labels are the authority) |
+| `audit_numbering.py` | numbering audit (runs in the change-log report) |
+| `restore_cut_names.py` | completes cut folder names by a unique prefix match (Waqfeya / Shamela / poems catalog) |
 | `verify_dups_deep.py` | extra proof for duplicates (64 KB at 25/50/75%) before removal |
 | `verify_provenance.py` | byte-checks doubtful provenance matches (first 64 KB phone vs archive.org) |
 | `recat_plan.py` | section-correction planner (rules in §4b) |
