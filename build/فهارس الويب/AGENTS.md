@@ -46,6 +46,9 @@ Read this file first. Keep it current when you change a convention.
 3. **Names come from evidence, not guesses.** Priority: exact-size provenance → Waqfeya record →
    archive.org item title → Shamela title/author → the existing name. If unsure, leave the name and
    list it under "needs review" in the report.
+   **One archive.org item often holds several sections or editions** (e.g. خريدة القصر: Iraq and Sham sections of
+   two academies in one item). Never name all its files from the item title: read each volume's title page first
+   (`pdftotext -l 8`; for image-only scans a low-resolution render of the first pages, `pdftoppm -r 25`).
 4. **Only real PDFs belong in `Books/`.** A file named `.pdf` must start with `%PDF` and open. Earlier download
    scripts saved web pages (shamela.ws, archive.org error pages, «الرق المنشور»), MP3s and Word files as `.pdf`
    (392 removed on 2026-09-30 by the owner's decision). Check with `scripts/check_magic.py` (first bytes) and
