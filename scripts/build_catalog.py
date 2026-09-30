@@ -17,6 +17,23 @@ def split_folder(name):
     if not rest and m: title, edition = m.group(1), m.group(2)
     return title.strip(), author.strip(), edition.strip()
 
+def count_titles(books, prov):
+    """Distinct works: 1 per book folder; collections/bucket folders count each work inside;
+    periodicals/series count as 1 title + their issues. ('books' in stats = folders.)"""
+    from rename_plan import COLLECTION
+    titles = issues = 0
+    for b in books:
+        ps = [f'{b["cat"]}/{b["folder"]}/{f}' for f, _ in b['files']]
+        src = {prov[p]['waqfeya_id'] for p in ps if p in prov and prov[p]['waqfeya_id']}
+        front = lambda p: re.search(r'\((الواجهة|المقدمة)\)|^00 - ', p.rsplit('/', 1)[1])
+        if re.match(r'^(مجلة|سلسلة)', b['folder']) or b['cat'] == 'المجلات والدوريات والسلاسل الكبرى':
+            titles += 1; issues += len([p for p in ps if not front(p)])
+        elif COLLECTION.match(b['folder']) or len(src) >= 3:
+            titles += len(src) + len([p for p in ps if not (p in prov and prov[p]['waqfeya_id']) and not front(p)])
+        else:
+            titles += 1
+    return titles, issues
+
 def main(index):
     prov = {}
     if os.path.exists(J('data/phone/provenance.tsv')):
@@ -55,8 +72,10 @@ def main(index):
     cats = defaultdict(lambda: {'books': 0, 'files': 0, 'bytes': 0})
     for r in out:
         c = cats[r['cat']]; c['books'] += 1; c['files'] += len(r['files']); c['bytes'] += r['bytes']
+    titles, issues = count_titles(out, prov)
     cat = {'generated': time.strftime('%Y-%m-%d %H:%M'), 'root': 'Books',
-           'stats': {'categories': len(cats), 'books': len(out), 'files': sum(len(r['files']) for r in out), 'bytes': sum(r['bytes'] for r in out)},
+           'stats': {'categories': len(cats), 'books': len(out), 'titles': titles, 'issues': issues,
+                     'files': sum(len(r['files']) for r in out), 'bytes': sum(r['bytes'] for r in out)},
            'categories': [{'name': k, **v} for k, v in sorted(cats.items())], 'books': out}
     json.dump(cat, open(J('data/catalog.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
     with open(J('data/catalog.tsv'), 'w') as f:

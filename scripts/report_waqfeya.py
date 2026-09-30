@@ -19,7 +19,7 @@ other_src = [b for b in cat['books'] if not b.get('waqfeya')]
 url = lambda r: r['url']
 
 R = Report('مقارنة المكتبة بالمكتبة الوقفية',
-           f'فهرس الوقفية كاملًا ({len(rows):,} مادة في {len({r["waqfeya_category"] for r in rows})} قسمًا) مقابل الهاتف ({cat["stats"]["books"]:,} كتابًا)')
+           f'فهرس الوقفية كاملًا ({len(rows):,} مادة في {len({r["waqfeya_category"] for r in rows})} قسمًا) مقابل الهاتف (نحو {cat["stats"]["titles"]:,} عنوانًا في {cat["stats"]["files"]:,} ملفًا)')
 R.kpis([('مواد الوقفية', f'{len(rows):,}'), ('ضمن أقسام مكتبتك', f'{len(scope):,}'),
         ('كاملة على الهاتف', f'{st["complete"]:,}'), ('ناقصة بعض المجلدات', f'{st["partial"]:,}'),
         ('نسخة أخرى على الهاتف', f'{st["other-copy"]:,}'), ('غير موجودة', f'{st["missing"]:,}'),

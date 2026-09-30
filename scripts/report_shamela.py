@@ -22,7 +22,7 @@ matched_phone = {int(i) for r in present for i in r['phone_book_ids'].split()}
 not_in_shamela = [b for b in cat['books'] if b['id'] not in matched_phone]
 
 R = Report('مقارنة المكتبة بالمكتبة الشاملة',
-           f'الشاملة المثبتة على الحاسوب ({total:,} كتابًا في {len(order)} قسمًا) مقابل كتب PDF على الهاتف ({cat["stats"]["books"]:,} كتابًا)')
+           f'الشاملة المثبتة على الحاسوب ({total:,} كتابًا في {len(order)} قسمًا) مقابل كتب PDF على الهاتف (نحو {cat["stats"]["titles"]:,} عنوانًا في {cat["stats"]["files"]:,} ملفًا)')
 R.kpis([('كتب الشاملة', f'{total:,}'), ('لها نسخة PDF على الهاتف', f'{len(present):,}'), ('نسبة التغطية', pct(len(present), total)),
         ('كتب الهاتف غير الموجودة في الشاملة', f'{len(not_in_shamela):,}')])
 R.note('المطابقة بالعنوان بعد توحيد الرسم (الهمزات، التاء المربوطة، الألف المقصورة، التشكيل)، مع التحقق من المؤلف في العناوين القصيرة. '

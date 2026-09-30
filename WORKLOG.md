@@ -19,3 +19,4 @@ Newest entries at the bottom. "Context left" = tokens remaining in the working s
 | 2026-09-30 03:20 | Plan 003 (5,225 renames/merges/splits, computed as if 002 were applied): validated (no overwrite, no clash) + dry run OK. Awaiting approval; apply after 002. 527 items listed for human review. | 14.71M |
 | 2026-09-30 03:22 | FTP server on the phone stopped once (port closed); owner restarted it. | 14.71M |
 | 2026-09-30 03:25 | Published to `Books/فهارس الويب/`: 00 index, 01 Shamela (1,147 / 8,598 = 13.3%), 02 Waqfeya (1,894 complete, 78 partial, 401 other copy), 03 recommendations (6 of 88 core works missing), 04 change log with pending plans, AGENTS.md, data/*.tsv|json, md/*. | 14.71M |
+| 2026-09-30 03:31 | Index/report headers now count titles (≈3,153 incl. current duplicates; ≈2,943 after plan 002) + 484 periodical issues + 9,467 files, instead of 2,752 folders. Publish fixed: phone FTP refuses rename-over-existing (553), so uploads use `--inplace`. | 14.99M |

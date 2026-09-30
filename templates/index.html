@@ -57,7 +57,7 @@ const gb=b=>b>=2**30?(b/2**30).toFixed(1)+' غ.ب':(b/2**20).toFixed(b<2**24?1:0
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const href=(b,f)=>'../'+[b.cat,...b.folder.split('/'),f].map(encodeURIComponent).join('/');
 D.books.forEach(b=>b._k=norm([b.title,b.author,b.edition,b.folder,b.researcher,b.publisher,b.cat].join(' ')));
-$('stats').textContent=`${D.stats.books.toLocaleString('ar')} كتابًا · ${D.stats.files.toLocaleString('ar')} ملفًّا · ${gb(D.stats.bytes)} · ${D.stats.categories.toLocaleString('ar')} قسمًا · حُدِّث ${D.generated}`;
+$('stats').textContent=`نحو ${(D.stats.titles||D.stats.books).toLocaleString('ar')} عنوانًا${D.stats.issues?` و${D.stats.issues.toLocaleString('ar')} عددًا من الدوريات`:''} · ${D.stats.files.toLocaleString('ar')} ملف PDF · ${gb(D.stats.bytes)} · ${D.stats.categories.toLocaleString('ar')} قسمًا · حُدِّث ${D.generated}`;
 $('reports').innerHTML=R.map(r=>`<a href="${encodeURI(r.href)}">${esc(r.title)}</a>`).join('');
 let cat='',shown=0,res=[];const PAGE=60;
 function chips(){const all=[{name:'',books:D.stats.books}].concat(D.categories);
