@@ -120,6 +120,12 @@ for c in sorted(by, key=lambda c: -len(by[c])):
             [[i, r['name'], r['author'].split('؛')[0], r['century'].replace('القرن ', ''), r['volumes'], round(r['size_mb']), r['visits']] for i, r in enumerate(xs, 1)],
             numeric=(0, 4, 5, 6), links={1: [r['url'] for r in xs]}, fold=f'{c} — {len(xs):,} كتابًا، {sum(r["size_mb"] for r in xs) / 1024:,.1f} GB', md_limit=15)
 
+absent = json.load(open(J('data/phone/absent-books.json'))) if os.path.exists(J('data/phone/absent-books.json')) else []
+if absent:
+    R.h2(f'4ب. كتب لم تكن على الهاتف إلا صفحات ويب ({len(absent)})', 'absent')
+    R.p('كانت ملفاتها صفحات ويب محفوظة باسم .pdf (من الشاملة أو الرق المنشور أو archive.org) فحُذفت، ولم يوجد لها في الوقفية بديل مطابق بلا لبس. إن أردتها فابحث عنها بعنوانها.')
+    R.table(['القسم', 'الكتاب'], [[a.split('/')[0], a.split('/', 1)[1]] for a in absent], fold=f'{len(absent)} كتابًا')
+
 R.h2('5. بنية الأقسام', 'structure')
 tiny = [c for c in cat['categories'] if c['books'] <= 6]
 R.ul([f'أقسام صغيرة جدًا: ' + '، '.join(f'«{c["name"]}» ({c["books"]} كتب)' for c in tiny) + ' — يُقترح نقل كتبها إلى الأقسام الموضوعية (مثل «الإتقان في علوم القرآن» إلى علوم القرآن) أو إبقاؤها إن كانت نواة لقسم ستتوسع فيه.',

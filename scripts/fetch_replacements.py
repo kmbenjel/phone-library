@@ -17,10 +17,10 @@ for b in books.values():
         m = re.search(r'archive\.org/download/([^/]+)/(.+?)\s*$', x.get('url', ''))
         if m: link[(m.group(1), urllib.parse.unquote(m.group(2)))] = x['title']
 todo = json.load(open(J('data/phone/downloads.json')))
-seen = set(); os.makedirs(J('downloads'), exist_ok=True)
-log = csv.writer(open(J('data/changes/changes.tsv'), 'a', newline=''), delimiter='\t')
-ok = bad = 0
-for t in todo:
+os.makedirs(J('downloads'), exist_ok=True)
+done = {r[3] for r in csv.reader(open(J('data/changes/changes.tsv')), delimiter='\t') if r and r[1] == 'add' and r[5] == '021-replacements'}
+jobs = []; seen = set()
+for t in todo:                                   # 1. decide every file's destination name up front
     wid = t['waqfeya_id']
     if wid in seen: continue
     seen.add(wid); b = books[wid]
@@ -43,15 +43,43 @@ for t in todo:
             name = f'{v[0]:02d} - {short}' + (' (الواجهة)' if v == (0, 'front') else ' (المقدمة)' if v[1] == 'front' else '') + '.pdf'
         else:
             name = f'{short} ({clean(re.sub(r"\.pdf$", "", f["name"], flags=re.I))}).pdf'
+        target = f'Books/{dest}/{name}'
+        if target in done: continue
         url = f'https://archive.org/download/{urllib.parse.quote(f["item"])}/{urllib.parse.quote(f["name"])}'
         local = J(f'downloads/{f["item"]}__{re.sub(r"[^A-Za-z0-9._-]", "_", f["name"])}')
-        if not (os.path.exists(local) and os.path.getsize(local) == f['size']):
-            subprocess.run(['curl', '-sL', '--fail', '--retry', '3', '--max-time', '1800', '-A', 'personal-library/1.0', '-o', local, url])
-        good = os.path.exists(local) and os.path.getsize(local) == f['size'] and open(local, 'rb').read(5) == b'%PDF-'
-        if not good: print('BAD download', url); bad += 1; continue
-        target = f'phone:Books/{dest}/{name}'
-        r = subprocess.run(['rclone', 'copyto', local, target, '--inplace', '--ftp-concurrency', '1', '-q'], capture_output=True, text=True)
-        if r.returncode: print('UPLOAD FAIL', target, r.stderr[-200:]); bad += 1; continue
-        log.writerow([time.strftime('%F %T'), 'add', '', f'Books/{dest}/{name}', f'replacement from Waqfeya «{b["name"]}»: {url}', '021-replacements']); ok += 1
-        print('added', dest.split('/', 1)[1][:50], '/', name[:60], flush=True)
-print('uploaded:', ok, '| failed:', bad)
+        jobs.append((url, local, f['size'], target, b['name']))
+print('files to do:', len(jobs), '| already added:', len(done), flush=True)
+
+import threading
+from concurrent.futures import ThreadPoolExecutor
+lock = threading.Lock(); stats = {'ok': 0, 'bad': 0}
+log = csv.writer(open(J('data/changes/changes.tsv'), 'a', newline=''), delimiter='\t')
+uploader = ThreadPoolExecutor(2)                   # the phone's FTP server limits simultaneous logins
+def upload(job):
+    url, local, size, target, bname = job
+    r = subprocess.run(['rclone', 'lsjson', f'phone:{target}'], capture_output=True, text=True)
+    if r.returncode == 0 and r.stdout.strip() not in ('', '[]'):
+        cur = json.loads(r.stdout)[0].get('Size')
+        if cur == size:
+            with lock: log.writerow([time.strftime('%F %T'), 'add', '', target, f'replacement from Waqfeya «{bname}»: {url}', '021-replacements']); stats['ok'] += 1
+            return
+        subprocess.run(['rclone', 'deletefile', f'phone:{target}'], capture_output=True)   # our own cut-off upload
+    r = subprocess.run(['rclone', 'copyto', local, f'phone:{target}', '--inplace', '--ftp-concurrency', '1', '-q'], capture_output=True, text=True)
+    with lock:
+        if r.returncode: print('UPLOAD FAIL', target, r.stderr[-200:], flush=True); stats['bad'] += 1; return
+        log.writerow([time.strftime('%F %T'), 'add', '', target, f'replacement from Waqfeya «{bname}»: {url}', '021-replacements']); stats['ok'] += 1
+        print('added', target.split('/', 2)[2][:90], flush=True)
+def download(job):
+    url, local, size, target, bname = job
+    if not (os.path.exists(local) and os.path.getsize(local) == size):
+        subprocess.run(['curl', '-sL', '--fail', '--retry', '3', '--max-time', '3600', '-A', 'personal-library/1.0', '-o', local, url])
+    if os.path.exists(local) and os.path.getsize(local) == size and open(local, 'rb').read(5) == b'%PDF-':
+        return uploader.submit(upload, job)
+    with lock: print('BAD download', url, flush=True); stats['bad'] += 1
+with ThreadPoolExecutor(6) as dl:                  # 2. six parallel downloads from archive.org
+    futs = [dl.submit(download, j) for j in jobs]
+    ups = [f.result() for f in futs]
+for u in ups:
+    if u: u.result()
+uploader.shutdown(wait=True)
+print('uploaded:', stats['ok'], '| failed:', stats['bad'], flush=True)
