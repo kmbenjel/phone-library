@@ -167,6 +167,7 @@ are in `فهارس الويب/md/` and the data tables in `فهارس الويب
 | `replacement_plan.py`, `fetch_replacements.py` | find Waqfeya replacements for removed files; download, verify, upload, log |
 | `fetch_gutenberg.py` | public-domain books from Project Gutenberg: EPUB → A5 PDF (calibre), checked, uploaded, logged |
 | `fetch_archive_pdfs.py` | chosen archive.org items as named PDFs (LIST file; `UPLOAD=0` downloads and prints first/last text to check content first) |
+| `fetch_selection.py` | downloads what the owner ticked on the selection page (saved `selections/current` → JSON): Hindawi, OpenStax, Hesperian, Siyavula; one uploader connection |
 | `fetch_chapter_book.py` | a book its publisher offers only as chapter PDFs (Hesperian): download in order, join with pdfunite, upload, log |
 | `fetch_new_books.py` | adds chosen archive.org items as new books (parallel, ZIPs extracted, `%PDF` check) |
 | `additions_audit.py` | audits files added from Waqfeya/archive.org: removes other books of a bundled item and copies already in the library, names the rest from Waqfeya labels |

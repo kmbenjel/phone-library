@@ -273,9 +273,9 @@
    "https://hesperian.org/wp-content/uploads/pdf/en_midw_2026/en_midw_2026_resc.pdf",
    "https://hesperian.org/wp-content/uploads/pdf/en_midw_2026/en_midw_2026_gloss.pdf",
    "https://hesperian.org/wp-content/uploads/pdf/en_midw_2026/en_midw_2026_indx.pdf",
-   "https://hesperian.org/wp-content/uploads/pdf/en_midw_2026/en_midw_2026_ddc.pdf",
-   "https://hesperian.org/wp-content/uploads/pdf/en_midw_2026/en_midw_2026_bm.pdf"
-  ]
+   "https://hesperian.org/wp-content/uploads/pdf/en_midw_2026/en_midw_2026_ddc.pdf"
+  ],
+  "note": "publisher link for _bm.pdf is 404 (2026-09-30); book assembled without it"
  },
  "en:dvc": {
   "lang": "en",
@@ -531,7 +531,7 @@
  },
  "fr:nwtnd": {
   "lang": "fr",
-  "title": "le NOUVEAU Là où il n'y a pas de docteur",
+  "title": "Le Nouveau Là où il n'y a pas de docteur",
   "parts": [
    "https://www.hesperian.org/wp-content/uploads/pdf/fr_nwtnd_2014/fr_nwtnd_2014_fm.pdf",
    "https://www.hesperian.org/wp-content/uploads/pdf/fr_nwtnd_2014/fr_nwtnd_2014_15.pdf",
@@ -654,7 +654,7 @@
  },
  "ar:wwd": {
   "lang": "ar",
-  "title": "كتيب الصحة للنساء ذوات الاعاقة",
+  "title": "كتيب الصحة للنساء ذوات الإعاقة",
   "parts": [
    "https://hesperian.org/wp-content/uploads/pdf/ar_wwd_2011/ar_wwd_2011_fm.pdf",
    "https://hesperian.org/wp-content/uploads/pdf/ar_wwd_2011/ar_wwd_2011_1.pdf",
