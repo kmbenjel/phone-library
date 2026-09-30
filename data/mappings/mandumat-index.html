@@ -1,0 +1,2641 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>فهرس خزانة المنظومات العلمية والشروح المطبوعة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1e3a8a;
+    --primary-light: #3b82f6;
+    --accent: #0d9488;
+    --bg-main: #f8fafc;
+    --bg-card: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --success-bg: #ecfdf5;
+    --success-text: #065f46;
+    --warn-bg: #fffbeb;
+    --warn-text: #92400e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Tajawal', 'Cairo', system-ui, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    line-height: 1.8;
+    padding: 1.5rem;
+  }
+  .container { max-width: 1280px; margin: 0 auto; }
+  header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #0f766e 100%);
+    color: white;
+    padding: 2.5rem 2rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+  }
+  header h1 {
+    font-family: 'Cairo', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+  header p { font-size: 1.1rem; opacity: 0.9; }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    padding: 1.25rem 1.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+  .stat-num {
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .stat-label { color: var(--text-muted); font-size: 0.95rem; }
+  .controls {
+    background: var(--bg-card);
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border);
+    margin-bottom: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
+  .search-box {
+    flex: 1;
+    min-width: 280px;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-box:focus { border-color: var(--primary-light); }
+  .cat-select {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-family: inherit;
+    background: white;
+  }
+  .table-card {
+    background: var(--bg-card);
+    border-radius: 0.75rem;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: start;
+  }
+  th {
+    background: #f1f5f9;
+    padding: 1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    border-bottom: 2px solid var(--border);
+    font-size: 0.95rem;
+  }
+  td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.95rem;
+    vertical-align: middle;
+  }
+  tr:hover { background-color: #f8fafc; }
+  .badge {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .badge-success { background: var(--success-bg); color: var(--success-text); }
+  .badge-warn { background: var(--warn-bg); color: var(--warn-text); }
+  .badge-cat { background: #eff6ff; color: #1e40af; border: 1px solid #dbeafe; }
+  .book-link { color: var(--primary); text-decoration: none; font-weight: 600; }
+  .book-link:hover { text-decoration: underline; }
+  footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding: 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>خزانة المنظومات العلمية والشروح المطبوعة</h1>
+    <p>فهرس تفاعلي شامل للمنظومات والمتون وشروحها المحققة والمطبوعة المرفوعة إلى مكتبة الهاتف في مساراتها الشاملية.</p>
+  </header>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num"><bdi dir="ltr">300</bdi></div>
+      <div class="stat-label">إجمالي الأعمال المؤهلة بالمدونة</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: #0d9488;"><bdi dir="ltr">256</bdi></div>
+      <div class="stat-label">المنظومات والشروح في الهاتف</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: #7c3aed;"><bdi dir="ltr">1.04 GB</bdi></div>
+      <div class="stat-label">الحجم الكلي المرفوع للهاتف</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num"><bdi dir="ltr">17</bdi></div>
+      <div class="stat-label">الفنون والتصنيفات العلمية</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <input type="text" id="search" class="search-box" placeholder="ابحث باسم المنظومة، الناظم، المحقق، أو دار النشر..." onkeyup="filterTable()">
+    <select id="catFilter" class="cat-select" onchange="filterTable()">
+      <option value="">جميع الفنون والتصنيفات</option>
+      <option value="أصول الفقه والقواعد الفقهية">أصول الفقه والقواعد الفقهية</option>
+      <option value="الأدب والبلاغة ونقد الشعر">الأدب والبلاغة ونقد الشعر</option>
+      <option value="التاريخ والوقائع العامة">التاريخ والوقائع العامة</option>
+      <option value="التفاسير">التفاسير</option>
+      <option value="الرقائق والآداب والأذكار">الرقائق والآداب والأذكار</option>
+      <option value="السيرة والشمائل النبوية">السيرة والشمائل النبوية</option>
+      <option value="العقيدة والتوحيد وأصول الدين">العقيدة والتوحيد وأصول الدين</option>
+      <option value="الفقه الحنبلي">الفقه الحنبلي</option>
+      <option value="الفقه الحنفي">الفقه الحنفي</option>
+      <option value="الفقه الشافعي">الفقه الشافعي</option>
+      <option value="الفقه المالكي">الفقه المالكي</option>
+      <option value="الفقه المقارن والعام">الفقه المقارن والعام</option>
+      <option value="المعاجم والقواميس اللغوية">المعاجم والقواميس اللغوية</option>
+      <option value="النحو والصرف وعلم الوضع">النحو والصرف وعلم الوضع</option>
+      <option value="شروح الحديث">شروح الحديث</option>
+      <option value="علوم الحديث ومصطلحه">علوم الحديث ومصطلحه</option>
+      <option value="علوم القرآن والقراءات">علوم القرآن والقراءات</option>
+    </select>
+  </div>
+
+  <div class="table-card">
+    <table id="booksTable">
+      <thead>
+        <tr>
+          <th style="width: 60px; text-align: center;">#</th>
+          <th>اسم المنظومة أو الشرح</th>
+          <th>الناظم أو الشارح</th>
+          <th>التصنيف الفني</th>
+          <th>دار النشر / المحقق</th>
+          <th style="text-align: center;">الحالة في الهاتف</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">1</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2015/09/blog-post_63.html" target="_blank">نظم الفوائد</a></td>
+          <td>ابن مالك</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>ت سليمان بن ابراهيم العايد</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (6.24 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">2</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2015/09/blog-post_47.html" target="_blank">مجموع الفوائد المنظومة لأحمد شملان</a></td>
+          <td>أحمد بن أحمد شملان</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (10.35 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">3</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2015/09/blog-post_11.html" target="_blank">نظم الفرائد وحصر الشوارد</a></td>
+          <td>المهلبي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>مكتبة العبيكان</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (4.02 MB)</span></td>
+        </tr>
+        <tr data-cat="الرقائق والآداب والأذكار">
+          <td style="text-align: center;"><bdi dir="ltr">4</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2015/09/blog-post.html" target="_blank">الأبيات الجامعة للمسائل النافعة</a></td>
+          <td>عبد الله الجار الله</td>
+          <td><span class="badge badge-cat">الرقائق والآداب والأذكار</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.26 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه المقارن والعام">
+          <td style="text-align: center;"><bdi dir="ltr">5</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2014/07/blog-post.html" target="_blank">منظومة معالم في أوقات الفتن والنوازل</a></td>
+          <td>عبد الله بن جبريل بن حمد عاتي</td>
+          <td><span class="badge badge-cat">الفقه المقارن والعام</span></td>
+          <td>دار الجيل</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.54 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">6</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2014/06/blog-post.html" target="_blank">الجكنية في بيان المحذوف من حروف الكلمات القرآنية</a></td>
+          <td>الجكني</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.23 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">7</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2014/05/blog-post_24.html" target="_blank">نظم من يظلهم الله بظل العرش</a></td>
+          <td>التهامي بن المدني الإدريسي</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (5.1 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">8</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2014/05/blog-post_21.html" target="_blank">الروضة الجنية في ضبط السنة الشمسية</a></td>
+          <td>ابن زاكور</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>دار الكتب العلمية</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.85 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">9</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2014/05/blog-post_8976.html" target="_blank">ناسخ القران ومنسوخه</a></td>
+          <td>الولاتي</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.5 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">10</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2014/05/blog-post_17.html" target="_blank">تحفة الأحباب فيما نسخ وخصص من السنة والكتاب</a></td>
+          <td>القلاوي</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.5 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">11</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2014/05/blog-post_9069.html" target="_blank">منظومة المفيد في التجويد</a></td>
+          <td>الطيبي</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>مكتبة التوعية الإسلامية</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.51 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه المقارن والعام">
+          <td style="text-align: center;"><bdi dir="ltr">12</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2014/05/blog-post_10.html" target="_blank">نظم الجواهر في النواهي والأوامر</a></td>
+          <td>الزبيري</td>
+          <td><span class="badge badge-cat">الفقه المقارن والعام</span></td>
+          <td>دار البشائر الإسلامية</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">13</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2014/05/blog-post_8531.html" target="_blank">مبلغ الآمال</a></td>
+          <td>طالبي التصريف في الأفعال</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (19.09 MB)</span></td>
+        </tr>
+        <tr data-cat="العقيدة والتوحيد وأصول الدين">
+          <td style="text-align: center;"><bdi dir="ltr">14</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2014/04/blog-post_3758.html" target="_blank">عقيلة أتراب في علم الإعراب ألفية في النحو</a></td>
+          <td>السنوسي</td>
+          <td><span class="badge badge-cat">العقيدة والتوحيد وأصول الدين</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.68 MB)</span></td>
+        </tr>
+        <tr data-cat="الرقائق والآداب والأذكار">
+          <td style="text-align: center;"><bdi dir="ltr">15</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2014/04/blog-post.html" target="_blank">تحفة ذوي الألباب فيمن حكم دمشق من الخلفاء والملوك والنواب</a></td>
+          <td>الصفدي</td>
+          <td><span class="badge badge-cat">الرقائق والآداب والأذكار</span></td>
+          <td>دار الكتاب الجديد</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.84 MB)</span></td>
+        </tr>
+        <tr data-cat="السيرة والشمائل النبوية">
+          <td style="text-align: center;"><bdi dir="ltr">16</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2014/02/blog-post.html" target="_blank">نظم أسماء أهل بدر</a></td>
+          <td>النهاه الشنقيطي</td>
+          <td><span class="badge badge-cat">السيرة والشمائل النبوية</span></td>
+          <td>دار يوسف بن تاشفين</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (13.05 MB)</span></td>
+        </tr>
+        <tr data-cat="السيرة والشمائل النبوية">
+          <td style="text-align: center;"><bdi dir="ltr">17</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2014/01/blog-post_17.html" target="_blank">الحلة السيرا في مدح خير الورى</a></td>
+          <td>لا بن جابر الأندلسي</td>
+          <td><span class="badge badge-cat">السيرة والشمائل النبوية</span></td>
+          <td>دار عالم الكتب</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.76 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">18</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2014/01/blog-post_6331.html" target="_blank">معيار اللآلئ في العروض و القوافي</a></td>
+          <td>حسن إسماعيل عبد الرزاق</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار الطباعة المحمدية</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.33 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">19</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2014/01/blog-post_1602.html" target="_blank">هداية المرتاب و غاية الحفاظ و الطلاب في تبيين متشابه الكتاب</a></td>
+          <td>السخاوي</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار الصحابة</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.0 MB)</span></td>
+        </tr>
+        <tr data-cat="السيرة والشمائل النبوية">
+          <td style="text-align: center;"><bdi dir="ltr">20</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_5812.html" target="_blank">منظومة: جواهر الأخبار في سيرة الأئمة الأخيار</a></td>
+          <td>صارم الدين ابن الوزير</td>
+          <td><span class="badge badge-cat">السيرة والشمائل النبوية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.55 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">21</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_3375.html" target="_blank">أرجوزة في الطب</a></td>
+          <td>ابن عبد ربه</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.62 MB)</span></td>
+        </tr>
+        <tr data-cat="المعاجم والقواميس اللغوية">
+          <td style="text-align: center;"><bdi dir="ltr">22</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_8244.html" target="_blank">إشارة الألحاظ في علم ما يرسم من الألفاظ</a></td>
+          <td>الحسني * خ</td>
+          <td><span class="badge badge-cat">المعاجم والقواميس اللغوية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.27 MB)</span></td>
+        </tr>
+        <tr data-cat="أصول الفقه والقواعد الفقهية">
+          <td style="text-align: center;"><bdi dir="ltr">23</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_26.html" target="_blank">مسائل الأصول اللامعة في</a></td>
+          <td>الشموس الطالعة لليعقوبي</td>
+          <td><span class="badge badge-cat">أصول الفقه والقواعد الفقهية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (5.58 MB)</span></td>
+        </tr>
+        <tr data-cat="شروح الحديث">
+          <td style="text-align: center;"><bdi dir="ltr">24</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_1803.html" target="_blank">نظم هدي الساري مقدمة فتح الباري</a></td>
+          <td>ابن الحاج السلمي</td>
+          <td><span class="badge badge-cat">شروح الحديث</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.62 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">25</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_9516.html" target="_blank">المنهل في</a></td>
+          <td>وشرح الجُمل لصلاح الدين فخري</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار الحديث</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.75 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">26</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_4841.html" target="_blank">منة الجليل في قراءة الإمام شعبة</a></td>
+          <td>التنزيل لصلاح الدين فخري</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار الفتوى بيروت</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (7.13 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">27</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_25.html" target="_blank">النصائح الرضية في</a></td>
+          <td>أسماء وشرح السور القرآنية لصلاح الدين فخري</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار الفتوى لبنان</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (5.11 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">28</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_1285.html" target="_blank">الإيضاح الساطع على المحتوى الجامع رسم الصحابة وضبط التابع</a></td>
+          <td>الطالب عبد الله الشنقيطي</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.99 MB)</span></td>
+        </tr>
+        <tr data-cat="أصول الفقه والقواعد الفقهية">
+          <td style="text-align: center;"><bdi dir="ltr">29</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_9654.html" target="_blank">مصباح العقول بنظم أصول ابن باديس</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">أصول الفقه والقواعد الفقهية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (5.52 MB)</span></td>
+        </tr>
+        <tr data-cat="الرقائق والآداب والأذكار">
+          <td style="text-align: center;"><bdi dir="ltr">30</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_4806.html" target="_blank">نهج اليمين في إرشاد البنين</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الرقائق والآداب والأذكار</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.11 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">31</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_5694.html" target="_blank">الشافي في علمي العروض والقوافي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">32</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_5231.html" target="_blank">نيل المنى في</a></td>
+          <td>قواعد البنا</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار غراس الكويت ـــــــــــــ</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.87 MB)</span></td>
+        </tr>
+        <tr data-cat="الرقائق والآداب والأذكار">
+          <td style="text-align: center;"><bdi dir="ltr">33</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_8637.html" target="_blank">هداية الألباب في جواهر الآداب</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الرقائق والآداب والأذكار</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.18 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">34</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_3587.html" target="_blank">ميسر التحصيل فيما</a></td>
+          <td>مالك من التأصيل</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (9.27 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">35</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_7293.html" target="_blank">ثلاثيات الفضفري في النحو</a></td>
+          <td>الشرح الثري</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>دار الصميعي</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.24 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">36</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_1460.html" target="_blank">المئوية الفضفرية في المسائل الفرضية</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار الصميعي</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.65 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه الشافعي">
+          <td style="text-align: center;"><bdi dir="ltr">37</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_6102.html" target="_blank">النظم الوفي في الفقه الشافعي</a></td>
+          <td>الفضفري</td>
+          <td><span class="badge badge-cat">الفقه الشافعي</span></td>
+          <td>دار الصميعي</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.98 MB)</span></td>
+        </tr>
+        <tr data-cat="الرقائق والآداب والأذكار">
+          <td style="text-align: center;"><bdi dir="ltr">38</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_3663.html" target="_blank">قلائد الحكمة</a></td>
+          <td>الزين</td>
+          <td><span class="badge badge-cat">الرقائق والآداب والأذكار</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.85 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">39</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_6888.html" target="_blank">أرجوزة في فن الفراسة</a></td>
+          <td>الحمزاوي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.19 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">40</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_6397.html" target="_blank">منظومة الشبراوي في قواعد فن العربية</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.28 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">41</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_1068.html" target="_blank">منظومة المكفرات</a></td>
+          <td>كل ذنب سابق وآت، والأدعية المستجابة</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار النوادر</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.59 MB)</span></td>
+        </tr>
+        <tr data-cat="أصول الفقه والقواعد الفقهية">
+          <td style="text-align: center;"><bdi dir="ltr">42</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_9996.html" target="_blank">الفوائد الجلية مختصر الفرائد البهية</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">أصول الفقه والقواعد الفقهية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.45 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">43</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_8302.html" target="_blank">التحذيرات من أخطاء القراء</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.08 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">44</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_19.html" target="_blank">كفاية المستكفي من الفن الصرفي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>مطبعة بولاق</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (13.48 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم الحديث ومصطلحه">
+          <td style="text-align: center;"><bdi dir="ltr">45</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_4176.html" target="_blank">عقد الدرر من نخبة الفكر</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">علوم الحديث ومصطلحه</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.12 MB)</span></td>
+        </tr>
+        <tr data-cat="أصول الفقه والقواعد الفقهية">
+          <td style="text-align: center;"><bdi dir="ltr">46</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_9356.html" target="_blank">الفرائد السنية في الفقه الحنفي</a></td>
+          <td>الكواكبي</td>
+          <td><span class="badge badge-cat">أصول الفقه والقواعد الفقهية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (33.19 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">47</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_1963.html" target="_blank">طالب الفضل والأجر في عيد الفطر</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">48</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_5581.html" target="_blank">الصفحات الناضرة في الأبيات الحاصرة</a></td>
+          <td>عبد السلام بن برجس آل عبد الكريم</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار الصميعي</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.47 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">49</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_614.html" target="_blank">الفوائد السمية في قواعد وضوابط علمية للإثيوبي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار ابن الجوزي</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الفقه الشافعي">
+          <td style="text-align: center;"><bdi dir="ltr">50</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_5973.html" target="_blank">توضيح الكواكب الدرية في الضوابط العلمية للأبياري</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الفقه الشافعي</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (33.37 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">51</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_3273.html" target="_blank">نظم معاني حروف الجر</a></td>
+          <td>البلقشي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (22.54 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">52</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_1317.html" target="_blank">نتائج الفطنة في</a></td>
+          <td>كليلة ودمنة لابن الهبارية</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (12.7 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">53</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_5189.html" target="_blank">المبتكر لأمين شميل</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">54</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_5672.html" target="_blank">حسن البيان في</a></td>
+          <td>مشتركات القرآن</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.2 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">55</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_1990.html" target="_blank">حوادث السنين النبوية مع الاحمرار</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.46 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">56</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_3480.html" target="_blank">نظم تنقيح فتح الكريم في تحرير أوجه القرآن العظيم</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>وزارة الأوقاف</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (9.1 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">57</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_5526.html" target="_blank">أرجوزة تاريخ أمير المؤمنين المعتضد بالله</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.15 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">58</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_4815.html" target="_blank">تحفة القاري في أسماء رجال البخاري</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.24 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">59</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_1610.html" target="_blank">المقصد الجليل في علم الخليل</a></td>
+          <td>ابن الحاجب</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار الجيل</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.51 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">60</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_4102.html" target="_blank">وقع القريض</a></td>
+          <td>الصرصري</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار اضواء السلف الرياض تحقيق</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="علوم الحديث ومصطلحه">
+          <td style="text-align: center;"><bdi dir="ltr">61</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_5950.html" target="_blank">منظومة في مصطلح الحديث للفيروزآبادي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">علوم الحديث ومصطلحه</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.09 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">62</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_4542.html" target="_blank">المنظومة السنية</a></td>
+          <td>متن الآجرومية</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.64 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">63</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_5520.html" target="_blank">المنظومة الدرية في ذكر الغزوة البدرية</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.92 MB)</span></td>
+        </tr>
+        <tr data-cat="السيرة والشمائل النبوية">
+          <td style="text-align: center;"><bdi dir="ltr">64</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_1877.html" target="_blank">المنظومة الحلبية في السيرة النبوية</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">السيرة والشمائل النبوية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.79 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">65</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_8201.html" target="_blank">الأرجوزة الجامعة في بيان دعوة الشيخ محمد بن عبد الوهاب</a></td>
+          <td>الحفظي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.6 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">66</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_8456.html" target="_blank">بديعية صفيّ الدين الحلّي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار صادر تحقيق رشيد عبد الرحم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.3 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه الحنفي">
+          <td style="text-align: center;"><bdi dir="ltr">67</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_4058.html" target="_blank">البديعية</a></td>
+          <td>ابن حجة الحموي</td>
+          <td><span class="badge badge-cat">الفقه الحنفي</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (4.2 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">68</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_3493.html" target="_blank">نظم البديع في مدح خير شفيع</a></td>
+          <td>السيوطي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار القلم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (4.2 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">69</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_4810.html" target="_blank">القصيدة المزدوجة في فن المنطق</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.63 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">70</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_2321.html" target="_blank">الكاشف للخفاء في</a></td>
+          <td>قواعد الإملاء</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.47 MB)</span></td>
+        </tr>
+        <tr data-cat="العقيدة والتوحيد وأصول الدين">
+          <td style="text-align: center;"><bdi dir="ltr">71</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_15.html" target="_blank">الكفاية في العقيدة والفرق والمذاهب</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">العقيدة والتوحيد وأصول الدين</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.29 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">72</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_8537.html" target="_blank">القصيدة الذهبية في الحجة المكية والزورة المحمدية</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار ابن الجوزي</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الفقه الشافعي">
+          <td style="text-align: center;"><bdi dir="ltr">73</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_3433.html" target="_blank">القصيدة الرائية</a></td>
+          <td>ابن البواب</td>
+          <td><span class="badge badge-cat">الفقه الشافعي</span></td>
+          <td>دار النودر</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (7.52 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه الشافعي">
+          <td style="text-align: center;"><bdi dir="ltr">74</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_6535.html" target="_blank">العناية الربانية في الطريقة الشعبانية</a></td>
+          <td>ابن شعبان</td>
+          <td><span class="badge badge-cat">الفقه الشافعي</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.28 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">75</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_990.html" target="_blank">وضاحة الأصول في الخط</a></td>
+          <td>الصيداوي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (5.14 MB)</span></td>
+        </tr>
+        <tr data-cat="أصول الفقه والقواعد الفقهية">
+          <td style="text-align: center;"><bdi dir="ltr">76</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_9366.html" target="_blank">أرجوزة في علم رسم الخط</a></td>
+          <td>الموصلي</td>
+          <td><span class="badge badge-cat">أصول الفقه والقواعد الفقهية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (12.68 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">77</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_6079.html" target="_blank">بضاعة المجوّد في الخط</a></td>
+          <td>السنجاري</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.99 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه المالكي">
+          <td style="text-align: center;"><bdi dir="ltr">78</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_1779.html" target="_blank">بغية الطالب النبيل بنظم فقه العبادات من مختصر خليل</a></td>
+          <td>العلجي</td>
+          <td><span class="badge badge-cat">الفقه المالكي</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (10.56 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">79</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_6016.html" target="_blank">الفرائد الحسان في عد آي القرآن</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.97 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">80</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_8844.html" target="_blank">أرجوزة الغزاوت النبوية</a></td>
+          <td>العدواني</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.95 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">81</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_5238.html" target="_blank">أرجوزة التجويد</a></td>
+          <td>البيضاني</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.49 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">82</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_9539.html" target="_blank">نظم الآجرومية</a></td>
+          <td>أبو يعلى الجمل</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.18 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">83</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_7105.html" target="_blank">الدر المنظوم في نصرة النبي المعصوم</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.53 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">84</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_1231.html" target="_blank">الخلاصة الشافية في العَروض والقافية</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.2 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم الحديث ومصطلحه">
+          <td style="text-align: center;"><bdi dir="ltr">85</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_2401.html" target="_blank">التحفة اللطيفة في حادثات البعثة الشريفة</a></td>
+          <td>الدبيع</td>
+          <td><span class="badge badge-cat">علوم الحديث ومصطلحه</span></td>
+          <td>دار البشائر الإسلامية</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الفقه الشافعي">
+          <td style="text-align: center;"><bdi dir="ltr">86</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_5583.html" target="_blank">الدرة الثمينة في</a></td>
+          <td>ما صح من خصائص المدينة</td>
+          <td><span class="badge badge-cat">الفقه الشافعي</span></td>
+          <td>دار المنهاج</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.34 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">87</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_9020.html" target="_blank">المنظومة الخاقانية في التجويد</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار الصحابة</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.01 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه الشافعي">
+          <td style="text-align: center;"><bdi dir="ltr">88</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_9958.html" target="_blank">قلائد الجمان في</a></td>
+          <td>عوامل عالم جرجان لابن علان</td>
+          <td><span class="badge badge-cat">الفقه الشافعي</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.26 MB)</span></td>
+        </tr>
+        <tr data-cat="الرقائق والآداب والأذكار">
+          <td style="text-align: center;"><bdi dir="ltr">89</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_5755.html" target="_blank">نظم في نصيحة أبناء الملمين</a></td>
+          <td>حماد بن ألمين</td>
+          <td><span class="badge badge-cat">الرقائق والآداب والأذكار</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (10.29 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">90</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_4309.html" target="_blank">إتحاف القاصد بنظم أحكام وقواعد المقاصد</a></td>
+          <td>اليوبي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.35 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">91</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_4992.html" target="_blank">إرشاد الحيران</a></td>
+          <td>معرفة لمعرفة آي القرآن للأنصاري</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (16.57 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه الشافعي">
+          <td style="text-align: center;"><bdi dir="ltr">92</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_4336.html" target="_blank">الوجه الجميل في علم الخليل للآثاري</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الفقه الشافعي</span></td>
+          <td>دار عالم الكتب</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (4.09 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">93</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_2786.html" target="_blank">إتحاف اهل السعادة بشرح أسباب الشهادة للإثيوبي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.56 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">94</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_9.html" target="_blank">عمدة المحتاط في معرفة من رمي من الثقات بالاختلاط للأثيوبي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.56 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">95</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_3727.html" target="_blank">المحبرةفي التاريخ</a></td>
+          <td>ابن الجهم</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="أصول الفقه والقواعد الفقهية">
+          <td style="text-align: center;"><bdi dir="ltr">96</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_3198.html" target="_blank">الوصول إلى</a></td>
+          <td>علم الأصول للمطيري</td>
+          <td><span class="badge badge-cat">أصول الفقه والقواعد الفقهية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.58 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه المقارن والعام">
+          <td style="text-align: center;"><bdi dir="ltr">97</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_6540.html" target="_blank">السعي الحثيث إلى فقه المواريث</a></td>
+          <td>المطيري</td>
+          <td><span class="badge badge-cat">الفقه المقارن والعام</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.58 MB)</span></td>
+        </tr>
+        <tr data-cat="العقيدة والتوحيد وأصول الدين">
+          <td style="text-align: center;"><bdi dir="ltr">98</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_2974.html" target="_blank">نظم نواقض الإسلام</a></td>
+          <td>ابن عتيق</td>
+          <td><span class="badge badge-cat">العقيدة والتوحيد وأصول الدين</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.11 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">99</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_2879.html" target="_blank">حميد الآثار في</a></td>
+          <td>تنوير الأبصار للجعفري</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (14.13 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">100</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_7.html" target="_blank">الموافق</a></td>
+          <td>الموافقات لماء العينين الشنقيطي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (18.0 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">101</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_1644.html" target="_blank">منهج الدراية في</a></td>
+          <td>النقاية للعياشي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.69 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">102</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_957.html" target="_blank">منثور الدرر في جمع أو ترجيح أو نسخ الخبر</a></td>
+          <td>ابن المرابط الشنقيطي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.32 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">103</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_7535.html" target="_blank">مدني الحبيب ممن يوالي مغني اللبيب</a></td>
+          <td>بورني</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">104</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_2965.html" target="_blank">جواهر الفقه</a></td>
+          <td>محمد مفتاح قريو</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (4.19 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">105</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_6.html" target="_blank">ألفية البلاغة</a></td>
+          <td>المرابط الشنقيطي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (7.12 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">106</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_7476.html" target="_blank">السبك العجيب</a></td>
+          <td>مغني اللبيب للسلطان المولى عبد الحفيظ</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>مطبعة المنار</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (5.13 MB)</span></td>
+        </tr>
+        <tr data-cat="أصول الفقه والقواعد الفقهية">
+          <td style="text-align: center;"><bdi dir="ltr">107</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_5.html" target="_blank">ألفية الوصول إلى علم الأصول</a></td>
+          <td>علي إبراهيم شقير</td>
+          <td><span class="badge badge-cat">أصول الفقه والقواعد الفقهية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.85 MB)</span></td>
+        </tr>
+        <tr data-cat="العقيدة والتوحيد وأصول الدين">
+          <td style="text-align: center;"><bdi dir="ltr">108</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_1863.html" target="_blank">أرجوزة في مسائل التوحيد لإسحاق بن عبد الرحمن آل الشيخ</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">العقيدة والتوحيد وأصول الدين</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.45 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">109</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_6881.html" target="_blank">نظم المقصور والممدود</a></td>
+          <td>ابن مالك</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>دار الكتب العلمية</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.66 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">110</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_3.html" target="_blank">طرفة الطرف في مصطلح من سلف</a></td>
+          <td>الفاسي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.31 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم الحديث ومصطلحه">
+          <td style="text-align: center;"><bdi dir="ltr">111</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_8428.html" target="_blank">طلعة الأنوار في علم آثار النبي المختار</a></td>
+          <td>العلوي الشنقيطي</td>
+          <td><span class="badge badge-cat">علوم الحديث ومصطلحه</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.79 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">112</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_3639.html" target="_blank">نظم الخصال المكفرة</a></td>
+          <td>الذنوب المتقدمة والمتأخرة للعلوي الشنقيطي</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.51 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">113</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_2285.html" target="_blank">غرة الصباح فيما يلزم</a></td>
+          <td>طالب معرفة صحيح البخاري من الاصطلاح للعلوي والشنقيطي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.31 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">114</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_6741.html" target="_blank">سراج طلاب العلوم</a></td>
+          <td>المساري</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.99 MB)</span></td>
+        </tr>
+        <tr data-cat="التفاسير">
+          <td style="text-align: center;"><bdi dir="ltr">115</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_4498.html" target="_blank">الدرة العروضية</a></td>
+          <td>النودهي</td>
+          <td><span class="badge badge-cat">التفاسير</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.14 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">116</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_2898.html" target="_blank">منظومة الألغاز النحوية</a></td>
+          <td>العصامي</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.65 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه الشافعي">
+          <td style="text-align: center;"><bdi dir="ltr">117</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post_6220.html" target="_blank">تدميث التذكير في التأنيث والتذكير</a></td>
+          <td>الجعبري</td>
+          <td><span class="badge badge-cat">الفقه الشافعي</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (5.02 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم الحديث ومصطلحه">
+          <td style="text-align: center;"><bdi dir="ltr">118</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/12/blog-post.html" target="_blank">إتحاف النبيل بمهمات علم الجرح والتعديل للإثيوبي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">علوم الحديث ومصطلحه</span></td>
+          <td>دار ابن الجوي الرياض</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.07 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">119</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_8840.html" target="_blank">ألفية الفقهاء</a></td>
+          <td>السعيدان</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.17 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">120</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_4175.html" target="_blank">حجر المخلاة في مجالس المحاجات</a></td>
+          <td>التليلي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.72 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم الحديث ومصطلحه">
+          <td style="text-align: center;"><bdi dir="ltr">121</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5004.html" target="_blank">أرجوزة في تقريظ الفضل بن الربيع وزير الرشيد والأمين</a></td>
+          <td>أبو نواس</td>
+          <td><span class="badge badge-cat">علوم الحديث ومصطلحه</span></td>
+          <td>ت محمد بهجة الأثري ـــــــــــــ</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (6.89 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">122</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7413.html" target="_blank">البراهين الموضحات في</a></td>
+          <td>كشف الشبهات للأنصاري</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.39 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">123</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5832.html" target="_blank">قصيدة الغريب عن جعفر بن بشار الأسدي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>مكتبة الثقافة الدينية</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.99 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">124</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2943.html" target="_blank">الرد الدامغ على الزاعم أن ابن تيمية زائغ</a></td>
+          <td>ابن منصور</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.72 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">125</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_27.html" target="_blank">المنظومة النونية في مآثر وآثار ورثاء مجدد علوم السنة النبوية محدث العصر العلامة الشيخ محمد ناصر الدين الألباني</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.36 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه الشافعي">
+          <td style="text-align: center;"><bdi dir="ltr">126</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2773.html" target="_blank">المنظومة الرائية</a></td>
+          <td>الزنجاني</td>
+          <td><span class="badge badge-cat">الفقه الشافعي</span></td>
+          <td>دار المنهاج</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.93 MB)</span></td>
+        </tr>
+        <tr data-cat="المعاجم والقواميس اللغوية">
+          <td style="text-align: center;"><bdi dir="ltr">127</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2490.html" target="_blank">قصيدة أبي شادوف</a></td>
+          <td>الشربيني</td>
+          <td><span class="badge badge-cat">المعاجم والقواميس اللغوية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (10.07 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه الحنبلي">
+          <td style="text-align: center;"><bdi dir="ltr">128</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_25.html" target="_blank">اللؤلؤة في علم العربية</a></td>
+          <td>السرمري</td>
+          <td><span class="badge badge-cat">الفقه الحنبلي</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.4 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه الشافعي">
+          <td style="text-align: center;"><bdi dir="ltr">129</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_4014.html" target="_blank">وسيلة الحصول إلى مهمات الأصول</a></td>
+          <td>الحكمي</td>
+          <td><span class="badge badge-cat">الفقه الشافعي</span></td>
+          <td>دار المنهاج</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">130</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_526.html" target="_blank">أدبة الأدب في مأكل ومشرب</a></td>
+          <td>اليعقوبي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>ت صاحب الفضيلة محمد عثمان بن محي</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.88 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">131</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2266.html" target="_blank">نيل المراد بنظم متن الزاد</a></td>
+          <td>ابن عتيق</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">132</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7951.html" target="_blank">القصيدة الميمية</a></td>
+          <td>ابن القيم</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">133</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2332.html" target="_blank">نظم في أحكام لا سيما</a></td>
+          <td>السجاعي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>جامعة أم القرى</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">134</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_24.html" target="_blank">مطهرة القلوب من قترة العيوب</a></td>
+          <td>الموسوي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (11.65 MB)</span></td>
+        </tr>
+        <tr data-cat="العقيدة والتوحيد وأصول الدين">
+          <td style="text-align: center;"><bdi dir="ltr">135</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2951.html" target="_blank">تتمة الفصول لسلم الوصول</a></td>
+          <td>العمري</td>
+          <td><span class="badge badge-cat">العقيدة والتوحيد وأصول الدين</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.62 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">136</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_3654.html" target="_blank">تيسير فقه العمدة في الفقه الحنبلي</a></td>
+          <td>ابن الدناه</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (15.82 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">137</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_1244.html" target="_blank">نظم القواعد الحسان</a></td>
+          <td>ابن الدناه</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.45 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">138</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7262.html" target="_blank">المعلم بتراجم القرّاء</a></td>
+          <td>ابن الدناه</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.6 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">139</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6133.html" target="_blank">نظم العقيدة الطحاوية</a></td>
+          <td>ابن الدناه</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.26 MB)</span></td>
+        </tr>
+        <tr data-cat="أصول الفقه والقواعد الفقهية">
+          <td style="text-align: center;"><bdi dir="ltr">140</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_140.html" target="_blank">المرقاة في</a></td>
+          <td>الورقات لابن الدناه</td>
+          <td><span class="badge badge-cat">أصول الفقه والقواعد الفقهية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.39 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">141</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_1485.html" target="_blank">نظم القواعد الكلية وفروعها الجلية</a></td>
+          <td>ابن الدناه</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.73 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">142</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5078.html" target="_blank">نظم نخبة الفكر</a></td>
+          <td>ابن الدناه</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.26 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">143</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7930.html" target="_blank">منظومة العشر</a></td>
+          <td>العبدلي</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (6.85 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">144</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_4273.html" target="_blank">منظومة زكاة الفطر</a></td>
+          <td>العبدلي</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (6.22 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه المقارن والعام">
+          <td style="text-align: center;"><bdi dir="ltr">145</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5016.html" target="_blank">منظومة الحجاب</a></td>
+          <td>العبدلي</td>
+          <td><span class="badge badge-cat">الفقه المقارن والعام</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (7.06 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم الحديث ومصطلحه">
+          <td style="text-align: center;"><bdi dir="ltr">146</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6257.html" target="_blank">منظومة المصطلح</a></td>
+          <td>العبدلي</td>
+          <td><span class="badge badge-cat">علوم الحديث ومصطلحه</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (6.99 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">147</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_3750.html" target="_blank">اختيارات شيخ الإسلام ابن تيمية</a></td>
+          <td>العبدلي</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>دار زدني الرياض</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (4.43 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">148</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5932.html" target="_blank">ألفية التاريخ</a></td>
+          <td>العبدلي</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>دار زدني للطباعة والنشر والتو</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (25.57 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">149</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_4646.html" target="_blank">القصيدة الغزلية فى صفات الحديث</a></td>
+          <td>ابن فرح</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.38 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">150</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7940.html" target="_blank">الداليّة الفقهيّة الغزليّة</a></td>
+          <td>العبدلي</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (7.71 MB)</span></td>
+        </tr>
+        <tr data-cat="الرقائق والآداب والأذكار">
+          <td style="text-align: center;"><bdi dir="ltr">151</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2774.html" target="_blank">القصيدة اللامية في الأخلاق والآداب والأحكام الشرعية</a></td>
+          <td>العبدلي</td>
+          <td><span class="badge badge-cat">الرقائق والآداب والأذكار</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.32 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">152</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2115.html" target="_blank">الرحلة الشوكانية</a></td>
+          <td>العبدلي</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (11.35 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه الحنبلي">
+          <td style="text-align: center;"><bdi dir="ltr">153</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7555.html" target="_blank">الألفية في الآداب الشرعية</a></td>
+          <td>المرداوي</td>
+          <td><span class="badge badge-cat">الفقه الحنبلي</span></td>
+          <td>دار الكتب العلمية</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (37.31 MB)</span></td>
+        </tr>
+        <tr data-cat="الرقائق والآداب والأذكار">
+          <td style="text-align: center;"><bdi dir="ltr">154</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_3080.html" target="_blank">المنظومة الميمية في الوصايا والآداب العلمية</a></td>
+          <td>الحكمي</td>
+          <td><span class="badge badge-cat">الرقائق والآداب والأذكار</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (9.41 MB)</span></td>
+        </tr>
+        <tr data-cat="الرقائق والآداب والأذكار">
+          <td style="text-align: center;"><bdi dir="ltr">155</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9692.html" target="_blank">همزية الإصلاح في تشجيع الإسلام وأهله</a></td>
+          <td>الحكمي</td>
+          <td><span class="badge badge-cat">الرقائق والآداب والأذكار</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">156</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_21.html" target="_blank">قصب السكر</a></td>
+          <td>نخبة الفكر للصنعاني</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (7.38 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">157</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6730.html" target="_blank">النصائح الدينية وزبدة المواعظ السنية</a></td>
+          <td>ابن مايابى الشنقيطي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.25 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">158</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_4366.html" target="_blank">هدية المغيث في أمراء المؤمنين في الحديث</a></td>
+          <td>ابن مايابى الشنقيطي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.31 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">159</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9472.html" target="_blank">كشف العمى</a></td>
+          <td>محمد العاقب الشنقيطي</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.37 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">160</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_1354.html" target="_blank">فاكهة الخوان في</a></td>
+          <td>أعلى درر علم البيان نظم ابن مايابى الشنقيطي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.94 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">161</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5898.html" target="_blank">مورد الظمآن في رسم القرآن</a></td>
+          <td>الخراز</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار الحديث</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.45 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">162</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_1191.html" target="_blank">الدرة اليتيمة</a></td>
+          <td>الحضرمي</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.74 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">163</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_20.html" target="_blank">تحفة الآثار في مصطلح حديث النبي المختار</a></td>
+          <td>القرشي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (7.67 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">164</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_1096.html" target="_blank">الكافية البديعية</a></td>
+          <td>صفي الدين الحلي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (5.65 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">165</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2911.html" target="_blank">منظومة في الكلمات التي تُنطَق بالظَّاء والضَّاد للفَرُّوخِيّ</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار الفتح بيروت</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.26 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">166</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7040.html" target="_blank">الدرة الإلغية</a></td>
+          <td>المقدمة الآجرومية للإلغي</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>مكتبة النجاح الدارالبيضاء</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.31 MB)</span></td>
+        </tr>
+        <tr data-cat="أصول الفقه والقواعد الفقهية">
+          <td style="text-align: center;"><bdi dir="ltr">167</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6973.html" target="_blank">النبذة الألفية في أصول الفقهية</a></td>
+          <td>البرماوي</td>
+          <td><span class="badge badge-cat">أصول الفقه والقواعد الفقهية</span></td>
+          <td>جامعة أم القرى</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (5.27 MB)</span></td>
+        </tr>
+        <tr data-cat="العقيدة والتوحيد وأصول الدين">
+          <td style="text-align: center;"><bdi dir="ltr">168</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_19.html" target="_blank">التحفة المرضية في</a></td>
+          <td>المسائل الأصولية على طريقة أهل السنة السنية للإثيوبي</td>
+          <td><span class="badge badge-cat">العقيدة والتوحيد وأصول الدين</span></td>
+          <td>مكتبة الرشد</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.64 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">169</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_1771.html" target="_blank">دليل السالك إلى موطا الإمام مالك</a></td>
+          <td>ابن مايابى الجكنى الشنقيطي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار الفضيلة مصر</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (4.92 MB)</span></td>
+        </tr>
+        <tr data-cat="العقيدة والتوحيد وأصول الدين">
+          <td style="text-align: center;"><bdi dir="ltr">170</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7044.html" target="_blank">سلّم الوصول إلى الضروري من الأصول</a></td>
+          <td>المسيلي</td>
+          <td><span class="badge badge-cat">العقيدة والتوحيد وأصول الدين</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.14 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">171</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_18.html" target="_blank">نظم رسالة ابن أبي زيد القيرواني</a></td>
+          <td>القلاوي الشنقيطي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (18.32 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">172</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post.html" target="_blank">المسائل التي لا يعذر بجهلها</a></td>
+          <td>بهرام</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار الغرب الإسلامي</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.52 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">173</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6183.html" target="_blank">نظم نظائر رسالة القيرواني</a></td>
+          <td>ابن غازي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (7.99 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">174</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6670.html" target="_blank">ترجيز المصباح</a></td>
+          <td>المراكشي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.28 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">175</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6081.html" target="_blank">الجوهر المكنون في صدف الثلاثة الفنون للأخضري</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (26.94 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه المالكي">
+          <td style="text-align: center;"><bdi dir="ltr">176</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_1940.html" target="_blank">نظم مختصر خليل</a></td>
+          <td>ابن بادي</td>
+          <td><span class="badge badge-cat">الفقه المالكي</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (7.46 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">177</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_4585.html" target="_blank">نظم للآجرومية عبيد ربه</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>دار الصميعي</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (4.01 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">178</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2962.html" target="_blank">ألفية الغريب</a></td>
+          <td>ابن العالم</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (5.95 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">179</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2892.html" target="_blank">البيقونية</a></td>
+          <td>البيقوني</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار النوادر</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (4.94 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">180</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7336.html" target="_blank">السلم المنورق في فن المنطق للأخضري</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>مطبعة الحلبي</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.25 MB)</span></td>
+        </tr>
+        <tr data-cat="الرقائق والآداب والأذكار">
+          <td style="text-align: center;"><bdi dir="ltr">181</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_3954.html" target="_blank">نصيحة الإخوان عن تعاظي القات والتبغ والدخان</a></td>
+          <td>الحكمي</td>
+          <td><span class="badge badge-cat">الرقائق والآداب والأذكار</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (9.41 MB)</span></td>
+        </tr>
+        <tr data-cat="الرقائق والآداب والأذكار">
+          <td style="text-align: center;"><bdi dir="ltr">182</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9814.html" target="_blank">الزيادات على المنظومة الشبراوية</a></td>
+          <td>الحكمي</td>
+          <td><span class="badge badge-cat">الرقائق والآداب والأذكار</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (9.41 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">183</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_16.html" target="_blank">اللؤلؤ المكنون في أحوال الأسانيد والمتون</a></td>
+          <td>الحكمي</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (9.41 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">184</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5185.html" target="_blank">مجدد العوافي في العروض و القوافي</a></td>
+          <td>العلوي الشنقيطي</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.05 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">185</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_1573.html" target="_blank">الوافية</a></td>
+          <td>الكافية لابن الحاجب .</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (8.01 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه الحنفي">
+          <td style="text-align: center;"><bdi dir="ltr">186</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6003.html" target="_blank">فرائد اللال</a></td>
+          <td>مجمع الأمثال للأحدب</td>
+          <td><span class="badge badge-cat">الفقه الحنفي</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (14.62 MB)</span></td>
+        </tr>
+        <tr data-cat="الرقائق والآداب والأذكار">
+          <td style="text-align: center;"><bdi dir="ltr">187</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9677.html" target="_blank">مقصورة القرطاجني</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الرقائق والآداب والأذكار</span></td>
+          <td>مطبعة السعادة</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.17 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه المقارن والعام">
+          <td style="text-align: center;"><bdi dir="ltr">188</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_8824.html" target="_blank">العذب القراح في علم الاصطلاح</a></td>
+          <td>المطيري</td>
+          <td><span class="badge badge-cat">الفقه المقارن والعام</span></td>
+          <td>دار البشائر الإسلامية</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.58 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه المقارن والعام">
+          <td style="text-align: center;"><bdi dir="ltr">189</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7116.html" target="_blank">رائعة الابتدا في</a></td>
+          <td>الآجرومية وقطر الندى للمطيري</td>
+          <td><span class="badge badge-cat">الفقه المقارن والعام</span></td>
+          <td>دار البشائر الإسلامية</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.58 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">190</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_1627.html" target="_blank">منظومة في أقسام العدة وأحكامها والحيض والرضاع</a></td>
+          <td>الهبطي</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.07 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه المالكي">
+          <td style="text-align: center;"><bdi dir="ltr">191</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_4374.html" target="_blank">العبقري في سهو الأخضري</a></td>
+          <td>التواتي</td>
+          <td><span class="badge badge-cat">الفقه المالكي</span></td>
+          <td>مكتبة المعارف</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="العقيدة والتوحيد وأصول الدين">
+          <td style="text-align: center;"><bdi dir="ltr">192</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_4965.html" target="_blank">نظم مختصر خليل</a></td>
+          <td>الداوودي</td>
+          <td><span class="badge badge-cat">العقيدة والتوحيد وأصول الدين</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (6.54 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">193</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9728.html" target="_blank">متن الدرة المتممة للقراءات العشر</a></td>
+          <td>محمد الجزري</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار الصحابة</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (5.35 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">194</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5293.html" target="_blank">شرح اليواقيت الثمينة فيما انتمى لعالم المدينة في القواعد والنظائر والفوائد الفقهية</a></td>
+          <td>السجلماني</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>مكتبة الرشد - ت عبد الباقي بدوي ــــــــــ موا</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">195</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6959.html" target="_blank">القصيدة الدالية</a></td>
+          <td>الكلوذاني</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار ابن الجوزي</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.28 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">196</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_278.html" target="_blank">نهج الدماثة في القراءات الثلاثة</a></td>
+          <td>الجعبري</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (7.46 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">197</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9352.html" target="_blank">حلية التنزيل شرح تحفة الترتيل للآلوسي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.35 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">198</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9705.html" target="_blank">أسماء المدلسين</a></td>
+          <td>الذهبي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار البشائر الإسلامية - ت محمد زياد التكلة ـــــــــــــ</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">199</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_3687.html" target="_blank">طبقات الحفاظ</a></td>
+          <td>الذهبي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار البشائر الإسلامية - ت محمد زياد التكلة ـــــــــــــ</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">200</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_4515.html" target="_blank">تحفة النساك بنظم متعلقات السواك للأهدل</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار البشائر الإسلامية</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الفقه الشافعي">
+          <td style="text-align: center;"><bdi dir="ltr">201</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9183.html" target="_blank">منظومة فيما يحل ويحرم من الحيوان للأقفهسي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الفقه الشافعي</span></td>
+          <td>دار البشائر الإسلامية</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الفقه الشافعي">
+          <td style="text-align: center;"><bdi dir="ltr">202</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_8892.html" target="_blank">القواعد المليحة في فن النحو</a></td>
+          <td>العباسي</td>
+          <td><span class="badge badge-cat">الفقه الشافعي</span></td>
+          <td>دار البشائر الإسلامية - ت محمد رفيق الحسيني ــــــــــــ</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الفقه الحنبلي">
+          <td style="text-align: center;"><bdi dir="ltr">203</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6724.html" target="_blank">ألفية الفرائض</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الفقه الحنبلي</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (6.58 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">204</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_13.html" target="_blank">المنظومة الفارضية</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.3 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه الحنبلي">
+          <td style="text-align: center;"><bdi dir="ltr">205</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5660.html" target="_blank">منظومة في شرح مثلثات قطرب</a></td>
+          <td>ابن العماد</td>
+          <td><span class="badge badge-cat">الفقه الحنبلي</span></td>
+          <td>دار البشائر الإسلامية</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">206</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_311.html" target="_blank">روضة المرتاد في</a></td>
+          <td>مهمات الزاد للمزيني</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الفقه الشافعي">
+          <td style="text-align: center;"><bdi dir="ltr">207</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_8863.html" target="_blank">الوافية</a></td>
+          <td>الشافية للنيساري</td>
+          <td><span class="badge badge-cat">الفقه الشافعي</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.97 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">208</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_611.html" target="_blank">حادية أولي الفهم في</a></td>
+          <td>حلية طالب العلم للشمري</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.34 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">209</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_3377.html" target="_blank">المنظومة الدالية</a></td>
+          <td>اليوسي</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="العقيدة والتوحيد وأصول الدين">
+          <td style="text-align: center;"><bdi dir="ltr">210</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5318.html" target="_blank">منظومة في مدح النبي صلى الله عليه وسلم وبيان عقيدة اهل السنة والجماعة</a></td>
+          <td>الصرصري</td>
+          <td><span class="badge badge-cat">العقيدة والتوحيد وأصول الدين</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.35 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">211</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_3839.html" target="_blank">منظومة فيما ورد من الافعال بالواو والياء</a></td>
+          <td>ابن مالك</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.48 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">212</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2352.html" target="_blank">نظم الاقتراح</a></td>
+          <td>العراقي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">213</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_1832.html" target="_blank">دول العرب وعظماء الإسلام لأحمد شوقي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>دار الكتاب العربي</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.16 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">214</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7120.html" target="_blank">بذل الندى في</a></td>
+          <td>قطر الندى وبل الصدى لمحمد بن بتار</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.32 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم الحديث ومصطلحه">
+          <td style="text-align: center;"><bdi dir="ltr">215</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_4841.html" target="_blank">كفاية القارئ</a></td>
+          <td>السندي</td>
+          <td><span class="badge badge-cat">علوم الحديث ومصطلحه</span></td>
+          <td>مؤسسة الريان</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.93 MB)</span></td>
+        </tr>
+        <tr data-cat="التفاسير">
+          <td style="text-align: center;"><bdi dir="ltr">216</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_3271.html" target="_blank">ألفية التفسير</a></td>
+          <td>حسين علي دحلي</td>
+          <td><span class="badge badge-cat">التفاسير</span></td>
+          <td>دار الحكمة</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.07 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">217</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7709.html" target="_blank">قصيدة أنا المقر بأني وهابي</a></td>
+          <td>الملا عمران</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار ابن خزيمة</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.03 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">218</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7231.html" target="_blank">المبنيات الجشتمية</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (4.57 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">219</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2448.html" target="_blank">وسيلة الخليل إلى بعوث صاحب الإكليل</a></td>
+          <td>البستاني</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (4.35 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">220</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_344.html" target="_blank">منظومة الانتظام في سيرة خير الأنام</a></td>
+          <td>محمد خير ضميرية</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.02 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">221</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_8648.html" target="_blank">العبر والأحكام من سيرة سيد الأنام</a></td>
+          <td>المحروق</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>دار ومكتبة الشعب ليبيا</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.9 MB)</span></td>
+        </tr>
+        <tr data-cat="السيرة والشمائل النبوية">
+          <td style="text-align: center;"><bdi dir="ltr">222</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_8201.html" target="_blank">نيل السول من تاريخ الأمم وسيرة الرسول</a></td>
+          <td>الحكمي</td>
+          <td><span class="badge badge-cat">السيرة والشمائل النبوية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.39 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">223</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_12.html" target="_blank">مرشد الأولاد والكهول على ما بني من الحروف والأسماء والفعول</a></td>
+          <td>الكدسي /*</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (4.04 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">224</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6452.html" target="_blank">نظم مثلث قطرب</a></td>
+          <td>المهلبي</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.7 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">225</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7203.html" target="_blank">لامية العرب</a></td>
+          <td>الشنفرى</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>مكتبة الآداب</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.76 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">226</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_1953.html" target="_blank">الكوكب الحثيث شرح درة الحديث</a></td>
+          <td>السفرجلاني</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.31 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">227</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7887.html" target="_blank">لامية العجم للطغرائي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>مكتبة الآداب</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.67 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">228</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2527.html" target="_blank">مورد الظمآن شرح هداية الصبيان لفهم مشكل القرآن</a></td>
+          <td>الميهي</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>مكتبة أولاد الشيخ</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.68 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه المالكي">
+          <td style="text-align: center;"><bdi dir="ltr">229</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_135.html" target="_blank">كفاف المبتدي من فني العادات والتعبد</a></td>
+          <td>اليعقوبي</td>
+          <td><span class="badge badge-cat">الفقه المالكي</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (4.38 MB)</span></td>
+        </tr>
+        <tr data-cat="الرقائق والآداب والأذكار">
+          <td style="text-align: center;"><bdi dir="ltr">230</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_4764.html" target="_blank">نظم ابن يامون في آداب النكاح</a></td>
+          <td>قرة العيون</td>
+          <td><span class="badge badge-cat">الرقائق والآداب والأذكار</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.4 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">231</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_456.html" target="_blank">المقصورة</a></td>
+          <td>ابن دريد</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>مكتبة المعارف - ت أحمد عبد الغفور عطار</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.46 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">232</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2398.html" target="_blank">نظم المقصود في الصرف</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار المنهاج</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.19 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">233</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_1551.html" target="_blank">ألفية علل الحديث للإثيوبي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار الوطن الرياض</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">234</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5094.html" target="_blank">لامية الأفعال</a></td>
+          <td>ابن مالك</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار المنهاج</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.16 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">235</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6135.html" target="_blank">البسط والتعريف في علم التصريف المكودي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.85 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">236</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9329.html" target="_blank">القصيدة الشمقمقية</a></td>
+          <td>ابن الونان</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.48 MB)</span></td>
+        </tr>
+        <tr data-cat="الرقائق والآداب والأذكار">
+          <td style="text-align: center;"><bdi dir="ltr">237</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_514.html" target="_blank">النصيحة الوفية لطلاب العلوم الشرعية</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الرقائق والآداب والأذكار</span></td>
+          <td>مكتبة الرشد</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">238</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_3344.html" target="_blank">غرة الصباح</a></td>
+          <td>العلوي الشنقيطي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الفقه الحنبلي">
+          <td style="text-align: center;"><bdi dir="ltr">239</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9098.html" target="_blank">المنظومة البرهانية في الفرائض الحنبلية</a></td>
+          <td>البرهامي</td>
+          <td><span class="badge badge-cat">الفقه الحنبلي</span></td>
+          <td>دار النوادر</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (6.01 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">240</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5978.html" target="_blank">نظم مفتاح الأصول</a></td>
+          <td>التلمساني</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.65 MB)</span></td>
+        </tr>
+        <tr data-cat="أصول الفقه والقواعد الفقهية">
+          <td style="text-align: center;"><bdi dir="ltr">241</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_8295.html" target="_blank">المحققة النونية</a></td>
+          <td>مراد شكري سويدان</td>
+          <td><span class="badge badge-cat">أصول الفقه والقواعد الفقهية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.08 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">242</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7326.html" target="_blank">تسهيل الطرقات في</a></td>
+          <td>الورقات للعمريطي</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار الكتب العلمية</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.34 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">243</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_3118.html" target="_blank">أرجوزة الزواوي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>دار الفرقان</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.85 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">244</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2867.html" target="_blank">بلوغ الأمل</a></td>
+          <td>الجمل لليوسفي</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.72 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">245</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_42.html" target="_blank">لامية المجرداي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.91 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">246</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_883.html" target="_blank">شهود الحق في إثبات ذات وصفات خالق الخلق</a></td>
+          <td>الكمالي</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>دار الكتاب العربي</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (5.96 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">247</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_1403.html" target="_blank">لامية المنسوخ</a></td>
+          <td>الحكمي</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.69 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">248</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5029.html" target="_blank">لامية شيخ الإسلام ابن تيمية</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.95 MB)</span></td>
+        </tr>
+        <tr data-cat="العقيدة والتوحيد وأصول الدين">
+          <td style="text-align: center;"><bdi dir="ltr">249</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_472.html" target="_blank">تحفة الأولاد في توحيد رب العباد</a></td>
+          <td>الشعباني</td>
+          <td><span class="badge badge-cat">العقيدة والتوحيد وأصول الدين</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.53 MB)</span></td>
+        </tr>
+        <tr data-cat="السيرة والشمائل النبوية">
+          <td style="text-align: center;"><bdi dir="ltr">250</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_4753.html" target="_blank">تائية السيرة النبوية والشمائل المحمدية</a></td>
+          <td>السبكي</td>
+          <td><span class="badge badge-cat">السيرة والشمائل النبوية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (14.59 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">251</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_8775.html" target="_blank">الألفية الوردية في تعبير الرؤيا</a></td>
+          <td>ابن الوردي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار الآثار صنعاء</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.28 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">252</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_11.html" target="_blank">الدرة الألفية</a></td>
+          <td>ابن معط</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>دار الفضيلة مصر</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (6.64 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">253</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_587.html" target="_blank">ألفية الحديث</a></td>
+          <td>العراقي</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار المنهاج</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">254</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_3190.html" target="_blank">ألفية الحديث</a></td>
+          <td>السيوطي</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">255</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_4470.html" target="_blank">الألفية النحوية</a></td>
+          <td>لا بن مالك</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.53 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">256</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_8701.html" target="_blank">الكوكب الساطع</a></td>
+          <td>جمع الجوامع للسيوطي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.53 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">257</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9803.html" target="_blank">نظم عقيدة الإمام ابن أبي زيد القيرواني</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">258</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2392.html" target="_blank">العقيدة السفارينية</a></td>
+          <td>السفاريني</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>مكتبة أضواء السلف الرياض</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.03 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">259</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_1388.html" target="_blank">نظم نوازل العلوي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>مكتبة النجاح طرابلس ليبيا ـــــ</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.48 MB)</span></td>
+        </tr>
+        <tr data-cat="أصول الفقه والقواعد الفقهية">
+          <td style="text-align: center;"><bdi dir="ltr">260</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9982.html" target="_blank">منظومة أحمد بن أبي كف في أصول الفقه المالكي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">أصول الفقه والقواعد الفقهية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.1 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">261</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6430.html" target="_blank">نظم مكفرات الذنوب</a></td>
+          <td>الولاتي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.66 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">262</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_840.html" target="_blank">رقم الحلل في</a></td>
+          <td>الدول لسان الدين ابن الخطيب</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.6 MB)</span></td>
+        </tr>
+        <tr data-cat="العقيدة والتوحيد وأصول الدين">
+          <td style="text-align: center;"><bdi dir="ltr">263</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_1828.html" target="_blank">درر الأصول في أصول فقه المالكية</a></td>
+          <td>ابن بونة الجكني</td>
+          <td><span class="badge badge-cat">العقيدة والتوحيد وأصول الدين</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">264</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5060.html" target="_blank">لامية الزقاق المالكي في القضاء</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.85 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">265</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2626.html" target="_blank">التحفة المرضية</a></td>
+          <td>القوانين الفقهية للأنصاري</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>دار الزمان المدينة المنورة ال</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (6.53 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">266</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5899.html" target="_blank">جواهر الدر في</a></td>
+          <td>اصول ابن باديس الابر لابن محفوظ الشنقيطي</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الفقه المالكي">
+          <td style="text-align: center;"><bdi dir="ltr">267</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7547.html" target="_blank">نظم متن الأخضري</a></td>
+          <td>القلاوي</td>
+          <td><span class="badge badge-cat">الفقه المالكي</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الفقه المالكي">
+          <td style="text-align: center;"><bdi dir="ltr">268</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7729.html" target="_blank">الإحمرار على ألفية ابن مالك</a></td>
+          <td>ابن بونا الجنكي</td>
+          <td><span class="badge badge-cat">الفقه المالكي</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (7.22 MB)</span></td>
+        </tr>
+        <tr data-cat="الرقائق والآداب والأذكار">
+          <td style="text-align: center;"><bdi dir="ltr">269</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_3672.html" target="_blank">قصيدة في الآداب والسنة</a></td>
+          <td>الجزيري</td>
+          <td><span class="badge badge-cat">الرقائق والآداب والأذكار</span></td>
+          <td>دار الغرب الإسلامي</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">270</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9439.html" target="_blank">تحفة الفتيان في رسم القرآن اليعقوبي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.95 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه المالكي">
+          <td style="text-align: center;"><bdi dir="ltr">271</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_8362.html" target="_blank">الألفية الفقهية على مذهب السادة المالكية</a></td>
+          <td>المبروك زيد الخير</td>
+          <td><span class="badge badge-cat">الفقه المالكي</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الفقه المالكي">
+          <td style="text-align: center;"><bdi dir="ltr">272</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6366.html" target="_blank">الكوكب الزهري</a></td>
+          <td>مختصر الأخضري</td>
+          <td><span class="badge badge-cat">الفقه المالكي</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.2 MB)</span></td>
+        </tr>
+        <tr data-cat="التفاسير">
+          <td style="text-align: center;"><bdi dir="ltr">273</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_2236.html" target="_blank">جهد المقل</a></td>
+          <td>زايد الأذان بن الطالب أحمد الشنقيطي</td>
+          <td><span class="badge badge-cat">التفاسير</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.47 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">274</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_4590.html" target="_blank">القصيدة الوضاحية في مدح السيدة عائشة أم المؤمنين</a></td>
+          <td>ابن بهيج</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار البشائر الإسلامية</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.11 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">275</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9653.html" target="_blank">حلية الفصيح في</a></td>
+          <td>الفصيح لا بن جابر الأندلسي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="العقيدة والتوحيد وأصول الدين">
+          <td style="text-align: center;"><bdi dir="ltr">276</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_4486.html" target="_blank">منظومة في مدح النبي</a></td>
+          <td>الصرصري</td>
+          <td><span class="badge badge-cat">العقيدة والتوحيد وأصول الدين</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.75 MB)</span></td>
+        </tr>
+        <tr data-cat="أصول الفقه والقواعد الفقهية">
+          <td style="text-align: center;"><bdi dir="ltr">277</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_8543.html" target="_blank">منظومة الكواكبي</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">أصول الفقه والقواعد الفقهية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (7.83 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">278</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7291.html" target="_blank">منظومة في السير الي الله و الدار الاخرة</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.76 MB)</span></td>
+        </tr>
+        <tr data-cat="أصول الفقه والقواعد الفقهية">
+          <td style="text-align: center;"><bdi dir="ltr">279</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9761.html" target="_blank">منظومة في أحكام الفقه</a></td>
+          <td>السعدي</td>
+          <td><span class="badge badge-cat">أصول الفقه والقواعد الفقهية</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.76 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه الحنبلي">
+          <td style="text-align: center;"><bdi dir="ltr">280</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_802.html" target="_blank">منظومة الذهب المنجلي في الفقه الحنبلي</a></td>
+          <td>موسى محمد شحادة</td>
+          <td><span class="badge badge-cat">الفقه الحنبلي</span></td>
+          <td>دار الفكر</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (5.13 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه الحنبلي">
+          <td style="text-align: center;"><bdi dir="ltr">281</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_652.html" target="_blank">الدرة اليتيمة والمحجة المستقيمة</a></td>
+          <td>الصرصري</td>
+          <td><span class="badge badge-cat">الفقه الحنبلي</span></td>
+          <td>دار ابن حزم - ت جاسم الفهيد الدوسري ــــــــــ</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (4.96 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">282</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_3474.html" target="_blank">مورد الصفا في محاذاة الشفا</a></td>
+          <td>العياشي</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>ت محمد الراضي كنون الإدريسي الحس</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">283</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_912.html" target="_blank">سعادة الدارين في أخلاق سيد الكونين أو المنظومة الفاضلية</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>مكتبة روائع الكلمة جدة</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (4.16 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">284</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7992.html" target="_blank">تبديد الغين عن مخبآت النظمين</a></td>
+          <td>الشنقيطي</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (3.39 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">285</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6863.html" target="_blank">نور الصباح نفحات شذية من سيرة خير البرية</a></td>
+          <td>الدعاس</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار النوادر</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.1 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">286</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9089.html" target="_blank">الفرائد البهية في</a></td>
+          <td>القواعد الفقهية للأهدل</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>مؤسسة الرسالة</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.0 MB)</span></td>
+        </tr>
+        <tr data-cat="شروح الحديث">
+          <td style="text-align: center;"><bdi dir="ltr">287</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_8655.html" target="_blank">فتح السلام</a></td>
+          <td>عمدة الأحكام للصنعاني</td>
+          <td><span class="badge badge-cat">شروح الحديث</span></td>
+          <td>دار ابن حزم</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (4.25 MB)</span></td>
+        </tr>
+        <tr data-cat="علوم القرآن والقراءات">
+          <td style="text-align: center;"><bdi dir="ltr">288</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_775.html" target="_blank">متن الزبد</a></td>
+          <td>ابن رسلان</td>
+          <td><span class="badge badge-cat">علوم القرآن والقراءات</span></td>
+          <td>دار الكتب العلمية</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الفقه الشافعي">
+          <td style="text-align: center;"><bdi dir="ltr">289</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9099.html" target="_blank">الجواب الواضح الشهير عن السؤال عن غزوات البشير النذير</a></td>
+          <td>اليمني</td>
+          <td><span class="badge badge-cat">الفقه الشافعي</span></td>
+          <td>مطبعة المدني</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.54 MB)</span></td>
+        </tr>
+        <tr data-cat="الفقه الشافعي">
+          <td style="text-align: center;"><bdi dir="ltr">290</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6523.html" target="_blank">كفاية المُعاني في حروف المعاني</a></td>
+          <td>البيتوشي</td>
+          <td><span class="badge badge-cat">الفقه الشافعي</span></td>
+          <td>دار اقرأ</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (5.04 MB)</span></td>
+        </tr>
+        <tr data-cat="التفاسير">
+          <td style="text-align: center;"><bdi dir="ltr">291</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_7343.html" target="_blank">التيسير في علوم التفسير</a></td>
+          <td>الديريني</td>
+          <td><span class="badge badge-cat">التفاسير</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (6.11 MB)</span></td>
+        </tr>
+        <tr data-cat="الأدب والبلاغة ونقد الشعر">
+          <td style="text-align: center;"><bdi dir="ltr">292</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5096.html" target="_blank"></a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">الأدب والبلاغة ونقد الشعر</span></td>
+          <td>دار البشائر الإسلامية</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="الرقائق والآداب والأذكار">
+          <td style="text-align: center;"><bdi dir="ltr">293</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_4735.html" target="_blank">لآليء النظم الحاوي لمسائل عظيمة و تحفة الطحاوي المسمى الفيفية في اعتقاد الفرقة الرافضة</a></td>
+          <td>الفيفي</td>
+          <td><span class="badge badge-cat">الرقائق والآداب والأذكار</span></td>
+          <td>مكتبة دار الحميضي</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">294</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_166.html" target="_blank">المنظومة الالفية في مسائل الاعتقاد السلفية</a></td>
+          <td>النفيعي</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>دار بلنسية الرياض</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (6.17 MB)</span></td>
+        </tr>
+        <tr data-cat="العقيدة والتوحيد وأصول الدين">
+          <td style="text-align: center;"><bdi dir="ltr">295</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_9776.html" target="_blank">ست منظومات في الرد على الصوفي يوسف النبهاني</a></td>
+          <td>-</td>
+          <td><span class="badge badge-cat">العقيدة والتوحيد وأصول الدين</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">296</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_8637.html" target="_blank">عقود السنة</a></td>
+          <td>الداني</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>-</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (2.06 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">297</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_1376.html" target="_blank">مجمل اعتقاد السلف</a></td>
+          <td>ابن عبد الودود الهاشمي الشنقيطي</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>دار الاندلس الخضراء</td>
+          <td style="text-align: center;"><span class="badge badge-warn">رابط المصدر معطل بالمدونة</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">298</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6299.html" target="_blank">إسراج الخيول بنظم القواعد وثلاثة الأصول</a></td>
+          <td>الشريم</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>دار الوطن الرياض</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (0.95 MB)</span></td>
+        </tr>
+        <tr data-cat="التاريخ والوقائع العامة">
+          <td style="text-align: center;"><bdi dir="ltr">299</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_5443.html" target="_blank">المنتقى من الكافية الشافية في الانتصار</a></td>
+          <td>الفرقة الناجية</td>
+          <td><span class="badge badge-cat">التاريخ والوقائع العامة</span></td>
+          <td>مكتبة الفلاح اليمن</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.17 MB)</span></td>
+        </tr>
+        <tr data-cat="النحو والصرف وعلم الوضع">
+          <td style="text-align: center;"><bdi dir="ltr">300</bdi></td>
+          <td><a class="book-link" href="https://mandumat.blogspot.com/2013/11/blog-post_6728.html" target="_blank">الروضة الأنيقة في نصرة العفيفة الصديقة رضي الله عنها</a></td>
+          <td>الصامولي</td>
+          <td><span class="badge badge-cat">النحو والصرف وعلم الوضع</span></td>
+          <td>دار التقوي مصر</td>
+          <td style="text-align: center;"><span class="badge badge-success">محفوظ بالهاتف (1.89 MB)</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    خزانة المنظومات العلمية والشروح المطبوعة — مفهرسة ومصنفة ومرفوعة لمكتبة الهاتف
+  </footer>
+</div>
+
+<script>
+function filterTable() {
+  const search = document.getElementById('search').value.toLowerCase();
+  const cat = document.getElementById('catFilter').value;
+  const rows = document.querySelectorAll('#booksTable tbody tr');
+
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    const rowCat = row.getAttribute('data-cat');
+    const matchesSearch = text.includes(search);
+    const matchesCat = !cat || rowCat === cat;
+
+    if (matchesSearch && matchesCat) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+</script>
+</body>
+</html>

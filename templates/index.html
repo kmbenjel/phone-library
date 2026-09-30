@@ -8,12 +8,16 @@
 :root{--bg:#f7f4ee;--card:#fffdf8;--ink:#1f1b16;--muted:#6b6358;--line:#e4ddd0;--accent:#7a4b1e;--chip:#efe7d8;--hl:#fff1c2}
 @media (prefers-color-scheme:dark){:root{--bg:#16140f;--card:#1f1c16;--ink:#ece6da;--muted:#a59c8d;--line:#332e25;--accent:#e0a86a;--chip:#2a261e;--hl:#4a3d1a}}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 "Noto Naskh Arabic","Amiri","Scheherazade New","Traditional Arabic",serif}
 header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 14px 8px}
 h1{font-size:1.25rem;margin:0 0 2px}
 .stats{color:var(--muted);font-size:.85rem}
-nav.rep{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0}
-nav.rep a{font-size:.8rem;color:var(--accent);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:1px 10px}
+nav.tabs{display:flex;gap:6px;overflow-x:auto;margin:6px 0 0;scrollbar-width:none}
+nav.tabs button{flex:0 0 auto;font:inherit;font-size:.82rem;color:var(--accent);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:2px 11px;white-space:nowrap}
+nav.tabs button[aria-current=true]{background:var(--accent);color:var(--bg)}
+#viewer{display:block;width:100%;border:0;background:var(--bg)}
+.path{font-size:.72rem;color:var(--muted);direction:rtl;word-break:break-all;margin:2px 0 4px;user-select:all}
 input[type=search]{width:100%;margin:8px 0 6px;padding:10px 12px;font:inherit;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
 .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
 .chip{flex:0 0 auto;border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:999px;padding:3px 11px;font:inherit;font-size:.85rem;cursor:pointer;white-space:nowrap}
@@ -41,13 +45,15 @@ mark{background:var(--hl);color:inherit}
 <header>
   <h1>فهرس المكتبة</h1>
   <div class="stats" id="stats"></div>
-  <nav class="rep" id="reports"></nav>
+  <nav class="tabs" id="tabs"></nav>
   <input type="search" id="q" placeholder="ابحث بالعنوان أو المؤلف أو المحقق أو الناشر…" autocomplete="off">
   <div class="chips" id="cats"></div>
 </header>
-<main><div id="list"></div><button id="more" hidden>عرض المزيد</button></main>
+<main id="home"><div id="list"></div><button id="more" hidden>عرض المزيد</button></main>
+<iframe id="viewer" hidden title="تقرير"></iframe>
 <script id="data" type="application/json">__CATALOG__</script>
 <script id="reports-data" type="application/json">__REPORTS__</script>
+__REPORT_SOURCES__
 <script>
 const D=JSON.parse(document.getElementById('data').textContent);
 const R=JSON.parse(document.getElementById('reports-data').textContent);
@@ -58,7 +64,15 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 const href=(b,f)=>'../'+[b.cat,...b.folder.split('/'),f].map(encodeURIComponent).join('/');
 D.books.forEach(b=>b._k=norm([b.title,b.author,b.edition,b.folder,b.researcher,b.publisher,b.cat].join(' ')));
 $('stats').textContent=`نحو ${(D.stats.titles||D.stats.books).toLocaleString('ar')} عنوانًا${D.stats.issues?` و${D.stats.issues.toLocaleString('ar')} عددًا من الدوريات`:''} · ${D.stats.files.toLocaleString('ar')} ملف PDF · ${gb(D.stats.bytes)} · ${D.stats.categories.toLocaleString('ar')} قسمًا · حُدِّث ${D.generated}`;
-$('reports').innerHTML=R.map(r=>`<a href="${encodeURI(r.href)}">${esc(r.title)}</a>`).join('');
+const TABS=[{id:'home',title:'الفهرس'}].concat(R.map((r,i)=>({id:'r'+i,title:r.title})));
+function tabs(cur){$('tabs').innerHTML=TABS.map(t=>`<button data-t="${t.id}" aria-current="${t.id===cur}">${esc(t.title)}</button>`).join('');}
+function show(id){tabs(id);const home=id==='home';$('home').hidden=!home;$('q').hidden=!home;$('cats').hidden=!home;
+ const v=$('viewer');v.hidden=home;
+ if(!home){const src=document.getElementById('src-'+id);if(v.dataset.cur!==id){v.srcdoc=src.textContent;v.dataset.cur=id;}
+  v.style.height=(innerHeight-document.querySelector('header').offsetHeight)+'px';}
+ try{history.replaceState(null,'','#'+id)}catch(_){} scrollTo(0,0);}
+$('tabs').onclick=e=>{const b=e.target.closest('button');if(b)show(b.dataset.t);};
+addEventListener('resize',()=>{const v=$('viewer');if(!v.hidden)v.style.height=(innerHeight-document.querySelector('header').offsetHeight)+'px';});
 let cat='',shown=0,res=[];const PAGE=60;
 function chips(){const all=[{name:'',books:D.stats.books}].concat(D.categories);
  $('cats').innerHTML=all.map(c=>`<button class="chip" data-c="${esc(c.name)}" aria-pressed="${c.name===cat}">${esc(c.name||'الكل')} <small>${c.books.toLocaleString('ar')}</small></button>`).join('');}
@@ -66,7 +80,7 @@ $('cats').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;cat=b.datas
 function hl(s,terms){s=esc(s);return s}
 function card(b){
  const meta=[b.author,b.edition||[b.researcher&&('ت '+b.researcher),b.publisher].filter(Boolean).join(' - ')].filter(Boolean).join(' · ');
- const files=b.files.map(([f,s])=>`<li><a href="${href(b,f)}">${esc(f.replace(/\.pdf$/i,''))}</a><span class="sz">${gb(s)}</span></li>`).join('');
+ const files=b.files.map(([f,s])=>`<li><a href="${href(b,f)}">${esc(f.replace(/\.pdf$/i,''))}</a><span class="sz">${gb(s)}</span></li>`).join('')+`<li class="path">المسار في الهاتف: Books/${esc(b.cat)}/${esc(b.folder)}/</li>`;
  const src=(b.waqfeya||[]).map(w=>`<a href="${esc(w.url)}">الوقفية</a>`).concat((b.archive||[]).slice(0,3).map(a=>`<a href="https://archive.org/details/${encodeURIComponent(a)}">archive.org</a>`)).join(' · ');
  return `<details class="book"><summary><div class="t">${esc(b.title)}</div><div class="m">${meta?esc(meta)+' · ':''}${cat?'':'<b>'+esc(b.cat)+'</b> · '}${b.files.length>1?b.files.length.toLocaleString('ar')+' مجلدات · ':''}${gb(b.bytes)}${b.century?' · '+esc(b.century):''}</div></summary><ul class="files">${files}</ul>${src?`<div class="src">المصدر: ${src}</div>`:''}</details>`;}
 function run(){const t=norm($('q').value).split(/\s+/).filter(Boolean);
@@ -76,6 +90,7 @@ function more(){const chunk=res.slice(shown,shown+PAGE);shown+=chunk.length;
 $('more').onclick=more;let tm;$('q').oninput=()=>{clearTimeout(tm);tm=setTimeout(run,150)};
 try{cat=localStorage.getItem('cat')||''}catch(_){}
 if(!D.categories.some(c=>c.name===cat))cat='';chips();run();
+show((location.hash||'#home').slice(1).split('&')[0] in {home:1} || !document.getElementById('src-'+(location.hash||'').slice(1)) ? 'home' : location.hash.slice(1));
 </script>
 </body>
 </html>

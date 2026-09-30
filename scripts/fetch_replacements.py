@@ -18,7 +18,14 @@ for b in books.values():
         if m: link[(m.group(1), urllib.parse.unquote(m.group(2)))] = x['title']
 todo = json.load(open(J('data/phone/downloads.json')))
 os.makedirs(J('downloads'), exist_ok=True)
-done = {r[3] for r in csv.reader(open(J('data/changes/changes.tsv')), delimiter='\t') if r and r[1] == 'add' and r[5] == '021-replacements'}
+PLAN = os.environ.get('PLAN', '021-replacements')
+done = {r[3] for r in csv.reader(open(J('data/changes/changes.tsv')), delimiter='\t') if r and r[1] == 'add' and r[5] == PLAN}
+EXIST = {'Books/' + p for p, sz in csv.reader(open(J('data/phone/index-now.tsv')), delimiter='\t')}
+from collections import Counter as _C
+def folder_short(folder):
+    stems = [re.sub(r'\s*\(.*$', '', re.sub(r'^\d+ - ', '', p.rsplit('/', 1)[1][:-4])) for p in EXIST if p.startswith(f'Books/{folder}/') and re.match(r'^\d+ - ', p.rsplit('/', 1)[1])]
+    return _C(stems).most_common(1)[0][0] if stems else None
+clashes = []
 jobs = []; seen = set()
 for t in todo:                                   # 1. decide every file's destination name up front
     wid = t['waqfeya_id']
@@ -28,6 +35,7 @@ for t in todo:                                   # 1. decide every file's destin
     canon, title, a = canonical_folder(b)
     dest = t['folder'] if t['mode'] == 'missing volumes' else f'{sec}/{canon}'
     short = clean(short_title(title, a))
+    if t['mode'] == 'missing volumes': short = folder_short(t['folder']) or short
     files = sorted(t['download'], key=lambda f: f['name'])
     main_count = sum(1 for f in files if (vol_from_orig(f['name']) or (1, 'vol'))[1] == 'vol')
     for f in files:
@@ -45,10 +53,13 @@ for t in todo:                                   # 1. decide every file's destin
             name = f'{short} ({clean(re.sub(r"\.pdf$", "", f["name"], flags=re.I))}).pdf'
         target = f'Books/{dest}/{name}'
         if target in done: continue
+        if target in EXIST:                                   # never touch an existing file: give the new one its own name
+            target = target[:-4] + ' (من الوقفية).pdf'
+            if target in EXIST: clashes.append(target); continue
         url = f'https://archive.org/download/{urllib.parse.quote(f["item"])}/{urllib.parse.quote(f["name"])}'
         local = J(f'downloads/{f["item"]}__{re.sub(r"[^A-Za-z0-9._-]", "_", f["name"])}')
         jobs.append((url, local, f['size'], target, b['name']))
-print('files to do:', len(jobs), '| already added:', len(done), flush=True)
+print('files to do:', len(jobs), '| already added:', len(done), '| name clashes skipped:', len(clashes), flush=True)
 
 import threading
 from concurrent.futures import ThreadPoolExecutor
@@ -58,16 +69,19 @@ uploader = ThreadPoolExecutor(2)                   # the phone's FTP server limi
 def upload(job):
     url, local, size, target, bname = job
     r = subprocess.run(['rclone', 'lsjson', f'phone:{target}'], capture_output=True, text=True)
+    if target in EXIST:
+        with lock: print('SKIP existing', target, flush=True); stats['bad'] += 1
+        return
     if r.returncode == 0 and r.stdout.strip() not in ('', '[]'):
         cur = json.loads(r.stdout)[0].get('Size')
         if cur == size:
-            with lock: log.writerow([time.strftime('%F %T'), 'add', '', target, f'replacement from Waqfeya «{bname}»: {url}', '021-replacements']); stats['ok'] += 1
+            with lock: log.writerow([time.strftime('%F %T'), 'add', '', target, f'replacement from Waqfeya «{bname}»: {url}', PLAN]); stats['ok'] += 1
             return
         subprocess.run(['rclone', 'deletefile', f'phone:{target}'], capture_output=True)   # our own cut-off upload
     r = subprocess.run(['rclone', 'copyto', local, f'phone:{target}', '--inplace', '--ftp-concurrency', '1', '-q'], capture_output=True, text=True)
     with lock:
         if r.returncode: print('UPLOAD FAIL', target, r.stderr[-200:], flush=True); stats['bad'] += 1; return
-        log.writerow([time.strftime('%F %T'), 'add', '', target, f'replacement from Waqfeya «{bname}»: {url}', '021-replacements']); stats['ok'] += 1
+        log.writerow([time.strftime('%F %T'), 'add', '', target, f'replacement from Waqfeya «{bname}»: {url}', PLAN]); stats['ok'] += 1
         print('added', target.split('/', 2)[2][:90], flush=True)
 def download(job):
     url, local, size, target, bname = job

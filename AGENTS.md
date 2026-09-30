@@ -84,6 +84,9 @@ Categories follow Shamela's classification loosely; the mappings in `data/mappin
 - Waqfeya's archive.org files follow `00_<id>.pdf` (front), `NN_<id>.pdf` (volume NN), `NN_<id>p.pdf`
   (preface pages of volume NN); the labels come from the Waqfeya book page links (`data/waqfeya/details*.jsonl`).
 - Single file: `<title>.pdf` (front matter beside it: `<title> (الواجهة).pdf`).
+- Periodicals are named by what the file really contains, read from the source or the cover:
+  `الأعداد 0026-0051 (السنة 2، 1934 - النصف الأول).pdf` (مجلة الرسالة), `المجلد 42 - الجزء الثاني (1998).pdf`
+  (مجلة معهد المخطوطات), `فهارس المجلة - الجزء 6 (المجلدات 51-60).pdf` (مجلة مجمع اللغة العربية بدمشق).
 - Items inside a collection/series folder: `<title> - <author>.pdf` or `NNN - <title>.pdf` for numbered issues.
 
 **Characters** (the files are also copied to FAT/Windows sometimes):
@@ -131,7 +134,10 @@ are in `فهارس الويب/md/` and the data tables in `فهارس الويب
 | `dedup_plan.py` | picks the copy to keep, writes a quarantine plan |
 | `apply_plan.py` | applies/undoes a plan over FTP, logs every change |
 | `build_catalog.py` | `data/catalog.json` + `.tsv` |
-| `build_site.py` | the main index page `site/00 - الفهرس العام.html` (offline search/browse, data embedded) |
+| `periodical_plan.py` | periodicals: issue range per file + what the source item still has |
+| `anthologies_check.py` | a canon of poetry anthologies checked against the library and Waqfeya |
+| `build_site.py` | ONE self-contained file (index + every report as tabs, reports shown in a frame) — Android browsers do not follow links between local files |
+| `build_site.py (old)` | the main index page `site/00 - الفهرس العام.html` (offline search/browse, data embedded) |
 | `compare_shamela.py`, `compare_waqfeya.py` | status of every Shamela / Waqfeya book vs the phone → `data/compare/*.tsv` |
 | `report_shamela.py`, `report_waqfeya.py`, `report_recommend.py`, `report_changes.py` | reports 01–04 (HTML + MD) |
 | `check_magic.py`, `check_pdf_tail.py` | is every ".pdf" a real, complete PDF? |

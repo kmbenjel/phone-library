@@ -1,2242 +1,4229 @@
 [
  {
-  "folder": "الأدب والبلاغة ونقد الشعر/الجليس الصالح الكافي والأنيس الناصح الشافي",
-  "deleted": 5,
-  "remaining": 0,
-  "how": "archive id",
-  "waqfeya_id": "68948feac965f31ec1aeff0a",
-  "waqfeya_name": "الجليس الصالح الكافي والأنيس الناصح الشافي ",
-  "url": "https://waqfeya.net/books/الجليس-الصالح-الكافي-والأنيس-الناصح-الشافي--f287cd2394874eff8c068d76f18cad51",
-  "files": [
-   {
-    "item": "FP32417",
-    "name": "00_32417.pdf",
-    "size": 251241
-   },
-   {
-    "item": "FP32417",
-    "name": "01_32417.pdf",
-    "size": 10392077
-   },
-   {
-    "item": "FP32417",
-    "name": "02_32418.pdf",
-    "size": 7541253
-   },
-   {
-    "item": "FP32417",
-    "name": "03_32419.pdf",
-    "size": 6992735
-   },
-   {
-    "item": "FP32417",
-    "name": "04_32420.pdf",
-    "size": 3849841
-   }
-  ],
-  "mb": 27.7,
+  "folder": "كتب العلل والزوائد والرجال/كتاب الطبقات - خليفة",
+  "waqfeya_id": "69f0630dc71e518055201f1c",
+  "waqfeya_name": "كتاب الطبقات - خليفة",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "FP32417",
-    "name": "00_32417.pdf",
-    "size": 251241
-   },
-   {
-    "item": "FP32417",
-    "name": "01_32417.pdf",
-    "size": 10392077
-   },
-   {
-    "item": "FP32417",
-    "name": "02_32418.pdf",
-    "size": 7541253
-   },
-   {
-    "item": "FP32417",
-    "name": "03_32419.pdf",
-    "size": 6992735
-   },
-   {
-    "item": "FP32417",
-    "name": "04_32420.pdf",
-    "size": 3849841
+    "item": "FP25928",
+    "name": "25928p.pdf",
+    "size": 2432315
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "FP25928",
+    "name": "25928p.pdf",
+    "size": 2432315
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "التاريخ والوقائع العامة/المغرب في حلى المغرب - قسم الأندلس - ت_ ضيف",
-  "deleted": 5,
-  "remaining": 0,
-  "how": "archive id",
-  "waqfeya_id": "6998d89c3a18c2dfd7a483f9",
-  "waqfeya_name": "المغرب في حلى المغرب - قسم الأندلس - ت: ضيف",
-  "url": "https://waqfeya.net/books/المغرب-في-حلى-المغرب--قسم-الأندلس--ت-ضيف-e7c31f479563411b861e3308d8946f1c",
-  "files": [
-   {
-    "item": "FP103330",
-    "name": "00_103330.pdf",
-    "size": 3132929
-   },
-   {
-    "item": "FP103330",
-    "name": "01_103330.pdf",
-    "size": 7741967
-   },
-   {
-    "item": "FP103330",
-    "name": "02_103330.pdf",
-    "size": 15750625
-   },
-   {
-    "item": "FP103330",
-    "name": "02_103330p.pdf",
-    "size": 356259
-   }
-  ],
-  "mb": 25.7,
+  "folder": "علوم القرآن والقراءات/القرطين أو كتابي مشكل القرآن وغريبه لابن قتيبة - ابن مطرف (ت عبد الحفيظ سعيد عطية - مكتبة الخانجي)",
+  "waqfeya_id": "69dd59274772042aa2a23286",
+  "waqfeya_name": "القرطين أو كتابي مشكل القرآن وغريبه لابن قتيبة",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "FP103330",
-    "name": "00_103330.pdf",
-    "size": 3132929
-   },
-   {
-    "item": "FP103330",
-    "name": "01_103330.pdf",
-    "size": 7741967
-   },
-   {
-    "item": "FP103330",
-    "name": "02_103330.pdf",
-    "size": 15750625
-   },
-   {
-    "item": "FP103330",
-    "name": "02_103330p.pdf",
-    "size": 356259
+    "item": "FP5493",
+    "name": "5493.pdf",
+    "size": 317186
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "FP5493",
+    "name": "5493.pdf",
+    "size": 317186
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "التراجم والطبقات والأعلام/أنساب الأشراف - ج 1 - ط. المعارف",
-  "deleted": 2,
-  "remaining": 0,
-  "how": "archive id",
-  "waqfeya_id": "69a189d23a18c2dfd7d58e45",
-  "waqfeya_name": "أنساب الأشراف - ج 1 - ط. المعارف",
-  "url": "https://waqfeya.net/books/أنساب-الأشراف--ج-1--ط-المعارف-c09017cfa3a842f08a2471085f019183",
-  "files": [
-   {
-    "item": "2602271403FP",
-    "name": "ansash01.pdf",
-    "size": 14662878
-   },
-   {
-    "item": "2602271403FP",
-    "name": "ansash01p.pdf",
-    "size": 829642
-   }
-  ],
-  "mb": 14.8,
+  "folder": "متون الحديث والمسانيد والمعاجم/غاية الإحكام في أحاديث الأحكام - محب الدين الطبري (ت حمزة أحمد الزين)",
+  "waqfeya_id": "66a88e0f87c55ca3e12f516e",
+  "waqfeya_name": "غاية الإحكام في أحاديث الأحكام",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "2602271403FP",
-    "name": "ansash01.pdf",
-    "size": 14662878
-   },
-   {
-    "item": "2602271403FP",
-    "name": "ansash01p.pdf",
-    "size": 829642
+    "item": "FP76831",
+    "name": "03_76833.pdf",
+    "size": 10946140
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "FP76831",
+    "name": "03_76833.pdf",
+    "size": 10946140
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "التراجم والطبقات والأعلام/سؤالات البرذعي لأبي زرعة الرازي وهو كتاب الضعفاء والكذابين والمتروكين ومعه كتاب أسامي الضعفاء",
-  "deleted": 1,
-  "remaining": 0,
-  "how": "title",
-  "waqfeya_id": "6877889ffb88aa78e0e9192c",
-  "waqfeya_name": "سؤالات البرذعي لأبي زرعة الرازي وهو كتاب الضعفاء والكذابين والمتروكين ومعه كتاب أسامي الضعفاء",
-  "url": "https://waqfeya.net/books/سؤالات-البرذعي-لأبي-زرعة-الرازي-وهو-كتاب-الضعفاء-والكذابين-والمتروكين-ومعه-كتاب-أسامي-الضعفاء-2261025a5d444228bc59abc2648f935d",
-  "files": [
-   {
-    "item": "fp14-106347_202507",
-    "name": "14_106347.pdf",
-    "size": 11637780
-   }
-  ],
-  "mb": 11.1,
+  "folder": "الأدب والبلاغة ونقد الشعر/الشاهنامه - ترجمة عربي",
+  "waqfeya_id": "66a88daa87c55ca3e12e77be",
+  "waqfeya_name": "الشاهنامه - ترجمة عربي",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "fp14-106347_202507",
-    "name": "14_106347.pdf",
-    "size": 11637780
+    "item": "FPSHEHNAME",
+    "name": "01_SHEHNAME.pdf",
+    "size": 62638801
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "FPSHEHNAME",
+    "name": "01_SHEHNAME.pdf",
+    "size": 62638801
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "التفاسير/العقل وفهم القرآن - كتاب مائية العقل ومعناه واختلاف الناس فيه - كتاب فهم القرآن ومعانيه",
-  "deleted": 1,
-  "remaining": 0,
-  "how": "title",
-  "waqfeya_id": "66a88da187c55ca3e12e6059",
-  "waqfeya_name": "العقل وفهم القرآن - كتاب مائية العقل ومعناه واختلاف الناس فيه - كتاب فهم القرآن ومعانيه",
-  "url": "https://waqfeya.net/books/العقل-وفهم-القرآن-كتاب-مائية-العقل-ومعناه-واختلاف-الناس-فيه--كتاب-فهم-القرآن-ومعانيه-3d788a1f2f734e59ba3b70333d09a8c4",
-  "files": [
-   {
-    "item": "2604121835FP",
-    "name": "aqlfhmqur.pdf",
-    "size": 8262148
-   }
-  ],
-  "mb": 7.9,
+  "folder": "العقيدة والتوحيد وأصول الدين/الفهرست - ط. الفرقان",
+  "waqfeya_id": "66a88dff87c55ca3e12f373c",
+  "waqfeya_name": "الفهرست - ط. الفرقان",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "2604121835FP",
-    "name": "aqlfhmqur.pdf",
-    "size": 8262148
+    "item": "kitabul-fihrist_20221214",
+    "name": "00_alfhrst.pdf",
+    "size": 2436725
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "kitabul-fihrist_20221214",
+    "name": "00_alfhrst.pdf",
+    "size": 2436725
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "التفاسير/تفسير غريب القرآن",
-  "deleted": 2,
-  "remaining": 0,
-  "how": "archive id",
-  "waqfeya_id": "69d210c2d1860ab182e5d069",
-  "waqfeya_name": "تفسير غريب القرآن - ابن قتيبة",
-  "url": "https://waqfeya.net/books/تفسير-غريب-القرآن--ابن-قتيبة-02f16f93f87c4e8999475053a17a8d67",
-  "files": [
-   {
-    "item": "FP14915",
-    "name": "14915.pdf",
-    "size": 11116879
-   },
-   {
-    "item": "FP14915",
-    "name": "14915p.pdf",
-    "size": 112510
-   }
-  ],
-  "mb": 10.7,
+  "folder": "التاريخ والوقائع العامة/تاريخ الإسلام ووفيات المشاهير والأعلام - الذهبي (دار الغرب)",
+  "waqfeya_id": "66a88e0487c55ca3e12f3e80",
+  "waqfeya_name": "مجموع رسائل العلامة مرعي الكرمي الحنبلي",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "FP14915",
-    "name": "14915.pdf",
-    "size": 11116879
+    "item": "FP177592",
+    "name": "02_177593.pdf",
+    "size": 16159651
    },
    {
-    "item": "FP14915",
-    "name": "14915p.pdf",
-    "size": 112510
+    "item": "FP177592",
+    "name": "03_177594.pdf",
+    "size": 15884012
+   },
+   {
+    "item": "FP177592",
+    "name": "04_177595.pdf",
+    "size": 16361607
+   },
+   {
+    "item": "FP177592",
+    "name": "05_177596.pdf",
+    "size": 14954402
+   },
+   {
+    "item": "FP177592",
+    "name": "06_177597.pdf",
+    "size": 14119243
+   },
+   {
+    "item": "FP177592",
+    "name": "07_177598.pdf",
+    "size": 14880978
+   },
+   {
+    "item": "FP177592",
+    "name": "08_177599.pdf",
+    "size": 15107645
+   },
+   {
+    "item": "FP177592",
+    "name": "09_177600.pdf",
+    "size": 14560430
+   },
+   {
+    "item": "FP177592",
+    "name": "10_177601.pdf",
+    "size": 8301836
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "FP177592",
+    "name": "02_177593.pdf",
+    "size": 16159651
+   },
+   {
+    "item": "FP177592",
+    "name": "03_177594.pdf",
+    "size": 15884012
+   },
+   {
+    "item": "FP177592",
+    "name": "04_177595.pdf",
+    "size": 16361607
+   },
+   {
+    "item": "FP177592",
+    "name": "05_177596.pdf",
+    "size": 14954402
+   },
+   {
+    "item": "FP177592",
+    "name": "06_177597.pdf",
+    "size": 14119243
+   },
+   {
+    "item": "FP177592",
+    "name": "07_177598.pdf",
+    "size": 14880978
+   },
+   {
+    "item": "FP177592",
+    "name": "08_177599.pdf",
+    "size": 15107645
+   },
+   {
+    "item": "FP177592",
+    "name": "09_177600.pdf",
+    "size": 14560430
+   },
+   {
+    "item": "FP177592",
+    "name": "10_177601.pdf",
+    "size": 8301836
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "الدواوين الشعرية/الأمثال السائرة من شعر المتنبي",
-  "deleted": 2,
-  "remaining": 0,
-  "how": "title",
-  "waqfeya_id": "66a88dd787c55ca3e12eeb5d",
-  "waqfeya_name": "الأمثال السائرة من شعر المتنبي - الروزنامجة",
-  "url": "https://waqfeya.net/books/الأمثال-السائرة-من-شعر-المتنبي--الروزنامجة-bc22dfc8b7df493eba2f186a6992a6ff",
-  "files": [
-   {
-    "item": "amsaros",
-    "name": "amsaros.pdf",
-    "size": 1160759
-   }
-  ],
-  "mb": 1.1,
+  "folder": "علوم القرآن والقراءات/فتح الوصيد في شرح القصيد - السخاوي (ت أحمد عدنان الزعبي - مكتبة دار البيان)",
+  "waqfeya_id": "66a88da687c55ca3e12e6cbd",
+  "waqfeya_name": "فتح الوصيد في شرح القصيد",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "amsaros",
-    "name": "amsaros.pdf",
-    "size": 1160759
+    "item": "2504131201FP",
+    "name": "01_fawashqa.pdf",
+    "size": 10503544
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "2504131201FP",
+    "name": "01_fawashqa.pdf",
+    "size": 10503544
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "الدواوين الشعرية/الدواوين الشعرية",
-  "deleted": 1,
-  "remaining": 0,
-  "how": "archive id",
-  "waqfeya_id": "66a88dc687c55ca3e12ec059",
-  "waqfeya_name": "أشعار النساء",
-  "url": "https://waqfeya.net/books/أشعار-النساء-a37ab1c2b6764c1e909ff96b65887069",
-  "files": [
-   {
-    "item": "waq32583",
-    "name": "32583.pdf",
-    "size": 3081222
-   }
-  ],
-  "mb": 2.9,
+  "folder": "التفاسير/تفسير البحر المحيط",
+  "waqfeya_id": "66a88e1987c55ca3e12f5f70",
+  "waqfeya_name": "تفسير البحر المحيط - ط. العلمية - ط. 3",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "waq32583",
-    "name": "32583.pdf",
-    "size": 3081222
+    "item": "fp134541_202503",
+    "name": "01_134541.pdf",
+    "size": 17922439
+   },
+   {
+    "item": "fp134541_202503",
+    "name": "02_134542.pdf",
+    "size": 15723806
+   },
+   {
+    "item": "fp134541_202503",
+    "name": "03_134543.pdf",
+    "size": 15826776
+   },
+   {
+    "item": "fp134541_202503",
+    "name": "04_134544.pdf",
+    "size": 14995627
+   },
+   {
+    "item": "fp134541_202503",
+    "name": "05_134545.pdf",
+    "size": 15987605
+   },
+   {
+    "item": "fp134541_202503",
+    "name": "06_134546.pdf",
+    "size": 13514850
+   },
+   {
+    "item": "fp134541_202503",
+    "name": "07_134547.pdf",
+    "size": 15151027
+   },
+   {
+    "item": "fp134541_202503",
+    "name": "08_134548.pdf",
+    "size": 15982368
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "fp134541_202503",
+    "name": "01_134541.pdf",
+    "size": 17922439
+   },
+   {
+    "item": "fp134541_202503",
+    "name": "02_134542.pdf",
+    "size": 15723806
+   },
+   {
+    "item": "fp134541_202503",
+    "name": "03_134543.pdf",
+    "size": 15826776
+   },
+   {
+    "item": "fp134541_202503",
+    "name": "04_134544.pdf",
+    "size": 14995627
+   },
+   {
+    "item": "fp134541_202503",
+    "name": "05_134545.pdf",
+    "size": 15987605
+   },
+   {
+    "item": "fp134541_202503",
+    "name": "06_134546.pdf",
+    "size": 13514850
+   },
+   {
+    "item": "fp134541_202503",
+    "name": "07_134547.pdf",
+    "size": 15151027
+   },
+   {
+    "item": "fp134541_202503",
+    "name": "08_134548.pdf",
+    "size": 15982368
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "الدواوين الشعرية/المعلقات السبع مع الحواشي المفيدة للزوزني",
-  "deleted": 7,
-  "remaining": 0,
-  "how": "title",
-  "waqfeya_id": "66a88de087c55ca3e12efe86",
-  "waqfeya_name": "المعلقات السبع مع الحواشي المفيدة للزوزني",
-  "url": "https://waqfeya.net/books/المعلقات-السبع-مع-الحواشي-المفيدة-للزوزني-70fdd4a99f5340d1a76ffcfbe0a43c96",
-  "files": [
-   {
-    "item": "fp134459_202603",
-    "name": "134459.pdf",
-    "size": 3626021
-   }
-  ],
-  "mb": 3.5,
+  "folder": "متون الحديث والمسانيد والمعاجم/المستدرك على الصحيحين وبذيله التلخيص للحافظ الذهبي - ط. الهندية",
+  "waqfeya_id": "66a88e1687c55ca3e12f5cbd",
+  "waqfeya_name": "المستدرك على الصحيحين وبذيله التلخيص للحافظ الذهبي - ط. الهندية",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "fp134459_202603",
-    "name": "134459.pdf",
-    "size": 3626021
+    "item": "FP156668",
+    "name": "02_156671.pdf",
+    "size": 20720365
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "FP156668",
+    "name": "02_156671.pdf",
+    "size": 20720365
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "الدواوين الشعرية/ديوان ابن هاني الأندلسي - تصفح",
-  "deleted": 1,
-  "remaining": 0,
-  "how": "archive id",
-  "waqfeya_id": "66a88dbb87c55ca3e12ea4f5",
-  "waqfeya_name": "ديوان ابن هاني الأندلسي",
-  "url": "https://waqfeya.net/books/ديوان-ابن-هاني-الأندلسي-d593bf7e8add4790a3762c556fc250b5",
-  "files": [
-   {
-    "item": "waq104366",
-    "name": "104366.pdf",
-    "size": 4897050
-   }
-  ],
-  "mb": 4.7,
+  "folder": "الأدب والبلاغة ونقد الشعر/الدر الفريد وبيت القصيد - ابن دقماق",
+  "waqfeya_id": "66a88e0f87c55ca3e12f50e7",
+  "waqfeya_name": "الدر الفريد وبيت القصيد - ت: سزكين",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "waq104366",
-    "name": "104366.pdf",
-    "size": 4897050
+    "item": "DrbqFP",
+    "name": "04_drbq.pdf",
+    "size": 14493999
+   },
+   {
+    "item": "DrbqFP",
+    "name": "05_drbq.pdf",
+    "size": 21435802
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "DrbqFP",
+    "name": "04_drbq.pdf",
+    "size": 14493999
+   },
+   {
+    "item": "DrbqFP",
+    "name": "05_drbq.pdf",
+    "size": 21435802
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "الدواوين الشعرية/ديوان الإمام علي - ت خفاجى",
-  "deleted": 1,
-  "remaining": 0,
-  "how": "title",
-  "waqfeya_id": "66a88df787c55ca3e12f295e",
-  "waqfeya_name": "ديوان الإمام علي - ت: خفاجى",
-  "url": "https://waqfeya.net/books/ديوان-الإمام-علي-ت-خفاجى-8e62b6371a664e36b87eb0cc46265415",
-  "files": [
-   {
-    "item": "fp127525_202507",
-    "name": "127525.pdf",
-    "size": 3652332
-   }
-  ],
-  "mb": 3.5,
+  "folder": "الفقه الحنبلي/رؤوس المسائل الخلافية بين جمهور الفقهاء - العكبري",
+  "waqfeya_id": "66a88e0e87c55ca3e12f4e73",
+  "waqfeya_name": "رؤوس المسائل الخلافية بين جمهور الفقهاء",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "fp127525_202507",
-    "name": "127525.pdf",
-    "size": 3652332
+    "item": "fp49255_202504",
+    "name": "01-03_49255-49257p.pdf",
+    "size": 1603198
+   },
+   {
+    "item": "fp49255_202504",
+    "name": "04-05_49258-49260.pdf",
+    "size": 21863045
+   },
+   {
+    "item": "fp49255_202504",
+    "name": "04-05_49258-49260p.pdf",
+    "size": 142643
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "fp49255_202504",
+    "name": "01-03_49255-49257p.pdf",
+    "size": 1603198
+   },
+   {
+    "item": "fp49255_202504",
+    "name": "04-05_49258-49260.pdf",
+    "size": 21863045
+   },
+   {
+    "item": "fp49255_202504",
+    "name": "04-05_49258-49260p.pdf",
+    "size": 142643
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "الدواوين الشعرية/ديوان الإمام علي - علي بن أبي طالب",
-  "deleted": 1,
-  "remaining": 0,
-  "how": "title",
-  "waqfeya_id": "66a88df787c55ca3e12f295e",
-  "waqfeya_name": "ديوان الإمام علي - ت: خفاجى",
-  "url": "https://waqfeya.net/books/ديوان-الإمام-علي-ت-خفاجى-8e62b6371a664e36b87eb0cc46265415",
-  "files": [
-   {
-    "item": "fp127525_202507",
-    "name": "127525.pdf",
-    "size": 3652332
-   }
-  ],
-  "mb": 3.5,
+  "folder": "أدباء ومفكرو العصر الحديث/مؤلفات محمود محمد شاكر (مكتبة الخانجي)",
+  "waqfeya_id": "66a88dea87c55ca3e12f129c",
+  "waqfeya_name": "كتاب المتنبي ورسالة في الطريق إلى ثقافتنا",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "fp127525_202507",
-    "name": "127525.pdf",
-    "size": 3652332
+    "item": "FP138442",
+    "name": "138442p.pdf",
+    "size": 3469277
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "FP138442",
+    "name": "138442p.pdf",
+    "size": 3469277
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "الدواوين الشعرية/ديوان زهير بن أبي سلمى",
-  "deleted": 1,
-  "remaining": 0,
-  "how": "title",
-  "waqfeya_id": "66a88db987c55ca3e12e9e79",
-  "waqfeya_name": "ديوان زهير بن أبي سلمى",
-  "url": "https://waqfeya.net/books/ديوان-زهير-بن-أبي-سلمى-2f604e37eea14145968d9a469f20bcfa",
-  "files": [
-   {
-    "item": "waq90783",
-    "name": "90783.pdf",
-    "size": 2720578
-   }
-  ],
-  "mb": 2.6,
+  "folder": "السيرة والشمائل النبوية/الروض الأنف في تفسير السيرة النبوية لابن هشام ومعه السيرة النبوية لابن هشام - السهيلي",
+  "waqfeya_id": "66a88e0887c55ca3e12f43d2",
+  "waqfeya_name": "الروض الأنف في تفسير السيرة النبوية لابن هشام ومعه السيرة النبوية لابن هشام - ت: سعد",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "waq90783",
-    "name": "90783.pdf",
-    "size": 2720578
+    "item": "fp9666_202505",
+    "name": "01_9666.pdf",
+    "size": 10567674
+   },
+   {
+    "item": "fp9666_202505",
+    "name": "02_9667.pdf",
+    "size": 10372802
+   },
+   {
+    "item": "fp9666_202505",
+    "name": "04_9669.pdf",
+    "size": 10544456
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "fp9666_202505",
+    "name": "01_9666.pdf",
+    "size": 10567674
+   },
+   {
+    "item": "fp9666_202505",
+    "name": "02_9667.pdf",
+    "size": 10372802
+   },
+   {
+    "item": "fp9666_202505",
+    "name": "04_9669.pdf",
+    "size": 10544456
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "الدواوين الشعرية/ديوان طرفة بن العبد",
-  "deleted": 1,
-  "remaining": 0,
-  "how": "title",
-  "waqfeya_id": "66a88db987c55ca3e12ea0e1",
-  "waqfeya_name": "ديوان طرفة بن العبد - ط. العلمية",
-  "url": "https://waqfeya.net/books/ديوان-طرفة-بن-العبد-ط-العلمية-6e6cd54087d5425d8a4cf607751a3468",
-  "files": [
-   {
-    "item": "waqdwaween1",
-    "name": "11577.pdf",
-    "size": 7203780
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "23425.pdf",
-    "size": 19309320
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "24776.pdf",
-    "size": 985905
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "31816.pdf",
-    "size": 4874930
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "32476.pdf",
-    "size": 4351143
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "32490.pdf",
-    "size": 1909380
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "32528.pdf",
-    "size": 4832722
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "33175.pdf",
-    "size": 2300350
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "4470.pdf",
-    "size": 10486576
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "46948.pdf",
-    "size": 16049616
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "47469.pdf",
-    "size": 1195317
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "50723.pdf",
-    "size": 3941644
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "50723p.pdf",
-    "size": 801547
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "51807.pdf",
-    "size": 1805913
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "54243.pdf",
-    "size": 7250728
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "54243p.pdf",
-    "size": 996301
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "59846.pdf",
-    "size": 2373110
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "59974.pdf",
-    "size": 11839716
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "62922.pdf",
-    "size": 1300101
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66431.pdf",
-    "size": 790027
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66439.pdf",
-    "size": 1981356
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66441.pdf",
-    "size": 1306046
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974.pdf",
-    "size": 5224376
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974m.pdf",
-    "size": 603767
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974p.pdf",
-    "size": 95644
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "71905.pdf",
-    "size": 6318705
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "79674.pdf",
-    "size": 7012468
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82220.pdf",
-    "size": 2635641
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82220p.pdf",
-    "size": 142645
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82565.pdf",
-    "size": 8457722
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82566.pdf",
-    "size": 4024663
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82577.pdf",
-    "size": 1042396
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82869.pdf",
-    "size": 2725885
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "84997.pdf",
-    "size": 3322994
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "85926.pdf",
-    "size": 2290126
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "91313.pdf",
-    "size": 2447225
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dairds.pdf",
-    "size": 2766501
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dait.pdf",
-    "size": 1751204
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "datd.pdf",
-    "size": 8696848
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dkmt.pdf",
-    "size": 1935802
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dogmh.pdf",
-    "size": 7098889
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dtia.pdf",
-    "size": 1327515
-   }
-  ],
-  "mb": 169.6,
+  "folder": "التفاسير/الجامع تفسير القرآن - تفسير القرآن",
+  "waqfeya_id": "66a88e0487c55ca3e12f3f2a",
+  "waqfeya_name": "الجامع تفسير القرآن = تفسير القرآن من الجامع لابن وهب",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "waqdwaween1",
-    "name": "11577.pdf",
-    "size": 7203780
+    "item": "GataquPDF",
+    "name": "01_gataqup.pdf",
+    "size": 578029
    },
    {
-    "item": "waqdwaween1",
-    "name": "23425.pdf",
-    "size": 19309320
+    "item": "GataquPDF",
+    "name": "02_gataqup.pdf",
+    "size": 425974
    },
    {
-    "item": "waqdwaween1",
-    "name": "24776.pdf",
-    "size": 985905
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "31816.pdf",
-    "size": 4874930
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "32476.pdf",
-    "size": 4351143
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "32490.pdf",
-    "size": 1909380
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "32528.pdf",
-    "size": 4832722
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "33175.pdf",
-    "size": 2300350
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "4470.pdf",
-    "size": 10486576
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "46948.pdf",
-    "size": 16049616
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "47469.pdf",
-    "size": 1195317
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "50723.pdf",
-    "size": 3941644
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "50723p.pdf",
-    "size": 801547
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "51807.pdf",
-    "size": 1805913
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "54243.pdf",
-    "size": 7250728
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "54243p.pdf",
-    "size": 996301
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "59846.pdf",
-    "size": 2373110
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "59974.pdf",
-    "size": 11839716
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "62922.pdf",
-    "size": 1300101
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66431.pdf",
-    "size": 790027
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66439.pdf",
-    "size": 1981356
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66441.pdf",
-    "size": 1306046
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974.pdf",
-    "size": 5224376
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974m.pdf",
-    "size": 603767
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974p.pdf",
-    "size": 95644
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "71905.pdf",
-    "size": 6318705
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "79674.pdf",
-    "size": 7012468
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82220.pdf",
-    "size": 2635641
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82220p.pdf",
-    "size": 142645
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82565.pdf",
-    "size": 8457722
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82566.pdf",
-    "size": 4024663
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82577.pdf",
-    "size": 1042396
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82869.pdf",
-    "size": 2725885
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "84997.pdf",
-    "size": 3322994
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "85926.pdf",
-    "size": 2290126
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "91313.pdf",
-    "size": 2447225
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dairds.pdf",
-    "size": 2766501
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dait.pdf",
-    "size": 1751204
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "datd.pdf",
-    "size": 8696848
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dkmt.pdf",
-    "size": 1935802
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dogmh.pdf",
-    "size": 7098889
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dtia.pdf",
-    "size": 1327515
+    "item": "GataquPDF",
+    "name": "03_gataqup.pdf",
+    "size": 271074
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "GataquPDF",
+    "name": "01_gataqup.pdf",
+    "size": 578029
+   },
+   {
+    "item": "GataquPDF",
+    "name": "02_gataqup.pdf",
+    "size": 425974
+   },
+   {
+    "item": "GataquPDF",
+    "name": "03_gataqup.pdf",
+    "size": 271074
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "الدواوين الشعرية/ديوان طرفة بن العبد - ط. العلمية",
-  "deleted": 1,
-  "remaining": 1,
-  "how": "title",
-  "waqfeya_id": "66a88db987c55ca3e12ea0e1",
-  "waqfeya_name": "ديوان طرفة بن العبد - ط. العلمية",
-  "url": "https://waqfeya.net/books/ديوان-طرفة-بن-العبد-ط-العلمية-6e6cd54087d5425d8a4cf607751a3468",
-  "files": [
-   {
-    "item": "waqdwaween1",
-    "name": "11577.pdf",
-    "size": 7203780
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "23425.pdf",
-    "size": 19309320
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "24776.pdf",
-    "size": 985905
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "31816.pdf",
-    "size": 4874930
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "32476.pdf",
-    "size": 4351143
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "32490.pdf",
-    "size": 1909380
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "32528.pdf",
-    "size": 4832722
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "33175.pdf",
-    "size": 2300350
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "4470.pdf",
-    "size": 10486576
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "46948.pdf",
-    "size": 16049616
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "47469.pdf",
-    "size": 1195317
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "50723.pdf",
-    "size": 3941644
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "50723p.pdf",
-    "size": 801547
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "51807.pdf",
-    "size": 1805913
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "54243.pdf",
-    "size": 7250728
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "54243p.pdf",
-    "size": 996301
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "59846.pdf",
-    "size": 2373110
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "59974.pdf",
-    "size": 11839716
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "62922.pdf",
-    "size": 1300101
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66431.pdf",
-    "size": 790027
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66439.pdf",
-    "size": 1981356
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66441.pdf",
-    "size": 1306046
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974.pdf",
-    "size": 5224376
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974m.pdf",
-    "size": 603767
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974p.pdf",
-    "size": 95644
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "71905.pdf",
-    "size": 6318705
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "79674.pdf",
-    "size": 7012468
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82220.pdf",
-    "size": 2635641
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82220p.pdf",
-    "size": 142645
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82565.pdf",
-    "size": 8457722
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82566.pdf",
-    "size": 4024663
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82577.pdf",
-    "size": 1042396
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82869.pdf",
-    "size": 2725885
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "84997.pdf",
-    "size": 3322994
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "85926.pdf",
-    "size": 2290126
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "91313.pdf",
-    "size": 2447225
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dairds.pdf",
-    "size": 2766501
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dait.pdf",
-    "size": 1751204
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "datd.pdf",
-    "size": 8696848
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dkmt.pdf",
-    "size": 1935802
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dogmh.pdf",
-    "size": 7098889
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dtia.pdf",
-    "size": 1327515
-   }
-  ],
-  "mb": 169.6,
+  "folder": "متون الحديث والمسانيد والمعاجم/الترغيب والترهيب من الحديث الشريف - المنذري (ت مصطفى محمد عمارة - دار إحياء التراث العربي)",
+  "waqfeya_id": "66a88e0487c55ca3e12f3efb",
+  "waqfeya_name": "الترغيب والترهيب من الحديث الشريف - ت: عمارة",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "waqdwaween1",
-    "name": "11577.pdf",
-    "size": 7203780
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "23425.pdf",
-    "size": 19309320
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "24776.pdf",
-    "size": 985905
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "31816.pdf",
-    "size": 4874930
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "32476.pdf",
-    "size": 4351143
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "32490.pdf",
-    "size": 1909380
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "32528.pdf",
-    "size": 4832722
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "33175.pdf",
-    "size": 2300350
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "4470.pdf",
-    "size": 10486576
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "46948.pdf",
-    "size": 16049616
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "47469.pdf",
-    "size": 1195317
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "50723.pdf",
-    "size": 3941644
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "50723p.pdf",
-    "size": 801547
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "51807.pdf",
-    "size": 1805913
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "54243.pdf",
-    "size": 7250728
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "54243p.pdf",
-    "size": 996301
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "59846.pdf",
-    "size": 2373110
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "59974.pdf",
-    "size": 11839716
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "62922.pdf",
-    "size": 1300101
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66431.pdf",
-    "size": 790027
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66439.pdf",
-    "size": 1981356
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66441.pdf",
-    "size": 1306046
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974.pdf",
-    "size": 5224376
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974m.pdf",
-    "size": 603767
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974p.pdf",
-    "size": 95644
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "71905.pdf",
-    "size": 6318705
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "79674.pdf",
-    "size": 7012468
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82220.pdf",
-    "size": 2635641
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82220p.pdf",
-    "size": 142645
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82565.pdf",
-    "size": 8457722
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82566.pdf",
-    "size": 4024663
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82577.pdf",
-    "size": 1042396
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82869.pdf",
-    "size": 2725885
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "84997.pdf",
-    "size": 3322994
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "85926.pdf",
-    "size": 2290126
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "91313.pdf",
-    "size": 2447225
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dairds.pdf",
-    "size": 2766501
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dait.pdf",
-    "size": 1751204
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "datd.pdf",
-    "size": 8696848
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dkmt.pdf",
-    "size": 1935802
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dogmh.pdf",
-    "size": 7098889
+    "item": "fp5972_202505",
+    "name": "04_5975.pdf",
+    "size": 18788483
    }
   ],
-  "mode": "missing volumes"
+  "files": [
+   {
+    "item": "fp5972_202505",
+    "name": "04_5975.pdf",
+    "size": 18788483
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "الدواوين الشعرية/ديوان طرفة بن العبد - ط. العلمية...",
-  "deleted": 1,
-  "remaining": 0,
-  "how": "title",
-  "waqfeya_id": "66a88db987c55ca3e12ea0e1",
-  "waqfeya_name": "ديوان طرفة بن العبد - ط. العلمية",
-  "url": "https://waqfeya.net/books/ديوان-طرفة-بن-العبد-ط-العلمية-6e6cd54087d5425d8a4cf607751a3468",
-  "files": [
-   {
-    "item": "waqdwaween1",
-    "name": "11577.pdf",
-    "size": 7203780
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "23425.pdf",
-    "size": 19309320
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "24776.pdf",
-    "size": 985905
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "31816.pdf",
-    "size": 4874930
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "32476.pdf",
-    "size": 4351143
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "32490.pdf",
-    "size": 1909380
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "32528.pdf",
-    "size": 4832722
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "33175.pdf",
-    "size": 2300350
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "4470.pdf",
-    "size": 10486576
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "46948.pdf",
-    "size": 16049616
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "47469.pdf",
-    "size": 1195317
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "50723.pdf",
-    "size": 3941644
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "50723p.pdf",
-    "size": 801547
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "51807.pdf",
-    "size": 1805913
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "54243.pdf",
-    "size": 7250728
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "54243p.pdf",
-    "size": 996301
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "59846.pdf",
-    "size": 2373110
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "59974.pdf",
-    "size": 11839716
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "62922.pdf",
-    "size": 1300101
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66431.pdf",
-    "size": 790027
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66439.pdf",
-    "size": 1981356
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66441.pdf",
-    "size": 1306046
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974.pdf",
-    "size": 5224376
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974m.pdf",
-    "size": 603767
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974p.pdf",
-    "size": 95644
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "71905.pdf",
-    "size": 6318705
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "79674.pdf",
-    "size": 7012468
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82220.pdf",
-    "size": 2635641
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82220p.pdf",
-    "size": 142645
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82565.pdf",
-    "size": 8457722
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82566.pdf",
-    "size": 4024663
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82577.pdf",
-    "size": 1042396
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82869.pdf",
-    "size": 2725885
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "84997.pdf",
-    "size": 3322994
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "85926.pdf",
-    "size": 2290126
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "91313.pdf",
-    "size": 2447225
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dairds.pdf",
-    "size": 2766501
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dait.pdf",
-    "size": 1751204
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "datd.pdf",
-    "size": 8696848
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dkmt.pdf",
-    "size": 1935802
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dogmh.pdf",
-    "size": 7098889
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dtia.pdf",
-    "size": 1327515
-   }
-  ],
-  "mb": 169.6,
+  "folder": "الأدب والبلاغة ونقد الشعر/التذكرة الحمدونية - ابن حمدون (ت إحسان عباس - بكر عباس - دار صادر)",
+  "waqfeya_id": "66a88dca87c55ca3e12eca86",
+  "waqfeya_name": "التذكرة الحمدونية",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "waqdwaween1",
-    "name": "11577.pdf",
-    "size": 7203780
+    "item": "FP84631",
+    "name": "01_84631.pdf",
+    "size": 6739844
    },
    {
-    "item": "waqdwaween1",
-    "name": "23425.pdf",
-    "size": 19309320
+    "item": "FP84631",
+    "name": "02_84632.pdf",
+    "size": 7224878
    },
    {
-    "item": "waqdwaween1",
-    "name": "24776.pdf",
-    "size": 985905
+    "item": "FP84631",
+    "name": "03_84633.pdf",
+    "size": 6528568
    },
    {
-    "item": "waqdwaween1",
-    "name": "31816.pdf",
-    "size": 4874930
+    "item": "FP84631",
+    "name": "04_84634.pdf",
+    "size": 5485630
    },
    {
-    "item": "waqdwaween1",
-    "name": "32476.pdf",
-    "size": 4351143
+    "item": "FP84631",
+    "name": "05_84635.pdf",
+    "size": 5879239
    },
    {
-    "item": "waqdwaween1",
-    "name": "32490.pdf",
-    "size": 1909380
+    "item": "FP84631",
+    "name": "08_84638.pdf",
+    "size": 5882613
    },
    {
-    "item": "waqdwaween1",
-    "name": "32528.pdf",
-    "size": 4832722
+    "item": "FP84631",
+    "name": "09_84639.pdf",
+    "size": 7248357
    },
    {
-    "item": "waqdwaween1",
-    "name": "33175.pdf",
-    "size": 2300350
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "4470.pdf",
-    "size": 10486576
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "46948.pdf",
-    "size": 16049616
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "47469.pdf",
-    "size": 1195317
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "50723.pdf",
-    "size": 3941644
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "50723p.pdf",
-    "size": 801547
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "51807.pdf",
-    "size": 1805913
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "54243.pdf",
-    "size": 7250728
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "54243p.pdf",
-    "size": 996301
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "59846.pdf",
-    "size": 2373110
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "59974.pdf",
-    "size": 11839716
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "62922.pdf",
-    "size": 1300101
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66431.pdf",
-    "size": 790027
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66439.pdf",
-    "size": 1981356
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66441.pdf",
-    "size": 1306046
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974.pdf",
-    "size": 5224376
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974m.pdf",
-    "size": 603767
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "66974p.pdf",
-    "size": 95644
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "71905.pdf",
-    "size": 6318705
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "79674.pdf",
-    "size": 7012468
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82220.pdf",
-    "size": 2635641
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82220p.pdf",
-    "size": 142645
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82565.pdf",
-    "size": 8457722
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82566.pdf",
-    "size": 4024663
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82577.pdf",
-    "size": 1042396
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "82869.pdf",
-    "size": 2725885
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "84997.pdf",
-    "size": 3322994
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "85926.pdf",
-    "size": 2290126
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "91313.pdf",
-    "size": 2447225
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dairds.pdf",
-    "size": 2766501
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dait.pdf",
-    "size": 1751204
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "datd.pdf",
-    "size": 8696848
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dkmt.pdf",
-    "size": 1935802
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dogmh.pdf",
-    "size": 7098889
-   },
-   {
-    "item": "waqdwaween1",
-    "name": "dtia.pdf",
-    "size": 1327515
+    "item": "FP84631",
+    "name": "10_84640.pdf",
+    "size": 4207414
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "FP84631",
+    "name": "01_84631.pdf",
+    "size": 6739844
+   },
+   {
+    "item": "FP84631",
+    "name": "02_84632.pdf",
+    "size": 7224878
+   },
+   {
+    "item": "FP84631",
+    "name": "03_84633.pdf",
+    "size": 6528568
+   },
+   {
+    "item": "FP84631",
+    "name": "04_84634.pdf",
+    "size": 5485630
+   },
+   {
+    "item": "FP84631",
+    "name": "05_84635.pdf",
+    "size": 5879239
+   },
+   {
+    "item": "FP84631",
+    "name": "08_84638.pdf",
+    "size": 5882613
+   },
+   {
+    "item": "FP84631",
+    "name": "09_84639.pdf",
+    "size": 7248357
+   },
+   {
+    "item": "FP84631",
+    "name": "10_84640.pdf",
+    "size": 4207414
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "الدواوين الشعرية/شرح ديوان أبي تمام - الخطيب التبريزي",
-  "deleted": 1,
-  "remaining": 0,
-  "how": "title",
-  "waqfeya_id": "66a88dbb87c55ca3e12ea4fa",
-  "waqfeya_name": "شرح ديوان أبي تمام",
-  "url": "https://waqfeya.net/books/شرح-ديوان-أبي-تمام-583f602f70db4b4a8690414219e71aad",
-  "files": [
-   {
-    "item": "waq59940",
-    "name": "00_59940.pdf",
-    "size": 10630
-   },
-   {
-    "item": "waq59940",
-    "name": "01_59940.pdf",
-    "size": 9317570
-   },
-   {
-    "item": "waq59940",
-    "name": "02_59941.pdf",
-    "size": 8967812
-   }
-  ],
-  "mb": 17.4,
+  "folder": "الفقه المالكي/حاشية الدسوقي على الشرح الكبير مع تقريرات الشيخ عليش (ط عيسى البابي الحلبي)",
+  "waqfeya_id": "66a88e0287c55ca3e12f3b14",
+  "waqfeya_name": "حاشية الدسوقي على الشرح الكبير مع تقريرات الشيخ عليش",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "waq59940",
-    "name": "00_59940.pdf",
-    "size": 10630
+    "item": "hadsshkahadsshka",
+    "name": "01_hadsshka.pdf",
+    "size": 26800486
    },
    {
-    "item": "waq59940",
-    "name": "01_59940.pdf",
-    "size": 9317570
+    "item": "hadsshkahadsshka",
+    "name": "02_hadsshka.pdf",
+    "size": 25432413
    },
    {
-    "item": "waq59940",
-    "name": "02_59941.pdf",
-    "size": 8967812
+    "item": "hadsshkahadsshka",
+    "name": "03_hadsshka.pdf",
+    "size": 26135839
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "hadsshkahadsshka",
+    "name": "01_hadsshka.pdf",
+    "size": 26800486
+   },
+   {
+    "item": "hadsshkahadsshka",
+    "name": "02_hadsshka.pdf",
+    "size": 25432413
+   },
+   {
+    "item": "hadsshkahadsshka",
+    "name": "03_hadsshka.pdf",
+    "size": 26135839
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "الدواوين الشعرية/كتاب شرح أشعار الهذليين",
-  "deleted": 2,
-  "remaining": 0,
-  "how": "archive id",
-  "waqfeya_id": "6952738913697382f6f12571",
-  "waqfeya_name": "كتاب شرح أشعار الهذليين",
-  "url": "https://waqfeya.net/books/كتاب-شرح-أشعار-الهذليين-4a83c5177c544fbcb1eb198c0f83f849",
-  "files": [
-   {
-    "item": "FP11541",
-    "name": "11541.pdf",
-    "size": 28397728
-   },
-   {
-    "item": "FP11541",
-    "name": "11541p.pdf",
-    "size": 271703
-   }
-  ],
-  "mb": 27.3,
+  "folder": "الأدب والبلاغة ونقد الشعر/المحيط في اللغة - الصاحب ابن عباد (ت محمد حسن آل ياسين)",
+  "waqfeya_id": "66a88e0087c55ca3e12f382a",
+  "waqfeya_name": "المحيط في اللغة",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "FP11541",
-    "name": "11541.pdf",
-    "size": 28397728
+    "item": "FP71561",
+    "name": "01_71561.pdf",
+    "size": 6202558
    },
    {
-    "item": "FP11541",
-    "name": "11541p.pdf",
-    "size": 271703
+    "item": "FP71561",
+    "name": "02_71562.pdf",
+    "size": 6624702
+   },
+   {
+    "item": "FP71561",
+    "name": "03_71563.pdf",
+    "size": 6160777
+   },
+   {
+    "item": "FP71561",
+    "name": "04_71564.pdf",
+    "size": 6507482
+   },
+   {
+    "item": "FP71561",
+    "name": "05_71565.pdf",
+    "size": 6307017
+   },
+   {
+    "item": "FP71561",
+    "name": "06_71566.pdf",
+    "size": 5534949
+   },
+   {
+    "item": "FP71561",
+    "name": "07_71566.pdf",
+    "size": 5856129
+   },
+   {
+    "item": "FP71561",
+    "name": "08_71567.pdf",
+    "size": 5395615
+   },
+   {
+    "item": "FP71561",
+    "name": "09_71568.pdf",
+    "size": 5570017
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "FP71561",
+    "name": "01_71561.pdf",
+    "size": 6202558
+   },
+   {
+    "item": "FP71561",
+    "name": "02_71562.pdf",
+    "size": 6624702
+   },
+   {
+    "item": "FP71561",
+    "name": "03_71563.pdf",
+    "size": 6160777
+   },
+   {
+    "item": "FP71561",
+    "name": "04_71564.pdf",
+    "size": 6507482
+   },
+   {
+    "item": "FP71561",
+    "name": "05_71565.pdf",
+    "size": 6307017
+   },
+   {
+    "item": "FP71561",
+    "name": "06_71566.pdf",
+    "size": 5534949
+   },
+   {
+    "item": "FP71561",
+    "name": "07_71566.pdf",
+    "size": 5856129
+   },
+   {
+    "item": "FP71561",
+    "name": "08_71567.pdf",
+    "size": 5395615
+   },
+   {
+    "item": "FP71561",
+    "name": "09_71568.pdf",
+    "size": 5570017
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "الدواوين الشعرية/نشيد دار الأرقم - تصفح",
-  "deleted": 1,
-  "remaining": 0,
-  "how": "archive id",
-  "waqfeya_id": "66a88ddf87c55ca3e12efc0d",
-  "waqfeya_name": "نشيد دار الأرقم",
-  "url": "https://waqfeya.net/books/نشيد-دار-الأرقم-8854f26537bc4f23a559a50a01ea9629",
-  "files": [
-   {
-    "item": "waq103303",
-    "name": "103303.pdf",
-    "size": 670542
-   }
-  ],
-  "mb": 0.6,
+  "folder": "التراجم والطبقات والأعلام/معرفة الصحابة - أبو نعيم (ت عادل بن يوسف العزازي - دار الوطن)",
+  "waqfeya_id": "66a88db887c55ca3e12e9d07",
+  "waqfeya_name": "معرفة الصحابة - ت: العزازي",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "waq103303",
-    "name": "103303.pdf",
-    "size": 670542
+    "item": "fp37408_202504",
+    "name": "37408.pdf",
+    "size": 67355864
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "fp37408_202504",
+    "name": "37408.pdf",
+    "size": 67355864
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "الرقائق والآداب والأذكار/العوالي",
-  "deleted": 4,
-  "remaining": 0,
-  "how": "title",
-  "waqfeya_id": "66a88df087c55ca3e12f1e22",
-  "waqfeya_name": "العوالي",
-  "url": "https://waqfeya.net/books/العوالي-986dcaed70274a428e82945be721996b",
-  "files": [
-   {
-    "item": "fp38676_202505",
-    "name": "38676.pdf",
-    "size": 29846360
-   },
-   {
-    "item": "fp38676_202505",
-    "name": "38676p.pdf",
-    "size": 1621974
-   }
-  ],
-  "mb": 30.0,
+  "folder": "أصول الفقه والقواعد الفقهية/الإحكام في أصول الأحكام",
+  "waqfeya_id": "66a88df987c55ca3e12f2f5f",
+  "waqfeya_name": "الإحكام في أصول الأحكام - الآمدي - ط. المكتب الإسلامي",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "fp38676_202505",
-    "name": "38676.pdf",
-    "size": 29846360
+    "item": "fp154701_202505",
+    "name": "01_154701-1.pdf",
+    "size": 9632739
    },
    {
-    "item": "fp38676_202505",
-    "name": "38676p.pdf",
-    "size": 1621974
+    "item": "fp154701_202505",
+    "name": "02_154701-2.pdf",
+    "size": 8158359
+   },
+   {
+    "item": "fp154701_202505",
+    "name": "03_154702-1.pdf",
+    "size": 12204044
+   },
+   {
+    "item": "fp154701_202505",
+    "name": "04_154702-2.pdf",
+    "size": 6026561
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "fp154701_202505",
+    "name": "01_154701-1.pdf",
+    "size": 9632739
+   },
+   {
+    "item": "fp154701_202505",
+    "name": "02_154701-2.pdf",
+    "size": 8158359
+   },
+   {
+    "item": "fp154701_202505",
+    "name": "03_154702-1.pdf",
+    "size": 12204044
+   },
+   {
+    "item": "fp154701_202505",
+    "name": "04_154702-2.pdf",
+    "size": 6026561
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "السيرة والشمائل النبوية/أنساب الأشراف",
-  "deleted": 2,
-  "remaining": 0,
-  "how": "archive id",
-  "waqfeya_id": "69a189d23a18c2dfd7d58e45",
-  "waqfeya_name": "أنساب الأشراف - ج 1 - ط. المعارف",
-  "url": "https://waqfeya.net/books/أنساب-الأشراف--ج-1--ط-المعارف-c09017cfa3a842f08a2471085f019183",
-  "files": [
-   {
-    "item": "2602271403FP",
-    "name": "ansash01.pdf",
-    "size": 14662878
-   },
-   {
-    "item": "2602271403FP",
-    "name": "ansash01p.pdf",
-    "size": 829642
-   }
-  ],
-  "mb": 14.8,
+  "folder": "التفاسير/تفسير البحر المحيط",
+  "waqfeya_id": "66a88df987c55ca3e12f2f28",
+  "waqfeya_name": "تفسير البحر المحيط - ت: المهدي",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "2602271403FP",
-    "name": "ansash01.pdf",
-    "size": 14662878
+    "item": "fp61684_202503",
+    "name": "05_61688.pdf",
+    "size": 25185477
    },
    {
-    "item": "2602271403FP",
-    "name": "ansash01p.pdf",
-    "size": 829642
+    "item": "fp61684_202503",
+    "name": "06_61689.pdf",
+    "size": 21855684
+   },
+   {
+    "item": "fp61684_202503",
+    "name": "07_61690.pdf",
+    "size": 25193856
+   },
+   {
+    "item": "fp61684_202503",
+    "name": "08_61691.pdf",
+    "size": 26124989
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "fp61684_202503",
+    "name": "05_61688.pdf",
+    "size": 25185477
+   },
+   {
+    "item": "fp61684_202503",
+    "name": "06_61689.pdf",
+    "size": 21855684
+   },
+   {
+    "item": "fp61684_202503",
+    "name": "07_61690.pdf",
+    "size": 25193856
+   },
+   {
+    "item": "fp61684_202503",
+    "name": "08_61691.pdf",
+    "size": 26124989
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "العقيدة والتوحيد وأصول الدين/التصديق بالنظر إلى الله تعالى في الآخرة",
-  "deleted": 1,
-  "remaining": 0,
-  "how": "title",
-  "waqfeya_id": "66a88dbb87c55ca3e12ea4b1",
-  "waqfeya_name": "التصديق بالنظر إلى الله تعالى في الآخرة",
-  "url": "https://waqfeya.net/books/التصديق-بالنظر-إلى-الله-تعالى-في-الآخرة-e199502fb0244fb19f26ef19eaf4e89d",
-  "files": [
-   {
-    "item": "waq40472",
-    "name": "40472.pdf",
-    "size": 1910146
-   }
-  ],
-  "mb": 1.8,
+  "folder": "الرقائق والآداب والأذكار/التبصرة - ت عبد الواحد - الطبعة الناقصة",
+  "waqfeya_id": "66a88dd687c55ca3e12ee6c5",
+  "waqfeya_name": "التبصرة - ت: عبد الواحد - الطبعة الناقصة",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "waq40472",
-    "name": "40472.pdf",
-    "size": 1910146
+    "item": "FP78999",
+    "name": "02_79000.pdf",
+    "size": 6211286
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "FP78999",
+    "name": "02_79000.pdf",
+    "size": 6211286
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "الفقه المالكي/أحكام الوقف",
-  "deleted": 1,
-  "remaining": 0,
-  "how": "title",
-  "waqfeya_id": "66a88e0887c55ca3e12f45f1",
-  "waqfeya_name": "كتاب أحكام الوقف",
-  "url": "https://waqfeya.net/books/كتاب-أحكام-الوقف-d0c728ffbde44b579dd31ce468b00506",
-  "files": [
-   {
-    "item": "fp45181_202605",
-    "name": "45181.pdf",
-    "size": 6945124
-   }
-  ],
-  "mb": 6.6,
+  "folder": "علوم الحديث ومصطلحه/شرح ألفية السيوطي في مصطلح الحديث - محمد محيي الدين (ت طارق بن عوض الله بن محمد أبو معاذ - دار ابن القيم)",
+  "waqfeya_id": "66a88da887c55ca3e12e7233",
+  "waqfeya_name": "شرح ألفية السيوطي في مصطلح الحديث - ت: عوض الله",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "fp45181_202605",
-    "name": "45181.pdf",
-    "size": 6945124
+    "item": "FP149328",
+    "name": "01_149328.pdf",
+    "size": 6752967
+   },
+   {
+    "item": "FP149328",
+    "name": "02_149329.pdf",
+    "size": 5283789
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "FP149328",
+    "name": "01_149328.pdf",
+    "size": 6752967
+   },
+   {
+    "item": "FP149328",
+    "name": "02_149329.pdf",
+    "size": 5283789
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "الفقه المقارن والعام/الأم ويليه مختصر المزني",
-  "deleted": 2,
-  "remaining": 0,
-  "how": "title",
-  "waqfeya_id": "66a88e0f87c55ca3e12f5133",
-  "waqfeya_name": "الأم ويليه مختصر المزني - ط. الكليات الأزهرية - ملون",
-  "url": "https://waqfeya.net/books/الأم-ويليه-مختصر-المزني-ط-الكليات-الأزهرية-ملون-c2a37c0475804aab9d1d17e2dfec3ae8",
-  "files": [
-   {
-    "item": "WAQalumm",
-    "name": "00_alumm.pdf",
-    "size": 511395
-   },
-   {
-    "item": "WAQalumm",
-    "name": "01_alumm.pdf",
-    "size": 20974791
-   },
-   {
-    "item": "WAQalumm",
-    "name": "01_alummp.pdf",
-    "size": 677072
-   },
-   {
-    "item": "WAQalumm",
-    "name": "02_alumm.pdf",
-    "size": 17497592
-   },
-   {
-    "item": "WAQalumm",
-    "name": "03_alumm.pdf",
-    "size": 16255484
-   },
-   {
-    "item": "WAQalumm",
-    "name": "04_alumm.pdf",
-    "size": 18297919
-   },
-   {
-    "item": "WAQalumm",
-    "name": "05_alumm.pdf",
-    "size": 18667697
-   },
-   {
-    "item": "WAQalumm",
-    "name": "06_alumm.pdf",
-    "size": 15519341
-   },
-   {
-    "item": "WAQalumm",
-    "name": "07_alumm.pdf",
-    "size": 26499383
-   },
-   {
-    "item": "WAQalumm",
-    "name": "08_alumm.pdf",
-    "size": 5645436
-   },
-   {
-    "item": "WAQalumm",
-    "name": "09_amuzani.pdf",
-    "size": 32279489
-   }
-  ],
-  "mb": 164.8,
+  "folder": "الفقه الحنبلي/التعليقة الكبيرة في مسائل الخلاف - من الاعتكاف إلى البيوع",
+  "waqfeya_id": "66a88daf87c55ca3e12e853f",
+  "waqfeya_name": "التعليقة الكبيرة في مسائل الخلاف - من الاعتكاف إلى البيوع",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "WAQalumm",
-    "name": "00_alumm.pdf",
-    "size": 511395
+    "item": "FP137913",
+    "name": "02_137914.pdf",
+    "size": 8986092
    },
    {
-    "item": "WAQalumm",
-    "name": "01_alumm.pdf",
-    "size": 20974791
-   },
-   {
-    "item": "WAQalumm",
-    "name": "01_alummp.pdf",
-    "size": 677072
-   },
-   {
-    "item": "WAQalumm",
-    "name": "02_alumm.pdf",
-    "size": 17497592
-   },
-   {
-    "item": "WAQalumm",
-    "name": "03_alumm.pdf",
-    "size": 16255484
-   },
-   {
-    "item": "WAQalumm",
-    "name": "04_alumm.pdf",
-    "size": 18297919
-   },
-   {
-    "item": "WAQalumm",
-    "name": "05_alumm.pdf",
-    "size": 18667697
-   },
-   {
-    "item": "WAQalumm",
-    "name": "06_alumm.pdf",
-    "size": 15519341
-   },
-   {
-    "item": "WAQalumm",
-    "name": "07_alumm.pdf",
-    "size": 26499383
-   },
-   {
-    "item": "WAQalumm",
-    "name": "08_alumm.pdf",
-    "size": 5645436
-   },
-   {
-    "item": "WAQalumm",
-    "name": "09_amuzani.pdf",
-    "size": 32279489
+    "item": "FP137913",
+    "name": "03_137915.pdf",
+    "size": 7301290
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "FP137913",
+    "name": "02_137914.pdf",
+    "size": 8986092
+   },
+   {
+    "item": "FP137913",
+    "name": "03_137915.pdf",
+    "size": 7301290
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "كتب العلل والزوائد والرجال/وفيات قوم من المصريين ونفر سواهم",
-  "deleted": 1,
-  "remaining": 0,
-  "how": "archive id",
-  "waqfeya_id": "67f48b9e5bedc34e5c8d1d7c",
-  "waqfeya_name": "وفيات قوم من المصريين ونفر سواهم",
-  "url": "https://waqfeya.net/books/وفيات-قوم-من-المصريين-ونفر-سواهم-065e66bba8654976921293d84e7e21c2",
-  "files": [
-   {
-    "item": "FP39771",
-    "name": "39771.pdf",
-    "size": 2554413
-   }
-  ],
-  "mb": 2.4,
+  "folder": "الرقائق والآداب والأذكار/الأذكار وبذيله تحفة الأبرار نكت الأذكار - النووي (ت بشير محمد عيون - مكتبة دار البيان)",
+  "waqfeya_id": "66a88de887c55ca3e12f0dc6",
+  "waqfeya_name": "الأذكار وبذيله تحفة الأبرار نكت الأذكار - ت: عيون - ط. 2",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "FP39771",
-    "name": "39771.pdf",
-    "size": 2554413
+    "item": "WAQ140693",
+    "name": "140693p.pdf",
+    "size": 213194
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "WAQ140693",
+    "name": "140693p.pdf",
+    "size": 213194
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "متون الحديث والمسانيد والمعاجم/تهذيب الآثار وتفصيل الثابت عن رسول الله صلى الله عليه وسلم  من الأخبار",
-  "deleted": 4,
-  "remaining": 0,
-  "how": "archive id",
-  "waqfeya_id": "66a88e1b87c55ca3e12f61d9",
-  "waqfeya_name": "تهذيب الآثار وتفصيل الثابت عن رسول الله صلى الله عليه وسلم من الأخبار - الجزء المفقود - ت: رضا",
-  "url": "https://waqfeya.net/books/تهذيب-الآثار-وتفصيل-الثابت-عن-رسول-الله-صلى-الله-عليه-وسلم-من-الأخبار-الجزء-المفقود-ت-رضا-4c44416d297e4d439bcc663bfbb11304",
-  "files": [
-   {
-    "item": "fp24441_202505",
-    "name": "24441.pdf",
-    "size": 11584603
-   }
-  ],
-  "mb": 11.0,
+  "folder": "التراجم والطبقات والأعلام/التكملة لوفيات النقلة - المنذري (ت بشار عواد معروف - مؤسسة الرسالة)",
+  "waqfeya_id": "66a88de387c55ca3e12f054a",
+  "waqfeya_name": "التكملة لوفيات النقلة",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "fp24441_202505",
-    "name": "24441.pdf",
-    "size": 11584603
+    "item": "WAQ8180",
+    "name": "04_8183.pdf",
+    "size": 9025132
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "WAQ8180",
+    "name": "04_8183.pdf",
+    "size": 9025132
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "متون الحديث والمسانيد والمعاجم/رياض الصالحين - صفحة تجميعية",
-  "deleted": 5,
-  "remaining": 0,
-  "how": "archive id",
-  "waqfeya_id": "66a88e0a87c55ca3e12f4884",
-  "waqfeya_name": "رياض الصالحين - ت: الألباني، ط 1412",
-  "url": "https://waqfeya.net/books/رياض-الصالحين-ت-الألباني-ط-1412-e01a5bf169f14dff894594b16332c36e",
-  "files": [
-   {
-    "item": "fp158170_202506",
-    "name": "158170.pdf",
-    "size": 12527280
-   }
-  ],
-  "mb": 11.9,
+  "folder": "متون الحديث والمسانيد والمعاجم/مصابيح السنة - البغوي (ت يوسف عبد الرحمن المرعشلي ومحمد سليم إبراهيم سمارة - دار المعرفة)",
+  "waqfeya_id": "66a88de187c55ca3e12f015f",
+  "waqfeya_name": "مصابيح السنة - ت: المرعشلي وآخرون",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "fp158170_202506",
-    "name": "158170.pdf",
-    "size": 12527280
+    "item": "WAQ3610_937",
+    "name": "01_3610.pdf",
+    "size": 9871090
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "WAQ3610_937",
+    "name": "01_3610.pdf",
+    "size": 9871090
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "متون الحديث والمسانيد والمعاجم/رياض الصالحين - عدة طبعات",
-  "deleted": 4,
-  "remaining": 0,
-  "how": "archive id",
-  "waqfeya_id": "66a88dc587c55ca3e12ebd28",
-  "waqfeya_name": "رياض الصالحين من حديث سيد المرسلين - ت: الحلبي",
-  "url": "https://waqfeya.net/books/رياض-الصالحين-من-حديث-سيد-المرسلين-ت-الحلبي-19d8a2b4228f4561a96c4dac4cae44ce",
-  "files": [
-   {
-    "item": "FP45235",
-    "name": "45235.pdf",
-    "size": 15771624
-   }
-  ],
-  "mb": 15.0,
+  "folder": "الفقه الحنفي/البناية في شرح الهداية - بدر الدين العيني (دار الكتب العلمية)",
+  "waqfeya_id": "66a88dc187c55ca3e12eb1ec",
+  "waqfeya_name": "البناية في شرح الهداية - ط. العلمية",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "FP45235",
-    "name": "45235.pdf",
-    "size": 15771624
+    "item": "waq74941",
+    "name": "01_74941.pdf",
+    "size": 17633644
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "waq74941",
+    "name": "01_74941.pdf",
+    "size": 17633644
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "متون الحديث والمسانيد والمعاجم/مجموع فيه الأحاديث العيدية المسلسلة لأبي طاهر أحمد بن محمد السلفي",
-  "deleted": 2,
-  "remaining": 0,
-  "how": "title",
-  "waqfeya_id": "66a88e0c87c55ca3e12f4b76",
-  "waqfeya_name": "مجموع فيه الأحاديث العيدية المسلسلة لأبي طاهر أحمد بن محمد السلفي",
-  "url": "https://waqfeya.net/books/مجموع-فيه-الأحاديث-العيدية-المسلسلة-لأبي-ظاهر-أحمد-بن-محمد-السلفي-21a3e2146a2b4da4ac328e0722ca0ec5",
-  "files": [
-   {
-    "item": "FP44612",
-    "name": "44612.pdf",
-    "size": 3342384
-   }
-  ],
-  "mb": 3.2,
+  "folder": "التراجم والطبقات والأعلام/البدر الطالع بمحاسن من بعد القرن السابع - محمد بن علي الشوكاني (دار المعرفة)",
+  "waqfeya_id": "66a88dde87c55ca3e12efad6",
+  "waqfeya_name": "البدر الطالع بمحاسن من بعد القرن السابع",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "FP44612",
-    "name": "44612.pdf",
-    "size": 3342384
+    "item": "waq10921",
+    "name": "01_10921.pdf",
+    "size": 11655406
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "waq10921",
+    "name": "01_10921.pdf",
+    "size": 11655406
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "متون الحديث والمسانيد والمعاجم/من حديث الإمام سفيان بن سعيد الثوري",
-  "deleted": 4,
-  "remaining": 0,
-  "how": "archive id",
-  "waqfeya_id": "66a88ddb87c55ca3e12ef4cd",
-  "waqfeya_name": "من حديث الإمام سفيان بن سعيد الثوري، ويليه: سنن الأثرم",
-  "url": "https://waqfeya.net/books/من-حديث-الإمام-سفيان-بن-سعيد-الثوري-ويليه-سنن-الأثرم-e904be4c3d5346c9820f0a292d007343",
-  "files": [
-   {
-    "item": "FP63662",
-    "name": "63662.pdf",
-    "size": 5204963
-   }
-  ],
-  "mb": 5.0,
+  "folder": "المجلات والدوريات والسلاسل الكبرى/سلسلة لقاء العشر الأواخر بالمسجد الحرام (دار البشائر)",
+  "waqfeya_id": "66a88ddc87c55ca3e12ef70b",
+  "waqfeya_name": "لقاء العشر الأواخر بالمسجد الحرام (المجموعة الثالثة عشرة: 1431 هـ = 150-163)",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "FP63662",
-    "name": "63662.pdf",
-    "size": 5204963
+    "item": "WAQ121130_201308",
+    "name": "150_121130-01.pdf",
+    "size": 850572
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "151_121130-02.pdf",
+    "size": 2837124
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "152_121130-03.pdf",
+    "size": 1379972
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "153_121130-04.pdf",
+    "size": 1554844
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "154_121130-05.pdf",
+    "size": 798147
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "155_121130-06.pdf",
+    "size": 2417288
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "156_121130-07.pdf",
+    "size": 496395
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "157_121130-08.pdf",
+    "size": 1604630
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "158_121130-09.pdf",
+    "size": 1677241
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "159_121130-10.pdf",
+    "size": 765500
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "160_121130-11.pdf",
+    "size": 734340
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "161_121130-12.pdf",
+    "size": 880834
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "162_121130-13.pdf",
+    "size": 872309
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "163_121130-14.pdf",
+    "size": 1150740
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "WAQ121130_201308",
+    "name": "150_121130-01.pdf",
+    "size": 850572
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "151_121130-02.pdf",
+    "size": 2837124
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "152_121130-03.pdf",
+    "size": 1379972
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "153_121130-04.pdf",
+    "size": 1554844
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "154_121130-05.pdf",
+    "size": 798147
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "155_121130-06.pdf",
+    "size": 2417288
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "156_121130-07.pdf",
+    "size": 496395
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "157_121130-08.pdf",
+    "size": 1604630
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "158_121130-09.pdf",
+    "size": 1677241
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "159_121130-10.pdf",
+    "size": 765500
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "160_121130-11.pdf",
+    "size": 734340
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "161_121130-12.pdf",
+    "size": 880834
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "162_121130-13.pdf",
+    "size": 872309
+   },
+   {
+    "item": "WAQ121130_201308",
+    "name": "163_121130-14.pdf",
+    "size": 1150740
+   }
+  ],
+  "remaining": 1
  },
  {
-  "folder": "متون الحديث والمسانيد والمعاجم/من حديث الإمام سفيان بن سعيد الثوري، ويليه - سنن الأثرم",
-  "deleted": 1,
-  "remaining": 0,
-  "how": "archive id",
-  "waqfeya_id": "66a88ddb87c55ca3e12ef4cd",
-  "waqfeya_name": "من حديث الإمام سفيان بن سعيد الثوري، ويليه: سنن الأثرم",
-  "url": "https://waqfeya.net/books/من-حديث-الإمام-سفيان-بن-سعيد-الثوري-ويليه-سنن-الأثرم-e904be4c3d5346c9820f0a292d007343",
-  "files": [
-   {
-    "item": "FP63662",
-    "name": "63662.pdf",
-    "size": 5204963
-   }
-  ],
-  "mb": 5.0,
+  "folder": "الفقه الشافعي/المجموع شرح المهذب، ويليه فتح العزيز شرح الوجيز، ويليه التلخيص الحبير في تخريج أحاديث الرافعي الكبير - ط. المنيرية",
+  "waqfeya_id": "66a88dda87c55ca3e12ef269",
+  "waqfeya_name": "المجموع شرح المهذب، ويليه فتح العزيز شرح الوجيز، ويليه التلخيص الحبير في تخريج أحاديث الرافعي الكبير - ط. المنيرية",
+  "mode": "missing volumes",
   "download": [
    {
-    "item": "FP63662",
-    "name": "63662.pdf",
-    "size": 5204963
+    "item": "waq20893",
+    "name": "01_20893.pdf",
+    "size": 30556313
+   },
+   {
+    "item": "waq20893",
+    "name": "02_20894.pdf",
+    "size": 38480507
+   },
+   {
+    "item": "waq20893",
+    "name": "03_20895.pdf",
+    "size": 37077370
+   },
+   {
+    "item": "waq20893",
+    "name": "04_20896.pdf",
+    "size": 43622710
+   },
+   {
+    "item": "waq20893",
+    "name": "05_20897.pdf",
+    "size": 44745617
+   },
+   {
+    "item": "waq20893",
+    "name": "06_20898.pdf",
+    "size": 47106455
+   },
+   {
+    "item": "waq20893",
+    "name": "07_20899.pdf",
+    "size": 37161516
+   },
+   {
+    "item": "waq20893",
+    "name": "08_20900.pdf",
+    "size": 30992027
+   },
+   {
+    "item": "waq20893",
+    "name": "09_68909.pdf",
+    "size": 15558592
+   },
+   {
+    "item": "waq20893",
+    "name": "10_20901.pdf",
+    "size": 28403514
+   },
+   {
+    "item": "waq20893",
+    "name": "11_20902.pdf",
+    "size": 30909309
+   },
+   {
+    "item": "waq20893",
+    "name": "12_20903.pdf",
+    "size": 24812465
+   },
+   {
+    "item": "waq20893",
+    "name": "13_20904.pdf",
+    "size": 19742116
+   },
+   {
+    "item": "waq20893",
+    "name": "14_20905.pdf",
+    "size": 19179012
+   },
+   {
+    "item": "waq20893",
+    "name": "15_20906.pdf",
+    "size": 23664973
+   },
+   {
+    "item": "waq20893",
+    "name": "16_20907.pdf",
+    "size": 17350360
+   },
+   {
+    "item": "waq20893",
+    "name": "17_20908.pdf",
+    "size": 21260726
+   },
+   {
+    "item": "waq20893",
+    "name": "18_68918.pdf",
+    "size": 21866842
+   },
+   {
+    "item": "waq20893",
+    "name": "19_20910.pdf",
+    "size": 20228671
+   },
+   {
+    "item": "waq20893",
+    "name": "20_20911.pdf",
+    "size": 12952821
    }
   ],
-  "mode": "whole book"
+  "files": [
+   {
+    "item": "waq20893",
+    "name": "01_20893.pdf",
+    "size": 30556313
+   },
+   {
+    "item": "waq20893",
+    "name": "02_20894.pdf",
+    "size": 38480507
+   },
+   {
+    "item": "waq20893",
+    "name": "03_20895.pdf",
+    "size": 37077370
+   },
+   {
+    "item": "waq20893",
+    "name": "04_20896.pdf",
+    "size": 43622710
+   },
+   {
+    "item": "waq20893",
+    "name": "05_20897.pdf",
+    "size": 44745617
+   },
+   {
+    "item": "waq20893",
+    "name": "06_20898.pdf",
+    "size": 47106455
+   },
+   {
+    "item": "waq20893",
+    "name": "07_20899.pdf",
+    "size": 37161516
+   },
+   {
+    "item": "waq20893",
+    "name": "08_20900.pdf",
+    "size": 30992027
+   },
+   {
+    "item": "waq20893",
+    "name": "09_68909.pdf",
+    "size": 15558592
+   },
+   {
+    "item": "waq20893",
+    "name": "10_20901.pdf",
+    "size": 28403514
+   },
+   {
+    "item": "waq20893",
+    "name": "11_20902.pdf",
+    "size": 30909309
+   },
+   {
+    "item": "waq20893",
+    "name": "12_20903.pdf",
+    "size": 24812465
+   },
+   {
+    "item": "waq20893",
+    "name": "13_20904.pdf",
+    "size": 19742116
+   },
+   {
+    "item": "waq20893",
+    "name": "14_20905.pdf",
+    "size": 19179012
+   },
+   {
+    "item": "waq20893",
+    "name": "15_20906.pdf",
+    "size": 23664973
+   },
+   {
+    "item": "waq20893",
+    "name": "16_20907.pdf",
+    "size": 17350360
+   },
+   {
+    "item": "waq20893",
+    "name": "17_20908.pdf",
+    "size": 21260726
+   },
+   {
+    "item": "waq20893",
+    "name": "18_68918.pdf",
+    "size": 21866842
+   },
+   {
+    "item": "waq20893",
+    "name": "19_20910.pdf",
+    "size": 20228671
+   },
+   {
+    "item": "waq20893",
+    "name": "20_20911.pdf",
+    "size": 12952821
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "شروح الحديث/عمدة القاري شرح صحيح البخاري - بدر الدين العيني (دار إحياء التراث)",
+  "waqfeya_id": "66a88dda87c55ca3e12ef1d1",
+  "waqfeya_name": "عمدة القاري شرح صحيح البخاري - ط. المنيرية",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "waq68701",
+    "name": "01_68701-01.pdf",
+    "size": 13509205
+   },
+   {
+    "item": "waq68701",
+    "name": "01_68701-01p.pdf",
+    "size": 377798
+   },
+   {
+    "item": "waq68701",
+    "name": "02_68701-02.pdf",
+    "size": 13081612
+   },
+   {
+    "item": "waq68701",
+    "name": "04_68702-02.pdf",
+    "size": 13366732
+   },
+   {
+    "item": "waq68701",
+    "name": "05_68703-01.pdf",
+    "size": 12996947
+   },
+   {
+    "item": "waq68701",
+    "name": "06_68703-02.pdf",
+    "size": 12484566
+   },
+   {
+    "item": "waq68701",
+    "name": "07_68704-01.pdf",
+    "size": 12629511
+   },
+   {
+    "item": "waq68701",
+    "name": "08_68704-02.pdf",
+    "size": 12298815
+   },
+   {
+    "item": "waq68701",
+    "name": "09_68705-01.pdf",
+    "size": 11923513
+   },
+   {
+    "item": "waq68701",
+    "name": "10_68705-02.pdf",
+    "size": 13072500
+   },
+   {
+    "item": "waq68701",
+    "name": "11_68706-01.pdf",
+    "size": 13152916
+   },
+   {
+    "item": "waq68701",
+    "name": "12_68706-02.pdf",
+    "size": 12518864
+   },
+   {
+    "item": "waq68701",
+    "name": "13_68707-01.pdf",
+    "size": 13275734
+   },
+   {
+    "item": "waq68701",
+    "name": "14_68707-02.pdf",
+    "size": 12534716
+   },
+   {
+    "item": "waq68701",
+    "name": "15_68708-01.pdf",
+    "size": 12843581
+   },
+   {
+    "item": "waq68701",
+    "name": "16_68708-02.pdf",
+    "size": 12844263
+   },
+   {
+    "item": "waq68701",
+    "name": "17_68709-01.pdf",
+    "size": 12944198
+   },
+   {
+    "item": "waq68701",
+    "name": "18_68709-02.pdf",
+    "size": 12394089
+   },
+   {
+    "item": "waq68701",
+    "name": "19_68710-01.pdf",
+    "size": 13466839
+   },
+   {
+    "item": "waq68701",
+    "name": "20_68710-02.pdf",
+    "size": 13898082
+   },
+   {
+    "item": "waq68701",
+    "name": "21_68711-01.pdf",
+    "size": 12869467
+   },
+   {
+    "item": "waq68701",
+    "name": "22_68711-02.pdf",
+    "size": 12464864
+   },
+   {
+    "item": "waq68701",
+    "name": "23_68712-01.pdf",
+    "size": 12026638
+   },
+   {
+    "item": "waq68701",
+    "name": "24_68712-02.pdf",
+    "size": 11112160
+   },
+   {
+    "item": "waq68701",
+    "name": "25_68712-03.pdf",
+    "size": 7985126
+   }
+  ],
+  "files": [
+   {
+    "item": "waq68701",
+    "name": "01_68701-01.pdf",
+    "size": 13509205
+   },
+   {
+    "item": "waq68701",
+    "name": "01_68701-01p.pdf",
+    "size": 377798
+   },
+   {
+    "item": "waq68701",
+    "name": "02_68701-02.pdf",
+    "size": 13081612
+   },
+   {
+    "item": "waq68701",
+    "name": "04_68702-02.pdf",
+    "size": 13366732
+   },
+   {
+    "item": "waq68701",
+    "name": "05_68703-01.pdf",
+    "size": 12996947
+   },
+   {
+    "item": "waq68701",
+    "name": "06_68703-02.pdf",
+    "size": 12484566
+   },
+   {
+    "item": "waq68701",
+    "name": "07_68704-01.pdf",
+    "size": 12629511
+   },
+   {
+    "item": "waq68701",
+    "name": "08_68704-02.pdf",
+    "size": 12298815
+   },
+   {
+    "item": "waq68701",
+    "name": "09_68705-01.pdf",
+    "size": 11923513
+   },
+   {
+    "item": "waq68701",
+    "name": "10_68705-02.pdf",
+    "size": 13072500
+   },
+   {
+    "item": "waq68701",
+    "name": "11_68706-01.pdf",
+    "size": 13152916
+   },
+   {
+    "item": "waq68701",
+    "name": "12_68706-02.pdf",
+    "size": 12518864
+   },
+   {
+    "item": "waq68701",
+    "name": "13_68707-01.pdf",
+    "size": 13275734
+   },
+   {
+    "item": "waq68701",
+    "name": "14_68707-02.pdf",
+    "size": 12534716
+   },
+   {
+    "item": "waq68701",
+    "name": "15_68708-01.pdf",
+    "size": 12843581
+   },
+   {
+    "item": "waq68701",
+    "name": "16_68708-02.pdf",
+    "size": 12844263
+   },
+   {
+    "item": "waq68701",
+    "name": "17_68709-01.pdf",
+    "size": 12944198
+   },
+   {
+    "item": "waq68701",
+    "name": "18_68709-02.pdf",
+    "size": 12394089
+   },
+   {
+    "item": "waq68701",
+    "name": "19_68710-01.pdf",
+    "size": 13466839
+   },
+   {
+    "item": "waq68701",
+    "name": "20_68710-02.pdf",
+    "size": 13898082
+   },
+   {
+    "item": "waq68701",
+    "name": "21_68711-01.pdf",
+    "size": 12869467
+   },
+   {
+    "item": "waq68701",
+    "name": "22_68711-02.pdf",
+    "size": 12464864
+   },
+   {
+    "item": "waq68701",
+    "name": "23_68712-01.pdf",
+    "size": 12026638
+   },
+   {
+    "item": "waq68701",
+    "name": "24_68712-02.pdf",
+    "size": 11112160
+   },
+   {
+    "item": "waq68701",
+    "name": "25_68712-03.pdf",
+    "size": 7985126
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "الفقه الحنبلي/مسائل الإمام أحمد بن حنبل وإسحاق ابن راهويه رواية إسحاق بن منصور الكوسج المروزي",
+  "waqfeya_id": "66a88dc987c55ca3e12ec7d8",
+  "waqfeya_name": "مسائل الإمام أحمد بن حنبل وإسحاق ابن راهويه رواية إسحاق بن منصور الكوسج المروزي - ط. دار الهجرة",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "waq62377",
+    "name": "01_62377.pdf",
+    "size": 8046664
+   }
+  ],
+  "files": [
+   {
+    "item": "waq62377",
+    "name": "01_62377.pdf",
+    "size": 8046664
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "الفقه المقارن والعام/الأموال",
+  "waqfeya_id": "66a88db187c55ca3e12e898c",
+  "waqfeya_name": "الأموال",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FP89729",
+    "name": "89729p.pdf",
+    "size": 1555484
+   }
+  ],
+  "files": [
+   {
+    "item": "FP89729",
+    "name": "89729p.pdf",
+    "size": 1555484
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "الدواوين الشعرية/ديوان بهاء الدين زهير",
+  "waqfeya_id": "66a88dba87c55ca3e12ea294",
+  "waqfeya_name": "ديوان محمد بن الطلبة اليعقوبي الشنقيطي المورتاني",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "waqdwaween2",
+    "name": "23629.pdf",
+    "size": 5108908
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "28628.pdf",
+    "size": 2946696
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "34418.pdf",
+    "size": 3355402
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "36116.pdf",
+    "size": 3709101
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "45610.pdf",
+    "size": 1348769
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "48685.pdf",
+    "size": 3267700
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "51459.pdf",
+    "size": 2968602
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "58000.pdf",
+    "size": 6723625
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "59447.pdf",
+    "size": 3298555
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "59839.pdf",
+    "size": 5007428
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "60290.pdf",
+    "size": 3648729
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "62973.pdf",
+    "size": 10805885
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "66371.pdf",
+    "size": 3269319
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "66443.pdf",
+    "size": 1893319
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "78835.pdf",
+    "size": 2289213
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "87582.pdf",
+    "size": 3634447
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "91600.pdf",
+    "size": 7896476
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "94469.pdf",
+    "size": 7355978
+   }
+  ],
+  "files": [
+   {
+    "item": "waqdwaween2",
+    "name": "23629.pdf",
+    "size": 5108908
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "28628.pdf",
+    "size": 2946696
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "34418.pdf",
+    "size": 3355402
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "36116.pdf",
+    "size": 3709101
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "45610.pdf",
+    "size": 1348769
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "48685.pdf",
+    "size": 3267700
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "51459.pdf",
+    "size": 2968602
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "58000.pdf",
+    "size": 6723625
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "59447.pdf",
+    "size": 3298555
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "59839.pdf",
+    "size": 5007428
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "60290.pdf",
+    "size": 3648729
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "62973.pdf",
+    "size": 10805885
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "66371.pdf",
+    "size": 3269319
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "66443.pdf",
+    "size": 1893319
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "78835.pdf",
+    "size": 2289213
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "87582.pdf",
+    "size": 3634447
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "91600.pdf",
+    "size": 7896476
+   },
+   {
+    "item": "waqdwaween2",
+    "name": "94469.pdf",
+    "size": 7355978
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "متون الحديث والمسانيد والمعاجم/الإفصاح عن معاني الصحاح - ابن هبيرة (ت فؤاد عبد المنعم أحمد - دار الوطن)",
+  "waqfeya_id": "66a88da087c55ca3e12e5deb",
+  "waqfeya_name": "الإفصاح عن  معاني الصحاح",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "waqimsh",
+    "name": "imsh8.pdf",
+    "size": 5381017
+   }
+  ],
+  "files": [
+   {
+    "item": "waqimsh",
+    "name": "imsh8.pdf",
+    "size": 5381017
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "النحو والصرف وعلم الوضع/الأشباه والنظائر في النحو - الجلال السيوطي (ت عبد العال سالم مكرم)",
+  "waqfeya_id": "66a88dc287c55ca3e12eb52f",
+  "waqfeya_name": "الأشباه والنظائر في النحو - ط. الرسالة",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "waq83221",
+    "name": "01_83221.pdf",
+    "size": 5063508
+   },
+   {
+    "item": "waq83221",
+    "name": "02_83222.pdf",
+    "size": 6103942
+   },
+   {
+    "item": "waq83221",
+    "name": "03_83223.pdf",
+    "size": 4987679
+   },
+   {
+    "item": "waq83221",
+    "name": "04_83224.pdf",
+    "size": 4572120
+   }
+  ],
+  "files": [
+   {
+    "item": "waq83221",
+    "name": "01_83221.pdf",
+    "size": 5063508
+   },
+   {
+    "item": "waq83221",
+    "name": "02_83222.pdf",
+    "size": 6103942
+   },
+   {
+    "item": "waq83221",
+    "name": "03_83223.pdf",
+    "size": 4987679
+   },
+   {
+    "item": "waq83221",
+    "name": "04_83224.pdf",
+    "size": 4572120
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "علوم القرآن والقراءات/إعراب القراءات الشواذ - العكبري (ت محمد السيد أحمد عزوز)",
+  "waqfeya_id": "66a88db987c55ca3e12e9e1f",
+  "waqfeya_name": "إعراب القراءات الشواذ",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FP46111",
+    "name": "01_46111.pdf",
+    "size": 12690997
+   }
+  ],
+  "files": [
+   {
+    "item": "FP46111",
+    "name": "01_46111.pdf",
+    "size": 12690997
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "كتب العلل والزوائد والرجال/بيان الوهم والإيهام في كتاب الأحكام - ابن القطان (ت الحسين آيت سعيد - دار طيبة للنشر والتوزيع)",
+  "waqfeya_id": "66a88db887c55ca3e12e9cf6",
+  "waqfeya_name": "بيان الوهم والإيهام في كتاب الأحكام - ت: سعيد",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "waq34163",
+    "name": "02_34164.pdf",
+    "size": 9754064
+   }
+  ],
+  "files": [
+   {
+    "item": "waq34163",
+    "name": "02_34164.pdf",
+    "size": 9754064
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "متون الحديث والمسانيد والمعاجم/الفردوس بمأثور الخطاب - الديلمي (ت السعيد بن بسيوني زغلول - دار الكتب العلمية)",
+  "waqfeya_id": "66a88db887c55ca3e12e9cba",
+  "waqfeya_name": "الفردوس بمأثور الخطاب",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FP3682",
+    "name": "fmk3.pdf",
+    "size": 10134694
+   },
+   {
+    "item": "FP3682",
+    "name": "fmk5.pdf",
+    "size": 8069466
+   },
+   {
+    "item": "FP3682",
+    "name": "fmk6.pdf",
+    "size": 5552140
+   }
+  ],
+  "files": [
+   {
+    "item": "FP3682",
+    "name": "fmk3.pdf",
+    "size": 10134694
+   },
+   {
+    "item": "FP3682",
+    "name": "fmk5.pdf",
+    "size": 8069466
+   },
+   {
+    "item": "FP3682",
+    "name": "fmk6.pdf",
+    "size": 5552140
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "متون الحديث والمسانيد والمعاجم/أخبار مكة في قديم الدهر وحديثه - الفاكهي (ت عبد الملك بن عبد الله بن دهيش - دار خضر للطباعة والنشر)",
+  "waqfeya_id": "66a88dc187c55ca3e12eb25e",
+  "waqfeya_name": "أخبار مكة في قديم الدهر وحديثه - الفاكهي - ت: بن دهيش",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "waq10151",
+    "name": "06_10156.pdf",
+    "size": 4207624
+   }
+  ],
+  "files": [
+   {
+    "item": "waq10151",
+    "name": "06_10156.pdf",
+    "size": 4207624
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "متون الحديث والمسانيد والمعاجم/مسند الإمام عبد الله بن المبارك - ت السامرائي",
+  "waqfeya_id": "66a88db787c55ca3e12e9886",
+  "waqfeya_name": "مسند الإمام عبد الله بن المبارك - ت: السامرائي",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "waq15754",
+    "name": "8979.pdf",
+    "size": 1466368
+   }
+  ],
+  "files": [
+   {
+    "item": "waq15754",
+    "name": "8979.pdf",
+    "size": 1466368
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "التفاسير/الجامع لأحكام القرآن = تفسير القرطبي (ت عبد الله بن عبد المحسن التركي - مؤسسة الرسالة)",
+  "waqfeya_id": "66a88db687c55ca3e12e9723",
+  "waqfeya_name": "الجامع لأحكام القرآن = تفسير القرطبي - ت: التركي",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FP73651",
+    "name": "07_73657.pdf",
+    "size": 9753261
+   }
+  ],
+  "files": [
+   {
+    "item": "FP73651",
+    "name": "07_73657.pdf",
+    "size": 9753261
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "الفقه الحنفي/رد المحتار على الدر المختار = حاشية ابن عابدين، ويليه قرة عيون الأخيار وتقريرات الرافعي",
+  "waqfeya_id": "66a88dc187c55ca3e12eb1c8",
+  "waqfeya_name": "رد المحتار على الدر المختار = حاشية ابن عابدين، ويليه قرة عيون الأخيار وتقريرات الرافعي",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FP61487",
+    "name": "01_61487.pdf",
+    "size": 14579550
+   },
+   {
+    "item": "FP61487",
+    "name": "02_61488.pdf",
+    "size": 16773924
+   },
+   {
+    "item": "FP61487",
+    "name": "09_61495.pdf",
+    "size": 16436486
+   },
+   {
+    "item": "FP61487",
+    "name": "13_61499.pdf",
+    "size": 21910310
+   }
+  ],
+  "files": [
+   {
+    "item": "FP61487",
+    "name": "01_61487.pdf",
+    "size": 14579550
+   },
+   {
+    "item": "FP61487",
+    "name": "02_61488.pdf",
+    "size": 16773924
+   },
+   {
+    "item": "FP61487",
+    "name": "09_61495.pdf",
+    "size": 16436486
+   },
+   {
+    "item": "FP61487",
+    "name": "13_61499.pdf",
+    "size": 21910310
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "الفقه المالكي/الأفنان الندية شرح منظومة السبل السوية لفقه السنن المروية - المدخلي",
+  "waqfeya_id": "66a88db487c55ca3e12e93ae",
+  "waqfeya_name": "الأفنان الندية شرح منظومة السبل السوية لفقه السنن المروية",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FP4282",
+    "name": "04-4285.pdf",
+    "size": 7778774
+   }
+  ],
+  "files": [
+   {
+    "item": "FP4282",
+    "name": "04-4285.pdf",
+    "size": 7778774
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "أصول الفقه والقواعد الفقهية/نشر البنود على مراقي السعود - الشنقيطي",
+  "waqfeya_id": "66a88db487c55ca3e12e929f",
+  "waqfeya_name": "نشر البنود على مراقي السعود",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "37355waq",
+    "name": "37355m.pdf",
+    "size": 10377
+   },
+   {
+    "item": "FP37355FP",
+    "name": "01_37355.pdf",
+    "size": 6754654
+   },
+   {
+    "item": "FP37355FP",
+    "name": "02_37356.pdf",
+    "size": 7458486
+   }
+  ],
+  "files": [
+   {
+    "item": "37355waq",
+    "name": "37355m.pdf",
+    "size": 10377
+   },
+   {
+    "item": "FP37355FP",
+    "name": "01_37355.pdf",
+    "size": 6754654
+   },
+   {
+    "item": "FP37355FP",
+    "name": "02_37356.pdf",
+    "size": 7458486
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "الرقائق والآداب والأذكار/المصابيح في صلاة التراويح - السيوطي",
+  "waqfeya_id": "66a88db387c55ca3e12e9007",
+  "waqfeya_name": "من وحي رمضان",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "mfaismfais",
+    "name": "agwr.pdf",
+    "size": 3238604
+   },
+   {
+    "item": "mfaismfais",
+    "name": "akrm.pdf",
+    "size": 2472925
+   },
+   {
+    "item": "mfaismfais",
+    "name": "amr.pdf",
+    "size": 545376
+   },
+   {
+    "item": "mfaismfais",
+    "name": "ast.pdf",
+    "size": 1435119
+   },
+   {
+    "item": "mfaismfais",
+    "name": "desa.pdf",
+    "size": 4104187
+   },
+   {
+    "item": "mfaismfais",
+    "name": "eaedr.pdf",
+    "size": 1462964
+   },
+   {
+    "item": "mfaismfais",
+    "name": "eaedrg.pdf",
+    "size": 2994047
+   },
+   {
+    "item": "mfaismfais",
+    "name": "frramr.pdf",
+    "size": 4198190
+   },
+   {
+    "item": "mfaismfais",
+    "name": "mfais.pdf",
+    "size": 9671167
+   },
+   {
+    "item": "mfaismfais",
+    "name": "mhsr.pdf",
+    "size": 8537152
+   },
+   {
+    "item": "mfaismfais",
+    "name": "mhwr.pdf",
+    "size": 4515102
+   },
+   {
+    "item": "mfaismfais",
+    "name": "mhwrp.pdf",
+    "size": 131140
+   },
+   {
+    "item": "mfaismfais",
+    "name": "mmms.pdf",
+    "size": 20147849
+   },
+   {
+    "item": "mfaismfais",
+    "name": "mymyr.pdf",
+    "size": 3180889
+   },
+   {
+    "item": "mfaismfais",
+    "name": "mymyrp.pdf",
+    "size": 146600
+   },
+   {
+    "item": "mfaismfais",
+    "name": "sfrm.pdf",
+    "size": 1538958
+   },
+   {
+    "item": "mfaismfais",
+    "name": "tds.pdf",
+    "size": 1489256
+   },
+   {
+    "item": "mfaismfais",
+    "name": "tmsz.pdf",
+    "size": 2928198
+   },
+   {
+    "item": "mfaismfais",
+    "name": "trast.pdf",
+    "size": 804072
+   },
+   {
+    "item": "mfaismfais",
+    "name": "tywr.pdf",
+    "size": 2686338
+   },
+   {
+    "item": "mfaismfais",
+    "name": "warm.pdf",
+    "size": 2836646
+   }
+  ],
+  "files": [
+   {
+    "item": "mfaismfais",
+    "name": "agwr.pdf",
+    "size": 3238604
+   },
+   {
+    "item": "mfaismfais",
+    "name": "akrm.pdf",
+    "size": 2472925
+   },
+   {
+    "item": "mfaismfais",
+    "name": "amr.pdf",
+    "size": 545376
+   },
+   {
+    "item": "mfaismfais",
+    "name": "ast.pdf",
+    "size": 1435119
+   },
+   {
+    "item": "mfaismfais",
+    "name": "desa.pdf",
+    "size": 4104187
+   },
+   {
+    "item": "mfaismfais",
+    "name": "eaedr.pdf",
+    "size": 1462964
+   },
+   {
+    "item": "mfaismfais",
+    "name": "eaedrg.pdf",
+    "size": 2994047
+   },
+   {
+    "item": "mfaismfais",
+    "name": "frramr.pdf",
+    "size": 4198190
+   },
+   {
+    "item": "mfaismfais",
+    "name": "mfais.pdf",
+    "size": 9671167
+   },
+   {
+    "item": "mfaismfais",
+    "name": "mhsr.pdf",
+    "size": 8537152
+   },
+   {
+    "item": "mfaismfais",
+    "name": "mhwr.pdf",
+    "size": 4515102
+   },
+   {
+    "item": "mfaismfais",
+    "name": "mhwrp.pdf",
+    "size": 131140
+   },
+   {
+    "item": "mfaismfais",
+    "name": "mmms.pdf",
+    "size": 20147849
+   },
+   {
+    "item": "mfaismfais",
+    "name": "mymyr.pdf",
+    "size": 3180889
+   },
+   {
+    "item": "mfaismfais",
+    "name": "mymyrp.pdf",
+    "size": 146600
+   },
+   {
+    "item": "mfaismfais",
+    "name": "sfrm.pdf",
+    "size": 1538958
+   },
+   {
+    "item": "mfaismfais",
+    "name": "tds.pdf",
+    "size": 1489256
+   },
+   {
+    "item": "mfaismfais",
+    "name": "tmsz.pdf",
+    "size": 2928198
+   },
+   {
+    "item": "mfaismfais",
+    "name": "trast.pdf",
+    "size": 804072
+   },
+   {
+    "item": "mfaismfais",
+    "name": "tywr.pdf",
+    "size": 2686338
+   },
+   {
+    "item": "mfaismfais",
+    "name": "warm.pdf",
+    "size": 2836646
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "الرقائق والآداب والأذكار/مقاصد الصوم",
+  "waqfeya_id": "66a88db387c55ca3e12e8f8d",
+  "waqfeya_name": "صيام الصالحين",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "sesasesa",
+    "name": "ktql.pdf",
+    "size": 5792116
+   },
+   {
+    "item": "sesasesa",
+    "name": "leqaa.pdf",
+    "size": 4731722
+   },
+   {
+    "item": "sesasesa",
+    "name": "lqmwd.pdf",
+    "size": 1155642
+   },
+   {
+    "item": "sesasesa",
+    "name": "msr.pdf",
+    "size": 2705300
+   },
+   {
+    "item": "sesasesa",
+    "name": "ndrm.pdf",
+    "size": 1394693
+   },
+   {
+    "item": "sesasesa",
+    "name": "qsrm.pdf",
+    "size": 2125517
+   },
+   {
+    "item": "sesasesa",
+    "name": "sesa.pdf",
+    "size": 776537
+   }
+  ],
+  "files": [
+   {
+    "item": "sesasesa",
+    "name": "ktql.pdf",
+    "size": 5792116
+   },
+   {
+    "item": "sesasesa",
+    "name": "leqaa.pdf",
+    "size": 4731722
+   },
+   {
+    "item": "sesasesa",
+    "name": "lqmwd.pdf",
+    "size": 1155642
+   },
+   {
+    "item": "sesasesa",
+    "name": "msr.pdf",
+    "size": 2705300
+   },
+   {
+    "item": "sesasesa",
+    "name": "ndrm.pdf",
+    "size": 1394693
+   },
+   {
+    "item": "sesasesa",
+    "name": "qsrm.pdf",
+    "size": 2125517
+   },
+   {
+    "item": "sesasesa",
+    "name": "sesa.pdf",
+    "size": 776537
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "الرقائق والآداب والأذكار/فوائد الصوم",
+  "waqfeya_id": "66a88db387c55ca3e12e8f0b",
+  "waqfeya_name": "شرح الصدر بذكر ليلة القدر فضائل وعلامات ليلة القدر ويليه إشراق المصابيح في صلاة التراويح",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "ftseftse",
+    "name": "adar.pdf",
+    "size": 5068326
+   },
+   {
+    "item": "ftseftse",
+    "name": "burn.pdf",
+    "size": 4337753
+   },
+   {
+    "item": "ftseftse",
+    "name": "eae.pdf",
+    "size": 2357419
+   },
+   {
+    "item": "ftseftse",
+    "name": "egtl.pdf",
+    "size": 2335220
+   },
+   {
+    "item": "ftseftse",
+    "name": "falk.pdf",
+    "size": 1083900
+   },
+   {
+    "item": "ftseftse",
+    "name": "fmdr.pdf",
+    "size": 4405476
+   },
+   {
+    "item": "ftseftse",
+    "name": "ftse.pdf",
+    "size": 289456
+   },
+   {
+    "item": "ftseftse",
+    "name": "gsaslt.pdf",
+    "size": 519838
+   },
+   {
+    "item": "ftseftse",
+    "name": "mas.pdf",
+    "size": 1190796
+   },
+   {
+    "item": "ftseftse",
+    "name": "mnr.pdf",
+    "size": 420911
+   },
+   {
+    "item": "ftseftse",
+    "name": "rmna.pdf",
+    "size": 1789460
+   },
+   {
+    "item": "ftseftse",
+    "name": "seah.pdf",
+    "size": 1141936
+   },
+   {
+    "item": "ftseftse",
+    "name": "srs.pdf",
+    "size": 1095090
+   },
+   {
+    "item": "ftseftse",
+    "name": "sszlk.pdf",
+    "size": 1019542
+   }
+  ],
+  "files": [
+   {
+    "item": "ftseftse",
+    "name": "adar.pdf",
+    "size": 5068326
+   },
+   {
+    "item": "ftseftse",
+    "name": "burn.pdf",
+    "size": 4337753
+   },
+   {
+    "item": "ftseftse",
+    "name": "eae.pdf",
+    "size": 2357419
+   },
+   {
+    "item": "ftseftse",
+    "name": "egtl.pdf",
+    "size": 2335220
+   },
+   {
+    "item": "ftseftse",
+    "name": "falk.pdf",
+    "size": 1083900
+   },
+   {
+    "item": "ftseftse",
+    "name": "fmdr.pdf",
+    "size": 4405476
+   },
+   {
+    "item": "ftseftse",
+    "name": "ftse.pdf",
+    "size": 289456
+   },
+   {
+    "item": "ftseftse",
+    "name": "gsaslt.pdf",
+    "size": 519838
+   },
+   {
+    "item": "ftseftse",
+    "name": "mas.pdf",
+    "size": 1190796
+   },
+   {
+    "item": "ftseftse",
+    "name": "mnr.pdf",
+    "size": 420911
+   },
+   {
+    "item": "ftseftse",
+    "name": "rmna.pdf",
+    "size": 1789460
+   },
+   {
+    "item": "ftseftse",
+    "name": "seah.pdf",
+    "size": 1141936
+   },
+   {
+    "item": "ftseftse",
+    "name": "srs.pdf",
+    "size": 1095090
+   },
+   {
+    "item": "ftseftse",
+    "name": "sszlk.pdf",
+    "size": 1019542
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "العقيدة والتوحيد وأصول الدين/تبصير أولي النهى ومعالم الهدى التبصير في معالم الدين أو التبصير في معالم الدين - ابن جرير الطبري",
+  "waqfeya_id": "66a88db287c55ca3e12e8ce2",
+  "waqfeya_name": "تبصير أولي النهى ومعالم الهدى التبصير في معالم الدين أو التبصير في معالم الدين",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "bansbans",
+    "name": "azma.pdf",
+    "size": 22482991
+   },
+   {
+    "item": "bansbans",
+    "name": "bans.pdf",
+    "size": 5457883
+   },
+   {
+    "item": "bansbans",
+    "name": "mitk.pdf",
+    "size": 16158291
+   }
+  ],
+  "files": [
+   {
+    "item": "bansbans",
+    "name": "azma.pdf",
+    "size": 22482991
+   },
+   {
+    "item": "bansbans",
+    "name": "bans.pdf",
+    "size": 5457883
+   },
+   {
+    "item": "bansbans",
+    "name": "mitk.pdf",
+    "size": 16158291
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "العقيدة والتوحيد وأصول الدين/صفة الجنة - أبو نعيم",
+  "waqfeya_id": "66a88db287c55ca3e12e8c6a",
+  "waqfeya_name": "اقتضاء الصراط المستقيم لمخالفة أصحاب الجحيم - ت: العقل - ط. الرشد",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "esmmagesmmag",
+    "name": "baoa1.pdf",
+    "size": 12772901
+   },
+   {
+    "item": "esmmagesmmag",
+    "name": "baoa2.pdf",
+    "size": 10293715
+   },
+   {
+    "item": "esmmagesmmag",
+    "name": "esmmag.pdf",
+    "size": 13210389
+   },
+   {
+    "item": "esmmagesmmag",
+    "name": "laslas1.pdf",
+    "size": 4867353
+   },
+   {
+    "item": "esmmagesmmag",
+    "name": "laslas2.pdf",
+    "size": 6170635
+   },
+   {
+    "item": "esmmagesmmag",
+    "name": "moaska.pdf",
+    "size": 6549764
+   }
+  ],
+  "files": [
+   {
+    "item": "esmmagesmmag",
+    "name": "baoa1.pdf",
+    "size": 12772901
+   },
+   {
+    "item": "esmmagesmmag",
+    "name": "baoa2.pdf",
+    "size": 10293715
+   },
+   {
+    "item": "esmmagesmmag",
+    "name": "esmmag.pdf",
+    "size": 13210389
+   },
+   {
+    "item": "esmmagesmmag",
+    "name": "laslas1.pdf",
+    "size": 4867353
+   },
+   {
+    "item": "esmmagesmmag",
+    "name": "laslas2.pdf",
+    "size": 6170635
+   },
+   {
+    "item": "esmmagesmmag",
+    "name": "moaska.pdf",
+    "size": 6549764
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "الرقائق والآداب والأذكار/مختصر الحجة على تارك المحجة",
+  "waqfeya_id": "66a88da087c55ca3e12e5da6",
+  "waqfeya_name": "الرد على عبد الله الحبشي",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "raahraah",
+    "name": "ktt.pdf",
+    "size": 1982441
+   },
+   {
+    "item": "raahraah",
+    "name": "mats.pdf",
+    "size": 9610246
+   },
+   {
+    "item": "raahraah",
+    "name": "mrgas.pdf",
+    "size": 6898817
+   },
+   {
+    "item": "raahraah",
+    "name": "mrs.pdf",
+    "size": 819027
+   },
+   {
+    "item": "raahraah",
+    "name": "mtmas1.pdf",
+    "size": 7375140
+   },
+   {
+    "item": "raahraah",
+    "name": "mtmas2.pdf",
+    "size": 8170695
+   },
+   {
+    "item": "raahraah",
+    "name": "mtmas3.pdf",
+    "size": 6084612
+   },
+   {
+    "item": "raahraah",
+    "name": "raah.pdf",
+    "size": 6017226
+   },
+   {
+    "item": "raahraah",
+    "name": "rdod.pdf",
+    "size": 6114150
+   }
+  ],
+  "files": [
+   {
+    "item": "raahraah",
+    "name": "ktt.pdf",
+    "size": 1982441
+   },
+   {
+    "item": "raahraah",
+    "name": "mats.pdf",
+    "size": 9610246
+   },
+   {
+    "item": "raahraah",
+    "name": "mrgas.pdf",
+    "size": 6898817
+   },
+   {
+    "item": "raahraah",
+    "name": "mrs.pdf",
+    "size": 819027
+   },
+   {
+    "item": "raahraah",
+    "name": "mtmas1.pdf",
+    "size": 7375140
+   },
+   {
+    "item": "raahraah",
+    "name": "mtmas2.pdf",
+    "size": 8170695
+   },
+   {
+    "item": "raahraah",
+    "name": "mtmas3.pdf",
+    "size": 6084612
+   },
+   {
+    "item": "raahraah",
+    "name": "raah.pdf",
+    "size": 6017226
+   },
+   {
+    "item": "raahraah",
+    "name": "rdod.pdf",
+    "size": 6114150
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "متون الحديث والمسانيد والمعاجم/الأربعين البلدانية - السلفي (ت عبد الله رابح - دار البيروتي)",
+  "waqfeya_id": "66a88db087c55ca3e12e87ff",
+  "waqfeya_name": "الأربعين البلدانية",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "tammktktammktk",
+    "name": "bldaniat.pdf",
+    "size": 5330438
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "duaad.pdf",
+    "size": 7240572
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "duaadp.pdf",
+    "size": 112286
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "fashal.pdf",
+    "size": 1494067
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "fayk.pdf",
+    "size": 914509
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "gemkt.pdf",
+    "size": 5608794
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "geseb.pdf",
+    "size": 1328964
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "khurbaa.pdf",
+    "size": 1204225
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "lqr.pdf",
+    "size": 3123529
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "mkak.pdf",
+    "size": 7084711
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "tammktk.pdf",
+    "size": 27014850
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "tast.pdf",
+    "size": 1744954
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "tmam.pdf",
+    "size": 3212009
+   }
+  ],
+  "files": [
+   {
+    "item": "tammktktammktk",
+    "name": "bldaniat.pdf",
+    "size": 5330438
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "duaad.pdf",
+    "size": 7240572
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "duaadp.pdf",
+    "size": 112286
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "fashal.pdf",
+    "size": 1494067
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "fayk.pdf",
+    "size": 914509
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "gemkt.pdf",
+    "size": 5608794
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "geseb.pdf",
+    "size": 1328964
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "khurbaa.pdf",
+    "size": 1204225
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "lqr.pdf",
+    "size": 3123529
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "mkak.pdf",
+    "size": 7084711
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "tammktk.pdf",
+    "size": 27014850
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "tast.pdf",
+    "size": 1744954
+   },
+   {
+    "item": "tammktktammktk",
+    "name": "tmam.pdf",
+    "size": 3212009
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "علوم القرآن والقراءات/إبراز المعاني من حرز الأماني",
+  "waqfeya_id": "66a88daf87c55ca3e12e8487",
+  "waqfeya_name": "علم القراءات نشأته أطواره أثره في العلوم الشرعية",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "emhaemha",
+    "name": "bzqam.pdf",
+    "size": 6170357
+   },
+   {
+    "item": "emhaemha",
+    "name": "ebgeke.pdf",
+    "size": 8373107
+   },
+   {
+    "item": "emhaemha",
+    "name": "elqr.pdf",
+    "size": 7971135
+   },
+   {
+    "item": "emhaemha",
+    "name": "emhap.pdf",
+    "size": 612944
+   },
+   {
+    "item": "emhaemha",
+    "name": "eqs.pdf",
+    "size": 11082680
+   },
+   {
+    "item": "emhaemha",
+    "name": "ifbqaa1.pdf",
+    "size": 8242104
+   },
+   {
+    "item": "emhaemha",
+    "name": "ifbqaa2.pdf",
+    "size": 9122901
+   },
+   {
+    "item": "emhaemha",
+    "name": "knbnb.pdf",
+    "size": 6656716
+   },
+   {
+    "item": "emhaemha",
+    "name": "mqt.pdf",
+    "size": 13888732
+   },
+   {
+    "item": "emhaemha",
+    "name": "mqtp.pdf",
+    "size": 1488178
+   },
+   {
+    "item": "emhaemha",
+    "name": "qstla.pdf",
+    "size": 1144509
+   },
+   {
+    "item": "emhaemha",
+    "name": "rqea.pdf",
+    "size": 10554183
+   },
+   {
+    "item": "emhaemha",
+    "name": "taqrsa.pdf",
+    "size": 3563531
+   },
+   {
+    "item": "emhaemha",
+    "name": "tmkdl.pdf",
+    "size": 4667874
+   },
+   {
+    "item": "emhaemha",
+    "name": "tqmm.pdf",
+    "size": 11273916
+   },
+   {
+    "item": "emhaemha",
+    "name": "tznht.pdf",
+    "size": 8479031
+   }
+  ],
+  "files": [
+   {
+    "item": "emhaemha",
+    "name": "bzqam.pdf",
+    "size": 6170357
+   },
+   {
+    "item": "emhaemha",
+    "name": "ebgeke.pdf",
+    "size": 8373107
+   },
+   {
+    "item": "emhaemha",
+    "name": "elqr.pdf",
+    "size": 7971135
+   },
+   {
+    "item": "emhaemha",
+    "name": "emhap.pdf",
+    "size": 612944
+   },
+   {
+    "item": "emhaemha",
+    "name": "eqs.pdf",
+    "size": 11082680
+   },
+   {
+    "item": "emhaemha",
+    "name": "ifbqaa1.pdf",
+    "size": 8242104
+   },
+   {
+    "item": "emhaemha",
+    "name": "ifbqaa2.pdf",
+    "size": 9122901
+   },
+   {
+    "item": "emhaemha",
+    "name": "knbnb.pdf",
+    "size": 6656716
+   },
+   {
+    "item": "emhaemha",
+    "name": "mqt.pdf",
+    "size": 13888732
+   },
+   {
+    "item": "emhaemha",
+    "name": "mqtp.pdf",
+    "size": 1488178
+   },
+   {
+    "item": "emhaemha",
+    "name": "qstla.pdf",
+    "size": 1144509
+   },
+   {
+    "item": "emhaemha",
+    "name": "rqea.pdf",
+    "size": 10554183
+   },
+   {
+    "item": "emhaemha",
+    "name": "taqrsa.pdf",
+    "size": 3563531
+   },
+   {
+    "item": "emhaemha",
+    "name": "tmkdl.pdf",
+    "size": 4667874
+   },
+   {
+    "item": "emhaemha",
+    "name": "tqmm.pdf",
+    "size": 11273916
+   },
+   {
+    "item": "emhaemha",
+    "name": "tznht.pdf",
+    "size": 8479031
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "المعاجم والقواميس اللغوية/كتاب العين - الخليل بن أحمد (ت مهدي المخزومي وإبراهيم السامرائي - دار ومكتبة الهلال)",
+  "waqfeya_id": "66a88dae87c55ca3e12e8142",
+  "waqfeya_name": "كتاب العين",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FPalaeenalaeen",
+    "name": "alaeen3.pdf",
+    "size": 6036138
+   },
+   {
+    "item": "FPalaeenalaeen",
+    "name": "alaeen7.pdf",
+    "size": 6747696
+   }
+  ],
+  "files": [
+   {
+    "item": "FPalaeenalaeen",
+    "name": "alaeen3.pdf",
+    "size": 6036138
+   },
+   {
+    "item": "FPalaeenalaeen",
+    "name": "alaeen7.pdf",
+    "size": 6747696
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "الفقه الشافعي/العزيز شرح الوجيز - ط. العلمية",
+  "waqfeya_id": "66a88dbf87c55ca3e12eaf6b",
+  "waqfeya_name": "العزيز شرح الوجيز - ط. العلمية",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "WAQ71626",
+    "name": "azez01.pdf",
+    "size": 13180145
+   }
+  ],
+  "files": [
+   {
+    "item": "WAQ71626",
+    "name": "azez01.pdf",
+    "size": 13180145
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "السيرة والشمائل النبوية/دلائل النبوة ومعرفة أحوال صاحب الشريعة - الإمام البيهقي (ت قلعجي - الكتب العلمية)",
+  "waqfeya_id": "66a88dad87c55ca3e12e7f01",
+  "waqfeya_name": "دلائل النبوة ومعرفة أحوال صاحب الشريعة - ت: قلعجي",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FP100511",
+    "name": "dlnbbi1.pdf",
+    "size": 6826482
+   },
+   {
+    "item": "FP100511",
+    "name": "dlnbbi2.pdf",
+    "size": 10532048
+   },
+   {
+    "item": "FP100511",
+    "name": "dlnbbi3.pdf",
+    "size": 8527779
+   },
+   {
+    "item": "FP100511",
+    "name": "dlnbbi4.pdf",
+    "size": 7222854
+   },
+   {
+    "item": "FP100511",
+    "name": "dlnbbi5.pdf",
+    "size": 8755618
+   },
+   {
+    "item": "FP100511",
+    "name": "dlnbbi6.pdf",
+    "size": 9383997
+   },
+   {
+    "item": "FP100511",
+    "name": "dlnbbi7.pdf",
+    "size": 5016608
+   }
+  ],
+  "files": [
+   {
+    "item": "FP100511",
+    "name": "dlnbbi1.pdf",
+    "size": 6826482
+   },
+   {
+    "item": "FP100511",
+    "name": "dlnbbi2.pdf",
+    "size": 10532048
+   },
+   {
+    "item": "FP100511",
+    "name": "dlnbbi3.pdf",
+    "size": 8527779
+   },
+   {
+    "item": "FP100511",
+    "name": "dlnbbi4.pdf",
+    "size": 7222854
+   },
+   {
+    "item": "FP100511",
+    "name": "dlnbbi5.pdf",
+    "size": 8755618
+   },
+   {
+    "item": "FP100511",
+    "name": "dlnbbi6.pdf",
+    "size": 9383997
+   },
+   {
+    "item": "FP100511",
+    "name": "dlnbbi7.pdf",
+    "size": 5016608
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "متون الحديث والمسانيد والمعاجم/معرفة السنن والآثار - أحمد بن الحسين البيهقي (جامعة الدراسات الإسلامية ودار قتيبة)",
+  "waqfeya_id": "66a88dad87c55ca3e12e7eb1",
+  "waqfeya_name": "معرفة السنن والآثار = السنن الوسطى - ت: قلعجي",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FP15881",
+    "name": "msa01.pdf",
+    "size": 9157917
+   }
+  ],
+  "files": [
+   {
+    "item": "FP15881",
+    "name": "msa01.pdf",
+    "size": 9157917
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "متون الحديث والمسانيد والمعاجم/مسند الشاميين - الطبراني (ت حمدي السلفي - مؤسسة الرسالة)",
+  "waqfeya_id": "66a88dac87c55ca3e12e7e22",
+  "waqfeya_name": "مسند الشاميين",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FP3571",
+    "name": "01_3571.pdf",
+    "size": 7246596
+   },
+   {
+    "item": "FP3571",
+    "name": "02_3572.pdf",
+    "size": 6877584
+   },
+   {
+    "item": "FP3571",
+    "name": "03_28006.pdf",
+    "size": 6102828
+   },
+   {
+    "item": "FP3571",
+    "name": "04_28007.pdf",
+    "size": 7754301
+   }
+  ],
+  "files": [
+   {
+    "item": "FP3571",
+    "name": "01_3571.pdf",
+    "size": 7246596
+   },
+   {
+    "item": "FP3571",
+    "name": "02_3572.pdf",
+    "size": 6877584
+   },
+   {
+    "item": "FP3571",
+    "name": "03_28006.pdf",
+    "size": 6102828
+   },
+   {
+    "item": "FP3571",
+    "name": "04_28007.pdf",
+    "size": 7754301
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "علوم القرآن والقراءات/معاني القرآن وإعرابه - الزجاج (ت عبد الجليل عبده شلبي - عالم الكتب)",
+  "waqfeya_id": "66a88dac87c55ca3e12e7e18",
+  "waqfeya_name": "معاني القرآن وإعرابه - ت: شلبي",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "fp8383_202503",
+    "name": "01_8383.pdf",
+    "size": 9399570
+   },
+   {
+    "item": "fp8383_202503",
+    "name": "02_8384.pdf",
+    "size": 8149239
+   },
+   {
+    "item": "fp8383_202503",
+    "name": "03_8385.pdf",
+    "size": 7258597
+   },
+   {
+    "item": "fp8383_202503",
+    "name": "04_8386.pdf",
+    "size": 6991692
+   }
+  ],
+  "files": [
+   {
+    "item": "fp8383_202503",
+    "name": "01_8383.pdf",
+    "size": 9399570
+   },
+   {
+    "item": "fp8383_202503",
+    "name": "02_8384.pdf",
+    "size": 8149239
+   },
+   {
+    "item": "fp8383_202503",
+    "name": "03_8385.pdf",
+    "size": 7258597
+   },
+   {
+    "item": "fp8383_202503",
+    "name": "04_8386.pdf",
+    "size": 6991692
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "كتب العلل والزوائد والرجال/معرفة الرجال عن يحيى بن معين رواية ابن محرز - ط. مجمع اللغة",
+  "waqfeya_id": "66a88dac87c55ca3e12e7c3c",
+  "waqfeya_name": "معرفة الرجال عن يحيى بن معين رواية ابن محرز - ط. مجمع اللغة",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FPmare",
+    "name": "00_mare.pdf",
+    "size": 291482
+   },
+   {
+    "item": "FPmare",
+    "name": "02_mare.pdf",
+    "size": 5690689
+   }
+  ],
+  "files": [
+   {
+    "item": "FPmare",
+    "name": "00_mare.pdf",
+    "size": 291482
+   },
+   {
+    "item": "FPmare",
+    "name": "02_mare.pdf",
+    "size": 5690689
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "علوم القرآن والقراءات/الحجة للقراء السبعة أئمة الأمصار بالحجاز والعراق والشام الذين ذكرهم أبو بكر بن مجاهد - أبو علي الفارسي",
+  "waqfeya_id": "66a88dac87c55ca3e12e7c4f",
+  "waqfeya_name": "الحجة للقراء السبعة أئمة الأمصار بالحجاز والعراق والشام الذين ذكرهم أبو بكر بن مجاهد",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "waq22681",
+    "name": "hqs3.pdf",
+    "size": 6437275
+   }
+  ],
+  "files": [
+   {
+    "item": "waq22681",
+    "name": "hqs3.pdf",
+    "size": 6437275
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "التفاسير/المحرر الوجيز في تفسير الكتاب العزيز = تفسير ابن عطية (ت عبد السلام عبد الشافي محمد - دار الكتب العلمية)",
+  "waqfeya_id": "66a88dab87c55ca3e12e79c2",
+  "waqfeya_name": "المحرر الوجيز في تفسير الكتاب العزيز = تفسير ابن عطية - ط. العلمية",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "fp72241_202504",
+    "name": "05_72245.pdf",
+    "size": 14270566
+   },
+   {
+    "item": "fp72241_202504",
+    "name": "06_72246.pdf",
+    "size": 3302020
+   }
+  ],
+  "files": [
+   {
+    "item": "fp72241_202504",
+    "name": "05_72245.pdf",
+    "size": 14270566
+   },
+   {
+    "item": "fp72241_202504",
+    "name": "06_72246.pdf",
+    "size": 3302020
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "شروح الحديث/تحفة الأخيار بترتيب شرح مشكل الآثار - الطحاوي (ت خالد محمود الرباط أبو الحسين - دار بلنسية)",
+  "waqfeya_id": "66a88daa87c55ca3e12e7974",
+  "waqfeya_name": "تحفة الأخيار بترتيب شرح مشكل الآثار",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FP62955",
+    "name": "tatma09.pdf",
+    "size": 5905024
+   }
+  ],
+  "files": [
+   {
+    "item": "FP62955",
+    "name": "tatma09.pdf",
+    "size": 5905024
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "كتب العلل والزوائد والرجال/الضعفاء والمتروكين - ط. العلمية",
+  "waqfeya_id": "66a88daa87c55ca3e12e78cf",
+  "waqfeya_name": "الضعفاء والمتروكين - ط. العلمية",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FP5286",
+    "name": "01_5286.pdf",
+    "size": 4241876
+   },
+   {
+    "item": "FP5286",
+    "name": "02_5287.pdf",
+    "size": 3195191
+   },
+   {
+    "item": "FP5286",
+    "name": "03_5288.pdf",
+    "size": 2945125
+   }
+  ],
+  "files": [
+   {
+    "item": "FP5286",
+    "name": "01_5286.pdf",
+    "size": 4241876
+   },
+   {
+    "item": "FP5286",
+    "name": "02_5287.pdf",
+    "size": 3195191
+   },
+   {
+    "item": "FP5286",
+    "name": "03_5288.pdf",
+    "size": 2945125
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "كتب العلل والزوائد والرجال/الكنى والأسماء - الدولابي (ت زكريا عميرات)",
+  "waqfeya_id": "66a88daa87c55ca3e12e7857",
+  "waqfeya_name": "الكنى والأسماء - ت: عميرات",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FP42064",
+    "name": "01_42064.pdf",
+    "size": 8262739
+   },
+   {
+    "item": "FP42064",
+    "name": "02_42065.pdf",
+    "size": 7884672
+   }
+  ],
+  "files": [
+   {
+    "item": "FP42064",
+    "name": "01_42064.pdf",
+    "size": 8262739
+   },
+   {
+    "item": "FP42064",
+    "name": "02_42065.pdf",
+    "size": 7884672
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "متون الحديث والمسانيد والمعاجم/مسند الحميدي (ت حسين سليم أسد الداراني)",
+  "waqfeya_id": "66a88daa87c55ca3e12e7836",
+  "waqfeya_name": "مسند الحميدي - ت: الداراني",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FPmohu",
+    "name": "mohu2.pdf",
+    "size": 7680549
+   }
+  ],
+  "files": [
+   {
+    "item": "FPmohu",
+    "name": "mohu2.pdf",
+    "size": 7680549
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "متون الحديث والمسانيد والمعاجم/الأحكام الوسطى من حديث النبي صلى الله عليه وسلم - ابن الخراط (ت حمدي السلفي - صبحي السامرائي - مكتبة الرشد)",
+  "waqfeya_id": "66a88da987c55ca3e12e7586",
+  "waqfeya_name": "الأحكام الوسطى من حديث النبي صلى الله عليه وسلم - ت: السلفي والسامرائي",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "WAQahwa",
+    "name": "ahwa4.pdf",
+    "size": 5976051
+   }
+  ],
+  "files": [
+   {
+    "item": "WAQahwa",
+    "name": "ahwa4.pdf",
+    "size": 5976051
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "المعاجم والقواميس اللغوية/سفر السعادة وسفير الإفادة - السخاوي (ت محمد أحمد الدالي - دار صادر)",
+  "waqfeya_id": "66a88da987c55ca3e12e744f",
+  "waqfeya_name": "سفر السعادة وسفير الإفادة",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "2504131210FP",
+    "name": "Sifru_Saadah_3.pdf",
+    "size": 2152253
+   }
+  ],
+  "files": [
+   {
+    "item": "2504131210FP",
+    "name": "Sifru_Saadah_3.pdf",
+    "size": 2152253
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "التراجم والطبقات والأعلام/الأنساب - السمعاني (ت عبد الله عمر البارودي)",
+  "waqfeya_id": "66a88dbe87c55ca3e12eac38",
+  "waqfeya_name": "الأنساب",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FP12164",
+    "name": "ansabs4.pdf",
+    "size": 10897599
+   },
+   {
+    "item": "FP12164",
+    "name": "ansabs5.pdf",
+    "size": 12724056
+   }
+  ],
+  "files": [
+   {
+    "item": "FP12164",
+    "name": "ansabs4.pdf",
+    "size": 10897599
+   },
+   {
+    "item": "FP12164",
+    "name": "ansabs5.pdf",
+    "size": 12724056
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "متون الحديث والمسانيد والمعاجم/المصنف لعبد الرزاق - ط. المجلس العلمي",
+  "waqfeya_id": "66a88da687c55ca3e12e6e92",
+  "waqfeya_name": "المصنف لعبد الرزاق - ط. المجلس العلمي",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FP3317",
+    "name": "miar07.pdf",
+    "size": 7627823
+   },
+   {
+    "item": "FP3317",
+    "name": "miar08.pdf",
+    "size": 7739985
+   },
+   {
+    "item": "FP3317",
+    "name": "miar09.pdf",
+    "size": 7354025
+   },
+   {
+    "item": "FP3317",
+    "name": "miar10.pdf",
+    "size": 9316041
+   },
+   {
+    "item": "FP3317",
+    "name": "miar11.pdf",
+    "size": 8523622
+   },
+   {
+    "item": "FP3317",
+    "name": "miar12.pdf",
+    "size": 6967719
+   }
+  ],
+  "files": [
+   {
+    "item": "FP3317",
+    "name": "miar07.pdf",
+    "size": 7627823
+   },
+   {
+    "item": "FP3317",
+    "name": "miar08.pdf",
+    "size": 7739985
+   },
+   {
+    "item": "FP3317",
+    "name": "miar09.pdf",
+    "size": 7354025
+   },
+   {
+    "item": "FP3317",
+    "name": "miar10.pdf",
+    "size": 9316041
+   },
+   {
+    "item": "FP3317",
+    "name": "miar11.pdf",
+    "size": 8523622
+   },
+   {
+    "item": "FP3317",
+    "name": "miar12.pdf",
+    "size": 6967719
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "متون الحديث والمسانيد والمعاجم/شرح مشكل الآثار - أبو جعفر الطحاوي (ت الأرناؤوط - الرسالة)",
+  "waqfeya_id": "66a88da687c55ca3e12e6e57",
+  "waqfeya_name": "شرح مشكل الآثار - ت: الأرناؤوط",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "WAQ1027",
+    "name": "sma02.pdf",
+    "size": 6770399
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma03.pdf",
+    "size": 6738824
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma04.pdf",
+    "size": 6613601
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma05.pdf",
+    "size": 6964308
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma06.pdf",
+    "size": 6415018
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma07.pdf",
+    "size": 6604349
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma08.pdf",
+    "size": 6476136
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma09.pdf",
+    "size": 6947742
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma10.pdf",
+    "size": 6671546
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma11.pdf",
+    "size": 8186218
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma12.pdf",
+    "size": 7774323
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma13.pdf",
+    "size": 6253431
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma14.pdf",
+    "size": 7385725
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma15.pdf",
+    "size": 7021389
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma16.pdf",
+    "size": 4219812
+   }
+  ],
+  "files": [
+   {
+    "item": "WAQ1027",
+    "name": "sma02.pdf",
+    "size": 6770399
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma03.pdf",
+    "size": 6738824
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma04.pdf",
+    "size": 6613601
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma05.pdf",
+    "size": 6964308
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma06.pdf",
+    "size": 6415018
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma07.pdf",
+    "size": 6604349
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma08.pdf",
+    "size": 6476136
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma09.pdf",
+    "size": 6947742
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma10.pdf",
+    "size": 6671546
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma11.pdf",
+    "size": 8186218
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma12.pdf",
+    "size": 7774323
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma13.pdf",
+    "size": 6253431
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma14.pdf",
+    "size": 7385725
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma15.pdf",
+    "size": 7021389
+   },
+   {
+    "item": "WAQ1027",
+    "name": "sma16.pdf",
+    "size": 4219812
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "علوم الحديث ومصطلحه/العلل ومعرفة الرجال - الإمام أحمد بن حنبل (ت وصي الله عباس - المكتب الإسلامي)",
+  "waqfeya_id": "66a88da687c55ca3e12e6c7a",
+  "waqfeya_name": "العلل ومعرفة الرجال",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FP51613",
+    "name": "emra1.pdf",
+    "size": 7476341
+   }
+  ],
+  "files": [
+   {
+    "item": "FP51613",
+    "name": "emra1.pdf",
+    "size": 7476341
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "متون الحديث والمسانيد والمعاجم/الجامع لشعب الإيمان - ط. الرشد",
+  "waqfeya_id": "66a88da487c55ca3e12e68ce",
+  "waqfeya_name": "الجامع لشعب الإيمان - ط. الرشد",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "fp62379_202503",
+    "name": "gse04.pdf",
+    "size": 10976571
+   },
+   {
+    "item": "fp62379_202503",
+    "name": "gse06.pdf",
+    "size": 10916209
+   }
+  ],
+  "files": [
+   {
+    "item": "fp62379_202503",
+    "name": "gse04.pdf",
+    "size": 10976571
+   },
+   {
+    "item": "fp62379_202503",
+    "name": "gse06.pdf",
+    "size": 10916209
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "الفقه الشافعي/الوسيط في المذهب، وبهامشه التنقيح في شرح الوسيط، شرح مشكل الوسيط، شرح مشكلات الوسيط، تعلقية موجزة على الوسيط",
+  "waqfeya_id": "66a88dbd87c55ca3e12ea97e",
+  "waqfeya_name": "الوسيط في المذهب، وبهامشه التنقيح في شرح الوسيط، شرح مشكل الوسيط، شرح مشكلات الوسيط، تعلقية موجزة على الوسيط",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "FPwama",
+    "name": "wama1.pdf",
+    "size": 9715459
+   },
+   {
+    "item": "FPwama",
+    "name": "wama2.pdf",
+    "size": 13974224
+   },
+   {
+    "item": "FPwama",
+    "name": "wama3.pdf",
+    "size": 8758112
+   },
+   {
+    "item": "FPwama",
+    "name": "wama4.pdf",
+    "size": 9154999
+   },
+   {
+    "item": "FPwama",
+    "name": "wama5.pdf",
+    "size": 8923666
+   },
+   {
+    "item": "FPwama",
+    "name": "wama6.pdf",
+    "size": 10227015
+   },
+   {
+    "item": "FPwama",
+    "name": "wama7.pdf",
+    "size": 10962814
+   }
+  ],
+  "files": [
+   {
+    "item": "FPwama",
+    "name": "wama1.pdf",
+    "size": 9715459
+   },
+   {
+    "item": "FPwama",
+    "name": "wama2.pdf",
+    "size": 13974224
+   },
+   {
+    "item": "FPwama",
+    "name": "wama3.pdf",
+    "size": 8758112
+   },
+   {
+    "item": "FPwama",
+    "name": "wama4.pdf",
+    "size": 9154999
+   },
+   {
+    "item": "FPwama",
+    "name": "wama5.pdf",
+    "size": 8923666
+   },
+   {
+    "item": "FPwama",
+    "name": "wama6.pdf",
+    "size": 10227015
+   },
+   {
+    "item": "FPwama",
+    "name": "wama7.pdf",
+    "size": 10962814
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "متون الحديث والمسانيد والمعاجم/الأحاديث المختارة - ضياء الدين المقدسي (ت عبد الملك بن عبد الله بن دهيش - دار خضر للطباعة والنشر)",
+  "waqfeya_id": "66a88da187c55ca3e12e5ff1",
+  "waqfeya_name": "الأحاديث المختارة - ت: بن دهيش",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "waq49397",
+    "name": "mktara10.pdf",
+    "size": 6636991
+   },
+   {
+    "item": "waq49397",
+    "name": "mktara11.pdf",
+    "size": 6363045
+   },
+   {
+    "item": "waq49397",
+    "name": "mktara12.pdf",
+    "size": 5376604
+   },
+   {
+    "item": "waq49397",
+    "name": "mktara13.pdf",
+    "size": 2985994
+   }
+  ],
+  "files": [
+   {
+    "item": "waq49397",
+    "name": "mktara10.pdf",
+    "size": 6636991
+   },
+   {
+    "item": "waq49397",
+    "name": "mktara11.pdf",
+    "size": 6363045
+   },
+   {
+    "item": "waq49397",
+    "name": "mktara12.pdf",
+    "size": 5376604
+   },
+   {
+    "item": "waq49397",
+    "name": "mktara13.pdf",
+    "size": 2985994
+   }
+  ],
+  "remaining": 1
+ },
+ {
+  "folder": "الفقه المالكي/المعيار المعرب والجامع المغرب عن فتاوى أهل إفريقية والأندلس والمغرب - أحمد بن يحيى الونشريسي (وزارة الأوقاف المغربية)",
+  "waqfeya_id": "66a88d9e87c55ca3e12e58fe",
+  "waqfeya_name": "المعيار المعرب والجامع المغرب عن فتاوى أهل إفريقية والأندلس والمغرب (ط. أوقاف المغربية)",
+  "mode": "missing volumes",
+  "download": [
+   {
+    "item": "WAQ9067",
+    "name": "meiaar01.pdf",
+    "size": 8305151
+   },
+   {
+    "item": "WAQ9067",
+    "name": "meiaar02.pdf",
+    "size": 10619221
+   },
+   {
+    "item": "WAQ9067",
+    "name": "meiaar03.pdf",
+    "size": 7703313
+   }
+  ],
+  "files": [
+   {
+    "item": "WAQ9067",
+    "name": "meiaar01.pdf",
+    "size": 8305151
+   },
+   {
+    "item": "WAQ9067",
+    "name": "meiaar02.pdf",
+    "size": 10619221
+   },
+   {
+    "item": "WAQ9067",
+    "name": "meiaar03.pdf",
+    "size": 7703313
+   }
+  ],
+  "remaining": 1
  }
 ]
