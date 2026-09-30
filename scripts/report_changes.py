@@ -33,6 +33,15 @@ if pending:
         R.h3(f'{os.path.basename(f)[:-4]} — {len(rows):,} عملية')
         R.p('الأسباب: ' + '، '.join(f'{k} ({v:,})' for k, v in Counter(r[2].split(':')[0].split(' «')[0] for r in rows).most_common()))
         R.table(['من', 'إلى', 'السبب'], [[r[0].removeprefix('Books/'), r[1].removeprefix('Books/'), r[2]] for r in rows], fold=f'عرض العمليات ({len(rows):,})', md_limit=40)
+import glob as _g
+_idx = sorted(_g.glob(J('data/phone/index-2*.tsv')) + [J('data/phone/index-now.tsv')], key=os.path.getmtime)[-1]
+sys.path.insert(0, J('scripts'))
+from audit_numbering import audit as _audit
+_a = _audit(_idx)
+R.h2('فحص الترقيم: ما بقي', 'audit')
+R.p('يُفحص كل مجلد آليًا بعد كل تعديل. المعدود هنا أخطاء فعلية؛ أما «NN - … (المقدمة)» بجانب المجلد نفسه، وأقسام المجلد الواحد (القسم الأول/الثاني)، و(أ)/(ب)، و(نسخة أخرى) فمقصودة.')
+for _k, _lab in (('all files numbered 01', 'كل الملفات مرقمة 01'), ('repeated volume number', 'رقم مجلد مكرر'), ('99 for indexes', '99 للفهارس'), ('numbered and unnumbered mixed', 'ملفات مرقمة وأخرى غير مرقمة')):
+    R.table(['المجلد'], [[f] for f in sorted(_a[_k])], fold=f'{_lab}: {len(_a[_k])}', md_limit=60)
 rv = J('data/phone/rename-review.tsv')
 if os.path.exists(rv):
     items = [l.rstrip('\n').split('\t') for l in open(rv) if l.strip()]
