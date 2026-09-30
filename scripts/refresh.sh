@@ -6,6 +6,7 @@ D=$(date +%F-%H%M)
 echo "1/6 indexing phone:Books ..."
 rclone lsf -R --files-only --format ps --separator $'\t' --checkers 2 phone:Books > "data/phone/index-$D.tsv"
 echo "    $(wc -l < "data/phone/index-$D.tsv") files"
+cp "data/phone/index-$D.tsv" data/phone/index-now.tsv   # stable name for scripts run by hand
 echo "2/6 provenance";  python3 scripts/provenance.py "data/phone/index-$D.tsv"
 echo "3/6 catalog";     python3 scripts/build_catalog.py "data/phone/index-$D.tsv"
 echo "4/6 comparisons"; python3 scripts/compare_shamela.py; python3 scripts/compare_waqfeya.py

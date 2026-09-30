@@ -51,6 +51,10 @@ Read this file first. Keep it current when you change a convention.
    (392 removed on 2026-09-30 by the owner's decision). Check with `scripts/check_magic.py` (first bytes) and
    `scripts/check_pdf_tail.py` (end marker). When downloading, verify exact size + `%PDF` before uploading
    (`scripts/fetch_replacements.py` does). Missing books are replaced only from Waqfeya; otherwise left out.
+   **Never download a whole archive.org item for one book:** items often bundle dozens of books. Take only the
+   files the Waqfeya record links (its `links`), then run `scripts/additions_audit.py` — it keeps a file only if
+   the record links it (or it follows the record's own pattern: link typos, `NN_IDp` prefaces), drops other books
+   of the bundle, byte-identical copies of files already in the library, and double uploads.
 5. After changes: re-index (`rclone lsf -R --files-only --format ps --separator $'\t' phone:Books`),
    rebuild the catalog, the site and the reports, publish them to the phone, add a WORKLOG line.
 
@@ -137,12 +141,13 @@ are in `فهارس الويب/md/` and the data tables in `فهارس الويب
 | `periodical_plan.py` | periodicals: issue range per file + what the source item still has |
 | `anthologies_check.py` | a canon of poetry anthologies checked against the library and Waqfeya |
 | `build_site.py` | ONE self-contained file (index + every report as tabs, reports shown in a frame) — Android browsers do not follow links between local files |
-| `build_site.py (old)` | the main index page `site/00 - الفهرس العام.html` (offline search/browse, data embedded) |
 | `compare_shamela.py`, `compare_waqfeya.py` | status of every Shamela / Waqfeya book vs the phone → `data/compare/*.tsv` |
 | `report_shamela.py`, `report_waqfeya.py`, `report_recommend.py`, `report_changes.py` | reports 01–04 (HTML + MD) |
 | `check_magic.py`, `check_pdf_tail.py` | is every ".pdf" a real, complete PDF? |
 | `delete_files.py` | logged deletion (owner-approved only), removes emptied folders |
 | `replacement_plan.py`, `fetch_replacements.py` | find Waqfeya replacements for removed files; download, verify, upload, log |
+| `fetch_new_books.py` | adds chosen archive.org items as new books (parallel, ZIPs extracted, `%PDF` check) |
+| `additions_audit.py` | audits files added from Waqfeya/archive.org: removes other books of a bundled item and copies already in the library, names the rest from Waqfeya labels |
 | `renumber_plan.py`, `tail_numbering_plan.py`, `label_numbering_plan.py`, `companion_plan.py` | numbering passes (independent books vs volumes; Waqfeya per-file labels are the authority) |
 | `audit_numbering.py` | numbering audit (runs in the change-log report) |
 | `restore_cut_names.py` | completes cut folder names by a unique prefix match (Waqfeya / Shamela / poems catalog) |
