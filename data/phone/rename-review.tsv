@@ -66,6 +66,7 @@
 الفقه الحنبلي/رؤوس المسائل في الخلاف على مذهب أبي عبد الله أحمد بن حنبل - الشريف أبو جعفر/01 - رؤوس المسائل.pdf	2 files would get the same name
 الفقه المالكي/التنبيهات المستنبطة على الكتب المدونة والمختلطة - القاضي عياض (ت محمد الوثيق - عبد النعيم محيتي - دار ابن حزم)/01 - التنبيهات المستنبطة على الكتب المدونة والمختلطة.pdf	2 files would get the same name
 الأدب والبلاغة ونقد الشعر/البرصان والعرجان والعميان والحولان - الجاحظ (ت عبد السلام محمد هارون - وزارة الثقافة والإعلام)/01 - البرصان والعرجان والعميان والحولان.pdf	2 files would get the same name
+الدواوين الشعرية/الموازنة بين شعر أبي تمام والبحتري	same book also exists in another section: not merged
 النحو والصرف وعلم الوضع/المقدمة الجزولية في النحو - ابن يللبخت (ت شعبان عبد الوهاب محمد - مطبعة أم القرى)/00 - المقدمة الجزولية في النحو (المقدمة).pdf	2 files would get the same name
 الفقه المالكي/الدرر في شرح المختصر وهو الشرح الصغير على مختصر خليل وبهامشه شفاء العليل في حل مقفل خليل - ط.أوقاف قطر/01 - الدرر في شرح المختصر.pdf	2 files would get the same name
 النحو والصرف وعلم الوضع/شرح ابن الناظم على ألفية ابن مالك (ت محمد باسل عيون السود - دار الكتب العلمية)/01 - شرح ابن الناظم على ألفية ابن.pdf	2 files would get the same name
@@ -85,6 +86,9 @@
 متون الحديث والمسانيد والمعاجم/سنن النسائي - ط. المكنز/01 - سنن النسائي.pdf	2 files would get the same name
 متون الحديث والمسانيد والمعاجم/مسند الإمام عبد الله بن المبارك (ت صبحي البدري السامرائي - مكتبة المعارف)/01 - مسند الإمام عبد الله بن المبارك.pdf	2 files would get the same name
 متون الحديث والمسانيد والمعاجم/مسند الدارمي المعروف بسنن الدارمي (ت حسين سليم أسد الداراني - دار المغني للنشر والتوزيع)/01 - مسند الدارمي المعروف بسنن الدارمي.pdf	2 files would get the same name
+كتب العلل والزوائد والرجال/الآحاد والمثاني	same book also exists in another section: not merged
+السيرة والشمائل النبوية/المعارف	same book also exists in another section: not merged
+الرقائق والآداب والأذكار/المصنف لابن أبي شيبة	same book also exists in another section: not merged
 الدواوين الشعرية/ديوان طرفة بن العبد - ط. العلمية...	fixed name collides with an existing folder
 أدباء ومفكرو العصر الحديث/مؤلفات علي الطنطاوي (دار المنارة)	name clash inside the planned folder: left unchanged (resolve duplicates first)
 أدباء ومفكرو العصر الحديث/مؤلفات محمود محمد شاكر (مكتبة الخانجي)	name clash inside the planned folder: left unchanged (resolve duplicates first)
@@ -136,7 +140,6 @@
 التفاسير/مقدمة تفسير ابن النقيب في علم البيا	name clash inside the planned folder: left unchanged (resolve duplicates first)
 الدواوين الشعرية/الأمثال السائرة من شعر المتنبي - الروزنامجة	name clash inside the planned folder: left unchanged (resolve duplicates first)
 الدواوين الشعرية/اللامع العزيزي شرح ديوان المتنبي	name clash inside the planned folder: left unchanged (resolve duplicates first)
-الدواوين الشعرية/الموازنة بين شعر أبي تمام والبحتري	name clash inside the planned folder: left unchanged (resolve duplicates first)
 الدواوين الشعرية/ديوان أبي القاسم الشابي	name clash inside the planned folder: left unchanged (resolve duplicates first)
 الدواوين الشعرية/ديوان أبي القاسم الشابي ورسائله	name clash inside the planned folder: left unchanged (resolve duplicates first)
 الدواوين الشعرية/ديوان الأعشى الكبير	name clash inside the planned folder: left unchanged (resolve duplicates first)

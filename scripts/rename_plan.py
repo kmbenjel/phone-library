@@ -196,15 +196,17 @@ def main(index, out):
         if kinds == 1 or (topn >= 0.8 * matched and not is_collection) or (kinds == 2 and not is_collection):
             b = books[top]
             canon, title, a = canonical_folder(b)
-            if top in target_of_book:
-                dest = target_of_book[top]; why = 'merge copies of the same book'
+            if (cat, top) in target_of_book:
+                dest = target_of_book[(cat, top)]; why = 'merge copies of the same book'
             else:
                 cur_ok = not deficient(name) and title_key(name) and title_key(b['name']).startswith(title_key(name)) and len(norm(name).split()) >= len(norm(title).split())
                 dest_name = name if cur_ok and ' - ' in name else canon
                 dest = f'{cat}/{dest_name}'
                 if dest != folder and dest in used and dest not in target_of_book.values():
                     dest = f'{cat}/{canon}' if f'{cat}/{canon}' not in used else folder
-                target_of_book[top] = dest; used.add(dest)
+                target_of_book[(cat, top)] = dest; used.add(dest)
+                if any(k[1] == top and k[0] != cat for k in target_of_book):
+                    review.append((folder, 'same book also exists in another section: not merged'))
                 why = 'restore full name from Waqfeya record' if dest != folder else ''
             plan_files(ps, prov, link_label, b, dest, why, add, review)
             if kinds > 1: review.append((folder, f'{kinds} Waqfeya sources; minority files kept in folder'))
@@ -227,8 +229,8 @@ def main(index, out):
                     for p in group: review.append((p, 'unidentified file in a mixed (bucket) folder'))
                     continue
                 b = books[wid]; canon, title, a = canonical_folder(b)
-                dest = target_of_book.get(wid) or f'{cat}/{canon}'
-                target_of_book.setdefault(wid, dest); used.add(dest)
+                dest = target_of_book.get((cat, wid)) or f'{cat}/{canon}'
+                target_of_book.setdefault((cat, wid), dest); used.add(dest)
                 plan_files(group, prov, link_label, b, dest, f'split mixed folder «{name}»', add, review)
     # final: a destination used twice blocks every source folder involved (never split a book across folders)
     dest_src = defaultdict(list)
@@ -283,7 +285,7 @@ def multi_record(folder, cat, name, ps, prov, books, src, add, used, target_of_b
     base = clean(w0['name'].split(' - ')[0])
     a = author_short((w0.get('author') or {}).get('name', ''))
     canon = fit(base + (f' - {clean(a)}' if a and not redundant(a, base) else ''))
-    key = ('multi', title_key(base))
+    key = ('multi', cat, title_key(base))
     dest = target_of_book.get(key) or (folder if not deficient(name) and title_key(name).startswith(title_key(base)) else f'{cat}/{canon}')
     target_of_book[key] = dest; used.add(dest)
     short = clean(short_title(base, a))
