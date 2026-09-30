@@ -129,10 +129,18 @@ def load():
             if m: link_label[(m.group(1), m.group(2))] = x.get('title', '')
     prov = {r['path']: r for r in csv.DictReader(open(J('data/phone/provenance.tsv')), delimiter='\t')}
     # doubtful matches (source title disagrees with the phone name) count only once verified byte-for-byte
-    suspect = {l.split('\t')[0] for l in open(J('data/phone/provenance-suspect.tsv'))} if os.path.exists(J('data/phone/provenance-suspect.tsv')) else set()
+    # doubtful matches: the source title shares (almost) nothing with the phone name -> never used for naming.
+    # Computed from the current names on every run (archive.org items often bundle several works).
+    W_ = lambda t: {w for w in norm(t).split() if len(w) > 2}
+    suspect = set()
+    for p_, r in prov.items():
+        src_name = r.get('waqfeya_name') or r.get('archive_title') or ''
+        ph, w = W_(p_.split('/', 1)[1]), W_(src_name)
+        if r['match'] != 'none' and w and len(ph & w) < 0.34 * min(len(w), len(ph) or 1): suspect.add(p_)
     ok = set()
     if os.path.exists(J('data/phone/provenance-verified.tsv')):
-        ok = {r[0] for r in csv.reader(open(J('data/phone/provenance-verified.tsv')), delimiter='\t') if r[3] == 'same'}
+        ver = {(r[1], r[2]) for r in csv.reader(open(J('data/phone/provenance-verified.tsv')), delimiter='\t') if r[3] == 'same'}
+        ok = {p_ for p_ in suspect if (prov[p_]['archive_id'], prov[p_]['orig_name']) in ver}
     VERIFIED_OTHER[:] = sorted(suspect & ok)
     for p in suspect:
         prov.pop(p, None)
@@ -193,7 +201,11 @@ def main(index, out):
             continue
         top, topn = src.most_common(1)[0]
         is_collection = bool(COLLECTION.match(name))
-        if kinds == 1 or (topn >= 0.8 * matched and not is_collection) or (kinds == 2 and not is_collection):
+        pat = re.compile(r'^\d+ - ' + re.escape(name) + r' \((.+)\)(?:_alt)?\.pdf$')
+        bucket_files = {p: m.group(1) for p in ps for m in [pat.match(p.rsplit('/', 1)[1])] if m}
+        if not is_collection and len(set(bucket_files.values())) >= 2:
+            kinds = max(kinds, 3)                        # bucket layout wins over a low count of traced sources
+        if not is_collection and (kinds == 1 or topn >= 0.8 * matched or kinds == 2):
             b = books[top]
             canon, title, a = canonical_folder(b)
             if (cat, top) in target_of_book:
@@ -213,7 +225,8 @@ def main(index, out):
         elif is_collection:
             for p in ps:
                 r = prov.get(p); fn = p.rsplit('/', 1)[1]
-                if r and r['waqfeya_id'] and len([q for q in ps if prov.get(q, {}).get('waqfeya_id') == r['waqfeya_id']]) == 1:
+                broken = deficient(fn[:-4]) or re.match(r'^\d+ - ' + re.escape(name) + r' \(', fn)
+                if broken and r and r['waqfeya_id'] and len([q for q in ps if prov.get(q, {}).get('waqfeya_id') == r['waqfeya_id']]) == 1:
                     wb = books[r['waqfeya_id']]; t, _ = split_wname(wb['name'])
                     a = author_short((wb.get('author') or {}).get('name', ''))
                     nfn = fit(clean(t) + (f' - {clean(a)}' if a and not redundant(a, name + ' ' + t) else '')) + '.pdf'
@@ -226,7 +239,12 @@ def main(index, out):
             for p in ps: by[prov.get(p, {}).get('waqfeya_id') or ''].append(p)
             for wid, group in by.items():
                 if not wid:
-                    for p in group: review.append((p, 'unidentified file in a mixed (bucket) folder'))
+                    for p in group:
+                        t = clean(re.sub(r'\s*-\s*\S{1,4}$', '', bucket_files.get(p, '')))   # drop a cut last word
+                        if len(norm(t).split()) >= 1 and bucket_files.get(p):
+                            add(f'Books/{p}', f'Books/{cat}/{fit(t)}/{fit(t)}.pdf', f'split mixed folder «{name}» (title from file name)')
+                        else:
+                            review.append((p, 'unidentified file in a mixed (bucket) folder'))
                     continue
                 b = books[wid]; canon, title, a = canonical_folder(b)
                 dest = target_of_book.get((cat, wid)) or f'{cat}/{canon}'

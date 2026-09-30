@@ -37,7 +37,9 @@ Read this file first. Keep it current when you change a convention.
 
 ## 3. Rules
 
-1. **Never delete on the phone.** Move unwanted copies to `Books-مكررات/` (same relative path). The owner deletes.
+1. **Deleting:** only verified duplicates, and only after the owner's approval (given 2026-09-30 for the 841 in plan 002).
+   "Verified" = same byte size + identical 64 KB samples at start, 25%, 50%, 75% and end (`dup_check.py` + `verify_dups_deep.py`).
+   They are first moved to `Books-مكررات/` (same relative path), then removed. Nothing else is ever deleted.
 2. **Every change goes through a plan** (`plans/NNN-*.tsv`: `from<TAB>to<TAB>reason`) applied with
    `scripts/apply_plan.py` (dry-run first). It never overwrites, removes emptied folders and logs to
    `data/changes/changes.tsv`. Undo a plan: `python3 scripts/apply_plan.py --undo NNN-name`.
@@ -79,6 +81,17 @@ Categories follow Shamela's classification loosely; the mappings in `data/mappin
 - no `_` used as a stand-in for `:` or `/`, no `_alt`, no `(نسخة ثانية)` (that is a duplicate → quarantine)
 - single spaces, no leading/trailing spaces or dots; ≤ 200 bytes per name (≈ 95 Arabic letters)
 
+## 4b. Sections (categories)
+
+- A book moves to another section only when its current section matches **neither** Shamela's section for the same
+  title nor Waqfeya's category (both mapped to phone sections via `data/mappings/`), nor a close neighbour
+  (diwans↔literature, rijal↔biographies, tafsir↔Qur'anic sciences, usul↔comparative fiqh, sira↔biographies,
+  dictionaries↔grammar/literature).
+- When the sources disagree, **Shamela wins** (owner's instruction). Commentaries (شروح) move to hadith texts
+  (متون) only with Shamela's confirmation; a book never leaves a madhhab section for general fiqh.
+- Never moved: `كتب ابن تيمية وابن القيم`, `أدباء ومفكرو العصر الحديث`, `أدب عالمي ومترجم`,
+  `المجلات والدوريات والسلاسل الكبرى`, `علم النفس وتطوير الذات`, and collection folders. Planner: `scripts/recat_plan.py`.
+
 ## 5. Expanding the library
 
 1. Pick candidates from `Books/فهارس الويب/03 - توصيات التوسعة.html` (or its `.md`). Each lists the Waqfeya
@@ -111,6 +124,9 @@ are in `فهارس الويب/md/` and the data tables in `فهارس الويب
 | `build_site.py` | the main index page `site/00 - الفهرس العام.html` (offline search/browse, data embedded) |
 | `compare_shamela.py`, `compare_waqfeya.py` | status of every Shamela / Waqfeya book vs the phone → `data/compare/*.tsv` |
 | `report_shamela.py`, `report_waqfeya.py`, `report_recommend.py`, `report_changes.py` | reports 01–04 (HTML + MD) |
+| `verify_dups_deep.py` | extra proof for duplicates (64 KB at 25/50/75%) before removal |
+| `verify_provenance.py` | byte-checks doubtful provenance matches (first 64 KB phone vs archive.org) |
+| `recat_plan.py` | section-correction planner (rules in §4b) |
 | `rename_plan.py` | the rename/merge/split planner (evidence-based; writes `plans/NNN-*.tsv` + review list) |
 | `buckets.py`, `textnorm.py`, `report_lib.py` | helpers |
 | `publish.py` | uploads `site/`, `reports/`, data tables and this guide to the phone (copy, never deletes) |

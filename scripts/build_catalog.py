@@ -8,13 +8,18 @@ sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 INDEX_DIR = 'فهارس الويب'
 
 def split_folder(name):
-    """'Title - Author (edition)' -> (title, author, edition); tolerant of variants."""
-    title, rest = (name.split(' - ', 1) + [''])[:2]
+    """'Title - Author (edition)' -> (title, author, edition). Separators inside brackets are ignored."""
+    depth, cut = 0, -1
+    for i, ch in enumerate(name):
+        depth += ch == '('; depth -= ch == ')'
+        if depth == 0 and name.startswith(' - ', i): cut = i; break
+    title, rest = (name[:cut], name[cut + 3:]) if cut >= 0 else (name, '')
     m = re.match(r'^(.*?)\s*\((.*)\)\s*$', rest)
     author, edition = (m.group(1), m.group(2)) if m else (rest, '')
-    if author.startswith(('ط ', 'ط. ', 'ت ', 'ت_ ')): author, edition = '', (author + (' - ' + edition if edition else ''))
-    m = re.match(r'^(.*?)\s*\(([^()]*)\)\s*$', title)
-    if not rest and m: title, edition = m.group(1), m.group(2)
+    if re.match(r'^(ط|ت)[ .]', author): author, edition = '', (author + (' - ' + edition if edition else ''))
+    if not rest:
+        m = re.match(r'^(.*?)\s*\(([^()]*)\)\s*$', title)
+        if m: title, edition = m.group(1), m.group(2)
     return title.strip(), author.strip(), edition.strip()
 
 def count_titles(books, prov):

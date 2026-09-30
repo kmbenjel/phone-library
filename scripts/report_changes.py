@@ -5,15 +5,16 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from report_lib import Report
 J = lambda p: os.path.join(ROOT, p)
-log = [r for r in csv.reader(open(J('data/changes/changes.tsv')), delimiter='\t') if r]
+log = [r for r in csv.reader(open(J('data/changes/changes.tsv')), delimiter='\t') if r and 'test-' not in r[5]]
 moves = [r for r in log if r[1] == 'move']
 quar = [r for r in moves if r[3].startswith('Books-مكررات/')]
 undone = {r[5][5:] for r in log if r[5].startswith('undo-')}
 R = Report('سجل التغييرات', 'ما طُبّق على ملفات الهاتف، وما هو مقترح بانتظار الموافقة')
-R.kpis([('عمليات نقل/تسمية', f'{len(moves):,}'), ('نسخ مكررة نُقلت إلى Books-مكررات', f'{len(quar):,}'),
+deleted = [r for r in log if r[1] == 'delete']
+R.kpis([('عمليات نقل/تسمية', f'{len(moves):,}'), ('نسخ مكررة حُذفت بعد التحقق', f'{len(deleted):,}'),
         ('مجلدات فارغة أزيلت', f'{sum(1 for r in log if r[1] == "rmdir"):,}'), ('خطط مطبقة', f'{len({r[5] for r in log}):,}')])
-R.note('لم يُحذف أي ملف. النسخ المكررة (متطابقة بالحجم وبصمة أول وآخر 64 ك.ب) نُقلت إلى مجلد «Books-مكررات» في ذاكرة الهاتف بالمسار نفسه؛ '
-       'راجعه ثم احذفه يدويًا. كل خطة يمكن التراجع عنها: python3 scripts/apply_plan.py --undo <اسم الخطة>.')
+R.note('المحذوف هو النسخ المكررة فقط، بعد التحقق من تطابقها: الحجم بالبايت نفسه، وتطابق عينات من 64 ك.ب في أول الملف وربعه ونصفه وثلاثة أرباعه وآخره، '
+       'ومع بقاء النسخة المطابقة في المكتبة. كل نقل أو تسمية أخرى يمكن التراجع عنها: python3 scripts/apply_plan.py --undo <اسم الخطة>.')
 R.h2('الخطط المطبقة')
 by = defaultdict(list)
 for r in log: by[r[5]].append(r)
@@ -39,8 +40,8 @@ if os.path.exists(rv):
     R.p('حالات لم يكفِ الدليل لتصحيحها آليًا، فتُركت كما هي.')
     R.table(['المسار', 'السبب'], items, fold=f'{len(items):,} بندًا', md_limit=100)
 for p, rs in by.items():
-    mv = [r for r in rs if r[1] == 'move']
+    mv = [r for r in rs if r[1] in ('move', 'delete')]
     if not mv: continue
     R.h2(f'تفاصيل: {p}')
-    R.table(['من', 'إلى', 'السبب'], [[r[2].removeprefix('Books/'), r[3].removeprefix('Books/'), r[4]] for r in mv], fold=f'{len(mv):,} عملية', md_limit=30)
+    R.table(['من', 'إلى', 'السبب'], [[r[2].removeprefix('Books/'), r[3].removeprefix('Books/') or '— حُذف', r[4]] for r in mv], fold=f'{len(mv):,} عملية', md_limit=30)
 print(R.write('04 - سجل التغييرات'))

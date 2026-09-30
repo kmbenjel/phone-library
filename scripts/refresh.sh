@@ -2,9 +2,9 @@
 # Re-index the phone and rebuild everything derived from it. Usage: scripts/refresh.sh [--publish]
 set -euo pipefail
 cd "$(dirname "$0")/.."
-D=$(date +%F)
+D=$(date +%F-%H%M)
 echo "1/6 indexing phone:Books ..."
-rclone lsf -R --files-only --format ps --separator $'\t' phone:Books > "data/phone/index-$D.tsv"
+rclone lsf -R --files-only --format ps --separator $'\t' --checkers 2 phone:Books > "data/phone/index-$D.tsv"
 echo "    $(wc -l < "data/phone/index-$D.tsv") files"
 echo "2/6 provenance";  python3 scripts/provenance.py "data/phone/index-$D.tsv"
 echo "3/6 catalog";     python3 scripts/build_catalog.py "data/phone/index-$D.tsv"

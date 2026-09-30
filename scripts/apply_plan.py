@@ -13,10 +13,27 @@ HOST, PORT = os.environ.get('PHONE_HOST', '192.168.11.100'), int(os.environ.get(
 def connect():
     f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=60); f.login(); return f
 
+CACHE = {}   # folder -> set of entry names (loaded once per folder, updated on every change)
+
+def listing(f, d):
+    if d not in CACHE:
+        try: CACHE[d] = {posixpath.basename(n) for n in f.nlst(d)} - {'.', '..'}
+        except ftplib.error_perm: CACHE[d] = None          # folder does not exist
+    return CACHE[d]
+
 def exists(f, path):
     parent, name = posixpath.split(path)
-    try: return name in [posixpath.basename(n) for n in f.nlst(parent)]
-    except ftplib.error_perm: return False
+    l = listing(f, parent)
+    return l is not None and name in l
+
+def note_add(path):
+    parent, name = posixpath.split(path)
+    if CACHE.get(parent) is not None: CACHE[parent].add(name)
+    elif parent in CACHE: CACHE[parent] = {name}
+
+def note_del(path):
+    parent, name = posixpath.split(path)
+    if CACHE.get(parent) is not None: CACHE[parent].discard(name)
 
 def mkdirs(f, path, made):
     parts = path.split('/'); cur = ''
@@ -24,12 +41,12 @@ def mkdirs(f, path, made):
         cur = posixpath.join(cur, p) if cur else p
         if cur in made: continue
         if not exists(f, cur):
-            f.mkd(cur)
+            f.mkd(cur); note_add(cur); CACHE[cur] = set()
         made.add(cur)
 
 def is_empty(f, d):
-    try: return len([n for n in f.nlst(d) if posixpath.basename(n) not in ('.', '..')]) == 0
-    except ftplib.error_perm: return False
+    l = listing(f, d)
+    return l is not None and len(l) == 0
 
 def log(w, action, a, b, reason, plan):
     w.writerow([time.strftime('%F %T'), action, a, b, reason, plan])
@@ -46,14 +63,14 @@ def run(rows, plan, dry):
                 try:
                     if exists(f, b): print('SKIP (exists)', b); skipped += 1; break
                     mkdirs(f, posixpath.dirname(b), made)
-                    f.rename(a, b); log(w, 'move', a, b, reason, plan); ok += 1
+                    f.rename(a, b); note_del(a); note_add(b); log(w, 'move', a, b, reason, plan); ok += 1
                     src_dir = posixpath.dirname(a)
                     while src_dir.count('/') >= 2 and is_empty(f, src_dir):   # keep Books/<category>
-                        f.rmd(src_dir); log(w, 'rmdir', src_dir, '', 'empty after move', plan)
+                        f.rmd(src_dir); note_del(src_dir); CACHE.pop(src_dir, None); log(w, 'rmdir', src_dir, '', 'empty after move', plan)
                         src_dir = posixpath.dirname(src_dir)
                     break
                 except (ftplib.error_temp, OSError, EOFError) as e:
-                    print('retry', a, e); time.sleep(3); f = connect()
+                    print('retry', a, e); time.sleep(3); f = connect(); CACHE.clear()
                 except ftplib.error_perm as e:
                     print('FAIL', a, '->', b, e); skipped += 1; break
             lf.flush()

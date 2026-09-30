@@ -21,3 +21,12 @@ Newest entries at the bottom. "Context left" = tokens remaining in the working s
 | 2026-09-30 03:25 | Published to `Books/فهارس الويب/`: 00 index, 01 Shamela (1,147 / 8,598 = 13.3%), 02 Waqfeya (1,894 complete, 78 partial, 401 other copy), 03 recommendations (6 of 88 core works missing), 04 change log with pending plans, AGENTS.md, data/*.tsv|json, md/*. | 14.71M |
 | 2026-09-30 03:31 | Index/report headers now count titles (≈3,153 incl. current duplicates; ≈2,943 after plan 002) + 484 periodical issues + 9,467 files, instead of 2,752 folders. Publish fixed: phone FTP refuses rename-over-existing (553), so uploads use `--inplace`. | 14.99M |
 | 2026-09-30 03:40 | Plan 003 revised: merges never cross sections (3 cross-section merges removed → review). 5,227 moves, validated. | 14.99M |
+| 2026-09-30 03:50 | Owner approved plans 002 + 003, asked to remove real duplicates, and to fix sections (Shamela wins on ties). Deep check of all 841 duplicate pairs (+3 inner samples): 841 identical. | 14.99M |
+| 2026-09-30 04:05 | Plan 002 applied: 841 copies → `Books-مكررات/` (8.03 GB), 117 empty folders removed, 0 skipped. Re-index matched the planned state exactly (8,626 files). | 14.97M |
+| 2026-09-30 04:07 | apply_plan.py now caches folder listings (~50 → ~930 operations/min). Plan 003 running. | 14.97M |
+| 2026-09-30 04:10 | Plan 003 applied (5,227 moves, 0 skipped). Found + fixed: bucket leftovers carried into a single-book folder (003b, 10 moves); one-word-title dedup rule; merges never cross sections. | 14.93M |
+| 2026-09-30 04:14 | 003c cleanup (67): author-only file names, junk names (اضغط هنا/كاملا/…), Waqfeya "صفحة تجميعية" → "عدة طبعات", merged the two العوالي folders, 2 misplaced books. | 14.91M |
+| 2026-09-30 04:16 | 004 sections (238 books / 621 files): Shamela wins; madhhab never → general fiqh; شروح→متون only with Shamela. | 14.90M |
+| 2026-09-30 04:18 | 005: the 841 verified duplicates deleted (8.03 GB) after checking every twin is still in the library. rclone must use ≤2 FTP connections (phone limits anonymous logins). | 14.90M |
+| 2026-09-30 04:22 | 007: restored 2 collection folders wrongly renamed after one book (series لقاء العشر الأواخر with 113 full issue titles from Waqfeya; مؤلفات الرافعي). Planner: collections never take a book's name; doubtful matches re-detected from current names. | 14.87M |
+| 2026-09-30 04:25 | 008 pass 2 (36) + 009 revert of 2 collection-item renames. Refresh + publish. Library: 2,924 titles + 484 issues, 8,626 PDFs, 91.3 GB. | 14.87M |

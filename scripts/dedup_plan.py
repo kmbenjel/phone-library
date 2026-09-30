@@ -65,6 +65,8 @@ def bracket(p):
     m = re.search(r'\((.{6,})\)(?:_alt)?\.pdf$', p.rsplit('/', 1)[1]); return m.group(1) if m else ''
 def agree(title, name):
     a, b = words(title), words(name)
+    if len(a) == 1:                                   # one-word title: the folder must be named after it
+        return norm(name).split()[:1] == list(a) or title_key(name.split(' - ')[0]) == title_key(title)
     return len(a) >= 2 and len(a & b) >= 0.6 * min(len(a), len(b))
 rows = []; skipped = Counter()
 for (size, h), ps in g.items():
