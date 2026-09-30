@@ -1,0 +1,4 @@
+2026-09-30 02:18:04	move	Books/فهارس الويب/الفهارس العامة/الفهارس العامة.pdf	Books/فهارس الويب/فهرس خزانة المنظومات العلمية.html	HTML index mis-saved with .pdf extension	001-index-file-extensions
+2026-09-30 02:18:04	rmdir	Books/فهارس الويب/الفهارس العامة		empty after move	001-index-file-extensions
+2026-09-30 02:18:05	move	Books/فهارس الويب/فهارس الويب (الفهارس العامة)_alt/فهارس الويب (الفهارس العامة)_alt.pdf	Books/فهارس الويب/فهرس خزانة المنظومات العلمية.md	Markdown index mis-saved with .pdf extension	001-index-file-extensions
+2026-09-30 02:18:05	rmdir	Books/فهارس الويب/فهارس الويب (الفهارس العامة)_alt		empty after move	001-index-file-extensions
