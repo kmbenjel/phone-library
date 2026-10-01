@@ -33,6 +33,7 @@ for r in csv.DictReader(open(J('data/phone/provenance.tsv')), delimiter='\t'):
     if r['waqfeya_id']:
         prov[r['waqfeya_id']].add((r['archive_id'], r['orig_name'])); prov_books[r['waqfeya_id']].add(r['path'].rsplit('/', 1)[0])
 cat = json.load(open(J('data/catalog.json')))
+cat_books_files = {b['cat'] + '/' + b['folder']: len(b.get('files', [])) for b in cat['books']}
 keys = defaultdict(set); pauth = {}
 for b in cat['books']:
     for t in {b['title']} | {w['name'] for w in b.get('waqfeya', [])}:
@@ -41,14 +42,31 @@ for b in cat['books']:
     pauth[b['cat'] + '/' + b['folder']] = author_tokens(b.get('author', ''))
 rows = []
 for wid, b in books.items():
+    links = b.get('links') or []
+    explicit_files = set()
+    for lk in links:
+        u = lk.get('url', '')
+        m = re.findall(r'archive\.org/(?:details|download)/([^/?#\s]+)/([^/?#\s]+)', u)
+        if m and m[0][1].lower().endswith('.pdf'):
+            explicit_files.add((m[0][0], m[0][1]))
+
     ids = set(re.findall(r'archive\.org/(?:details|download)/([^/"?#\s]+)', json.dumps([b.get('thumbnail'), b.get('links'), b.get('archiveLink')], ensure_ascii=False)))
-    allv = {(i, f['name']) for i in ids for f in items.get(i, [])}
+    if explicit_files:
+        allv = explicit_files
+    else:
+        allv = {(i, f['name']) for i in ids for f in items.get(i, [])}
+
     vols = {x for x in allv if (vol_from_orig(x[1]) or (1, 'vol'))[1] == 'vol'}      # main volumes only (no cover/preface files)
     have = prov.get(wid, set()) & (vols or allv) or prov.get(wid, set())
     wcat, pcat = phone_cat((b.get('category') or {}).get('name'))
     if have:
-        status = 'complete' if not vols or have >= vols else 'partial'
         where = sorted(prov_books[wid])
+        folder_max_vols = max([cat_books_files.get(pf, 0) for pf in where] if where else [0])
+        # If the book folder on the phone already contains all required volumes, it is complete
+        if not vols or have >= vols or folder_max_vols >= len(vols):
+            status = 'complete'
+        else:
+            status = 'partial' 
     else:
         k = title_key(b['name']); at = author_tokens((b.get('author') or {}).get('name', ''))
         cand = keys.get(k, set())

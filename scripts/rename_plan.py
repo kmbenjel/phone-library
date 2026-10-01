@@ -97,11 +97,18 @@ def short_title(t, author=''):
 def vol_from_orig(orig):
     """archive.org Waqfeya naming: 00_xxxx = front, NN_xxxx = vol NN, NN_xxxxp = front of vol NN."""
     b = orig.rsplit('/', 1)[-1]
-    m = (re.match(r'^(\d{1,3})_\d+(p?)(?:_\d+)?\.pdf$', b, re.I)            # 03_144599.pdf, 01_16678p.pdf
-         or re.match(r'^(\d{1,3})-\d{1,3}_\d+(p?)\.pdf$', b, re.I)             # 01-02_44056.pdf (two volumes in one file)
-         or re.match(r'^(\d{1,3})(p?)\.pdf$', b, re.I)                          # 75.pdf
-         or re.match(r'^[a-z][a-z_-]{1,15}?(\d{1,3})(p?)\.pdf$', b, re.I))       # thtn03.pdf, shts1p.pdf, mkdsalah0.pdf
-    if not m: return None
+    m = (re.match(r'^(\d{1,3})[_-]\d+(p[a-z0-9]*)?\.pdf$', b, re.I)
+         or re.match(r'^(\d{1,3})-\d{1,3}(?:[_-][a-z0-9-]+?)(p[a-z0-9]*)?\.pdf$', b, re.I)
+         or re.match(r'^\d{4,}(p[a-z0-9]*)?\.pdf$', b, re.I)
+         or re.match(r'^(\d{1,3})(p[a-z0-9]*)?\.pdf$', b, re.I)
+         or re.match(r'^[a-z][a-z_-]{1,15}?(\d{1,3})(p[a-z0-9]*)?\.pdf$', b, re.I))
+    if not m:
+        if b.lower().endswith('.pdf') and not b.lower().endswith('_text.pdf'):
+            return (1, 'vol')
+        return None
+    if len(m.groups()) == 1:
+        p = bool(m.group(1))
+        return (0, 'front') if p else (1, 'vol')
     n = int(m.group(1)); p = bool(m.group(2))
     return (0, 'front') if n == 0 else ((n, 'front') if p else (n, 'vol'))
 
