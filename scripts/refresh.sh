@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
-# Re-index the phone, rebuild everything derived from it, open the main index in Brave. Usage: scripts/refresh.sh [--publish]
+# Re-index the phone, rebuild everything derived from it, open the main index in Brave. Usage: scripts/refresh.sh [--no-list] [--publish]
 set -euo pipefail
 cd "$(dirname "$0")/.."
 D=$(date +%F-%H%M)
-echo "1/6 indexing phone:Books ..."
-rclone lsf -R --files-only --format ps --separator $'\t' --checkers 2 phone:Books > "data/phone/index-$D.tsv"
+if [ "${1:-}" = "--no-list" ]; then   # phone busy: use index-now.tsv kept current by scripts/index_update.py
+    shift; echo "1/6 using data/phone/index-now.tsv (not re-listed)"; cp data/phone/index-now.tsv "data/phone/index-$D.tsv"
+else
+    echo "1/6 indexing phone:Books ..."
+    rclone lsf -R --files-only --format ps --separator $'\t' --checkers 2 phone:Books > "data/phone/index-$D.tsv"
+    cp "data/phone/index-$D.tsv" data/phone/index-now.tsv   # stable name for scripts run by hand
+fi
 echo "    $(wc -l < "data/phone/index-$D.tsv") files"
-cp "data/phone/index-$D.tsv" data/phone/index-now.tsv   # stable name for scripts run by hand
 echo "2/6 provenance";  python3 scripts/provenance.py "data/phone/index-$D.tsv"
 echo "3/6 catalog";     python3 scripts/build_catalog.py "data/phone/index-$D.tsv"
 echo "4/6 comparisons"; python3 scripts/compare_shamela.py; python3 scripts/compare_waqfeya.py

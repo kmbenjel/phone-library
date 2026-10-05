@@ -12,6 +12,7 @@ import csv, ftplib, hashlib, json, os, queue, re, statistics, subprocess, sys, t
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from phone_host import HOST, PORT
+from netpace import Pacer
 J = lambda *p: os.path.join(ROOT, *p)
 IDX = sys.argv[1] if len(sys.argv) > 1 else J('data/phone/index-now.tsv')
 PRI = sys.argv[2] if len(sys.argv) > 2 else None
@@ -131,6 +132,7 @@ def main():
     def connect():
         f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=300); f.login(); return f
     f, t0, nbytes = connect(), time.time(), 0
+    pacer = Pacer()                      # Wi-Fi is shared (games, calls): back off when the router's latency rises
     for i, (path, size) in enumerate(todo):
         key = key_of(path, size); dst = os.path.join(TMP, key + '.pdf')
         for attempt in range(4):
@@ -138,8 +140,8 @@ def main():
                 h = hashlib.md5()
                 with open(dst, 'wb') as o:
                     def cb(b):
-                        o.write(b); h.update(b)
-                    f.retrbinary('RETR /Books/' + path, cb, blocksize=1 << 20)
+                        o.write(b); h.update(b); pacer.wait(len(b))
+                    f.retrbinary('RETR /Books/' + path, cb, blocksize=1 << 16)
                 if os.path.getsize(dst) != size: raise OSError(f'short read {os.path.getsize(dst)} != {size}')
                 q.put((dst, path, size, h.hexdigest(), key)); nbytes += size; break
             except ftplib.error_perm as e:
@@ -150,7 +152,7 @@ def main():
                 except Exception: pass
         if i % 50 == 0:
             el = time.time() - t0
-            print(f'{i}/{len(todo)}  {nbytes / 1e9:.1f} GB  {nbytes / 1e6 / max(el, 1):.1f} MB/s  {el / 60:.0f} min', flush=True)
+            print(f'{i}/{len(todo)}  {nbytes / 1e9:.1f} GB  {nbytes / 1e6 / max(el, 1):.1f} MB/s  {el / 60:.0f} min  {pacer.status()}', flush=True)
     for _ in ths: q.put(None)
     for t in ths: t.join()
     print('done', flush=True)
