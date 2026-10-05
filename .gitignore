@@ -5,3 +5,5 @@ data/inspect/tmp/
 data/inspect/ocr-queue/
 data/inspect/thumbs/
 logs/
+data/inspect/pages/
+data/inspect/crops/

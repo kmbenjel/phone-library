@@ -64,17 +64,26 @@ Owner's request (full text in the session; summary):
 Phone FTP: 192.168.11.102:2221, max 2 connections. The server has `MD5 <path>` (hash computed on the phone, ~70 MB/s).
 
 ### Steps (status)
-1. [running] `scripts/phone_md5.py` → data/phone/md5.tsv (exact dups). Log logs/phone_md5.log. 1 connection.
+1. [nearly done] `scripts/phone_md5.py` → data/phone/md5.tsv (exact dups). Log logs/phone_md5.log. 1 connection.
 2. [running] `scripts/inspect_files.py data/phone/index-now.tsv data/inspect/priority.txt` → data/inspect/files.jsonl
    (+ ocr-queue/, thumbs/). 1 connection, ~3 h for 168 GB. Re-run the same command to resume.
-3. [todo] `scripts/inspect_ocr.py` (tesseract ara) on data/inspect/ocr-queue → data/inspect/ocr.jsonl.
-4. [todo] Risala: better copy search + original sample + verdict; Tabari/Kashshaf ranking.
-5. [todo] Exact duplicates (md5) → delete (rule 1), logged.
-6. [todo] 10-04 batch: names from Waqfeya labels + title pages, sections, overlap with existing editions.
+3. [running] `/usr/bin/python3 scripts/inspect_ocr.py 5` (keeps front pages in data/inspect/pages/) (tesseract ara) on data/inspect/ocr-queue → data/inspect/ocr.jsonl.
+4. [DONE] Risala/Tabari/Kashshaf → reports/overnight/01-risala-and-compressions.md.
+5. [DONE 068–079] 1,124 copies deleted (≈8 GB). Left: 3 groups unreadable (data/phone/visual-check-state.json pending 3, 9, 12).
+6. [PART] 070 named 574 batch files. Left: folder/section fixes (recat), single-file folders (singles_plan.py, after inspection).
 7. [todo] Problems report (size/cropping/readability) + fixed copies → Books-نسخ-محسنة/.
-8. [todo] Editions report (groups, distinctions, quality metrics, scholars' notes) → site tab.
+8. [PART] report 05 rebuilt with quality + sourced notes (data/editions/notes.json). Re-run after inspection. Editions report (groups, distinctions, quality metrics, scholars' notes) → site tab.
 9. [todo] Same edition / different scans → keep best, weaker → Books-نسخ-مستبعدة/.
 10. [todo] Names verification across the library (inspect + OCR vs names) → plans. Then singles_plan.py (1,950 single-file folders → plain files): ONLY after inspection, junk names («- أحمد ا», «( - ط)») rebuilt from the PDF title/author metadata; never shorten away an author; shorten only for length.
 11. [todo] Missing volumes, failed queues, expansion (pre-700, العمران).
 12. [todo] Local ~/Books fixes + ≈5 GB expansion. Owner (05:xx): EVERY Shamela category must have at least a few books locally, and the sub-sections too (الأدب/أدب عالمي/… English, French, German, Spanish, translated). Local names mirror the phone. Protected: أبو العلاء المعري, ابن الزبير الغرناطي.
 13. [todo] Insights write-up (phone access, desktop, backup, citations workflow).
+
+### Notes for whoever resumes (2026-10-05 ~03:00)
+- Index of the phone is kept current WITHOUT re-listing: after each plan run `python3 scripts/index_update.py <plan>`;
+  before restarting inspect/md5 run `python3 scripts/remap_paths.py <plans since last remap>` (pending: 071 072 074–079).
+- Kill jobs with `kill <pid>` from `pgrep -f "[n]ame"` in a SEPARATE command (pkill in a command line that also names the
+  script kills the shell).
+- Pending: renumber_inside_plan.py on data/phone/renumber-from-inside.txt (needs PDF titles → after inspection);
+  073 queue re-run for archive.org failures (التحبير items return HTTP 500); local sync (local_sync_plan.py) after md5;
+  Books-نسخ-محسنة samples (fix_pdf.py: crop sample 20 books, split 5 spreads); singles_plan.py after inspection.
