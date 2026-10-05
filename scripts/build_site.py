@@ -7,7 +7,9 @@ J = lambda p: os.path.join(ROOT, p)
 os.makedirs(J('site'), exist_ok=True)
 cat = open(J('data/catalog.json')).read().replace('</', '<\\/')
 reports, sources = [], []
+WEB = os.environ.get('WEB') == '1'          # the online copy (benjelloun.dev/library): no change log (owner, 2026-10-05)
 pages = [p for p in sorted(glob.glob(J('site/[0-9][0-9] - *.html'))) if not os.path.basename(p).startswith('00 ')]
+if WEB: pages = [p for p in pages if 'سجل التغييرات' not in p]
 # the old static «فهرس خزانة المنظومات العلمية» is replaced by report 06 (scripts/report_manzumat.py)
 for i, p in enumerate(pages):
     title = os.path.basename(p)[5:-5] if os.path.basename(p)[:2].isdigit() else 'فهرس خزانة المنظومات العلمية'
@@ -17,5 +19,7 @@ for i, p in enumerate(pages):
     reports.append({'title': title})
     sources.append(f'<script type="text/plain" id="src-r{i}">' + html.replace('</script', '<\\/script') + '</script>')
 page = open(J('templates/index.html')).read().replace('__CATALOG__', cat).replace('__REPORTS__', json.dumps(reports, ensure_ascii=False)).replace('__REPORT_SOURCES__', '\n'.join(sources))
-open(J('site/00 - الفهرس العام.html'), 'w').write(page)
-print('site/00 - الفهرس العام.html', round(len(page.encode()) / 2**20, 2), 'MB, tabs:', ['الفهرس'] + [r['title'] for r in reports])
+OUT = J('site-web/00 - الفهرس العام.html') if WEB else J('site/00 - الفهرس العام.html')
+os.makedirs(os.path.dirname(OUT), exist_ok=True)
+open(OUT, 'w').write(page)
+print(os.path.relpath(OUT, ROOT), round(len(page.encode()) / 2**20, 2), 'MB, tabs:', ['الفهرس'] + [r['title'] for r in reports])

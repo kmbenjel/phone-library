@@ -24,6 +24,25 @@ def load():
                 death.setdefault(i, int(r['death'])); sh_author.setdefault(i, r['author'])
     return [b for b in cat['books'] if b['cat'] not in SKIP], death, sh_author
 
+
+HONORIFIC = re.compile(r'^(?:(?:أ\.?\s*د|د|الدكتور|الدكتورة|الشيخ|العلامة|الأستاذ|الأستاذة|فضيلة|سماحة)\.?\s+)+')
+
+def merge_variants(by):
+    """One person, several spellings: «بشار عواد» / «بشار عواد معروف», «التركي» / «عبد الله بن عبد المحسن التركي».
+    A shorter name is folded into a longer one when its words appear in it in order (same first word, or the shorter
+    is a single surname that ends the longer) and exactly one longer name qualifies."""
+    def sub(a, b):
+        it = iter(b); return all(w in it for w in a)
+    for key in sorted(by, key=lambda k: len(k.split())):
+        if key not in by: continue
+        a = key.split()
+        cands = [k for k in by if k != key and len(k.split()) > len(a) and sub(a, k.split())
+                 and (k.split()[0] == a[0] if len(a) > 1 else k.split()[-1] == a[0])]
+        if len(cands) > 1:                                   # several fuller forms of the same person: take the fullest
+            top = max(cands, key=lambda k: len(k.split()))
+            if all(c == top or sub(c.split(), top.split()) for c in cands): cands = [top]
+        if len(cands) == 1: by[cands[0]] += by.pop(key)
+
 def edition_of(b):
     """The editor as the book's own name gives it («(ت X - publisher)», «- ت X»); the catalog's researcher field
     is not used: it is sometimes copied from a Waqfeya page that collects several books."""
@@ -72,16 +91,18 @@ def report_editors(B):
         for one in re.split(r'\s+و(?=[^\s]{3,})|،\s*|\s+-\s+', e)[:3]:
             one = one.strip()
             if len(one) < 3 or re.match(r'^(دار|مكتبة|مؤسسة|مطبعة|ط\b|مجموعة|وزارة|جامعة|مركز)', one): continue
+            one = HONORIFIC.sub('', one.split('؛')[0].split('،')[0]).strip()
+            if len(one) < 3: continue
             key = ' '.join(norm(one).split())
             by[key].append((one, b))
-    for key in [k for k in by if len(k.split()) == 1]:            # «التركي» → «عبد الله بن عبد المحسن التركي» if unique
-        full = [k for k in by if len(k.split()) > 1 and k.split()[-1] == key]
-        if len(full) == 1: by[full[0]] += by.pop(key)
+    merge_variants(by)
     rows = []
     for key, v in sorted(by.items(), key=lambda kv: (-len(kv[1]), kv[0])):
-        name = collections.Counter(n for n, _ in v).most_common(1)[0][0]
-        works = RawHTML('<br>'.join(f'{b["folder"]} <span class="sub">({b["cat"]})</span>' for _, b in sorted(v, key=lambda x: x[1]['folder'])))
-        rows.append([name, len(v), works])
+        name = max({n for n, _ in v}, key=lambda n: (len(n.split()), len(n)))           # the fullest spelling
+        seen = {}
+        for _, b in v: seen.setdefault(b['folder'], b)                                  # one line per edition
+        works = RawHTML('<br>'.join(f'{f} <span class="sub">({b["cat"]})</span>' for f, b in sorted(seen.items())))
+        rows.append([name, len(seen), works])
     R.kpis([('المحققون', len(rows)), ('طبعات منسوبة إلى محقق', sum(r[1] for r in rows))])
     R.note('المحقق كما يرد بعد «ت» في اسم الكتاب على الهاتف (والأسماء تُصحَّح من صفحات العنوان تباعًا). قد يرد المحقق الواحد بصيغ مختلفة.')
     R.table(['المحقق', 'طبعاته على الهاتف', 'الكتب'], rows[:400], numeric=(1,))
