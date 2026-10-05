@@ -76,5 +76,5 @@ Phone FTP: 192.168.11.102:2221, max 2 connections. The server has `MD5 <path>` (
 9. [todo] Same edition / different scans → keep best, weaker → Books-نسخ-مستبعدة/.
 10. [todo] Names verification across the library (inspect + OCR vs names) → plans.
 11. [todo] Missing volumes, failed queues, expansion (pre-700, العمران).
-12. [todo] Local ~/Books fixes + ≈5 GB expansion.
+12. [todo] Local ~/Books fixes + ≈5 GB expansion. Owner (05:xx): EVERY Shamela category must have at least a few books locally, and the sub-sections too (الأدب/أدب عالمي/… English, French, German, Spanish, translated). Local names mirror the phone. Protected: أبو العلاء المعري, ابن الزبير الغرناطي.
 13. [todo] Insights write-up (phone access, desktop, backup, citations workflow).

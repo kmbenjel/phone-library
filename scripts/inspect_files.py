@@ -13,11 +13,16 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from phone_host import HOST, PORT
 from netpace import Pacer
+sys.path.append(os.path.expanduser('~/.local/share/phone-library-tools/site'))
+try:
+    import pymupdf, fix_pdf                    # crop «recipes» while the file is here (no second download later)
+except Exception:
+    pymupdf = None
 J = lambda *p: os.path.join(ROOT, *p)
 IDX = sys.argv[1] if len(sys.argv) > 1 else J('data/phone/index-now.tsv')
 PRI = sys.argv[2] if len(sys.argv) > 2 else None
-OUT, TMP, OCRQ, THUMBS = J('data/inspect/files.jsonl'), J('data/inspect/tmp'), J('data/inspect/ocr-queue'), J('data/inspect/thumbs')
-for d in (TMP, OCRQ, THUMBS): os.makedirs(d, exist_ok=True)
+OUT, TMP, OCRQ, THUMBS, CROPS = J('data/inspect/files.jsonl'), J('data/inspect/tmp'), J('data/inspect/ocr-queue'), J('data/inspect/thumbs'), J('data/inspect/crops')
+for d in (TMP, OCRQ, THUMBS, CROPS): os.makedirs(d, exist_ok=True)
 WORKERS, MAX_STAGED, OCR_CAP = 3, 4, 12000
 
 def run(cmd, timeout=600):
@@ -90,6 +95,15 @@ def analyse(pdf, path, size, md5, key):
     rec['text_first'] = re.sub(r'[ \t]+', ' ', first).strip()[:2500]
     samples = sorted({min(pages, p) for p in (max(1, pages // 4), max(1, pages // 2), max(1, 3 * pages // 4))})
     rec['margins'] = [m for m in (margins(pdf, p, key) for p in samples) if m]
+    mm = [m for m in rec['margins'] if not m.get('blank')]
+    if pymupdf and mm and (statistics.median(m['l'] + m['r'] for m in mm) > 0.30 or max(max(m['l'], m['r']) for m in mm) > 0.20
+                           or max(max(m.get('edge_dark_rows', 0), m.get('edge_dark_cols', 0)) for m in mm) >= 0.35):
+        try:
+            boxes = fix_pdf.crop_boxes(pymupdf.open(pdf))
+            json.dump({'path': path, 'size': size, 'md5': md5, 'boxes': boxes}, open(os.path.join(CROPS, key + '.json'), 'w'))
+            rec['crop_recipe'] = True
+        except Exception as e:
+            rec['crop_error'] = repr(e)[:200]
     run(['pdftoppm', '-gray', '-jpeg', '-jpegopt', 'quality=60', '-r', '18', '-f', '1', '-l', '1', '-singlefile', pdf, os.path.join(THUMBS, key)], 120)
     if rec['text_first_chars'] < 300:            # image-only front matter: queue the first 4 pages for OCR
         while len(os.listdir(OCRQ)) > OCR_CAP: time.sleep(30)     # OCR is slower than the download: cap the backlog

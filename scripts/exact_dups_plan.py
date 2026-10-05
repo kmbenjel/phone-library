@@ -39,8 +39,12 @@ def book_name(p):
     return parts[1] if len(parts) > 2 else parts[-1][:-4]
 
 def author_of(name):
-    m = re.match(r'.+?\s-\s([^()]+)', name)
-    return author_tokens(m.group(1)) if m else set()
+    """Author words of «title - author (edition)»; segments that are editions («ت - X», «ط. Y», «ج 1») are not authors."""
+    segs = [x.strip() for x in re.sub(r'\([^()]*\)', ' ', name).split(' - ')[1:]]
+    segs = [x for x in segs if x and not re.match(r'^(ت|ط|ج|و\s?ط)\b|^(ت|ط)[.\-]', x) and len(x) > 2]
+    return author_tokens(segs[-1]) if segs else set()
+
+JUNK_META = re.compile(r'binder|\.pdf$|^[A-Za-z0-9 _\-.]+$|acdsee|microsoft|untitled|^\s*$', re.I)
 
 ED_STOP = set('ط ت دار مكتبه مكتبة مؤسسه مطبعه المطبعه الطبعه طبعه نشر للنشر والتوزيع الكتب العلميه بيروت القاهره و'.split())
 
@@ -72,6 +76,13 @@ def main(index, out, review_out):
     folder_files = collections.defaultdict(list)
     for p in idx: folder_files[p.rsplit('/', 1)[0]].append(p)
     ev, sec = load_evidence(), shamela_sections()
+    global META, MAUTH
+    META, MAUTH = {}, {}
+    for l in open(J('data/inspect/files.jsonl'), encoding='utf-8'):
+        d = json.loads(l)
+        if d.get('pages'):
+            META[d['path']] = ((d.get('meta') or {}).get('title') or '').strip()
+            MAUTH[d['path']] = ((d.get('meta') or {}).get('author') or '').strip()
 
     def score(p):
         parts = p.split('/'); cat, fname = parts[0], parts[-1]; folder = p.rsplit('/', 1)[0]
@@ -90,6 +101,9 @@ def main(index, out, review_out):
         if re.search(r'\s-\s', name) and '(' in name: s += 10
         if re.search(r'[A-Za-z]{4,}|^\d+_\d+', fname[:-4]) and not re.search(r'[ء-ي]', fname): s -= 30
         if re.search(r'\sت-\s|\sط\.\s|\.\.\.|،$|\s-\s*$', name): s -= 10
+        if re.search(r'\s-\s*-\s|\s-\sو\s?ط\b|\s-\s*ط\.?\s*$|\s-\sت\s-\s|؛', name): s -= 15     # junk «- - ط», «- ت - X»
+        if author_of(name): s += 5
+        if re.match(r'^\d{2,3} - ', fname): s += 5                                              # numbered volume name
         if re.search(r'نسخة (ثانية|أخرى)|_alt', p): s -= 40
         return s, why
 
@@ -107,7 +121,30 @@ def main(index, out, review_out):
         else:
             # different books claim the same bytes: the file itself decides
             have = [p for p in g if ev.get(p)]
-            if os.environ.get('AUTO_EVIDENCE') != '1':           # different titles/authors: decided by reading, not word overlap
+            mt = META.get(g[0], '')
+            if mt and not JUNK_META.search(mt):
+                km = title_key(re.split(r'\s+-\s+ج\s*\d|:', mt)[0]).split()[:3]
+                def hit(p):
+                    k = title_key(book_name(p)).split()
+                    return sum(1 for w in km if w in k) / max(1, len(km))
+                ranked = sorted(g, key=lambda p: (hit(p), score(p)[0]), reverse=True)
+                good = [p for p in g if hit(p) >= 0.67]
+                if len(good) > 1:                                  # several names fit the title: the author must decide
+                    ma = author_tokens(MAUTH.get(g[0], ''))
+                    if ma:
+                        good = [p for p in good if author_of(book_name(p)) & ma] or good
+                    names_ = [book_name(p) for p in good]
+                    if not all(same_work(names_[0], n) for n in names_[1:]) or any(edition_conflict(a, b) for a in names_ for b in names_):
+                        good = []
+                if good and all(hit(p) < 0.34 for p in g if p not in good):
+                    best = max(good, key=lambda p: (score(p)[0], -len(p)))
+                    how = f'names disagree; the file\'s own title «{mt[:60]}» is «{book_name(best)[:60]}»'
+                    stats['groups'] += 1
+                    for p in g:
+                        if p != best:
+                            rows.append((f'Books/{p}', f'duplicate of: {best} | {how}')); stats['delete'] += 1; stats['bytes'] += idx[p]
+                    continue
+            if os.environ.get('AUTO_EVIDENCE') != '1':           # no informative title inside: decided by looking at the pages
                 review.append((g, 'names disagree' + ('' if have else ', not inspected yet'))); stats['review: names disagree'] += 1; continue
             if not have:
                 review.append((g, 'names disagree, file not inspected yet')); stats['review: no evidence'] += 1; continue
