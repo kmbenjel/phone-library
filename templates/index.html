@@ -10,15 +10,27 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 "Noto Naskh Arabic","Amiri","Scheherazade New","Traditional Arabic",serif}
-header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 14px 8px}
+header{background:var(--bg);padding:10px 14px 4px;max-width:900px;margin:auto}
 h1{font-size:1.25rem;margin:0 0 2px}
 .stats{color:var(--muted);font-size:.85rem}
 nav.tabs{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 0}
+/* only this slim bar stays on screen while scrolling (owner, 2026-10-05: the whole header was sticky and filled phone screens) */
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:6px max(14px,env(safe-area-inset-right,0px)) 6px max(14px,env(safe-area-inset-left,0px))}
+.bar>div{display:flex;gap:6px;max-width:900px;margin:auto}
+.bar select{flex:0 1 38%;max-width:260px;min-width:0;font:inherit;font-size:.9rem;padding:8px 6px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+#catbox{max-width:900px;margin:6px auto 0;padding:0 14px}
+#catbox summary{cursor:pointer;color:var(--accent);font-size:.85rem;list-style:none;padding:2px 0}
+#catbox summary::-webkit-details-marker{display:none}
+#catbox summary::before{content:'▸ '}#catbox[open] summary::before{content:'▾ '}
+#totabs{position:fixed;top:8px;inset-inline-start:8px;z-index:6;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--accent);font-size:1.1rem;opacity:.85;box-shadow:0 1px 4px #0003}
+@media (max-width:600px){header{padding:8px 10px 2px}h1{font-size:1.05rem}.stats{font-size:.75rem;line-height:1.5}
+ nav.tabs button{font-size:.75rem;padding:1px 9px}.chip{font-size:.75rem;padding:1px 8px}
+ .bar{padding:5px 8px}#catbox{padding:0 8px}main{padding:8px 8px 60px}.book{padding:8px 10px;border-radius:10px}.t{font-size:.98rem}}
 nav.tabs button{flex:0 0 auto;font:inherit;font-size:.8rem;color:var(--accent);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:2px 11px;white-space:nowrap}
 nav.tabs button[aria-current=true]{background:var(--accent);color:var(--bg)}
-#viewer{display:block;width:100%;border:0;background:var(--bg)}
+#viewer{display:block;width:100%;height:100vh;height:100dvh;border:0;background:var(--bg)}
 .path{font-size:.72rem;color:var(--muted);direction:rtl;word-break:break-all;margin:2px 0 4px;user-select:all}
-input[type=search]{width:100%;margin:8px 0 6px;padding:10px 12px;font:inherit;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+input[type=search]{flex:1 1 auto;min-width:0;width:100%;margin:0;padding:8px 12px;font:inherit;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
 .chips{display:flex;flex-wrap:wrap;gap:4px;padding-bottom:4px}
 .chip{flex:0 0 auto;border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:999px;padding:2px 9px;font:inherit;font-size:.8rem;line-height:1.5;cursor:pointer;white-space:nowrap}
 .chip[aria-pressed=true]{background:var(--accent);color:var(--bg);border-color:var(--accent)}
@@ -32,7 +44,8 @@ main{padding:10px 12px 60px;max-width:900px;margin:auto}
 .m b{font-weight:400;color:var(--accent)}
 ul.files{margin:6px 0 2px;padding:0;list-style:none;font-size:.92rem}
 ul.files li{padding:2px 0;border-top:1px dashed var(--line)}
-ul.files a{color:var(--ink);text-decoration:none}
+ul.files a{color:var(--ink);text-decoration:none;overflow-wrap:anywhere}
+.t,.m{overflow-wrap:anywhere}
 .sz{color:var(--muted);font-size:.78rem;margin-inline-start:6px}
 .src{font-size:.78rem;margin-top:4px}
 .src a{color:var(--accent)}
@@ -46,9 +59,13 @@ mark{background:var(--hl);color:inherit}
   <h1>فهرس المكتبة</h1>
   <div class="stats" id="stats"></div>
   <nav class="tabs" id="tabs"></nav>
-  <input type="search" id="q" placeholder="ابحث بالعنوان أو المؤلف أو المحقق أو الناشر…" autocomplete="off">
-  <div class="chips" id="cats"></div>
 </header>
+<div class="bar" id="bar"><div>
+  <input type="search" id="q" placeholder="ابحث بالعنوان أو المؤلف أو المحقق أو الناشر…" autocomplete="off">
+  <select id="catsel" aria-label="القسم"></select>
+</div></div>
+<details id="catbox"><summary>الأقسام</summary><div class="chips" id="cats"></div></details>
+<button id="totabs" hidden title="التبويبات" aria-label="العودة إلى التبويبات">☰</button>
 <main id="home"><div id="list"></div><button id="more" hidden>عرض المزيد</button></main>
 <iframe id="viewer" hidden title="تقرير"></iframe>
 <script id="data" type="application/json">__CATALOG__</script>
@@ -66,17 +83,23 @@ D.books.forEach(b=>b._k=norm([b.title,b.author,b.edition,b.folder,b.researcher,b
 $('stats').textContent=`نحو ${(D.stats.titles||D.stats.books).toLocaleString('ar')} عنوانًا${D.stats.issues?` و${D.stats.issues.toLocaleString('ar')} عددًا من الدوريات`:''} · ${D.stats.files.toLocaleString('ar')} ملف PDF · ${gb(D.stats.bytes)} · ${D.stats.categories.toLocaleString('ar')} قسمًا · حُدِّث ${D.generated}`;
 const TABS=[{id:'home',title:'الفهرس'}].concat(R.map((r,i)=>({id:'r'+i,title:r.title})));
 function tabs(cur){$('tabs').innerHTML=TABS.map(t=>`<button data-t="${t.id}" aria-current="${t.id===cur}">${esc(t.title)}</button>`).join('');}
-function show(id){tabs(id);const home=id==='home';$('home').hidden=!home;$('q').hidden=!home;$('cats').hidden=!home;
- const v=$('viewer');v.hidden=home;
- if(!home){const src=document.getElementById('src-'+id);if(v.dataset.cur!==id){v.srcdoc=src.textContent.split('<\\/script').join('<'+'/script');v.dataset.cur=id;}
-  v.style.height=(innerHeight-document.querySelector('header').offsetHeight)+'px';}
- try{history.replaceState(null,'','#'+id)}catch(_){} scrollTo(0,0);}
-$('tabs').onclick=e=>{const b=e.target.closest('button');if(b)show(b.dataset.t);};
-addEventListener('resize',()=>{const v=$('viewer');if(!v.hidden)v.style.height=(innerHeight-document.querySelector('header').offsetHeight)+'px';});
+function show(id,user){tabs(id);const home=id==='home';$('home').hidden=!home;$('bar').hidden=!home;$('catbox').hidden=!home;
+ const v=$('viewer');v.hidden=home;$('totabs').hidden=home;
+ if(!home){const src=document.getElementById('src-'+id);if(v.dataset.cur!==id){v.srcdoc=src.textContent.split('<\\/script').join('<'+'/script');v.dataset.cur=id;}}
+ try{history.replaceState(null,'',home?location.pathname+location.search:'#'+id)}catch(_){}   // no «#home»: the browser would scroll to <main id=home> after loading
+ if(!home&&user)v.scrollIntoView();else scrollTo(0,0);}   // a report fills the screen; scrolling up past its top (or ☰) brings the tabs back
+$('tabs').onclick=e=>{const b=e.target.closest('button');if(b)show(b.dataset.t,true);};
+$('totabs').onclick=()=>scrollTo({top:0,behavior:'smooth'});
 let cat='',shown=0,res=[];const PAGE=60;
 function chips(){const all=[{name:'',books:D.stats.books}].concat(D.categories);
- $('cats').innerHTML=all.map(c=>`<button class="chip" data-c="${esc(c.name)}" aria-pressed="${c.name===cat}">${esc(c.name||'الكل')} <small>${c.books.toLocaleString('ar')}</small></button>`).join('');}
-$('cats').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;cat=b.dataset.c;chips();run();try{localStorage.setItem('cat',cat)}catch(_){}};
+ $('cats').innerHTML=all.map(c=>`<button class="chip" data-c="${esc(c.name)}" aria-pressed="${c.name===cat}">${esc(c.name||'الكل')} <small>${c.books.toLocaleString('ar')}</small></button>`).join('');
+ $('catsel').innerHTML=all.map(c=>`<option value="${esc(c.name)}"${c.name===cat?' selected':''}>${c.name?esc(c.name)+' ('+c.books.toLocaleString('ar')+')':'كل الأقسام'}</option>`).join('');
+ $('catbox').querySelector('summary').textContent=cat?`القسم: ${cat}`:`الأقسام (${D.categories.length.toLocaleString('ar')})`;}
+function setCat(c){cat=c;chips();run();try{localStorage.setItem('cat',cat)}catch(_){}}
+$('cats').onclick=e=>{const b=e.target.closest('.chip');if(b)setCat(b.dataset.c);};
+$('catsel').onchange=e=>{setCat(e.target.value);scrollTo(0,0);};
+try{const o=localStorage.getItem('catbox');$('catbox').open=o?o==='1':matchMedia('(min-width:700px)').matches}catch(_){$('catbox').open=innerWidth>=700}
+$('catbox').ontoggle=()=>{try{localStorage.setItem('catbox',$('catbox').open?'1':'0')}catch(_){}};
 function hl(s,terms){s=esc(s);return s}
 function card(b){
  const meta=[b.author,b.edition||[b.researcher&&('ت '+b.researcher),b.publisher].filter(Boolean).join(' - ')].filter(Boolean).join(' · ');
