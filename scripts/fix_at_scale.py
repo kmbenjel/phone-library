@@ -35,16 +35,12 @@ def handled():
     return h
 
 def phone_up():
-    import socket
+    """the phone's address (known ones first, then a scan of the network), rclone pointed at it; None while away"""
     sys.path.insert(0, J('scripts'))
-    from phone_host import CANDIDATES, PORT
-    for h in CANDIDATES:
-        try:
-            socket.create_connection((h, PORT), timeout=3).close()
-            subprocess.run(['rclone', 'config', 'update', 'phone', 'host', h], capture_output=True)
-            return h
-        except OSError: pass
-    return None
+    import phone_host
+    h = phone_host.find()
+    if h: subprocess.run(['rclone', 'config', 'update', 'phone', 'host', h], capture_output=True)
+    return h
 
 def wait_phone():
     t = 0
