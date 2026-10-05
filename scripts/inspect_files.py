@@ -21,7 +21,7 @@ IDX = sys.argv[1] if len(sys.argv) > 1 else J('data/phone/index-now.tsv')
 PRI = sys.argv[2] if len(sys.argv) > 2 else None
 OUT, TMP, OCRQ, THUMBS, CROPS = J('data/inspect/files.jsonl'), J('data/inspect/tmp'), J('data/inspect/ocr-queue'), J('data/inspect/thumbs'), J('data/inspect/crops')
 for d in (TMP, OCRQ, THUMBS, CROPS): os.makedirs(d, exist_ok=True)
-WORKERS, MAX_STAGED, OCR_CAP = 3, 4, 12000
+WORKERS, MAX_STAGED, OCR_CAP = 3, 4, int(os.environ.get('OCR_CAP', 12000))   # OCR_CAP: page images waiting for OCR (disk)
 
 def run(cmd, timeout=600):
     try:
