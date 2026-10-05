@@ -25,6 +25,11 @@ QFILE, PLAN = sys.argv[1], sys.argv[2]
 DL_JOBS = int(os.environ.get('DL_JOBS', 12))
 CONN = os.environ.get('CONN', '8')
 STAGE_MAX = float(os.environ.get('STAGE_GB', 6)) * 1e9
+MIN_FREE = float(os.environ.get('MIN_FREE_GB', 8)) * 1e9    # the laptop disk is small: never fill it (owner, 2026-10-05)
+
+def wait_for_disk():
+    import shutil
+    while shutil.disk_usage(STAGE).free < MIN_FREE: time.sleep(30)
 NET_MB = float(os.environ.get('NET_MB', 3))          # total internet download cap in MB/s (0 = none); see AGENTS §7.8
 PHONE_BW = os.environ.get('PHONE_BW', '6M')          # rclone --bwlimit for phone uploads (Wi-Fi shared)
 LOCAL_BOOKS = os.path.expanduser('~/Books')
@@ -120,6 +125,7 @@ def archive_mirrors(url):
     return [f'https://{s}{m["dir"]}/{f}' for s in (m.get('workable_servers') or [m.get('d1'), m.get('d2')]) if s and m.get('dir')]
 
 def download(row):
+    wait_for_disk()
     url, size, target, reason = row[0], int(row[1] or 0), row[2], row[3] if len(row) > 3 else ''
     if 'سلسلة عالم المعرفة (المجلس الوطني للثقافة - الكويت)' in target and 'الأعداد ' not in target:
         import re
