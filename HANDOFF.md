@@ -41,3 +41,40 @@ Each workstream appends its progress below (newest last). Everything is resumabl
   * Ali al-Omran missing books queue prepared: `data/queue/omran.tsv` / `omran_clean.tsv`.
   * Pre-700 authors candidates queue prepared: `data/queue/pre700_clean.tsv` (2,541 files, >18 GB).
   * Duplicates analysis: 225 groups identified; duplicate investigation shows false files (e.g. `tilbatu't talabah` wrongly copied into multiple folders). Per owner's instructions ("investigate and decide"), verified duplicates will be quarantined to `Books-مكررات/`.
+
+## Overnight 2026-10-05 (owner asleep; work without asking; resume from here after any stop)
+Owner's request (full text in the session; summary):
+- Editions (الطبعات) of the same book are KEPT for now, clearly distinguished in names + indexes (investigator, publisher,
+  year, pages, scan quality, scholars' opinions on the edition). Gather everything needed for a later purge decision.
+- Find books with size / cropping / readability problems; list exact issues for the owner. When the fix is clear,
+  produce fixed copies into phone `Books-نسخ-محسنة/` (same relative path) for later substitution — never replace originals.
+  A better copy of the same edition found elsewhere (library or web) may serve as the substitute.
+- مجلة الرسالة: original lost (compressed in place). Look for a better, very readable copy → second folder; else get a
+  sample of the original (archive.org) and judge whether compression is acceptable. Rank the Tabari + Kashshaf
+  compressions and give thoughts.
+- Fix all errors: names verified from INSIDE the files (title pages, prefaces), Waqfeya/logs as secondary; missing
+  categories; duplicates; missing volumes; unfinished queues; same edition / different scans → keep the best
+  (weaker → `Books-نسخ-مستبعدة/`, not deleted); expansion per strategy (pre-700 authors, العمران, quality first, no copy
+  already present).
+- Local ~/Books: fix what the audit found; expand ≈5 GB ("surprise me").
+- End: insights on fast phone access (Acrobat, Google Files), desktop browsing, backup/restore to a new phone, and
+  "open the pages cited in the margins of a book" workflows (desktop + phone, e.g. extract cited pages into one PDF).
+- Indexes stay local; open site/00 in Brave after each edit (scripts/open_index.sh). Never remove the index folder.
+
+Phone FTP: 192.168.11.102:2221, max 2 connections. The server has `MD5 <path>` (hash computed on the phone, ~70 MB/s).
+
+### Steps (status)
+1. [running] `scripts/phone_md5.py` → data/phone/md5.tsv (exact dups). Log logs/phone_md5.log. 1 connection.
+2. [running] `scripts/inspect_files.py data/phone/index-now.tsv data/inspect/priority.txt` → data/inspect/files.jsonl
+   (+ ocr-queue/, thumbs/). 1 connection, ~3 h for 168 GB. Re-run the same command to resume.
+3. [todo] `scripts/inspect_ocr.py` (tesseract ara) on data/inspect/ocr-queue → data/inspect/ocr.jsonl.
+4. [todo] Risala: better copy search + original sample + verdict; Tabari/Kashshaf ranking.
+5. [todo] Exact duplicates (md5) → delete (rule 1), logged.
+6. [todo] 10-04 batch: names from Waqfeya labels + title pages, sections, overlap with existing editions.
+7. [todo] Problems report (size/cropping/readability) + fixed copies → Books-نسخ-محسنة/.
+8. [todo] Editions report (groups, distinctions, quality metrics, scholars' notes) → site tab.
+9. [todo] Same edition / different scans → keep best, weaker → Books-نسخ-مستبعدة/.
+10. [todo] Names verification across the library (inspect + OCR vs names) → plans.
+11. [todo] Missing volumes, failed queues, expansion (pre-700, العمران).
+12. [todo] Local ~/Books fixes + ≈5 GB expansion.
+13. [todo] Insights write-up (phone access, desktop, backup, citations workflow).
