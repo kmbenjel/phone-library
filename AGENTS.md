@@ -142,6 +142,9 @@ are in `فهارس الويب/md/` and the data tables in `فهارس الويب
 | `build_site.py` | ONE self-contained file (index + every report as tabs, reports shown in a frame) — Android browsers do not follow links between local files |
 | `compare_shamela.py`, `compare_waqfeya.py` | status of every Shamela / Waqfeya book vs the phone → `data/compare/*.tsv` |
 | `report_shamela.py`, `report_waqfeya.py`, `report_recommend.py`, `report_changes.py` | reports 01–04 (HTML + MD) |
+| `report_multi_editions.py` | report 05: titles present in several editions/folders |
+| `name_audit.py` | §4 name audit: raw archive names, >200-byte names, forbidden chars, non-PDF/tiny files, unknown categories → `data/phone/name-audit.tsv` |
+| `raw_names_plan.py` | names files still called `NN_<id>.pdf` from the Waqfeya record that links them → plan + review list |
 | `check_magic.py`, `check_pdf_tail.py` | is every ".pdf" a real, complete PDF? |
 | `delete_files.py` | logged deletion (owner-approved only), removes emptied folders |
 | `replacement_plan.py`, `fetch_replacements.py` | find Waqfeya replacements for removed files; download, verify, upload, log |
@@ -156,13 +159,20 @@ are in `فهارس الويب/md/` and the data tables in `فهارس الويب
 | `audit_numbering.py` | numbering audit (runs in the change-log report) |
 | `restore_cut_names.py` | completes cut folder names by a unique prefix match (Waqfeya / Shamela / poems catalog) |
 | `verify_dups_deep.py` | extra proof for duplicates (64 KB at 25/50/75%) before removal |
+| `verify_pairs.py` | the same proof for explicit pairs of phone files |
 | `verify_provenance.py` | byte-checks doubtful provenance matches (first 64 KB phone vs archive.org) |
 | `recat_plan.py` | section-correction planner (rules in §4b) |
 | `rename_plan.py` | the rename/merge/split planner (evidence-based; writes `plans/NNN-*.tsv` + review list) |
 | `buckets.py`, `textnorm.py`, `report_lib.py` | helpers |
+| `phone_host.py` | the phone's FTP address: first answering of the known addresses (§2); `PHONE_HOST` overrides |
 | `publish.py` | uploads `site/`, `reports/`, data tables and this guide to the phone (copy, never deletes) |
 | `refresh.sh` | everything above in order |
 | `fetch_queue.py` | THE download/upload pipeline (§7): parallel aria2c, verify, one serialized phone connection, resumable |
+| `waq_queue.py` | Waqfeya records → `fetch_queue.py` lines (only the files each record links; skips what the phone already has) |
+| `local_selection.py` | picks the best of the phone library for the laptop's local `~/Books` (group budgets) |
+
+Only reusable tools live in `scripts/`. A one-off generator goes in `scratch/`; the plan or queue it writes is the
+record. Nothing goes in the repo root. Removed one-offs (2026-10-05) are in git history at commit `0e64d80`.
 
 ## 7. Speed and concurrency (binding rule)
 
