@@ -110,6 +110,11 @@ Single-volume books are stored as plain files in the category folder without the
   Folder and file names are in the book's own language (`Les Misérables - Victor Hugo/01 - Les Misérables (Tome I - Fantine).pdf`).
   A translated non-literary work goes to its subject section (قصة الحضارة → التاريخ).
 - Modern educational and general science books belong strictly inside Shamela categories: `الطب` (health guides, medicine) and `علوم أخرى` (Science, Mathematics, Psychology, Sociology, Humanities, OpenStax, Strang, Siyavula, Hindawi).
+- **Folders that are not categories** (`scripts/special_dirs.py`, all protected like the index folder, never counted as books):
+  `نسخ محسنة للاستبدال/<original path>` — improved copies (lossless crop of margins, split spreads, repaired or
+  re-downloaded files) waiting for the owner's word; substitution = `ALLOW_PROTECTED=1 apply_plan.py` moving each copy over
+  its original after the original is removed. `نسخ مستبعدة/<original path>` — weaker scans of an edition already kept,
+  set aside for the owner's final decision (owner, 2026-10-05: keep only the best scan of the same edition).
 - **The index folder is not a category and is never removed.** `Books/فهارس الويب/` (and any folder that holds the
   library's own indexes/reports) must never be deleted, emptied, moved or renamed — not by the category rule below,
   not by a duplicate or cleanup pass. `apply_plan.py` and `delete_files.py` refuse paths inside it

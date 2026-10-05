@@ -13,6 +13,7 @@ import collections, csv, glob, json, os, re, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from textnorm import norm, title_key
+from special_dirs import NOT_BOOKS
 from rename_plan import load, canonical_folder, clean, fit, short_title, split_wname, label_from_link, vol_from_orig, deficient, author_short, redundant
 J = lambda p: os.path.join(ROOT, p)
 META_VOL = re.compile(r'^(.*?)\s*-?\s*ج\s*(\d+)\s*(?::\s*(.*))?$')
@@ -61,7 +62,7 @@ def main(index, out, review_out, only_raw=False):
     idx = [p for p, s in csv.reader(open(index, encoding='utf-8'), delimiter='\t')]
     folders = collections.defaultdict(list)
     for p in idx:
-        if p.count('/') == 2 and not p.startswith('فهارس الويب/'): folders[p.rsplit('/', 1)[0]].append(p)
+        if p.count('/') == 2 and p.split('/')[0] not in NOT_BOOKS: folders[p.rsplit('/', 1)[0]].append(p)
     existing = set(folders)
     rows, review, stats = [], [], collections.Counter()
     targets = {}

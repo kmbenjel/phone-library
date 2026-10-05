@@ -13,6 +13,8 @@ Problems (thresholds chosen for reading a scanned book on a phone screen, ~1080 
   mixed-sizes   page sizes vary widely inside one file (> 15 % in width) → inconsistent zoom while reading
 Usage: python3 scripts/quality_report.py index.tsv"""
 import collections, csv, json, os, re, statistics, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from special_dirs import NOT_BOOKS
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 J = lambda p: os.path.join(ROOT, p)
 
@@ -69,7 +71,7 @@ def main(index):
     rows, per, saving, n = [], collections.Counter(), 0, 0
     for l in open(J('data/inspect/files.jsonl'), encoding='utf-8'):
         d = json.loads(l)
-        if d['path'] not in idx or idx[d['path']] != d['size']: continue
+        if d['path'] not in idx or idx[d['path']] != d['size'] or d['path'].split('/')[0] in NOT_BOOKS: continue
         n += 1
         for kind, why, save in problems(d):
             rows.append((kind, d['path'], d['size'], why)); per[kind] += 1; saving += save

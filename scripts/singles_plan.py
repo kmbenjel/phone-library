@@ -9,6 +9,7 @@ import collections, csv, json, os, re, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from textnorm import norm, title_key
+from special_dirs import NOT_BOOKS
 from rename_plan import clean, fit, deficient, canonical_folder, split_wname, author_short, redundant
 from names_plan import short, BAD_FOLDER
 J = lambda p: os.path.join(ROOT, p)
@@ -42,7 +43,7 @@ def main(index, out):
         if len(ps) != 1: continue
         cat, name = folder.split('/', 1)
         fn = ps[0].rsplit('/', 1)[1]
-        if not fn.lower().endswith('.pdf') or cat == 'فهارس الويب': continue
+        if not fn.lower().endswith('.pdf') or cat in NOT_BOOKS: continue
         if re.match(r'^(مؤلفات|سلسلة|مجلة|موسوعة|مجموع|أدب)', name): stats['keep: collection'] += 1; continue
         r = prov.get(ps[0]) or {}
         b = books.get(r.get('waqfeya_id')) if r.get('waqfeya_id') else None

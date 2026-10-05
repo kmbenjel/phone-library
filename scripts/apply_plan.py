@@ -10,9 +10,11 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG = os.path.join(ROOT, 'data/changes/changes.tsv')
 from phone_host import HOST, PORT
 # Folders holding the library's own indexes/reports (AGENTS.md §4b): never moved out of, emptied or removed.
-PROTECTED = ('Books/فهارس الويب',)
+from special_dirs import NOT_BOOKS
+PROTECTED = tuple('Books/' + d for d in NOT_BOOKS)
 
 def protected(p):
+    if os.environ.get('ALLOW_PROTECTED') == '1': return False      # deliberate step only (substituting improved copies)
     return any(p == d or p.startswith(d + '/') for d in PROTECTED)
 
 def connect():

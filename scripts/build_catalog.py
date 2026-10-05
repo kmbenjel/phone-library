@@ -5,6 +5,7 @@ from collections import defaultdict, OrderedDict
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 J = lambda p: os.path.join(ROOT, p)
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
+from special_dirs import NOT_BOOKS
 INDEX_DIR = 'فهارس الويب'
 
 def split_folder(name):
@@ -53,7 +54,7 @@ def main(index):
     books = OrderedDict()
     for path, size in csv.reader(open(index), delimiter='\t'):
         parts = path.split('/')
-        if parts[0] == INDEX_DIR or len(parts) < 2: continue
+        if parts[0] in NOT_BOOKS or len(parts) < 2: continue
         if len(parts) == 2:
             cat, folder, fname = parts[0], parts[1][:-4] if parts[1].lower().endswith('.pdf') else parts[1], parts[1]
         else:
