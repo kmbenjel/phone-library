@@ -13,6 +13,7 @@ Read this file first. Keep it current when you change a convention.
 |------|-------|
 | Books (source of truth) | phone `Books/<category>/<book folder>/<file>.pdf` |
 | Indexes (main + reports) | laptop `site/00 - الفهرس العام.html` (one file, reports as tabs) + `reports/*.md`; kept local for now (owner, 2026-10-05) |
+| Indexes online (owner, 2026-10-05) | https://benjelloun.dev/library — GitHub Pages repo `kmbenjel/library` (clone `~/projects/library-site`), updated by `scripts/publish_web.sh` at the end of every `refresh.sh` |
 | Indexes on the phone (when published) | phone `Books/فهارس الويب/` (HTML indexes, reports, `catalog.json`, this guide) |
 | Workspace (scripts, data, reports) | laptop `~/projects/phone-library/` (local git repo) |
 | Work log (what was done, when) | `WORKLOG.md` |
@@ -185,6 +186,7 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `buckets.py`, `textnorm.py`, `report_lib.py` | helpers |
 | `phone_host.py` | the phone's FTP address: first answering of the known addresses (§2); `PHONE_HOST` overrides |
 | `publish.py` | uploads `site/`, `reports/`, data tables and this guide to the phone (copy, never deletes) — only when the owner asks |
+| `publish_web.sh` | copies `site/0*.html` to the GitHub Pages copy (benjelloun.dev/library), commits only changes, pushes (`NO_WEB=1` skips) |
 | `open_index.sh` | opens `site/00 - الفهرس العام.html` in Brave on the laptop (`NO_OPEN=1` skips) |
 | `refresh.sh` | everything above in order |
 | `fetch_queue.py` | THE download/upload pipeline (§7): parallel aria2c, verify, one serialized phone connection, resumable; `file:///…` = a file already downloaded and read; falls back to the item's own storage servers when archive.org's redirect lands on a failing node (HTTP 500) |
