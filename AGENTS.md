@@ -204,9 +204,11 @@ record. Nothing goes in the repo root. Removed one-offs (2026-10-05) are in git 
    downloads). A new request from the owner never cancels a running job; only an explicit order does.
 7. **Everything is resumable:** `data/queue/<name>.done` lists finished targets, `<name>.failed` the failures with the
    reason. Re-running the same queue continues where it stopped.
-8. **Never make the home Wi-Fi lag** (other people game and call on it — owner, 2026-10-05). Long phone transfers
-   pace themselves on the router's latency (`scripts/netpace.py`: worst ping > 15 ms → slower, < 8 ms → faster;
-   ~4–16 MB/s). Internet downloads during the day: `aria2c --max-overall-download-limit=3M`. CPU-heavy jobs run
-   with `nice -n 10`. Phone-side work (`MD5`, moves, deletes) costs no Wi-Fi bandwidth.
+8. **Never make the home network lag** (other people game and call on it — owner, 2026-10-05, twice). Only ONE bulk
+   transfer at a time. Long phone transfers pace themselves (`scripts/netpace.py`): worst Wi-Fi ping to the router
+   > 10 ms or internet ping > its baseline + 15 ms → 40 % slower; ceiling 6 MB/s. Internet downloads (`fetch_queue.py`,
+   `NET_MB`, default 3 MB/s, 1.5 while anyone is home) and other queues start only after `scripts/wait_calm.py 10`
+   (10 calm minutes); `scripts/resume_when_calm.sh` chains the paused queues that way. CPU-heavy jobs run with
+   `nice`. Phone-side work (`MD5`, moves, renames, deletes) costs no bandwidth and can run any time.
 9. **Stopping a job:** `kill <pid>` with the PID from `pgrep -f "[n]ame"` in a separate command — a `pkill -f name`
    in the same command line that restarts the job kills the shell itself.
