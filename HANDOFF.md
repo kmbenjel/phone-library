@@ -144,3 +144,13 @@ Phone FTP: 192.168.11.103:2221 since 2026-10-05 noon (was .102; scripts/phone_ho
   3. 139: spot-check a few copies (render a page: original vs copy), then substitute (125-style: original out, copy in).
   4. Margins (3,895 files, 35 GB) in batches with substitution right after each batch (phone space unknown: FTP has no AVBL).
   5. WORKLOG line, git commit, summary to the owner.
+- Owner 2026-10-05 ~14:45: the Tabari «جامع البيان … (ت شاكر - دار المعارف 1958 - طبعة ملونة)» STAYS IN COLOUR (he likes its colours;
+  do not gray it to save 3 GB). Lossless crops are fine; never a gray recompression.
+- 15:10 check of 139 (lossless crops): many copies barely change the page (samples: 100 %, 95 % of the page kept; one 72 %;
+  splits work: 18 → 30 pages). Substitute ONLY splits and crops that keep ≤ 90 % of the page (measure CropBox/MediaBox
+  on the copy with pymupdf); delete the near no-op copies from «نسخ محسنة». fix_pdf.py misses dark bands that have a
+  thin white strip outside them (القول الفصل في تأييد سنة السدل: black bar at the bottom kept) — improve content_box().
+- 136a uploaded (364 files) and indexed; 136b (389 files, names scratch/name_136b.py) uploading; فيض الباري (2/7 staged)
+  and المحرر في أسباب النزول left out until their files download (archive.org nodes fail).
+- 140: 17 recompressed copies substituted (≤ 50 % of the original; saving 3.8 GB), 9 unworthy copies deleted.
+- Lid: systemd-inhibit blocks lid-close suspend until ~21:00 (pid in `systemd-inhibit --list`).

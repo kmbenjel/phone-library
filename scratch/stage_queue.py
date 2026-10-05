@@ -6,9 +6,10 @@ import csv, hashlib, os, subprocess, sys, shutil
 q, stage = sys.argv[1], sys.argv[2]
 os.makedirs(stage, exist_ok=True)
 rows = [r for r in csv.reader(open(q), delimiter='\t') if r and not r[0].startswith('#')]
-need = sum(int(r[1]) for r in rows)
-if shutil.disk_usage(stage).free - need < 8e9: sys.exit(f'not enough disk: need {need/1e9:.1f} GB + 8 GB free')
 loc = lambda r: os.path.join(stage, hashlib.md5(r[2].encode()).hexdigest() + '.pdf')
+have = lambda r: os.path.exists(loc(r)) and os.path.getsize(loc(r)) == int(r[1])
+need = sum(int(r[1]) for r in rows if not have(r))           # only what is still missing
+if shutil.disk_usage(stage).free - need < 8e9: sys.exit(f'not enough disk: need {need/1e9:.1f} GB + 8 GB free')
 with open(os.path.join(stage, 'aria.txt'), 'w') as w:
     for r in rows:
         p = loc(r)
