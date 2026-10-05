@@ -61,7 +61,7 @@ Owner's request (full text in the session; summary):
   "open the pages cited in the margins of a book" workflows (desktop + phone, e.g. extract cited pages into one PDF).
 - Indexes stay local; open site/00 in Brave after each edit (scripts/open_index.sh). Never remove the index folder.
 
-Phone FTP: 192.168.11.102:2221, max 2 connections. The server has `MD5 <path>` (hash computed on the phone, ~70 MB/s).
+Phone FTP: 192.168.11.103:2221 since 2026-10-05 noon (was .102; scripts/phone_host.py tries both), ≤ 3 connections. The server has `MD5 <path>` (hash computed on the phone, ~70 MB/s).
 
 ### Steps (status)
 1. [nearly done] `scripts/phone_md5.py` → data/phone/md5.tsv (exact dups). Log logs/phone_md5.log. 1 connection.
@@ -111,3 +111,36 @@ Phone FTP: 192.168.11.102:2221, max 2 connections. The server has `MD5 <path>` (
   report 05 with full inspection data; then refresh.sh, delete data/.no-open, open Brave once.
 - Lesson: labels lie sometimes (Waqfeya links one file under two volume titles; earlier passes copied labels). Check
   against the exact source file and the PDF's embedded title before renumbering (AGENTS §3 rule 3).
+
+### Status 2026-10-05 ~12:30 (owner approved the 6 morning items + new requests; work continues without asking)
+- Owner's new requests: approve all 6 (substitute improved copies; delete junk; 4 broken without source; other scans of
+  the same edition → throw away; fixed copies at scale; more pre-700), keep the laptop disk safe, indexes: sections
+  superposed (no sideways scroll), editors merged (بشار عواد = بشار عواد معروف), no change log online, header usable on
+  phones; more chosen Waqfeya books; حميتو's missing works; careful printers (عامرة/بولاق، الحلبي، الخانجي، دار المعارف،
+  حجرية فاس…), the dawawin of الأسد «مصادر الشعر الجاهلي»; a selection of the most-read missing Waqfeya titles.
+- Done: 125–127 (substitutions, deletions), 128/128b (junk codes in names), 129/129b (singles), 130/131 (حميتو), 132,
+  133/133b (14 jahili dawawin; canon in data/mappings/jahili-dawawin.tsv now complete), 137 (الكشف folder held 3 misfiled
+  articles; the complete الكشف moved to التجويد والقراءات), 138/138b (split sets التحبير and سنن الترمذي joined; other
+  scans of أبي تمام، مسند عابس، مصنف عبد الرزاق، فضل عشر ذي الحجة deleted), index page: slim sticky search bar only
+  (templates/index.html), published to benjelloun.dev/library.
+- Running (logs/): 134-printers (230 files, names from title pages: scratch/name_134.py), 137b-masoul (complete المعسول,
+  then delete the old set with plans/137c-delete-masoul-old-set.tsv), 135-recompress (26 bloated gray scans → «نسخ محسنة»;
+  substitute only copies ≤ 50 % of the original), stage-136a (top-missing selection, 141 works in data/expansion/top-pick.json;
+  136b staged after 134 frees disk; then title sheets → names → upload, like 134).
+- Not yet: crop/spread fixed copies at scale; the Tabari «طبعة ملونة» set (bloated but labelled colour: ask before graying).
+
+### Status 2026-10-05 ~14:40 (unattended until the usage renewal ≈ 19:22; owner asleep)
+- Running alone: `scratch/unattended_2026-10-05.sh` (log logs/unattended-2026-10-05.log), two lines:
+  A. 134 printers DONE (230/230 uploaded) → index → stage 136b (downloads/stage-136b) → title sheets
+     downloads/stage-136{a,b}/sheets (books.tsv + sheetNN.png) → refresh.sh --no-list (web published, Brave not opened).
+  B. 135 recompress (retry of the 18 that timed out when the phone moved) → 139: lossless fixed copies (split spreads,
+     crop dark scanner edges; lists/139-split-and-crop.tsv, small files first) into «نسخ محسنة للاستبدال».
+- Done before: 137b/137c المعسول replaced by the complete set (22 files) and the old misnumbered set deleted (18).
+- Next for the agent (one-shot resume task at 19:29 + the hourly check-in):
+  1. 136a/136b: read the title sheets, write scratch/name_136.py like scratch/name_134.py (single files plain, sets
+     numbered, editions from title pages), upload with fetch_queue (file://), index_update --add.
+  2. 135: substitute only copies ≤ 50 % of the original (الشفا 19 %، فتوح البلدان 27 %، الطبقات 05 25 %، 03 39 % so far);
+     delete the other recompressed copies from «نسخ محسنة» (خريدة القصر ×3، طبقات فحول الشعراء ≈ 80 %: not worth a lossy copy).
+  3. 139: spot-check a few copies (render a page: original vs copy), then substitute (125-style: original out, copy in).
+  4. Margins (3,895 files, 35 GB) in batches with substitution right after each batch (phone space unknown: FTP has no AVBL).
+  5. WORKLOG line, git commit, summary to the owner.
