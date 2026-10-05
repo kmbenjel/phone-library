@@ -29,7 +29,7 @@ Each workstream appends its progress below (newest last). Everything is resumabl
 - Re-run the same queue: `DL_JOBS=12 CONN=8 STAGE_GB=5 python3 scripts/fetch_queue.py data/queue/<q>.tsv <plan>`.
 - Phone size now: `flock /tmp/phone-ftp.lock rclone lsf -R --files-only --format ps --separator $'\t' --checkers=1 --transfers=1 phone:Books > data/phone/index-<date>.tsv` then sum column 2.
 - Local size: `du -sh ~/Books`.
-- Finish: `scripts/additions_audit.py`, `flock /tmp/phone-ftp.lock scripts/refresh.sh --publish`, WORKLOG line, git commit.
+- Finish: `scripts/additions_audit.py`, `flock /tmp/phone-ftp.lock scripts/refresh.sh` (indexes stay local; it opens the main index in Brave), WORKLOG line, git commit.
 
 ## Progress log
 - 07:02 AGENTS.md §7 + fetch_queue.py written; streams A, B, C launched.

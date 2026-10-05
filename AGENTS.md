@@ -2,7 +2,8 @@
 
 This workspace manages a large Arabic PDF library on an Android phone: `Books/` on the phone's
 internal storage, reached over FTP. The laptop keeps the scripts, the source catalogs and the
-change log; the phone keeps the books and a copy of the indexes in `Books/فهارس الويب/`.
+change log and, for now, the indexes (`site/`); the phone keeps the books. The indexes go to the phone
+(`Books/فهارس الويب/`) only when the owner asks.
 
 Read this file first. Keep it current when you change a convention.
 
@@ -11,7 +12,8 @@ Read this file first. Keep it current when you change a convention.
 | What | Where |
 |------|-------|
 | Books (source of truth) | phone `Books/<category>/<book folder>/<file>.pdf` |
-| Human + AI indexes on the phone | phone `Books/فهارس الويب/` (HTML indexes, reports, `catalog.json`, this guide) |
+| Indexes (main + reports) | laptop `site/00 - الفهرس العام.html` (one file, reports as tabs) + `reports/*.md`; kept local for now (owner, 2026-10-05) |
+| Indexes on the phone (when published) | phone `Books/فهارس الويب/` (HTML indexes, reports, `catalog.json`, this guide) |
 | Workspace (scripts, data, reports) | laptop `~/projects/phone-library/` (local git repo) |
 | Work log (what was done, when) | `WORKLOG.md` |
 | Every move/rename ever applied | `data/changes/changes.tsv` (time, action, from, to, reason, plan) |
@@ -58,8 +60,10 @@ Read this file first. Keep it current when you change a convention.
    files the Waqfeya record links (its `links`), then run `scripts/additions_audit.py` — it keeps a file only if
    the record links it (or it follows the record's own pattern: link typos, `NN_IDp` prefaces), drops other books
    of the bundle, byte-identical copies of files already in the library, and double uploads.
-5. After changes: re-index (`rclone lsf -R --files-only --format ps --separator $'\t' phone:Books`),
-   rebuild the catalog, the site and the reports, publish them to the phone, add a WORKLOG line.
+5. After every edit: run `scripts/refresh.sh` (re-index → catalog → reports → site), WITHOUT `--publish` — the
+   indexes stay on the laptop until the owner asks for them on the phone. It ends by opening the main index
+   (`site/00 - الفهرس العام.html`) in Brave on the laptop (`scripts/open_index.sh`) for the owner to check:
+   do this after every edit, also when only the indexes changed. Then add a WORKLOG line.
 
 ## 4. Naming conventions
 
@@ -106,24 +110,28 @@ Single-volume books are stored as plain files in the category folder without the
   Folder and file names are in the book's own language (`Les Misérables - Victor Hugo/01 - Les Misérables (Tome I - Fantine).pdf`).
   A translated non-literary work goes to its subject section (قصة الحضارة → التاريخ).
 - Modern educational and general science books belong strictly inside Shamela categories: `الطب` (health guides, medicine) and `علوم أخرى` (Science, Mathematics, Psychology, Sociology, Humanities, OpenStax, Strang, Siyavula, Hindawi).
-- All 40 Shamela categories must be strictly represented on the phone library. No custom category may ever be introduced if its contents can belong to any of the 40 Shamela categories. Any folder found outside the official Shamela classifications is assumed to be an error: its books must be moved to the appropriate Shamela category, and the stray category folder must then be deleted.
+- **The index folder is not a category and is never removed.** `Books/فهارس الويب/` (and any folder that holds the
+  library's own indexes/reports) must never be deleted, emptied, moved or renamed — not by the category rule below,
+  not by a duplicate or cleanup pass. `apply_plan.py` and `delete_files.py` refuse paths inside it
+  (`PROTECTED` in `apply_plan.py`; add any new index folder there). On 2026-10-04 a category purge removed it.
+- All 40 Shamela categories must be strictly represented on the phone library. No custom category may ever be introduced if its contents can belong to any of the 40 Shamela categories. Any folder found outside the official Shamela classifications (except the index folder above) is assumed to be an error: its books must be moved to the appropriate Shamela category, and the stray category folder must then be deleted.
 
 ## 5. Expanding the library
 
-1. Pick candidates from `Books/فهارس الويب/03 - توصيات التوسعة.html` (or its `.md`). Each lists the Waqfeya
+1. Pick candidates from `site/03 - توصيات التوسعة.html` (or `reports/03 - توصيات التوسعة.md`). Each lists the Waqfeya
    page and the archive.org item.
 2. Check it is not already present: search `data/catalog.tsv` by normalized title and check exact sizes
    in `data/phone/provenance.tsv`.
 3. Download from archive.org (`https://archive.org/download/<id>/<file>`), name it per §4, upload
    with `rclone copyto <local> "phone:Books/<category>/<folder>/<file>"`.
-4. Re-index and republish (rule 4). Add the new book's source to the WORKLOG line.
+4. Re-index and rebuild the indexes (rule 5). Add the new book's source to the WORKLOG line.
 
 ## 6. Scripts (all in `scripts/`, Python 3, stdlib only)
 
-**One command after any change on the phone:** `scripts/refresh.sh --publish` (re-index → provenance →
-catalog → comparisons → reports → HTML → upload to `Books/فهارس الويب/`). Reports are written twice:
-`site/*.html` (phone, Arabic, offline) and `reports/*.md` (for agents); on the phone the Markdown copies
-are in `فهارس الويب/md/` and the data tables in `فهارس الويب/data/`.
+**One command after any edit:** `scripts/refresh.sh` (re-index → provenance → catalog → comparisons → reports →
+HTML → opens the main index in Brave). `--publish` also uploads to `Books/فهارس الويب/` — only when the owner asks.
+Reports are written twice: `site/*.html` (Arabic, offline) and `reports/*.md` (for agents); when published, the
+Markdown copies are in `فهارس الويب/md/` and the data tables in `فهارس الويب/data/`.
 
 | Script | Does |
 |--------|------|
@@ -165,7 +173,8 @@ are in `فهارس الويب/md/` and the data tables in `فهارس الويب
 | `rename_plan.py` | the rename/merge/split planner (evidence-based; writes `plans/NNN-*.tsv` + review list) |
 | `buckets.py`, `textnorm.py`, `report_lib.py` | helpers |
 | `phone_host.py` | the phone's FTP address: first answering of the known addresses (§2); `PHONE_HOST` overrides |
-| `publish.py` | uploads `site/`, `reports/`, data tables and this guide to the phone (copy, never deletes) |
+| `publish.py` | uploads `site/`, `reports/`, data tables and this guide to the phone (copy, never deletes) — only when the owner asks |
+| `open_index.sh` | opens `site/00 - الفهرس العام.html` in Brave on the laptop (`NO_OPEN=1` skips) |
 | `refresh.sh` | everything above in order |
 | `fetch_queue.py` | THE download/upload pipeline (§7): parallel aria2c, verify, one serialized phone connection, resumable |
 | `waq_queue.py` | Waqfeya records → `fetch_queue.py` lines (only the files each record links; skips what the phone already has) |

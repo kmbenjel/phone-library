@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Re-index the phone and rebuild everything derived from it. Usage: scripts/refresh.sh [--publish]
+# Re-index the phone, rebuild everything derived from it, open the main index in Brave. Usage: scripts/refresh.sh [--publish]
 set -euo pipefail
 cd "$(dirname "$0")/.."
 D=$(date +%F-%H%M)
@@ -14,4 +14,6 @@ echo "5/6 reports";     python3 scripts/report_shamela.py; python3 scripts/repor
                         [ -s data/changes/changes.tsv ] && python3 scripts/report_changes.py || true
 python3 scripts/build_selection.py   # selection page catalogue (publish it with the Artifact tool when it changed)
                         python3 scripts/build_site.py
-if [ "${1:-}" = "--publish" ]; then echo "6/6 publish"; python3 scripts/publish.py; else echo "6/6 (skipped publish; pass --publish)"; fi
+# Indexes stay on the laptop for now (owner, 2026-10-05): publish to the phone only when the owner asks.
+if [ "${1:-}" = "--publish" ]; then echo "6/6 publish"; python3 scripts/publish.py; else echo "6/6 (kept local; --publish uploads to the phone)"; fi
+scripts/open_index.sh || true

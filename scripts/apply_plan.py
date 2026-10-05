@@ -9,6 +9,11 @@ import ftplib, csv, os, sys, time, posixpath
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG = os.path.join(ROOT, 'data/changes/changes.tsv')
 from phone_host import HOST, PORT
+# Folders holding the library's own indexes/reports (AGENTS.md §4b): never moved out of, emptied or removed.
+PROTECTED = ('Books/فهارس الويب',)
+
+def protected(p):
+    return any(p == d or p.startswith(d + '/') for d in PROTECTED)
 
 def connect():
     f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=60); f.login(); return f
@@ -67,6 +72,7 @@ def run(rows, plan, dry):
         w = csv.writer(lf, delimiter='\t')
         for a, b, reason in rows:
             if a == b: continue
+            if protected(a): print('REFUSED (index folder)', a); skipped += 1; continue
             if dry: print('MOVE', a, '->', b); ok += 1; continue
             for attempt in range(3):
                 try:

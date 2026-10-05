@@ -1,0 +1,19 @@
+1/6 indexing phone:Books ...
+    16169 files
+2/6 provenance
+{'waqfeya': 10372, 'unique': 11537, 'archive-only': 1528, 'ambiguous': 363, 'none': 4269} of 16169
+3/6 catalog
+catalog: {'categories': 40, 'books': 5751, 'titles': 5876, 'issues': 1005, 'files': 16169, 'bytes': 168624018500}
+4/6 comparisons
+shamela books: 8598  on phone: 2464 (28.7%)
+Counter({'missing': 7440, 'complete': 3166, 'other-copy': 955, 'partial': 33})
+5/6 reports
+01 - مقارنة بالشاملة
+02 - مقارنة بالوقفية
+03 - توصيات التوسعة
+05 - الكتب متعددة الطبعات
+04 - سجل التغييرات
+{'hindawi': 145, 'openstax': 73, 'hesperian': 21, 'siyavula': 2, 'waqfeya': 5618, 'shamela': 6134} page 2.2 MB
+site/00 - الفهرس العام.html 21.65 MB, tabs: ['الفهرس', 'مقارنة بالشاملة', 'مقارنة بالوقفية', 'توصيات التوسعة', 'سجل التغييرات', 'الكتب متعددة الطبعات', 'فهرس خزانة المنظومات العلمية']
+6/6 (kept local; --publish uploads to the phone)
+opened in Brave: /home/k/projects/phone-library/site/00 - الفهرس العام.html
