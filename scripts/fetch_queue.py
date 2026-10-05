@@ -24,6 +24,8 @@ QFILE, PLAN = sys.argv[1], sys.argv[2]
 DL_JOBS = int(os.environ.get('DL_JOBS', 12))
 CONN = os.environ.get('CONN', '8')
 STAGE_MAX = float(os.environ.get('STAGE_GB', 6)) * 1e9
+NET_MB = float(os.environ.get('NET_MB', 3))          # total internet download cap in MB/s (0 = none); see AGENTS §7.8
+PHONE_BW = os.environ.get('PHONE_BW', '6M')          # rclone --bwlimit for phone uploads (Wi-Fi shared)
 LOCAL_BOOKS = os.path.expanduser('~/Books')
 STAGE = J('downloads/queue'); os.makedirs(STAGE, exist_ok=True); os.makedirs(J('data/queue'), exist_ok=True)
 DONE_F = J('data/queue/' + os.path.basename(QFILE).rsplit('.', 1)[0] + '.done')
@@ -40,7 +42,7 @@ class PhoneLock:
     def __exit__(self, *a):
         fcntl.flock(self.f, fcntl.LOCK_UN); self.f.close()
 
-RC = ['--checkers=1', '--transfers=1', '--ftp-concurrency', '1', '--inplace', '-q', '--retries', '5']
+RC = ['--checkers=1', '--transfers=1', '--ftp-concurrency', '1', '--inplace', '-q', '--retries', '5', '--bwlimit', PHONE_BW]
 
 def ok_pdf(p, size):
     try:
@@ -127,10 +129,17 @@ def download(row):
         while not to_local and staged[0] + size > STAGE_MAX and staged[0] > 0: stage_cv.wait()
         if not to_local: staged[0] += size
     os.makedirs(os.path.dirname(out), exist_ok=True)
-    r = subprocess.run(['aria2c', '-q', '--continue=true', f'-x{CONN}', f'-s{CONN}', '-k1M', '--max-tries=5', '--retry-wait=10',
+    lim = [f'--max-download-limit={int(NET_MB * 1e6 / DL_JOBS)}'] if NET_MB else []      # shared home internet (AGENTS §7.8)
+    r = subprocess.run(['aria2c', '-q', *lim, '--continue=true', f'-x{CONN}', f'-s{CONN}', '-k1M', '--max-tries=5', '--retry-wait=10',
                         '--allow-overwrite=true', '--auto-file-renaming=false', '-U', 'personal-library/1.0',
                         '-d', os.path.dirname(out), '-o', os.path.basename(out), url], capture_output=True, text=True)
-    why = 'aria2c ' + r.stdout[-150:] if r.returncode else ok_pdf(out, size)
+    if r.returncode:                      # some archive.org data nodes refuse parallel ranges (HTTP 500): one plain stream
+        if os.path.exists(out): os.remove(out)
+        lim_c = ['--limit-rate', str(int(NET_MB * 1e6 / DL_JOBS))] if NET_MB else []
+        r = subprocess.run(['curl', '-sfL', '--retry', '5', '--retry-delay', '10', *lim_c, '-A', 'personal-library/1.0', '-o', out, url], capture_output=True, text=True)
+        why = f'curl exit {r.returncode}' if r.returncode else ok_pdf(out, size)
+    else:
+        why = ok_pdf(out, size)
     if why:
         fail(target, why)
         if os.path.exists(out): os.remove(out)

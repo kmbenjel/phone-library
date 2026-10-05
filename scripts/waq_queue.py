@@ -1,6 +1,6 @@
 """Waqfeya records → fetch_queue.py lines (only the files each record links; AGENTS.md §3 rule 4, §4 names).
 
-Usage: python3 scripts/waq_queue.py IDS.tsv OUT_QUEUE.tsv [--force]
+Usage: python3 scripts/waq_queue.py IDS.tsv OUT_QUEUE.tsv [--force | --complete]
   IDS.tsv: waqfeya_id[<TAB>category][<TAB>folder]   (blank = automatic: Shamela category of the title, else Waqfeya map)
 Skips: records already complete on the phone (data/compare/waqfeya-matches.tsv), a phone folder with the same title and
 the same publisher, files whose exact size is already in the phone index. Sizes come from archive.org <id>_files.xml
@@ -73,6 +73,7 @@ def book_title(name):
 
 def main():
     ids_f, out = sys.argv[1], sys.argv[2]; force = '--force' in sys.argv
+    complete = '--complete' in sys.argv          # finish a partial book: no record-level skips, keep the per-file size skip
     recs = {}
     for fn in ('data/waqfeya/details.jsonl', 'data/waqfeya/details2.jsonl'):
         for l in open(J(fn)):
@@ -105,10 +106,10 @@ def main():
         d = recs.get(r[0])
         if not d: print('NO RECORD', r[0]); continue
         name = d['name'].strip(); t = clean(book_title(name)); tk = title_key(t)
-        if status.get(r[0]) == 'complete' and not force: print('ON PHONE', name[:70]); continue
+        if status.get(r[0]) == 'complete' and not (force or complete): print('ON PHONE', name[:70]); continue
         pub = clean(re.split(r'\s+-\s+', d.get('publisher') or '')[0])
         inv = clean(d.get('investigator') or '')
-        if not force and tk in cat_titles:
+        if not (force or complete) and tk in cat_titles:
             print('TITLE ON PHONE', name[:60], '→', cat_titles[tk][0][:80]); continue
         cat = (r[1] if len(r) > 1 and r[1] else '') or sham.get(tk) or wcat(d.get('category', {}).get('name'))
         if not cat: print('NO CATEGORY', name[:70], d.get('category', {}).get('name')); continue

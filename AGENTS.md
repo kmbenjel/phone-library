@@ -188,7 +188,7 @@ record. Nothing goes in the repo root. Removed one-offs (2026-10-05) are in git 
 1. **Every download goes through `scripts/fetch_queue.py`** (or follows its model). Never `curl` files one by one.
 2. **Internet downloads are always parallel and multi-connection:** `aria2c -x8 -s8 -k1M --continue`, 12 files at a
    time (`DL_JOBS=12 CONN=8`). Lower these only on HTTP 429/503 or repeated resets, and raise them back afterwards.
-3. **The phone takes TWO FTP connections** (`--checkers=2 --transfers=2 --ftp-concurrency 2`). All phone I/O
+3. **The phone takes several FTP connections** (tested 2026-10-05: 5 at once accepted; use ≤ 3 for stability) (`--checkers=2 --transfers=2 --ftp-concurrency 2`). All phone I/O
    (upload, copy from phone, moves, listings) holds the shared lock `/tmp/phone-ftp.lock` (`flock`), so several
    jobs can run at once without fighting over the phone. The phone thread is never idle while files are waiting:
    download → verify → upload are separate stages; downloads never wait for uploads (except the staging cap).
