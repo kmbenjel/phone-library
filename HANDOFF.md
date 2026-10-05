@@ -164,3 +164,7 @@ Phone FTP: 192.168.11.103:2221 since 2026-10-05 noon (was .102; scripts/phone_ho
 - 20:10: phone back at .102 since 19:30; 142 running batch by batch (crops substituted at once). 144 (pre-700, 185 books)
   uploading → after_144.sh (second pass + index). 143 (last copies of 139) runs by itself after the 139 retry pass.
   Next: refresh.sh --no-list when 144 is indexed (rebuilds and publishes the indexes), WORKLOG, commit.
+- 20:15: 144 done (253/253 uploaded and indexed); indexes rebuilt and published. Phone index: 16,553 files, 169.3 GB.
+  Still running by itself: fix_at_scale.py 142 (batch 9 of ~30; each batch substitutes its copies at once) and
+  after_139.sh → plan 143. Left for later: pre-700 works with no strong archive.org match (543; search by author/other
+  uploads with scripts/find_on_archive.py), local ~/Books sync for today's additions.
