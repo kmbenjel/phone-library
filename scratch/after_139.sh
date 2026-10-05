@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# One-off (2026-10-05 16:40): when the 139 fixed copies are all made (line B of unattended_2026-10-05.sh ends),
+# One-off (2026-10-05 15:30): when the 139 fixed copies are all made (line B of unattended_2026-10-05.sh ends),
 # measure the rest and substitute them as plan 143 (like 141).
 cd "$(dirname "$0")/.."
 while pgrep -f "[i]mprove_copies.py lists/139-split-and-crop" >/dev/null || pgrep -f "[u]nattended_2026-10-05" >/dev/null; do sleep 60; done
