@@ -155,7 +155,9 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `build_site.py` | ONE self-contained file (index + every report as tabs, reports shown in a frame) — Android browsers do not follow links between local files |
 | `compare_shamela.py`, `compare_waqfeya.py` | status of every Shamela / Waqfeya book vs the phone → `data/compare/*.tsv` |
 | `report_shamela.py`, `report_waqfeya.py`, `report_recommend.py`, `report_changes.py` | reports 01–04 (HTML + MD) |
-| `report_multi_editions.py` | report 05: titles present in several editions/folders |
+| `report_multi_editions.py` | report 05: works in several editions or scans — completeness, scan quality from the files, sourced notes (`data/editions/notes.json`) |
+| `report_manzumat.py` | report 06: the teaching poems of each science (`data/mappings/manzumat-canon.tsv`) with their text and commentaries on the phone, Waqfeya offers for the missing; all other poems by section (replaces the old static «خزانة المنظومات» page) |
+| `report_people.py` | reports 07 (authors by century of death; Shamela death year / Waqfeya century) and 08 (editors and their editions, from the «(ت …)» of the names) |
 | `name_audit.py` | §4 name audit: raw archive names, >200-byte names, forbidden chars, non-PDF/tiny files, unknown categories → `data/phone/name-audit.tsv` |
 | `raw_names_plan.py` | names files still called `NN_<id>.pdf` from the Waqfeya record that links them → plan + review list |
 | `check_magic.py`, `check_pdf_tail.py` | is every ".pdf" a real, complete PDF? |

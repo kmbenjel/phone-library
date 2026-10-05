@@ -8,10 +8,7 @@ os.makedirs(J('site'), exist_ok=True)
 cat = open(J('data/catalog.json')).read().replace('</', '<\\/')
 reports, sources = [], []
 pages = [p for p in sorted(glob.glob(J('site/[0-9][0-9] - *.html'))) if not os.path.basename(p).startswith('00 ')]
-mand = J('data/mappings/mandumat-index.html')
-if not os.path.exists(mand):
-    subprocess.run(['rclone', 'copyto', 'phone:Books/فهارس الويب/فهرس خزانة المنظومات العلمية.html', mand, '-q'])
-if os.path.exists(mand): pages.append(mand)
+# the old static «فهرس خزانة المنظومات العلمية» is replaced by report 06 (scripts/report_manzumat.py)
 for i, p in enumerate(pages):
     title = os.path.basename(p)[5:-5] if os.path.basename(p)[:2].isdigit() else 'فهرس خزانة المنظومات العلمية'
     html = open(p, encoding='utf-8').read()

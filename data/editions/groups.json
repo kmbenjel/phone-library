@@ -3414,6 +3414,81 @@
   "note": null
  },
  {
+  "work": "شرح اصول اعتقاد اهل",
+  "title": "شرح أصول اعتقاد أهل السنة للالكائي",
+  "author": "",
+  "bytes": 152735112,
+  "editions": [
+   {
+    "folder": "شرح أصول اعتقاد أهل السنة للالكائي",
+    "cat": "العقيدة",
+    "edition": "",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 87927832,
+    "quality": null,
+    "score": -1,
+    "waqfeya": []
+   },
+   {
+    "folder": "شرح أصول اعتقاد أهل السنة والجماعة - اللالكائي (ت أحمد سعد حمدان الغامدي - وزارة الأوقاف السعودية)",
+    "cat": "العقيدة",
+    "edition": "ت أحمد بن سعد بن حمدان الغامدي - ط وزارة الأوقاف السعودية - 1424 - 2003",
+    "researcher": "أحمد بن سعد بن حمدان الغامدي",
+    "publisher": "وزارة الأوقاف السعودية",
+    "files": 3,
+    "vols_edition": "5",
+    "complete": false,
+    "bytes": 37928002,
+    "quality": null,
+    "score": -1,
+    "waqfeya": [
+     "https://waqfeya.net/books/شرح-أصول-اعتقاد-أهل-السنة-والجماعة-من-الكتاب-والسنة-وإجماع-الصحابة-والتابعين-ومن-بعدهم-ويليه-كرامات-أولياء-الله-عز-وجل-ط-الأوقاف-السعودية-97da2d7bd5cf4d3a80c0b1a5057cfb32"
+    ],
+    "same_edition": true,
+    "best_scan": false
+   },
+   {
+    "folder": "شرح أصول اعتقاد أهل السنة والجماعة من الكتاب والسنة وإجماع الصحابة والتابعين ومن بعدهم",
+    "cat": "العقيدة",
+    "edition": "ت أحمد بن مسعود بن حمدان - 1411",
+    "researcher": "أحمد بن مسعود بن حمدان",
+    "publisher": "",
+    "files": 3,
+    "vols_edition": "4",
+    "complete": false,
+    "bytes": 26879278,
+    "quality": {
+     "files": 3,
+     "pages": 1912,
+     "kbpp": 14,
+     "px": 1878,
+     "colour": "أبيض وأسود",
+     "width_used": 0.81,
+     "text": false
+    },
+    "score": 66.2,
+    "waqfeya": [
+     "https://waqfeya.net/books/شرح-أصول-اعتقاد-أهل-السنة-والجماعة-من-الكتاب-والسنة-وإجماع-الصحابة-والتابعين-ومن-بعدهم-af43f539275343c388a6ffc1f366aec5"
+    ],
+    "same_edition": true,
+    "best_scan": true
+   }
+  ],
+  "note": {
+   "key": "شرح اصول اعتقاد",
+   "author": "لالكايي",
+   "note": "نصّ الدليل على تحقيق أحمد سعد حمدان الغامدي (دار طيبة).",
+   "best": "الغامدي.",
+   "sources": [
+    "«دليلك إلى أفضل الطبعات لأمهات الكتب» — محمد عبد الله آل سنه، صيد الفوائد: https://saaid.org/mktarat/alalm/63.htm"
+   ]
+  }
+ },
+ {
   "work": "جامع الترمذي",
   "title": "جامع الترمذي",
   "author": "الترمذي؛ محمد بن عيسى بن سورة بن موسى السلمي البوغي الترمذي، أبو عيسى",
@@ -4656,61 +4731,6 @@
    }
   ],
   "note": null
- },
- {
-  "work": "شرح اصول اعتقاد اهل",
-  "title": "شرح أصول اعتقاد أهل السنة للالكائي",
-  "author": "",
-  "bytes": 114807110,
-  "editions": [
-   {
-    "folder": "شرح أصول اعتقاد أهل السنة للالكائي",
-    "cat": "العقيدة",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 87927832,
-    "quality": null,
-    "score": -1,
-    "waqfeya": []
-   },
-   {
-    "folder": "شرح أصول اعتقاد أهل السنة والجماعة من الكتاب والسنة وإجماع الصحابة والتابعين ومن بعدهم",
-    "cat": "العقيدة",
-    "edition": "ت أحمد بن مسعود بن حمدان - 1411",
-    "researcher": "أحمد بن مسعود بن حمدان",
-    "publisher": "",
-    "files": 3,
-    "vols_edition": "4",
-    "complete": false,
-    "bytes": 26879278,
-    "quality": {
-     "files": 3,
-     "pages": 1912,
-     "kbpp": 14,
-     "px": 1878,
-     "colour": "أبيض وأسود",
-     "width_used": 0.81,
-     "text": false
-    },
-    "score": 66.2,
-    "waqfeya": [
-     "https://waqfeya.net/books/شرح-أصول-اعتقاد-أهل-السنة-والجماعة-من-الكتاب-والسنة-وإجماع-الصحابة-والتابعين-ومن-بعدهم-af43f539275343c388a6ffc1f366aec5"
-    ]
-   }
-  ],
-  "note": {
-   "key": "شرح اصول اعتقاد",
-   "author": "لالكايي",
-   "note": "نصّ الدليل على تحقيق أحمد سعد حمدان الغامدي (دار طيبة).",
-   "best": "الغامدي.",
-   "sources": [
-    "«دليلك إلى أفضل الطبعات لأمهات الكتب» — محمد عبد الله آل سنه، صيد الفوائد: https://saaid.org/mktarat/alalm/63.htm"
-   ]
-  }
  },
  {
   "work": "النهايه في غريب الحديث",
@@ -6859,8 +6879,16 @@
     "vols_edition": "6",
     "complete": true,
     "bytes": 39215905,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 6,
+     "pages": 2641,
+     "kbpp": 14,
+     "px": 1952,
+     "colour": "أبيض وأسود",
+     "width_used": 0.68,
+     "text": false
+    },
+    "score": 78.6,
     "waqfeya": [
      "https://waqfeya.net/books/المحصول-في-علم-أصول-الفقه-8da0417fb1b643dcbdb47a5c4979f8cc"
     ],
@@ -6877,8 +6905,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 31508408,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 2650,
+     "kbpp": 11,
+     "px": 1291,
+     "colour": "أبيض وأسود",
+     "width_used": 0.69,
+     "text": false
+    },
+    "score": 59.9,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -8991,6 +9027,47 @@
   "note": null
  },
  {
+  "work": "المحرر في فقه الامام",
+  "title": "المحرر في فقه الإمام الشافعي",
+  "author": "الرافعي",
+  "bytes": 43044082,
+  "editions": [
+   {
+    "folder": "المحرر في فقه الإمام الشافعي - الرافعي",
+    "cat": "الفقه الشافعي",
+    "edition": "ت محمد حسن محمد حسن إسماعيل - ط دار الكتب العلمية - 2005",
+    "researcher": "محمد حسن محمد حسن إسماعيل",
+    "publisher": "دار الكتب العلمية",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 11798002,
+    "quality": null,
+    "score": -1,
+    "waqfeya": [
+     "https://waqfeya.net/books/المحرر-في-فقه-الإمام-الشافعي-ط-العلمية-5ddca4d19c674a308a229ec10645f045"
+    ]
+   },
+   {
+    "folder": "المحرر في فقه الإمام الشافعي - الرافعي (ط دار السلام - القاهرة)",
+    "cat": "الفقه الشافعي",
+    "edition": "ت نشأت بن كمال المصري - ط دار السلام - القاهرة - 1434 - 2013",
+    "researcher": "نشأت بن كمال المصري",
+    "publisher": "دار السلام - القاهرة",
+    "files": 1,
+    "vols_edition": "3",
+    "complete": false,
+    "bytes": 31246080,
+    "quality": null,
+    "score": -1,
+    "waqfeya": [
+     "https://waqfeya.net/books/المحرر-في-فقه-الإمام-الشافعي-ط-السلام-bbb3822af08a47f7bcbd1eb5930a4007"
+    ]
+   }
+  ],
+  "note": null
+ },
+ {
   "work": "التحبير لايضاح معاني التيسير",
   "title": "التحبير لإيضاح معاني التيسير",
   "author": "الصنعاني",
@@ -9198,11 +9275,19 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 14308876,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 788,
+     "kbpp": 18,
+     "px": 1871,
+     "colour": "أبيض وأسود",
+     "width_used": 0.68,
+     "text": false
+    },
+    "score": 63.6,
     "waqfeya": [],
     "same_edition": true,
-    "best_scan": true
+    "best_scan": false
    },
    {
     "folder": "الرسالة - الإمام الشافعي (ت أحمد شاكر - مصطفى البابي الحلبي)",
@@ -9214,13 +9299,21 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 15376954,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 2,
+     "pages": 788,
+     "kbpp": 19,
+     "px": 1866,
+     "colour": "أبيض وأسود",
+     "width_used": 0.69,
+     "text": false
+    },
+    "score": 78.8,
     "waqfeya": [
      "https://waqfeya.net/books/الرسالة--ت-أحمد-شاكر--ط-الحلبي-ec37bc0c3c64486ea1ee6fe5f4039650"
     ],
     "same_edition": true,
-    "best_scan": false
+    "best_scan": true
    },
    {
     "folder": "الرسالة - الإمام الشافعي (ت خالد السبع العلمي وزهير شفيق الكبي - دار الكتاب العربي)",
@@ -12782,6 +12875,45 @@
     "score": -1,
     "waqfeya": [
      "https://waqfeya.net/books/خلق-أفعال-العباد-والرد-على-الجهمية-وأصحاب-التعطيل-تالفهيد-af85bbaa29174ce18a42094d035b39f9"
+    ]
+   }
+  ],
+  "note": null
+ },
+ {
+  "work": "المعجم الصغير",
+  "title": "المعجم الصغير",
+  "author": "الحافظ الطبراني",
+  "bytes": 18506908,
+  "editions": [
+   {
+    "folder": "المعجم الصغير - الحافظ الطبراني (ت أنيس - دار الفكر)",
+    "cat": "كتب السنة",
+    "edition": "ت أنيس - دار الفكر",
+    "researcher": "",
+    "publisher": "",
+    "files": 3,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 9152591,
+    "quality": null,
+    "score": -1,
+    "waqfeya": []
+   },
+   {
+    "folder": "المعجم الصغير - الطبراني (ط 1403-1983)",
+    "cat": "كتب السنة",
+    "edition": "1403 - 1983",
+    "researcher": "",
+    "publisher": "",
+    "files": 3,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 9354317,
+    "quality": null,
+    "score": -1,
+    "waqfeya": [
+     "https://waqfeya.net/books/المعجم-الصغير-للطبراني-ويليه-غنية-الألمعي--التحفة-المرضية-في-حل-بعض-المشكلات-الحديثيةسنية-رفع-اليدين-في-الدعاء-بعد-الصلوات-المكتوبة-لمن-شاء--رسالة-الكشف-في-بيان-خروج-المهدي-613077974d624c20988795376dc0c980"
     ]
    }
   ],
