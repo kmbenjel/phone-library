@@ -7,6 +7,10 @@ q, stage = sys.argv[1], sys.argv[2]
 os.makedirs(stage, exist_ok=True)
 rows = [r for r in csv.reader(open(q), delimiter='\t') if r and not r[0].startswith('#')]
 loc = lambda r: os.path.join(stage, hashlib.md5(r[2].encode()).hexdigest() + '.pdf')
+MAN = os.path.join(stage, 'manifest.tsv')
+gone = {x[2] for x in csv.reader(open(MAN), delimiter='\t') if len(x) > 5 and x[5] in ('ok', 'uploaded') and not os.path.exists(x[4])} \
+    if os.path.exists(MAN) else set()              # staged once, then uploaded (fetch_queue deletes the staged copy): never fetch again
+rows = [r for r in rows if r[2] not in gone]
 have = lambda r: os.path.exists(loc(r)) and os.path.getsize(loc(r)) == int(r[1])
 need = sum(int(r[1]) for r in rows if not have(r))           # only what is still missing
 if shutil.disk_usage(stage).free - need < 8e9: sys.exit(f'not enough disk: need {need/1e9:.1f} GB + 8 GB free')
@@ -26,7 +30,8 @@ def check(p, size):
         f.seek(max(0, n - 8192))
         if b'%%EOF' not in f.read(): return 'no %%EOF'
     return 'ok'
-with open(os.path.join(stage, 'manifest.tsv'), 'w') as w:
+with open(MAN, 'w') as w:
+    for t in sorted(gone): w.write('\t'.join(['', '', t, '', '', 'uploaded']) + '\n')
     for r in rows:
         st = check(loc(r), int(r[1])); w.write('\t'.join(r[:4] + [loc(r), st]) + '\n')
         if st != 'ok': print(st, r[2][-90:])
