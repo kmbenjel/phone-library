@@ -12,7 +12,6 @@ Read this file first. Keep it current when you change a convention.
 |------|-------|
 | Books (source of truth) | phone `Books/<category>/<book folder>/<file>.pdf` |
 | Human + AI indexes on the phone | phone `Books/فهارس الويب/` (HTML indexes, reports, `catalog.json`, this guide) |
-| Duplicate copies set aside (not deleted) | phone `Books-مكررات/<original path>` — review, then delete by hand |
 | Workspace (scripts, data, reports) | laptop `~/projects/phone-library/` (local git repo) |
 | Work log (what was done, when) | `WORKLOG.md` |
 | Every move/rename ever applied | `data/changes/changes.tsv` (time, action, from, to, reason, plan) |
@@ -26,9 +25,11 @@ Read this file first. Keep it current when you change a convention.
 
 ## 2. Connecting to the phone
 
-- The phone runs an FTP server app: `192.168.11.100:2221`, anonymous login. The IP is DHCP; if it
-  changes, find it with `ip neigh` and `nc -z <ip> 2221`, then set `PHONE_HOST=<ip>` for the scripts
-  and `rclone config update phone host <ip>`.
+- The phone runs an FTP server app on port `2221`, anonymous login. The IP is DHCP; known addresses:
+  `192.168.11.102` (since 2026-10-04) and `192.168.11.100` (before). The scripts try them in that order
+  (`scripts/phone_host.py`; `PHONE_HOST=<ip>` overrides). If neither answers, find it with `ip neigh` and
+  `nc -z <ip> 2221`, add it to the top of `CANDIDATES` in `phone_host.py` and run
+  `rclone config update phone host <ip>` (rclone takes one fixed host).
 - rclone remote: `phone:` (library = `phone:Books`). Optional mount:
   `rclone mount phone:Books ~/phone-books --daemon --vfs-cache-mode writes --dir-cache-time 1h`.
 - Moves and renames are server-side (FTP RNFR/RNTO): nothing is re-uploaded, so they are instant.
@@ -37,15 +38,14 @@ Read this file first. Keep it current when you change a convention.
 
 ## 3. Rules
 
-1. **Deleting:** only verified duplicates, and only after the owner's approval (given 2026-09-30 for the 841 in plan 002).
+1. **Deleting:** Verified duplicates can be deleted directly by the agent without moving them to a temporary folder or asking for permission.
    "Verified" = same byte size + identical 64 KB samples at start, 25%, 50%, 75% and end (`dup_check.py` + `verify_dups_deep.py`).
-   They are first moved to `Books-مكررات/` (same relative path), then removed. Nothing else is ever deleted.
 2. **Every change goes through a plan** (`plans/NNN-*.tsv`: `from<TAB>to<TAB>reason`) applied with
    `scripts/apply_plan.py` (dry-run first). It never overwrites, removes emptied folders and logs to
    `data/changes/changes.tsv`. Undo a plan: `python3 scripts/apply_plan.py --undo NNN-name`.
-3. **Names come from evidence, not guesses.** Priority: exact-size provenance → Waqfeya record →
-   archive.org item title → Shamela title/author → the existing name. If unsure, leave the name and
+3. **Names come from evidence, not guesses.** Match the exact size with the original download source only (which is usually archive.org). If unsure, leave the name and
    list it under "needs review" in the report.
+   **Matching principle**: When generating indexes or comparing (Shamela/Waqfeya vs phone), base the logic on whether a book is *conceptually present* on the phone. If the author and title are present on the phone, the book exists. Do not rely on literal, exact string matches of titles and authors to declare a book missing, as differences between the phone's filenames and catalog records are expected.
    **One archive.org item often holds several sections or editions** (e.g. خريدة القصر: Iraq and Sham sections of
    two academies in one item). Never name all its files from the item title: read each volume's title page first
    (`pdftotext -l 8`; for image-only scans a low-resolution render of the first pages, `pdftoppm -r 25`).
@@ -63,17 +63,20 @@ Read this file first. Keep it current when you change a convention.
 
 ## 4. Naming conventions
 
-Layout: `Books/<category>/<book folder>/<files>`. Every book has its own folder, even single-file books.
+Layout: `Books/<category>/<book folder>/<files>` or `Books/<category>/<file>.pdf`.
+Single-volume books are stored as plain files in the category folder without their own subfolder. Folders are used only for multi-file works.
 
-**Category** — one of the existing category folders (see `data/catalog.json` → `categories`).
-Categories follow Shamela's classification loosely; the mappings in `data/mappings/` are the reference.
+**Category** — All Shamela categories must be present and contain books. It is strictly forbidden to create any category that can fit into one of Shamela's categories.
 
-**Book folder** — `<title> - <author> (<edition>)`
+**Book folder** (for multi-file works): `<title> - <author> (<edition>)`
 - `<title>`: the full title, never cut. No `...`, no half words.
 - `<author>`: the commonly used name (e.g. `ابن قدامة`, `الإمام الغزالي`). Omit for periodicals/series.
 - `<edition>`: `ت <investigator> - <publisher>` or `ط <publisher>`; omit when unknown.
 - Collections: `مؤلفات <author> (<publisher>)`; periodicals: `مجلة <name> (<publisher>)`; series: `سلسلة <name> (<publisher>)`.
 - Different editions of the same book are separate folders that differ only in `(<edition>)`.
+
+**Single file** (no folder): `<short title> - <author> (<edition>).pdf`
+- `<short title>`: shorten the title by dropping subtitles (e.g., `زاد المعاد` instead of `زاد المعاد في هدي خير العباد`) so the filename can always include the author and publisher.
 
 **Files**
 - Independent books collected in one folder (a series such as «سلسلة أعلام المسلمين», «مؤلفات فلان») carry **no
@@ -81,16 +84,12 @@ Categories follow Shamela's classification loosely; the mappings in `data/mappin
   number (e.g. «عالم المعرفة»: `003 - التفكير العلمي.pdf`). Never "01 -" in front of every item.
 - Indexes (الفهارس) take the number after the last volume, never 99. For a periodical they take `00`.
 - A companion that is not a volume (نسخة أخرى، صور المخطوطات، ملحق، the whole book in one file) has no number.
-- Multi-volume: `NN - <short title> (<volume label>).pdf` — `NN` = the volume number, zero-padded to the
-  same width in the folder (`01…31`, `001…101`). Volume numbers are never repeated. `00` is reserved for
+- Multi-volume: `NN - <short title> (<volume label>).pdf` — `NN` = the volume number, zero-padded to two digits (`01, 02`) or more for large collections. Volume numbers are never repeated. `00` is reserved for
   front matter and may appear more than once: `00 - <short title> (الواجهة).pdf` (cover/title pages),
   `00 - <short title> (المقدمة).pdf`. A preface belonging to one volume keeps that volume's number with
   `(المقدمة)`. The label describes the contents (`(الطهارة - الصلاة)`, `(الفهارس)`), balanced parentheses.
 - `<short title>` = the title up to its first subtitle marker (`=`, ` - `, `ويليه`, `ومعه`, `المسمى`,
   `الموسوم`, `،`) or its first particle after two words; a one-word title gets ` - <author>`.
-- Waqfeya's archive.org files follow `00_<id>.pdf` (front), `NN_<id>.pdf` (volume NN), `NN_<id>p.pdf`
-  (preface pages of volume NN); the labels come from the Waqfeya book page links (`data/waqfeya/details*.jsonl`).
-- Single file: `<title>.pdf` (front matter beside it: `<title> (الواجهة).pdf`).
 - Periodicals are named by what the file really contains, read from the source or the cover:
   `الأعداد 0026-0051 (السنة 2، 1934 - النصف الأول).pdf` (مجلة الرسالة), `المجلد 42 - الجزء الثاني (1998).pdf`
   (مجلة معهد المخطوطات), `فهارس المجلة - الجزء 6 (المجلدات 51-60).pdf` (مجلة مجمع اللغة العربية بدمشق).
@@ -103,42 +102,11 @@ Categories follow Shamela's classification loosely; the mappings in `data/mappin
 
 ## 4b. Sections (categories)
 
-- **World literature** (not a Shamela category; the owner's own) is split by the language of the text:
-  `أدب عالمي - فرنسي (Littérature française)`, `أدب عالمي - إنجليزي (English Literature)`,
-  `أدب عالمي - ألماني (Deutsche Literatur)`, `أدب عالمي - إسباني (Literatura en español)`, and
-  `أدب عالمي - مترجم` for works read in translation (Homer in English, Hugo in English…). Folder and file names
-  are in the book's own language (`Les Misérables - Victor Hugo/01 - Les Misérables (Tome I - Fantine).pdf`); the
-  language was verified from each PDF's text. A translated non-literary work goes to its subject section
-  (قصة الحضارة → التاريخ). New public-domain books come from Project Gutenberg as A5 PDFs (`fetch_gutenberg.py`).
-- A work kept in two forms gets two folders: the complete text edition (`Les Misérables - Victor Hugo`, Gutenberg) and
-  the owner's scanned edition, completed with the other tomes of the SAME edition (`Les Misérables - Victor Hugo
-  (Bruxelles, Lacroix-Verboeckhoven 1862)`). The scan's archive.org id is in its PDF metadata (`pdfinfo` → Keywords).
-- Modern educational books from charitable foundations have their own sections: `الطب والصحة` (Hesperian, Facts for
-  Life) and `العلوم والرياضيات (Science and Mathematics)` (OpenStax, Strang, Siyavula). Books in another language keep
-  their own titles there too. What to take from the broad catalogues (Hindawi VSI, OpenStax, Hesperian) is the owner's
-  choice, made on the selection page https://claude.ai/artifact/65hgeqWwbTengz9NTxJ1CP (read it with ArtifactData
-  `get selections/current`); catalogues are in `data/sources/` and `selection/catalog.json`.
-- **Choosing what to download.** The owner ticks books in two places: (1) the phone's comparison reports (01 Shamela,
-  02 Waqfeya, 03 recommendations) have a checkbox on every missing or incomplete book; ticks are kept in that
-  phone's browser (shared by the three reports) and «انسخ القائمة» copies lines `w:<waqfeya id> <title>` /
-  `s:<shamela id> <title>` that the owner pastes in the chat or in the selection page's import box; (2) the
-  selection page itself (tabs for Hindawi, OpenStax, Hesperian, Siyavula, الوقفية, الشاملة). What was already
-  downloaded is recorded in `selection/selection-YYYY-MM-DD.json` — diff the live selection against those files.
-  `w:` items are fetched from their Waqfeya record's links (all volumes, or only the missing ones for an incomplete
-  book); `s:` items through their Waqfeya match when the page marks one, otherwise searched on archive.org.
-  `scripts/build_selection.py` (run by refresh.sh) rebuilds the page; republish it with the Artifact tool.
-- Sources that block scripts: UNESDOC (Cloudflare; use archive.org copies), hindawi.org/safahat.org pages (a fresh
-  browser context per page passes; `downloads.hindawi.org/books/<id>.pdf` downloads directly), StoryWeaver (account
-  needed), CK-12 (403).
-
-- A book moves to another section only when its current section matches **neither** Shamela's section for the same
-  title nor Waqfeya's category (both mapped to phone sections via `data/mappings/`), nor a close neighbour
-  (diwans↔literature, rijal↔biographies, tafsir↔Qur'anic sciences, usul↔comparative fiqh, sira↔biographies,
-  dictionaries↔grammar/literature).
-- When the sources disagree, **Shamela wins** (owner's instruction). Commentaries (شروح) move to hadith texts
-  (متون) only with Shamela's confirmation; a book never leaves a madhhab section for general fiqh.
-- Never moved: `كتب ابن تيمية وابن القيم`, `أدباء ومفكرو العصر الحديث`, the `أدب عالمي - …` sections,
-  `المجلات والدوريات والسلاسل الكبرى`, `علم النفس وتطوير الذات`, and collection folders. Planner: `scripts/recat_plan.py`.
+- **World literature** is a sub-category strictly inside the `الأدب` section (e.g. `الأدب/أدب عالمي`).
+  Folder and file names are in the book's own language (`Les Misérables - Victor Hugo/01 - Les Misérables (Tome I - Fantine).pdf`).
+  A translated non-literary work goes to its subject section (قصة الحضارة → التاريخ).
+- Modern educational and general science books belong strictly inside Shamela categories: `الطب` (health guides, medicine) and `علوم أخرى` (Science, Mathematics, Psychology, Sociology, Humanities, OpenStax, Strang, Siyavula, Hindawi).
+- All 40 Shamela categories must be strictly represented on the phone library. No custom category may ever be introduced if its contents can belong to any of the 40 Shamela categories. Any folder found outside the official Shamela classifications is assumed to be an error: its books must be moved to the appropriate Shamela category, and the stray category folder must then be deleted.
 
 ## 5. Expanding the library
 
@@ -194,3 +162,21 @@ are in `فهارس الويب/md/` and the data tables in `فهارس الويب
 | `buckets.py`, `textnorm.py`, `report_lib.py` | helpers |
 | `publish.py` | uploads `site/`, `reports/`, data tables and this guide to the phone (copy, never deletes) |
 | `refresh.sh` | everything above in order |
+| `fetch_queue.py` | THE download/upload pipeline (§7): parallel aria2c, verify, one serialized phone connection, resumable |
+
+## 7. Speed and concurrency (binding rule)
+
+1. **Every download goes through `scripts/fetch_queue.py`** (or follows its model). Never `curl` files one by one.
+2. **Internet downloads are always parallel and multi-connection:** `aria2c -x8 -s8 -k1M --continue`, 12 files at a
+   time (`DL_JOBS=12 CONN=8`). Lower these only on HTTP 429/503 or repeated resets, and raise them back afterwards.
+3. **The phone takes TWO FTP connections** (`--checkers=2 --transfers=2 --ftp-concurrency 2`). All phone I/O
+   (upload, copy from phone, moves, listings) holds the shared lock `/tmp/phone-ftp.lock` (`flock`), so several
+   jobs can run at once without fighting over the phone. The phone thread is never idle while files are waiting:
+   download → verify → upload are separate stages; downloads never wait for uploads (except the staging cap).
+4. **Staging cap:** the laptop disk is small (≈15 GB free on 2026-10-03). Staged files ≤ `STAGE_GB` (6), each staged
+   file is deleted right after a successful upload.
+5. **Verification runs in parallel** with the downloads: exact size, `%PDF`, `%%EOF`, `pdfinfo`.
+6. **Independent tasks run at the same time in the background** (catalog fetches, dup checks, phone uploads, local
+   downloads). A new request from the owner never cancels a running job; only an explicit order does.
+7. **Everything is resumable:** `data/queue/<name>.done` lists finished targets, `<name>.failed` the failures with the
+   reason. Re-running the same queue continues where it stopped.

@@ -35,11 +35,25 @@ for r in csv.DictReader(open(J('data/phone/provenance.tsv')), delimiter='\t'):
 cat = json.load(open(J('data/catalog.json')))
 cat_books_files = {b['cat'] + '/' + b['folder']: len(b.get('files', [])) for b in cat['books']}
 keys = defaultdict(set); pauth = {}
+word_to_books = defaultdict(set)
+phone_full_tks = {}
+phone_folder_words = {}
 for b in cat['books']:
-    for t in {b['title']} | {w['name'] for w in b.get('waqfeya', [])}:
+    pk = b['cat'] + '/' + b['folder']
+    ts = {b['title']} | {w['name'] for w in b.get('waqfeya', [])}
+    for t in ts:
         k = title_key(t)
-        if k: keys[k].add(b['cat'] + '/' + b['folder'])
-    pauth[b['cat'] + '/' + b['folder']] = author_tokens(b.get('author', ''))
+        if k: keys[k].add(pk)
+    phone_full_tks[pk] = [title_key(t) for t in ts if t]
+    pauth[pk] = author_tokens(b.get('author', ''))
+    tk = title_key(b['title'])
+    fk = title_key(b['folder'])
+    phone_folder_words[pk] = set(fk.split())
+    all_words = set(tk.split()) | set(fk.split())
+    for w in all_words:
+        if len(w) > 2 and w not in ('كتاب', 'رسالة', 'جزء', 'شرح', 'مختصر'):
+            word_to_books[w].add(pk)
+col_keywords = {'مجموع', 'مؤلفات', 'رسائل', 'أعمال', 'فتاوى', 'تراث', 'موسوعة', 'جامع', 'الجامع'}
 rows = []
 for wid, b in books.items():
     links = b.get('links') or []
@@ -71,11 +85,44 @@ for wid, b in books.items():
         k = title_key(b['name']); at = author_tokens((b.get('author') or {}).get('name', ''))
         cand = keys.get(k, set())
         if cand and len(k.split()) <= 2 and at: cand = {c for c in cand if not pauth[c] or pauth[c] & at}
+        
+        if not cand:
+            # Smart fallback: token matching + author verification
+            kw = [w for w in k.split() if len(w) > 2 and w not in ('كتاب', 'رسالة', 'جزء', 'شرح', 'مختصر')]
+            if len(kw) >= 2:
+                candidates = word_to_books[kw[0]]
+                for w in kw[1:]:
+                    candidates = candidates & word_to_books[w]
+                    if not candidates: break
+                if candidates:
+                    valid = set()
+                    for cid in candidates:
+                        cb_at = pauth[cid]
+                        if not at or not cb_at or (at & cb_at):
+                            valid.add(cid)
+                    if valid:
+                        cand = valid
+                        
+        if not cand and at:
+            valid = set()
+            for cid in pauth:
+                cb_at = pauth[cid]
+                if cb_at and (at & cb_at):
+                    # Rule A: Attached books (exact phrase match)
+                    tk_list = phone_full_tks[cid]
+                    kw = k.split()
+                    if len(kw) >= 2 or len(k) >= 5:
+                        if any(f" {k} " in f" {t} " for t in tk_list):
+                            valid.add(cid)
+            if valid:
+                cand = valid
+                
         status, where = ('other-copy', sorted(cand)) if cand else ('missing', [])
+    vols_on_phone = len(have) if have else (max([cat_books_files.get(pf, 0) for pf in where] if where else [0]))
     size_mb = sum(f['size'] for i in ids for f in items.get(i, []) if is_volume(f)) / 2**20
     missing_mb = sum(f['size'] for i in ids for f in items.get(i, []) if is_volume(f) and (i, f['name']) in vols - have) / 2**20 if status == 'partial' else (size_mb if status == 'missing' else 0)
     rows.append([wid, b['name'], (b.get('author') or {}).get('name', ''), wcat, pcat or '', (b.get('century') or {}).get('name', ''),
-                 b.get('visitCounts', 0), len(vols), len(have), round(size_mb, 1), round(missing_mb, 1), status, ' | '.join(where),
+                 b.get('visitCounts', 0), len(vols), vols_on_phone, round(size_mb, 1), round(missing_mb, 1), status, ' | '.join(where),
                  'https://waqfeya.net/books/' + b.get('permalink', ''), ' '.join(sorted(ids)), 'known' if ids and all(i in items for i in ids) else 'unknown-files'])
 with open(J('data/compare/waqfeya-matches.tsv'), 'w') as f:
     w = csv.writer(f, delimiter='\t')

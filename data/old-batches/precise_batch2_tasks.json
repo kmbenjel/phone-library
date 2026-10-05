@@ -1,0 +1,32 @@
+[
+  {
+    "url": "https://archive.org/download/hmmt00290/TMA0021_01.pdf",
+    "local": "downloads/precise_batch2/hmmt00290_0_TMA0021_01.pdf",
+    "target": "Books/النحو والصرف وعلم الوضع/شرح التصريح على التوضيح - خالد الأزهري (ت محيي الدين عبد الحميد)/00 - شرح التصريح على التوضيح (الواجهة والمقدمة).pdf",
+    "std_fname": "00 - شرح التصريح على التوضيح (الواجهة والمقدمة).pdf"
+  },
+  {
+    "url": "https://archive.org/download/hmmt00290/TMA0021_02.pdf",
+    "local": "downloads/precise_batch2/hmmt00290_1_TMA0021_02.pdf",
+    "target": "Books/النحو والصرف وعلم الوضع/شرح التصريح على التوضيح - خالد الأزهري (ت محيي الدين عبد الحميد)/01 - شرح التصريح على التوضيح (جزء 1).pdf",
+    "std_fname": "01 - شرح التصريح على التوضيح (جزء 1).pdf"
+  },
+  {
+    "url": "https://archive.org/download/hmmt00290/TMA0021_03.pdf",
+    "local": "downloads/precise_batch2/hmmt00290_2_TMA0021_03.pdf",
+    "target": "Books/النحو والصرف وعلم الوضع/شرح التصريح على التوضيح - خالد الأزهري (ت محيي الدين عبد الحميد)/02 - شرح التصريح على التوضيح (جزء 2).pdf",
+    "std_fname": "02 - شرح التصريح على التوضيح (جزء 2).pdf"
+  },
+  {
+    "url": "https://archive.org/download/fdree_201712/fdree.pdf",
+    "local": "downloads/precise_batch2/fdree_201712_0_fdree.pdf",
+    "target": "Books/علوم الحديث ومصطلحه/الأجوبة الفاضلة للأسئلة العشرة الكاملة - اللكنوي (ت عبد الفتاح أبو غدة - دار البشائر)/الأجوبة الفاضلة للأسئلة العشرة الكاملة.pdf",
+    "std_fname": "الأجوبة الفاضلة للأسئلة العشرة الكاملة.pdf"
+  },
+  {
+    "url": "https://archive.org/download/WAQ80470/80470.pdf",
+    "local": "downloads/precise_batch2/WAQ80470_0_80470.pdf",
+    "target": "Books/النحو والصرف وعلم الوضع/شرح شذور الذهب في معرفة كلام العرب - ابن هشام (ت محيي الدين عبد الحميد)/شرح شذور الذهب في معرفة كلام العرب.pdf",
+    "std_fname": "شرح شذور الذهب في معرفة كلام العرب.pdf"
+  }
+]

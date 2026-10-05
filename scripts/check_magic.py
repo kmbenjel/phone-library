@@ -2,7 +2,7 @@
 import csv, os, subprocess, sys, urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FTP = os.environ.get('PHONE_FTP', 'ftp://192.168.11.100:2221/Books/')
+from phone_host import FTP
 rows = [(p, int(s)) for p, s in csv.reader(open(sys.argv[1]), delimiter='\t') if not p.startswith('فهارس الويب/')]
 def kind(row):
     p, s = row

@@ -40,7 +40,7 @@ trs = []
 for c in order:
     rs = [r for r in rows if r['category'] == c]; p = sum(1 for r in rs if r['phone_book_ids'])
     trs.append([c, smap.get(c) or '— لا مقابل', len(rs), p, pct(p, len(rs))])
-R.table(['قسم الشاملة', 'القسم المقابل على الهاتف', 'كتب الشاملة', 'على الهاتف', 'النسبة'], trs, numeric=(2, 3, 4), bar_col=(3, max(t[3] for t in trs)))
+R.table(['قسم الشاملة', 'القسم المقابل على الهاتف', 'كتب الشاملة', 'على الهاتف', 'النسبة'], trs, numeric=(2, 3, 4))
 
 R.h2('التغطية حسب قرن وفاة المؤلف', 'era')
 by_c = defaultdict(lambda: [0, 0])
@@ -52,6 +52,16 @@ keys = sorted([k for k in by_c if k.startswith('القرن')], key=lambda k: int
 R.table(['القرن الهجري', 'كتب الشاملة', 'على الهاتف', 'النسبة'], [[k, *by_c[k], pct(by_c[k][1], by_c[k][0])] for k in keys if k in by_c], numeric=(1, 2, 3))
 early = [r for r in rows if r['death'].isdigit() and 0 < int(r['death']) <= 700]
 R.p(f'كتب المتقدمين (وفاة المؤلف حتى 700هـ): {len(early):,} في الشاملة، منها {sum(1 for r in early if r["phone_book_ids"]):,} على الهاتف ({pct(sum(1 for r in early if r["phone_book_ids"]), len(early))}).')
+
+early_missing = [r for r in early if not r['phone_book_ids']]
+early_missing.sort(key=lambda r: (int(r['death']) if r['death'].isdigit() and int(r['death']) > 0 else 9999, r['title']))
+R.h2(f'نواقص ما قبل 700 هـ من الشاملة ({len(early_missing):,} كتابًا مفقودًا)', 'missing-pre700')
+R.p('كتب التراث المتقدمة في الشاملة حتى سنة 700 هـ التي ليس لها مقابل مصور على الهاتف حتى الآن، مرتبة بسنة وفاة المؤلف.')
+R.table(['#', 'الكتاب', 'المؤلف', 'الوفاة', 'قسم الشاملة', 'في الوقفية'],
+        [[i, r['title'], r['author'], r['death'] or '', r['category'], 'نعم' if waq_of(r) else ''] for i, r in enumerate(early_missing, 1)],
+        numeric=(0, 3), links={5: [waq_of(r)['url'] if waq_of(r) else None for r in early_missing]},
+        fold=f'نواقص الشاملة حتى 700 هـ ({len(early_missing):,} كتابًا)', md_limit=50,
+        pick=[(f"s:{r['shamela_id']}", r['title']) for r in early_missing])
 
 R.h2('كتب على الهاتف ليست في الشاملة', 'extra')
 R.p('عناوين لم يُعثر لها على مقابل في الشاملة: غالبها كتب معاصرة ودوريات وسلاسل، أو طبعات عناوينها مختلفة عن عنوان الشاملة.')

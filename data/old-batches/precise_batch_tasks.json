@@ -1,0 +1,38 @@
+[
+  {
+    "url": "https://archive.org/download/AAskZad-1124081/Book جمهرة و نسب قريش وأخبارها - الجزء الأول [1124081] --- الزبير بن بكار (مؤلف)_محمود محمد شاكر (تحقيق).pdf",
+    "local": "downloads/precise_batch/AAskZad-1124081_0_Book جمهرة و نسب قريش وأخبارها - الجزء الأول [1124081] --- الزبير بن بكار (مؤلف)_محمود محمد شاكر (تحقيق).pdf",
+    "target": "Books/التراجم والطبقات والأعلام/جمهرة نسب قريش وأخبارها - الزبير بن بكار (ت محمود شاكر)/جمهرة نسب قريش وأخبارها.pdf",
+    "std_fname": "جمهرة نسب قريش وأخبارها.pdf"
+  },
+  {
+    "url": "https://archive.org/download/0916pdf_201912/0916 كتاب اقرا اونلاين    pdf   الاشتقاق - ابن دريد - تحقيق عبد السلام هارون.pdf",
+    "local": "downloads/precise_batch/0916pdf_201912_0_0916 كتاب اقرا اونلاين    pdf   الاشتقاق - ابن دريد - تحقيق عبد السلام هارون.pdf",
+    "target": "Books/المعاجم والقواميس اللغوية/الاشتقاق - ابن دريد (ت عبد السلام هارون - دار الجيل)/الاشتقاق.pdf",
+    "std_fname": "الاشتقاق.pdf"
+  },
+  {
+    "url": "https://archive.org/download/Qolhdth/Qolhdth.pdf",
+    "local": "downloads/precise_batch/Qolhdth_0_Qolhdth.pdf",
+    "target": "Books/علوم الحديث ومصطلحه/قواعد في علوم الحديث - ظفر أحمد التهانوي (ت عبد الفتاح أبو غدة - دار السلام)/قواعد في علوم الحديث.pdf",
+    "std_fname": "قواعد في علوم الحديث.pdf"
+  },
+  {
+    "url": "https://archive.org/download/raftakmil8/raftakmil8.pdf",
+    "local": "downloads/precise_batch/raftakmil8_0_raftakmil8.pdf",
+    "target": "Books/علوم الحديث ومصطلحه/الرفع والتكميل في الجرح والتعديل - اللكنوي (ت عبد الفتاح أبو غدة - دار البشائر)/الرفع والتكميل في الجرح والتعديل.pdf",
+    "std_fname": "الرفع والتكميل في الجرح والتعديل.pdf"
+  },
+  {
+    "url": "https://archive.org/download/1577Pdf_201807/1577كتاب  pdf   اقرا اونلاين  قيمة الزمن عند العلماء - عبد الفتاح أبو غدة.pdf",
+    "local": "downloads/precise_batch/1577Pdf_201807_0_1577كتاب  pdf   اقرا اونلاين  قيمة الزمن عند العلماء - عبد الفتاح أبو غدة.pdf",
+    "target": "Books/الرقائق والآداب والتربية/قيمة الزمن عند العلماء - عبد الفتاح أبو غدة (دار البشائر)/قيمة الزمن عند العلماء.pdf",
+    "std_fname": "قيمة الزمن عند العلماء.pdf"
+  },
+  {
+    "url": "https://archive.org/download/safahate/safahate.pdf",
+    "local": "downloads/precise_batch/safahate_0_safahate.pdf",
+    "target": "Books/الرقائق والآداب والتربية/صفحات من صبر العلماء على شدائد العلم والتحصيل - عبد الفتاح أبو غدة (دار البشائر)/صفحات من صبر العلماء على شدائد العلم والتحصيل.pdf",
+    "std_fname": "صفحات من صبر العلماء على شدائد العلم والتحصيل.pdf"
+  }
+]

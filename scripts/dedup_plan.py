@@ -43,7 +43,10 @@ def shamela_cat(folder):
 g = defaultdict(list)
 for s, h, p in csv.reader(open(os.path.join(ROOT, 'data/phone/dup-fingerprints.tsv')), delimiter='\t'): g[(s, h)].append(p)
 def score(p):
-    folder, fname = p.rsplit('/', 1); cat = folder.split('/')[0]; name = folder.split('/', 1)[1]
+    folder, fname = p.rsplit('/', 1)
+    parts = folder.split('/', 1)
+    cat = parts[0]
+    name = parts[1] if len(parts) > 1 else fname.replace('.pdf', '')
     s = 0
     r = prov.get(p, {}); wid = r.get('waqfeya_id')
     if wid:
@@ -76,8 +79,11 @@ for (size, h), ps in g.items():
     bonus = Counter()
     for p in ps:                       # a copy whose folder is named after the title bracketed in another copy wins
         for q in ps:
-            if p != q and bracket(q) and agree(bracket(q), p.rsplit('/', 1)[0].split('/', 1)[1]):
-                bonus[p] += 60; bonus[q] -= 60
+            if p != q and bracket(q):
+                p_parts = p.rsplit('/', 1)[0].split('/', 1)
+                p_name = p_parts[1] if len(p_parts) > 1 else p.rsplit('/', 1)[1].replace('.pdf', '')
+                if agree(bracket(q), p_name):
+                    bonus[p] += 60; bonus[q] -= 60
     keep = max(ps, key=lambda p: score(p) + bonus[p])
     for p in ps:
         if p != keep: rows.append((p, keep, int(size)))

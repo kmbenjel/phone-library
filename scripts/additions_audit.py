@@ -16,7 +16,7 @@ from rename_plan import clean, fit, short_title
 from build_catalog import split_folder
 from textnorm import title_key
 J = lambda p: os.path.join(ROOT, p)
-PLANS = ('021-replacements', '024-complete-volumes')
+PLANS = tuple(os.environ.get('AUDIT_PLANS', '021-replacements,024-complete-volumes').split(','))
 LINK = re.compile(r'archive\.org/(?:details|download|stream)/([^/\s]+)/(.+?)\s*$')
 
 def skeleton(n):

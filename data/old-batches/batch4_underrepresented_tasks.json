@@ -1,0 +1,14 @@
+[
+  {
+    "url": "https://archive.org/download/hm4431/hm4431.pdf",
+    "local": "downloads/batch4_underrepresented/hm4431_0_hm4431.pdf",
+    "target": "Books/البلاغة/مفتاح العلوم - السكاكي (دار الرسالة - بغداد)/مفتاح العلوم.pdf",
+    "std_fname": "مفتاح العلوم.pdf"
+  },
+  {
+    "url": "https://archive.org/download/20240119_20240119_0548/الأحكام السلطانية.pdf",
+    "local": "downloads/batch4_underrepresented/20240119_20240119_0548_0_الأحكام السلطانية.pdf",
+    "target": "Books/السياسة الشرعية والقضاء/الأحكام السلطانية - أبو يعلى الفراء الحنبلي (ت محمد حامد الفقي)/الأحكام السلطانية.pdf",
+    "std_fname": "الأحكام السلطانية.pdf"
+  }
+]

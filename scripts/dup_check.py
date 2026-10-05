@@ -4,7 +4,7 @@ import csv, hashlib, subprocess, sys, os, urllib.parse
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FTP = os.environ.get('PHONE_FTP', 'ftp://192.168.11.100:2221/Books/')
+from phone_host import FTP
 index = sys.argv[1]
 by_size = defaultdict(list)
 for path, size in csv.reader(open(index), delimiter='\t'):

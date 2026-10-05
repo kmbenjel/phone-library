@@ -3,7 +3,7 @@
 import csv, os, subprocess, urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FTP = os.environ.get('PHONE_FTP', 'ftp://192.168.11.100:2221/Books/')
+from phone_host import FTP
 rows = [(p, int(s)) for p, s, t in csv.reader(open(os.path.join(ROOT, 'data/phone/file-types.tsv')), delimiter='\t') if t == 'pdf']
 def tail(row):
     p, s = row

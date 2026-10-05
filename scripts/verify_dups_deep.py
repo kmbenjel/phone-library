@@ -3,7 +3,7 @@ Input: a dedup plan (from, to, 'duplicate of: <kept path>'). Output: data/phone/
 import csv, hashlib, os, subprocess, sys, urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FTP = os.environ.get('PHONE_FTP', 'ftp://192.168.11.100:2221/Books/')
+from phone_host import FTP
 size = {p: int(s) for p, s in csv.reader(open(sys.argv[2]), delimiter='\t')}
 def chunks(path):
     n = size[path]; out = []

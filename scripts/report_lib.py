@@ -136,9 +136,17 @@ class Report:
         open(os.path.join(ROOT, 'reports', name + '.md'), 'w').write('\n'.join(self.m + ['', f'_Generated {stamp}_', '']))
         return name
 
-def esc(s): return html.escape(str(s if s is not None else ''))
+class RawHTML(str):
+    """Marker for pre-formatted HTML string that should not be html.escaped."""
+    pass
+
+def esc(s):
+    if isinstance(s, RawHTML):
+        return str(s)
+    return html.escape(str(s if s is not None else ''))
 
 def fmt(c):
+    if isinstance(c, RawHTML): return c
     if isinstance(c, float): return f'{c:,.1f}'
     if isinstance(c, int): return f'{c:,}'
     return str(c if c is not None else '')

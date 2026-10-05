@@ -18,7 +18,33 @@ for b in cat['books']:
     auth[b['id']] = author_tokens(b.get('author', ''))
 by_first = defaultdict(list)
 for k in keys: by_first[k.split()[0]].append(k)
+
+# Additional inverted index on clean title tokens for fallback matching
+word_to_books = defaultdict(set)
+# Additional inverted index on clean title tokens for fallback matching
+word_to_books = defaultdict(set)
+phone_books = {}
+phone_full_tks = {}
+phone_folder_words = {}
+phone_authors = {}
+for b in cat['books']:
+    phone_books[b['id']] = b
+    tk = title_key(b['title'])
+    fk = title_key(b['folder'])
+    phone_folder_words[b['id']] = set(fk.split())
+    phone_authors[b['id']] = auth[b['id']] | author_tokens(b['folder'])
+    
+    ts = {b['title']} | {w['name'] for w in b.get('waqfeya', [])}
+    phone_full_tks[b['id']] = [title_key(t) for t in ts if t]
+    
+    all_words = set(tk.split()) | set(fk.split())
+    for w in all_words:
+        if len(w) > 2 and w not in ('كتاب', 'رسالة', 'جزء', 'شرح', 'مختصر'):
+            word_to_books[w].add(b['id'])
+
 rows = []
+col_keywords = {'مجموع', 'مؤلفات', 'رسائل', 'أعمال', 'فتاوى', 'تراث', 'موسوعة', 'جامع', 'الجامع'}
+
 for r in csv.DictReader(open(J('data/shamela/books.tsv')), delimiter='\t'):
     k = title_key(r['title']); at = author_tokens(r['author'])
     hit, how = set(), ''
@@ -33,8 +59,42 @@ for r in csv.DictReader(open(J('data/shamela/books.tsv')), delimiter='\t'):
                     if ok: hit |= ok; how = 'prefix+author'
     if hit and len(k.split()) <= 2 and at:        # short titles are ambiguous: reject a *different* known author
         hit = {h for h in hit if not auth[h] or auth[h] & at}; how = '' if not hit else how
+    if not hit:
+        # Smart fallback: token matching + author verification
+        kw = [w for w in k.split() if len(w) > 2 and w not in ('كتاب', 'رسالة', 'جزء', 'شرح', 'مختصر')]
+        if len(kw) >= 2:
+            candidates = word_to_books[kw[0]]
+            for w in kw[1:]:
+                candidates = candidates & word_to_books[w]
+                if not candidates: break
+            if candidates:
+                valid = set()
+                for cid in candidates:
+                    cb_at = phone_authors[cid]
+                    if not at or not cb_at or (at & cb_at):
+                        valid.add(cid)
+                if valid:
+                    hit, how = valid, 'smart-tokens'
+                    
+    if not hit and at:
+        # Check strictly for attached books by the same author
+        valid = set()
+        for cid, cb in phone_books.items():
+            cb_at = phone_authors[cid]
+            if cb_at and (at & cb_at):
+                # Rule A: Attached books (exact phrase match within full Waqfeya names)
+                tk_list = phone_full_tks[cid]
+                kw = k.split()
+                # Ensure the missing title is not just a single common word, or check if it matches as a whole phrase
+                if len(kw) >= 2 or len(k) >= 5:
+                    if any(f" {k} " in f" {t} " for t in tk_list):
+                        valid.add(cid)
+        if valid:
+            hit, how = valid, 'in-collection'
+            
     rows.append([r['book_id'], r['title'], r['author'], r['death'], r['category'], r['has_pdf'], how, ' '.join(map(str, sorted(hit)))])
 with open(J('data/compare/shamela-matches.tsv'), 'w') as f:
     w = csv.writer(f, delimiter='\t'); w.writerow(['shamela_id', 'title', 'author', 'death', 'category', 'shamela_pdf', 'match', 'phone_book_ids']); w.writerows(rows)
 found = sum(1 for r in rows if r[7])
 print(f'shamela books: {len(rows)}  on phone: {found} ({found*100/len(rows):.1f}%)')
+

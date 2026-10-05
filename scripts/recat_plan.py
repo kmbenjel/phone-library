@@ -11,8 +11,7 @@ sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from rename_plan import COLLECTION
 J = lambda p: os.path.join(ROOT, p)
 
-EXEMPT = {'كتب ابن تيمية وابن القيم', 'أدباء ومفكرو العصر الحديث', 'أدب عالمي - فرنسي (Littérature française)', 'أدب عالمي - إنجليزي (English Literature)', 'أدب عالمي - ألماني (Deutsche Literatur)', 'أدب عالمي - إسباني (Literatura en español)', 'أدب عالمي - مترجم',
-          'المجلات والدوريات والسلاسل الكبرى', 'علم النفس وتطوير الذات', 'فهارس الويب'}
+EXEMPT = {'كتب ابن تيمية وابن القيم', 'أدب عالمي - فرنسي (Littérature française)', 'أدب عالمي - إنجليزي (English Literature)', 'أدب عالمي - ألماني (Deutsche Literatur)', 'أدب عالمي - إسباني (Literatura en español)', 'أدب عالمي - مترجم', 'فهارس الويب'}
 NEIGHBOURS = [  # either section is acceptable for books that sit on the border
     {'الدواوين الشعرية', 'الأدب والبلاغة ونقد الشعر'},
     {'التراجم والطبقات والأعلام', 'كتب العلل والزوائد والرجال'},
@@ -47,17 +46,41 @@ def main(out):
         for i in r['phone_book_ids'].split():
             shamela[int(i)].append(smap.get(r['category'], ''))
     existing = {(b['cat'], b['folder']): {f for f, _ in b['files']} for b in cat['books']}
+    shamela_cats = set()
+    for r in csv.DictReader(open(J('data/shamela/books.tsv')), delimiter='\t'):
+        shamela_cats.add(r['category'])
     moves, review, stats = [], [], Counter()
+
     for b in cat['books']:
         cur = b['cat']
         if cur in EXEMPT or COLLECTION.match(b['folder']): continue
         S = Counter(s for s in shamela.get(b['id'], []) if s)
         W = Counter(wcat.get(w['id'], '') for w in b.get('waqfeya', []) if wcat.get(w['id']))
-        if not S and not W: stats['no evidence'] += 1; continue
-        if any(near(cur, s) for s in list(S) + list(W)): stats['section agrees'] += 1; continue
-        if len(S) > 1:
-            review.append((f"{cur}/{b['folder']}", 'Shamela matches point to several sections: ' + ' / '.join(S))); continue
-        target = next(iter(S)) if S else W.most_common(1)[0][0]
+        if not S and not W:
+            if cur not in shamela_cats:
+                # It is in a stray category and we have no book-level evidence. Map the category itself.
+                target = smap.get(cur) or wmap.get(cur)
+                if not target:
+                    # Simple heuristics for known strays if unmapped
+                    if 'رقاق' in cur: target = 'الرقائق والآداب والأذكار'
+                    elif 'قواعد' in cur and 'فقه' in cur: target = 'علوم الفقه والقواعد الفقهية'
+                    elif 'سيرة' in cur: target = 'السيرة النبوية'
+                    elif 'حديث' in cur: target = 'كتب السنة'
+                    else: target = 'كتب عامة'
+                why = f'stray category ({cur}) fallback mapping'
+            else:
+                stats['no evidence'] += 1
+                continue
+        elif any(near(cur, s) for s in list(S) + list(W)) and cur in shamela_cats:
+            stats['section agrees'] += 1
+            continue
+        elif len(S) > 1:
+            review.append((f"{cur}/{b['folder']}", 'Shamela matches point to several sections: ' + ' / '.join(S)))
+            continue
+        else:
+            target = next(iter(S)) if S else W.most_common(1)[0][0]
+            why = 'section: ' + ' / '.join(x for x in [f'Shamela «{next(iter(S))}»' if S else '', f'Waqfeya «{W.most_common(1)[0][0]}»' if W else ''] if x)
+        
         if not target or target in EXEMPT: continue
         if stays(cur, target): stats['madhhab kept'] += 1; continue
         if not S and (cur, target) in NEEDS_SHAMELA: stats['needs Shamela'] += 1; continue

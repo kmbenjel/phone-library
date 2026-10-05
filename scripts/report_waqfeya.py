@@ -68,6 +68,16 @@ R.p('كتب لم تُطابق ملفاتها أي ملف في الوقفية: م
 oc = Counter(b['cat'] for b in other_src); tc = Counter(b['cat'] for b in cat['books'])
 R.table(['قسم الهاتف', 'كتب القسم', 'ليست من الوقفية', 'النسبة'], [[c, tc[c], n, pct(n, tc[c])] for c, n in oc.most_common()], numeric=(1, 2, 3))
 
+target_pre700 = {'القرن 01 هـ', 'القرن 02 هـ', 'القرن 03 هـ', 'القرن 04 هـ', 'القرن 05 هـ', 'القرن 06 هـ', 'القرن 07 هـ'}
+pre700_miss = sorted([r for r in scope if r['century'] in target_pre700 and r['status'] == 'missing'], key=lambda r: (r['century'], -r['visits']))
+
+R.h2(f'نواقص ما قبل 700 هـ (القرون 1 إلى 7 هـ) ({len(pre700_miss):,} كتابًا مفقودًا)', 'missing-pre700')
+R.p('مجموعة خاصة ومميزة تضم كتب المتقدمين حتى نهاية القرن السابع الهجري (المؤلفون المتوفون قبل أو خلال 700 هـ).')
+R.table(['#', 'الكتاب', 'المؤلف', 'القرن', 'قسم الهاتف', 'مج', 'MB', 'زيارات'],
+        [[i, r['name'], r['author'].split('؛')[0], r['century'].replace('القرن ', ''), r['phone_category'], r['volumes'], round(r['size_mb']), r['visits']] for i, r in enumerate(pre700_miss, 1)],
+        numeric=(0, 5, 6, 7), links={1: [r['url'] for r in pre700_miss]}, fold=f'نواقص القرون السبعة الأولى ({len(pre700_miss):,} كتابًا)', md_limit=50,
+        pick=[(f"w:{r['waqfeya_id']}", r['name']) for r in pre700_miss])
+
 R.h2('تفصيل: كتب الوقفية غير الموجودة، لكل قسم', 'missing')
 R.p('مرتبة بعدد الزيارات في الوقفية (الأشهر أولًا). الحجم من ملفات الأرشيف. القائمة الكاملة في data/waqfeya-matches.tsv.')
 for c in [t[0] for t in sorted(((c, sum(by[c].values())) for c in by), key=lambda x: -x[1])]:

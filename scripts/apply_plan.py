@@ -8,7 +8,7 @@ Usage: python3 scripts/apply_plan.py plan.tsv [--dry-run]"""
 import ftplib, csv, os, sys, time, posixpath
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG = os.path.join(ROOT, 'data/changes/changes.tsv')
-HOST, PORT = os.environ.get('PHONE_HOST', '192.168.11.100'), int(os.environ.get('PHONE_PORT', '2221'))
+from phone_host import HOST, PORT
 
 def connect():
     f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=60); f.login(); return f
@@ -17,8 +17,17 @@ CACHE = {}   # folder -> set of entry names (loaded once per folder, updated on 
 
 def listing(f, d):
     if d not in CACHE:
-        try: CACHE[d] = {posixpath.basename(n) for n in f.nlst(d)} - {'.', '..'}
-        except ftplib.error_perm: CACHE[d] = None          # folder does not exist
+        if d == '' or d == '.' or d == '/':
+            try: CACHE[d] = {posixpath.basename(n) for n in f.nlst(d)} - {'.', '..'}
+            except ftplib.error_perm: CACHE[d] = None
+        else:
+            parent, name = posixpath.split(d)
+            parent_l = listing(f, parent)
+            if parent_l is not None and name in parent_l:
+                try: CACHE[d] = {posixpath.basename(n) for n in f.nlst(d)} - {'.', '..'}
+                except ftplib.error_perm: CACHE[d] = None
+            else:
+                CACHE[d] = None          # folder does not exist
     return CACHE[d]
 
 def exists(f, path):

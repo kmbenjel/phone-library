@@ -9,6 +9,8 @@ INDEX_DIR = 'فهارس الويب'
 
 def split_folder(name):
     """'Title - Author (edition)' -> (title, author, edition). Separators inside brackets are ignored."""
+    if '/' in name:
+        _, name = name.rsplit('/', 1)
     depth, cut = 0, -1
     for i, ch in enumerate(name):
         depth += ch == '('; depth -= ch == ')'
@@ -51,8 +53,11 @@ def main(index):
     books = OrderedDict()
     for path, size in csv.reader(open(index), delimiter='\t'):
         parts = path.split('/')
-        if parts[0] == INDEX_DIR or len(parts) < 3: continue
-        cat, folder, fname = parts[0], '/'.join(parts[1:-1]), parts[-1]
+        if parts[0] == INDEX_DIR or len(parts) < 2: continue
+        if len(parts) == 2:
+            cat, folder, fname = parts[0], parts[1][:-4] if parts[1].lower().endswith('.pdf') else parts[1], parts[1]
+        else:
+            cat, folder, fname = parts[0], '/'.join(parts[1:-1]), parts[-1]
         b = books.setdefault((cat, folder), {'cat': cat, 'folder': folder, 'files': [], 'bytes': 0, 'waqfeya': set(), 'archive': set()})
         b['files'].append([fname, int(size)]); b['bytes'] += int(size)
         p = prov.get(path)

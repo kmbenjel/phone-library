@@ -1,0 +1,162 @@
+2026-10-04 08:48:40 STARTING UPLOAD OF OPTIMIZED THREE TARGETS
+=== STEP 1: Uploading Majallat al-Risala ===
+2026/10/04 08:49:20 INFO  : الأعداد 0026-0051 (السنة 2، 1934 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:49:22 INFO  : الأعداد 0001-0025 (السنة 1، 1933).pdf: Copied (replaced existing)
+2026/10/04 08:49:41 INFO  : 
+Transferred:   	  567.515 MiB / 6.634 GiB, 8%, 9.057 MiB/s, ETA 11m27s
+Checks:                45 / 45, 100%, Listed 90
+Transferred:            2 / 45, 4%
+Elapsed time:       1m0.0s
+Transferring:
+ * الأعداد 0052-0078 (الس…34 - النصف الثاني).pdf: 64% / 199.539 MiB, 6.169 MiB/s, 11s
+ * الأعداد 0079-0103 (الس…935 - النصف الأول).pdf: 20% / 194.206 MiB, 2.157 MiB/s, 1m11s
+
+2026/10/04 08:49:56 INFO  : الأعداد 0052-0078 (السنة 2، 1934 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:50:06 INFO  : الأعداد 0079-0103 (السنة 3، 1935 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:50:41 INFO  : 
+Transferred:   	    1.080 GiB / 6.634 GiB, 16%, 9.001 MiB/s, ETA 10m31s
+Checks:                45 / 45, 100%, Listed 90
+Transferred:            4 / 45, 9%
+Elapsed time:       2m0.0s
+Transferring:
+ * الأعداد 0104-0130 (الس…35 - النصف الثاني).pdf: 84% / 209.174 MiB, 4.341 MiB/s, 7s
+ * الأعداد 0131-0156 (الس…936 - النصف الأول).pdf: 63% / 214.312 MiB, 4.152 MiB/s, 18s
+
+2026/10/04 08:50:48 INFO  : الأعداد 0104-0130 (السنة 3، 1935 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:50:53 INFO  : الأعداد 0131-0156 (السنة 4، 1936 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:51:34 INFO  : الأعداد 0157-0182 (السنة 4، 1936 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:51:39 INFO  : الأعداد 0183-0208 (السنة 5، 1937 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:51:41 INFO  : 
+Transferred:   	    1.620 GiB / 6.634 GiB, 24%, 9.385 MiB/s, ETA 9m7s
+Checks:                45 / 45, 100%, Listed 90
+Transferred:            8 / 45, 18%
+Elapsed time:      2m59.9s
+Transferring:
+ * الأعداد 0209-0234 (الس…37 - النصف الثاني).pdf: 10% / 200.207 MiB, 2.499 MiB/s, 1m11s
+ * الأعداد 0235-0260 (الس…938 - النصف الأول).pdf:  0% / 208.442 MiB, 1019.926 KiB/s, 3m28s
+
+2026/10/04 08:52:14 INFO  : الأعداد 0209-0234 (السنة 5، 1937 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:52:26 INFO  : الأعداد 0235-0260 (السنة 6، 1938 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:52:41 INFO  : 
+Transferred:   	    2.128 GiB / 6.634 GiB, 32%, 8.723 MiB/s, ETA 8m49s
+Checks:                45 / 45, 100%, Listed 90
+Transferred:           10 / 45, 22%
+Elapsed time:       4m0.0s
+Transferring:
+ * الأعداد 0261-0286 (الس…38 - النصف الثاني).pdf: 57% / 204.035 MiB, 4.898 MiB/s, 17s
+ * الأعداد 0287-0312 (الس…939 - النصف الأول).pdf:  6% / 243.426 MiB, 1.214 MiB/s, 3m6s
+
+2026/10/04 08:53:02 INFO  : الأعداد 0261-0286 (السنة 6، 1938 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:53:21 INFO  : الأعداد 0287-0312 (السنة 7، 1939 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:53:41 INFO  : 
+Transferred:   	    2.636 GiB / 6.634 GiB, 40%, 9.047 MiB/s, ETA 7m32s
+Checks:                45 / 45, 100%, Listed 90
+Transferred:           12 / 45, 27%
+Elapsed time:       5m0.0s
+Transferring:
+ * الأعداد 0313-0338 (الس…39 - النصف الثاني).pdf: 84% / 208.680 MiB, 5.445 MiB/s, 6s
+ * الأعداد 0365-0391 (الس…40 - النصف الثاني).pdf: 19% / 160.283 MiB, 1.627 MiB/s, 1m19s
+
+2026/10/04 08:53:48 INFO  : الأعداد 0313-0338 (السنة 7، 1939 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:53:58 INFO  : الأعداد 0365-0391 (السنة 8، 1940 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:54:30 INFO  : الأعداد 0339-0364 (السنة 8، 1940 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:54:34 INFO  : الأعداد 0392-0417 (السنة 9، 1941 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:54:41 INFO  : 
+Transferred:   	    3.211 GiB / 6.634 GiB, 48%, 9.615 MiB/s, ETA 6m4s
+Checks:                45 / 45, 100%, Listed 90
+Transferred:           16 / 45, 36%
+Elapsed time:       6m0.0s
+Transferring:
+ * الأعداد 0418-0443 (الس…41 - النصف الثاني).pdf: 27% / 142.958 MiB, 3.500 MiB/s, 29s
+ * الأعداد 0470-0495 (الس…42 - النصف الثاني).pdf: 31% / 100.302 MiB, 4.666 MiB/s, 14s
+
+2026/10/04 08:54:56 INFO  : الأعداد 0470-0495 (السنة 10، 1942 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:55:01 INFO  : الأعداد 0418-0443 (السنة 9، 1941 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:55:22 INFO  : الأعداد 0522-0547 (السنة 11، 1943 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:55:24 INFO  : الأعداد 0496-0521 (السنة 11، 1943 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:55:41 INFO  : 
+Transferred:   	    3.704 GiB / 6.634 GiB, 56%, 8.023 MiB/s, ETA 6m14s
+Checks:                45 / 45, 100%, Listed 90
+Transferred:           20 / 45, 44%
+Elapsed time:       7m0.0s
+Transferring:
+ * الأعداد 0548-0573 (الس…944 - النصف الأول).pdf: 98% / 99.390 MiB, 5.373 MiB/s, 0s
+ * الأعداد 0574-0599 (الس…44 - النصف الثاني).pdf: 41% / 93.307 MiB, 2.293 MiB/s, 23s
+
+2026/10/04 08:55:42 INFO  : الأعداد 0548-0573 (السنة 12، 1944 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:55:47 INFO  : الأعداد 0574-0599 (السنة 12، 1944 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:56:14 INFO  : الأعداد 0626-0652 (السنة 13، 1945 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:56:19 INFO  : الأعداد 0600-0625 (السنة 13، 1945 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:56:41 INFO  : 
+Transferred:   	    4.235 GiB / 6.634 GiB, 64%, 9.010 MiB/s, ETA 4m32s
+Checks:                45 / 45, 100%, Listed 90
+Transferred:           24 / 45, 53%
+Elapsed time:       8m0.0s
+Transferring:
+ * الأعداد 0653-0677 (الس…946 - النصف الأول).pdf: 59% / 147.002 MiB, 3.410 MiB/s, 17s
+ * الأعداد 0678-0704 (الس…46 - النصف الثاني).pdf: 71% / 152.291 MiB, 5.016 MiB/s, 8s
+
+2026/10/04 08:56:51 INFO  : الأعداد 0678-0704 (السنة 14، 1946 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:56:52 INFO  : الأعداد 0653-0677 (السنة 14، 1946 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:57:21 INFO  : الأعداد 0705-0730 (السنة 15، 1947 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:57:23 INFO  : الأعداد 0731-0756 (السنة 15، 1947 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:57:41 INFO  : 
+Transferred:   	    4.820 GiB / 6.634 GiB, 73%, 9.986 MiB/s, ETA 3m6s
+Checks:                45 / 45, 100%, Listed 90
+Transferred:           28 / 45, 62%
+Elapsed time:       9m0.0s
+Transferring:
+ * الأعداد 0757-0782 (الس…948 - النصف الأول).pdf: 92% / 161.069 MiB, 7.688 MiB/s, 1s
+ * الأعداد 0783-0808 (الس…48 - النصف الثاني).pdf: 18% / 157.517 MiB, 1.539 MiB/s, 1m23s
+
+2026/10/04 08:57:45 INFO  : الأعداد 0757-0782 (السنة 16، 1948 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:57:58 INFO  : الأعداد 0783-0808 (السنة 16، 1948 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:58:22 INFO  : الأعداد 0809-0834 (السنة 17، 1949 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:58:32 INFO  : الأعداد 0835-0860 (السنة 17، 1949 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:58:41 INFO  : 
+Transferred:   	    5.359 GiB / 6.634 GiB, 81%, 9.486 MiB/s, ETA 2m17s
+Checks:                45 / 45, 100%, Listed 90
+Transferred:           32 / 45, 71%
+Elapsed time:      10m0.0s
+Transferring:
+ * الأعداد 0861-0886 (الس…950 - النصف الأول).pdf: 49% / 153.702 MiB, 4.038 MiB/s, 19s
+ * الأعداد 0887-0912 (الس…50 - النصف الثاني).pdf: 14% / 148.122 MiB, 2.625 MiB/s, 48s
+
+2026/10/04 08:58:56 INFO  : الأعداد 0861-0886 (السنة 18، 1950 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:59:02 INFO  : الأعداد 0887-0912 (السنة 18، 1950 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:59:17 INFO  : الأعداد 0444-0469 (السنة 10، 1942 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 08:59:31 INFO  : الأعداد 0939-0965 (السنة 19، 1951 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 08:59:41 INFO  : 
+Transferred:   	    5.928 GiB / 6.634 GiB, 89%, 9.229 MiB/s, ETA 1m18s
+Checks:                45 / 45, 100%, Listed 90
+Transferred:           36 / 45, 80%
+Elapsed time:      11m0.0s
+Transferring:
+ * الأعداد 0913-0938 (الس…951 - النصف الأول).pdf: 63% / 147.398 MiB, 4.223 MiB/s, 12s
+ * الأعداد 0966-0991 (الس…952 - النصف الأول).pdf:  4% / 149.649 MiB, 682.217 KiB/s, 3m35s
+
+2026/10/04 08:59:50 INFO  : الأعداد 0913-0938 (السنة 19، 1951 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 09:00:02 INFO  : الأعداد 1018-1025 (السنة 21، 1953 - النصف الأول - آخر الإصدار الأول).pdf: Copied (replaced existing)
+2026/10/04 09:00:03 INFO  : الأعداد 0966-0991 (السنة 20، 1952 - النصف الأول).pdf: Copied (replaced existing)
+2026/10/04 09:00:21 INFO  : الأعداد 1019-1041 (الإصدار الثاني، 1963).pdf: Copied (replaced existing)
+2026/10/04 09:00:25 INFO  : الأعداد 0992-1017 (السنة 20، 1952 - النصف الثاني).pdf: Copied (replaced existing)
+2026/10/04 09:00:41 INFO  : 
+Transferred:   	    6.445 GiB / 6.634 GiB, 97%, 8.388 MiB/s, ETA 23s
+Checks:                45 / 45, 100%, Listed 90
+Transferred:           41 / 45, 91%
+Elapsed time:     11m59.9s
+Transferring:
+ * الأعداد 1095-1123 (الإ…ي، 1965 - آخر عدد).pdf: 53% / 113.653 MiB, 3.124 MiB/s, 16s
+ *  الأعداد 1042-1094 (الإصدار الثاني، 1964).pdf: 37% / 171.330 MiB, 4.200 MiB/s, 25s
+
+2026/10/04 09:00:54 INFO  : الأعداد 1095-1123 (الإصدار الثاني، 1965 - آخر عدد).pdf: Copied (replaced existing)
+2026/10/04 09:00:59 INFO  : الأعداد 1042-1094 (الإصدار الثاني، 1964).pdf: Copied (replaced existing)
+2026/10/04 09:01:00 INFO  : فهرس موضوعات مجلة الرسالة.pdf: Copied (replaced existing)
+2026/10/04 09:01:03 INFO  : الفهارس العامة لمجلة الرسالة.pdf: Copied (replaced existing)
+2026/10/04 09:01:03 INFO  : 
+Transferred:   	    6.634 GiB / 6.634 GiB, 100%, 8.779 MiB/s, ETA 0s
+Checks:                45 / 45, 100%, Listed 90
+Transferred:           45 / 45, 100%
+Elapsed time:     12m22.1s
+
+2026-10-04 09:01:03 COMPLETED UPLOAD OF RISALA (STOPPED AT RISALA ONLY PER USER REQUEST)!

@@ -51,12 +51,34 @@ def optimize_vol(src_path):
 
 def main():
     total_saved = 0
-    files = sorted([os.path.join(SRC_DIR, f) for f in os.listdir(SRC_DIR) if f.endswith('.pdf') and not f.endswith('.opt.tmp')])
-    for f in files:
-        saved = optimize_vol(f)
-        total_saved += saved
-        print(f"Running saved disk: {total_saved/(1024*1024*1024):.2f} GB", flush=True)
-    print(f"COMPLETED RISALA OPTIMIZATION. Total saved: {total_saved/(1024*1024*1024):.2f} GB", flush=True)
+    done_files = set()
+    if os.path.exists(LOG_FILE):
+        with open(LOG_FILE, 'r') as lf:
+            for line in lf:
+                parts = line.strip().split('\t')
+                if len(parts) >= 2:
+                    done_files.add(parts[1])
+    print(f"Already optimized {len(done_files)} files. Skipping them.", flush=True)
+
+    targets = [
+        os.path.expanduser('~/Books/الجوامع/مجلة الرسالة'),
+        os.path.expanduser('~/Books/التفسير/جامع البيان عن تأويل آي القرآن - الطبري (ت التركي - هجر)'),
+        os.path.expanduser('~/Books/التفسير/الكشاف عن حقائق التنزيل - الزمخشري (دار المعرفة)'),
+    ]
+    for target_dir in targets:
+        if not os.path.exists(target_dir):
+            continue
+        print(f"\n=== STARTING TARGET DIRECTORY: {os.path.basename(target_dir)} ===", flush=True)
+        files = sorted([os.path.join(target_dir, f) for f in os.listdir(target_dir) if f.endswith('.pdf') and not f.endswith('.opt.tmp')])
+        for f in files:
+            fname = os.path.basename(f)
+            if fname in done_files:
+                continue
+            saved = optimize_vol(f)
+            total_saved += saved
+            done_files.add(fname)
+            print(f"Running saved disk: {total_saved/(1024*1024*1024):.2f} GB", flush=True)
+    print(f"\nALL 3 TARGETS COMPLETED! Total disk space saved: {total_saved/(1024*1024*1024):.2f} GB", flush=True)
 
 if __name__ == '__main__':
     main()

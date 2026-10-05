@@ -6,22 +6,36 @@ sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from report_lib import Report
 J = lambda p: os.path.join(ROOT, p)
 log = [r for r in csv.reader(open(J('data/changes/changes.tsv')), delimiter='\t') if r and 'test-' not in r[5]]
+adds = [r for r in log if r[1] == 'add']
 moves = [r for r in log if r[1] == 'move']
 quar = [r for r in moves if r[3].startswith('Books-مكررات/')]
 undone = {r[5][5:] for r in log if r[5].startswith('undo-')}
-R = Report('سجل التغييرات', 'ما طُبّق على ملفات الهاتف، وما هو مقترح بانتظار الموافقة')
+R = Report('سجل التغييرات', 'ما طُبّق على ملفات الهاتف من تنزيلات وتعديلات، وما هو مقترح بانتظار الموافقة')
 deleted = [r for r in log if r[1] == 'delete']
-R.kpis([('عمليات نقل/تسمية', f'{len(moves):,}'), ('نسخ مكررة حُذفت بعد التحقق', f'{len(deleted):,}'),
-        ('مجلدات فارغة أزيلت', f'{sum(1 for r in log if r[1] == "rmdir"):,}'), ('خطط مطبقة', f'{len({r[5] for r in log}):,}')])
-R.note('المحذوف هو النسخ المكررة فقط، بعد التحقق من تطابقها: الحجم بالبايت نفسه، وتطابق عينات من 64 ك.ب في أول الملف وربعه ونصفه وثلاثة أرباعه وآخره، '
-       'ومع بقاء النسخة المطابقة في المكتبة. كل نقل أو تسمية أخرى يمكن التراجع عنها: python3 scripts/apply_plan.py --undo <اسم الخطة>.')
-R.h2('الخطط المطبقة')
+R.kpis([('ملفات مضافة ومحمّلة حديثاً', f'{len(adds):,}'),
+        ('عمليات نقل/تسمية', f'{len(moves):,}'),
+        ('نسخ مكررة حُذفت بعد التحقق', f'{len(deleted):,}'),
+        ('مجلدات فارغة أزيلت', f'{sum(1 for r in log if r[1] == "rmdir"):,}'),
+        ('دفعات وخطط مسجلة', f'{len({r[5] for r in log}):,}')])
+R.note('يشمل السجل جميع دفعات التنزيل والإضافة إلى الهاتف، إضافة إلى عمليات إعادة التسمية والنقل وإزالة المكررات المحققة. '
+       'المحذوف هو النسخ المكررة فقط، بعد التحقق من تطابقها التام. كل نقل أو تسمية أخرى يمكن التراجع عنها.')
+
+R.h2('دفعات التنزيل والإضافة المنفذة حديثاً', 'downloads')
+by_add = defaultdict(list)
+for r in adds: by_add[r[5]].append(r)
+add_rows = []
+for p, rs in sorted(by_add.items(), key=lambda x: x[1][-1][0], reverse=True):
+    sample_reason = rs[0][4].split(':')[0]
+    add_rows.append([p, rs[-1][0], len(rs), sample_reason])
+R.table(['الدفعة / الخطة', 'تاريخ الإضافة', 'عدد الملفات', 'المصدر / البيان'], add_rows, numeric=(2,))
+
+R.h2('خطط التنظيم وإعادة التسمية المطبقة', 'plans')
 by = defaultdict(list)
-for r in log: by[r[5]].append(r)
-R.table(['الخطة', 'التاريخ', 'نقل', 'إزالة مجلد فارغ', 'الأسباب'],
-        [[p, rs[0][0], sum(1 for r in rs if r[1] == 'move'), sum(1 for r in rs if r[1] == 'rmdir'),
+for r in moves: by[r[5]].append(r)
+R.table(['الخطة', 'التاريخ', 'نقل / تسمية', 'الأسباب'],
+        [[p, rs[0][0], len(rs),
           '، '.join(f'{k} ({v})' for k, v in Counter(r[4].split(':')[0].split(' «')[0] for r in rs if r[1] == 'move').most_common(4))] for p, rs in by.items()],
-        numeric=(2, 3))
+        numeric=(2,))
 import glob
 applied = {r[5] for r in log}
 pending = [f for f in sorted(glob.glob(J('plans/[0-9][0-9][0-9]-*.tsv'))) if os.path.basename(f)[:-4] not in applied]

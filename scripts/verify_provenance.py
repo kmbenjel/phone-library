@@ -5,7 +5,7 @@ provenance.py drops 'different' pairs on its next run."""
 import csv, hashlib, os, subprocess, urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FTP = os.environ.get('PHONE_FTP', 'ftp://192.168.11.100:2221/Books/')
+from phone_host import FTP
 def head(url, extra=()):
     r = subprocess.run(['curl', '-s', '-L', '--max-time', '90', '-r', '0-65535', *extra, url], capture_output=True)
     return r.stdout[:65536] if r.returncode == 0 else b''

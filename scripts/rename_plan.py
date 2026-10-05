@@ -337,9 +337,20 @@ def plan_files(ps, prov, link_label, b, dest, why, add, review):
     vols = [v for p, v, lab, fn in info if v and v[1] == 'vol']
     nvol = len(vols); width = max(2, len(str(max([v[0] for v in vols], default=1))))
     names = Counter()
+    
+    single_file_book = (len(info) == 1)
+    
     for p, v, lab, fn in info:
+        current_dest = dest
         if v is not None and not lab: lab = old_label(fn, title)
-        if v is None:
+        if single_file_book and v is not None and v[1] == 'vol':
+            cat = dest.split('/')[0]
+            edition = clean(b.get('publisher', ''))
+            new_base = short + (f' - {a}' if a and not redundant(a, short) else '')
+            if edition: new_base += f' (ط {edition})'
+            new = f'{fit(new_base, MAXB - 10)}.pdf'
+            current_dest = cat
+        elif v is None:
             new = repair_file(fn, title, short)
         elif nvol <= 1:
             base = fit(clean(title), MAXB - 30)
@@ -350,10 +361,10 @@ def plan_files(ps, prov, link_label, b, dest, why, add, review):
             lab = lab if v[1] == 'vol' else (lab or ('الواجهة' if v[0] == 0 else 'المقدمة'))
             if v[1] == 'front' and lab not in ('الواجهة', 'المقدمة') and v[0] > 0: lab = 'المقدمة'
             new = f'{n} - {short}' + (f' ({fit(clean(lab), 90)})' if lab else '') + '.pdf'
-        names[new] += 1
-        add(f'Books/{p}', f'Books/{dest}/{new}', why or ('volume names from Waqfeya record' if v else 'mechanical fix'))
-    for n, k in names.items():
-        if k > 1: review.append((f'{dest}/{n}', f'{k} files would get the same name'))
+        names[(current_dest, new)] += 1
+        add(f'Books/{p}', f'Books/{current_dest}/{new}', why or ('volume names from Waqfeya record' if v else 'mechanical fix'))
+    for (d, n), k in names.items():
+        if k > 1: review.append((f'{d}/{n}', f'{k} files would get the same name'))
 
 if __name__ == '__main__':
     main(sys.argv[1], sys.argv[2])
