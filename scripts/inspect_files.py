@@ -13,11 +13,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from phone_host import HOST, PORT
 from netpace import Pacer
-sys.path.append(os.path.expanduser('~/.local/share/phone-library-tools/site'))
-try:
-    import pymupdf, fix_pdf                    # crop «recipes» while the file is here (no second download later)
-except Exception:
-    pymupdf = None
+TOOLS = os.path.expanduser('~/.local/share/phone-library-tools/site')
+pymupdf = os.path.isdir(TOOLS)                # crop «recipes» while the file is here (no second download later);
+                                              # PyMuPDF is not thread-safe → always in a separate process
 J = lambda *p: os.path.join(ROOT, *p)
 IDX = sys.argv[1] if len(sys.argv) > 1 else J('data/phone/index-now.tsv')
 PRI = sys.argv[2] if len(sys.argv) > 2 else None
@@ -98,12 +96,17 @@ def analyse(pdf, path, size, md5, key):
     mm = [m for m in rec['margins'] if not m.get('blank')]
     if pymupdf and mm and (statistics.median(m['l'] + m['r'] for m in mm) > 0.30 or max(max(m['l'], m['r']) for m in mm) > 0.20
                            or max(max(m.get('edge_dark_rows', 0), m.get('edge_dark_cols', 0)) for m in mm) >= 0.35):
+        tmpb = os.path.join(TMP, key + '.boxes.json')
         try:
-            boxes = fix_pdf.crop_boxes(pymupdf.open(pdf))
+            subprocess.run(['/usr/bin/python3', os.path.join(ROOT, 'scripts/fix_pdf.py'), pdf, '/dev/null', '--boxes-only', tmpb],
+                           env=dict(os.environ, PYTHONPATH=TOOLS), capture_output=True, timeout=900)
+            boxes = json.load(open(tmpb))
             json.dump({'path': path, 'size': size, 'md5': md5, 'boxes': boxes}, open(os.path.join(CROPS, key + '.json'), 'w'))
             rec['crop_recipe'] = True
         except Exception as e:
             rec['crop_error'] = repr(e)[:200]
+        finally:
+            if os.path.exists(tmpb): os.remove(tmpb)
     run(['pdftoppm', '-gray', '-jpeg', '-jpegopt', 'quality=60', '-r', '18', '-f', '1', '-l', '1', '-singlefile', pdf, os.path.join(THUMBS, key)], 120)
     if rec['text_first_chars'] < 300:            # image-only front matter: queue the first 4 pages for OCR
         while len(os.listdir(OCRQ)) > OCR_CAP: time.sleep(30)     # OCR is slower than the download: cap the backlog
@@ -159,7 +162,9 @@ def main():
                 if os.path.getsize(dst) != size: raise OSError(f'short read {os.path.getsize(dst)} != {size}')
                 q.put((dst, path, size, h.hexdigest(), key)); nbytes += size; break
             except ftplib.error_perm as e:
-                print('FAIL', path, e, flush=True); break
+                print('FAIL', path, e, flush=True)
+                if os.path.exists(dst): os.remove(dst)
+                break
             except (ftplib.error_temp, OSError, EOFError) as e:
                 print('retry', path, e, flush=True); time.sleep(5 * (attempt + 1))
                 try: f = connect()

@@ -7,23 +7,39 @@ import os, re, statistics, subprocess, threading, time
 class Pacer:
     def __init__(self):
         self.on = os.environ.get('NETPACE', '1') != '0'
-        self.max = float(os.environ.get('NETPACE_MAX', '16')) * 1e6
+        self.max = float(os.environ.get('NETPACE_MAX', '6')) * 1e6       # ceiling: other devices game and call
+        self.wan_slack = float(os.environ.get('NETPACE_WAN_SLACK', '15'))   # ms above the internet baseline
+        self.wan_rtt = None
         self.min = float(os.environ.get('NETPACE_MIN', '0.4')) * 1e6
-        self.low, self.high = float(os.environ.get('NETPACE_LOW', '8')), float(os.environ.get('NETPACE_HIGH', '15'))
+        self.low, self.high = float(os.environ.get('NETPACE_LOW', '6')), float(os.environ.get('NETPACE_HIGH', '10'))
         self.router = os.environ.get('NETPACE_ROUTER', '192.168.11.1')
-        self.rate, self.rtt = 3e6, None
+        self.wan = os.environ.get('NETPACE_WAN', '1.1.1.1')           # games feel the internet line, not only the Wi-Fi
+        self.wan_base = None
+        self.rate, self.rtt = 2e6, None
         self.t, self.sent = time.time(), 0.0
         self.lock = threading.Lock()
         if self.on: threading.Thread(target=self._watch, daemon=True).start()
 
+    def _ping(self, host):
+        out = subprocess.run(['ping', '-c', '4', '-i', '0.25', '-W', '1', host], capture_output=True, text=True).stdout
+        return [float(x) for x in re.findall(r'time=([\d.]+)', out)]
+
     def _watch(self):
         while True:
-            out = subprocess.run(['ping', '-c', '4', '-i', '0.25', '-W', '1', self.router], capture_output=True, text=True).stdout
-            rtts = [float(x) for x in re.findall(r'time=([\d.]+)', out)]
-            if rtts:
-                self.rtt = max(rtts)                      # games feel the spikes, not the average
-                if self.rtt > self.high: self.rate = max(self.min, self.rate * 0.7)
-                elif self.rtt < self.low: self.rate = min(self.max, self.rate * 1.15)
+            lan, wan = self._ping(self.router), self._ping(self.wan)
+            if wan:
+                w = min(wan)
+                self.wan_base = w if self.wan_base is None else min(self.wan_base * 1.002, w)   # slowly forgets
+            busy = False
+            if lan:
+                self.rtt = max(lan)                       # games feel the spikes, not the average
+                busy = self.rtt > self.high
+            if wan and self.wan_base:
+                self.wan_rtt = max(wan)
+                busy = busy or self.wan_rtt > self.wan_base + self.wan_slack
+            calm = lan and self.rtt < self.low and (not wan or max(wan) < (self.wan_base or 0) + self.wan_slack / 2)
+            if busy: self.rate = max(self.min, self.rate * 0.6)
+            elif calm: self.rate = min(self.max, self.rate * 1.1)
             time.sleep(2)
 
     def wait(self, n):
@@ -36,4 +52,5 @@ class Pacer:
         if delay > 0: time.sleep(delay)
 
     def status(self):
-        return f'pace {self.rate / 1e6:.1f} MB/s, rtt {self.rtt if self.rtt is None else round(self.rtt, 1)} ms' if self.on else 'pace off'
+        return (f'pace {self.rate / 1e6:.1f} MB/s, wifi {self.rtt if self.rtt is None else round(self.rtt, 1)} ms, '
+                f'internet {self.wan_rtt if self.wan_rtt is None else round(self.wan_rtt)}/{self.wan_base if self.wan_base is None else round(self.wan_base)} ms') if self.on else 'pace off'

@@ -107,6 +107,8 @@ def recompress(doc, max_ppi=200, quality=60):
 def main():
     a = sys.argv[1:]
     src, dst = a[0], a[1]
+    if '--boxes-only' in a:                       # crop recipe only (used by inspect_files.py in a subprocess)
+        json.dump(crop_boxes(pymupdf.open(src)), open(a[a.index('--boxes-only') + 1], 'w')); return
     doc = pymupdf.open(src); n0 = len(doc)
     if '--split' in a:
         doc = split_spreads(doc)
