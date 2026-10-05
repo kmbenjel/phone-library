@@ -97,3 +97,17 @@ Phone FTP: 192.168.11.102:2221, max 2 connections. The server has `MD5 <path>` (
 - Next when inspection progresses: renumber_inside_plan.py (32 folders in review), singles_plan.py (1,337 waiting),
   names_plan.py (all folders), verify_names.py → fixes, quality_report.py → crop recipes at scale, same-edition scans
   (keep best → «نسخ مستبعدة» only on the owner's word), remap_paths.py before each inspect restart.
+
+### Status 2026-10-05 ~05:10
+- Done since 03:45: العمران (092/093, data/authors/omran-works-status.tsv); 094/096/098 reverse-numbered sets by labels,
+  verified against exact source files (two wrong labels fixed by reading); 095 (46 pre-700 works, 62 files, every title
+  page read); missing volumes 097/099/100/103/104 (records that linked one file for two volumes: data/missing-by-duplinks.json);
+  101 long names (none > 200 bytes left); 102 renumber-from-inside (417 files, ~70 sets; 52 sets in
+  data/phone/renumber-inside-review.tsv need titles from OCR or reading); local-003 mirror (apply_local_plan.py).
+- Running: inspect_files.py ×3 shards (SHARD=k/3, NETPACE=0), inspect_ocr.py (backlog ~4,700 front-page sets).
+- Next: re-list the phone (index-now drifted: uploads of 073/082/084 were never added) → compare; renumber review list;
+  edition-mixing folders (درج الدرر: two editions in one folder; ديوان جرير: الصاوي + dgsmh; تهذيب الآثار musnads);
+  names_plan across raw names; singles_plan for the waiting single-file folders; verify_names; quality fixes;
+  report 05 with full inspection data; then refresh.sh, delete data/.no-open, open Brave once.
+- Lesson: labels lie sometimes (Waqfeya links one file under two volume titles; earlier passes copied labels). Check
+  against the exact source file and the PDF's embedded title before renumbering (AGENTS §3 rule 3).
