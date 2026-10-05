@@ -41,6 +41,27 @@ def short(title, author=''):
         s = f'{s} - {author}'
     return clean(s)
 
+def compose(title, author='', edition='', limit=196):
+    """Folder/file name «title - author (edition)» within `limit` bytes: drop the edition first, then the author; the
+    title itself is cut only when it alone is too long, and then at a natural break (before a «و…» clause or a
+    particle), never inside a word or a name."""
+    title, author, edition = clean(title), clean(author), clean(edition)
+    for cand in (f'{title} - {author} ({edition})' if author and edition else None,
+                 f'{title} ({edition})' if edition and not author else None,
+                 f'{title} - {author}' if author else None, title):
+        if cand and len(cand.encode()) <= limit: return cand
+    if len(title.encode()) > limit:                    # the title must be cut anyway: short form + author + edition
+        st = short(title)
+        if st != title and len(st.split()) >= 2: return compose(st, author, edition, limit)
+    w = title.split()
+    cut = [i for i in range(3, len(w)) if norm(w[i]) in STOPS or (len(norm(w[i])) > 3 and norm(w[i]).startswith('و'))]
+    for i in reversed(cut):
+        t = ' '.join(w[:i])
+        if len(t.encode()) <= limit: return t
+    while w and len(' '.join(w).encode()) > limit: w.pop()
+    while len(w) > 1 and norm(w[-1]) in WEAK_END | STOPS: w.pop()
+    return ' '.join(w)
+
 def meta_titles():
     m = {}
     for l in open(J('data/inspect/files.jsonl'), encoding='utf-8'):
