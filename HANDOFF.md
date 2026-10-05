@@ -168,3 +168,6 @@ Phone FTP: 192.168.11.103:2221 since 2026-10-05 noon (was .102; scripts/phone_ho
   Still running by itself: fix_at_scale.py 142 (batch 9 of ~30; each batch substitutes its copies at once) and
   after_139.sh → plan 143. Left for later: pre-700 works with no strong archive.org match (543; search by author/other
   uploads with scripts/find_on_archive.py), local ~/Books sync for today's additions.
+- 20:30: 142 at batch 10 (≈ 1,330 books substituted so far; 3 checked by eye: nothing cut, footnotes/page numbers kept).
+  139 retry pass running, then after_139.sh → 143. Nothing else pending for tonight; fix_at_scale writes its WORKLOG
+  line when it ends. Morning: refresh.sh --no-list, commit, local ~/Books sync for today's additions.
