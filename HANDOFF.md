@@ -87,3 +87,13 @@ Phone FTP: 192.168.11.102:2221, max 2 connections. The server has `MD5 <path>` (
 - Pending: renumber_inside_plan.py on data/phone/renumber-from-inside.txt (needs PDF titles → after inspection);
   073 queue re-run for archive.org failures (التحبير items return HTTP 500); local sync (local_sync_plan.py) after md5;
   Books-نسخ-محسنة samples (fix_pdf.py: crop sample 20 books, split 5 spreads); singles_plan.py after inspection.
+
+### Status 2026-10-05 ~03:45
+- Done tonight: duplicates 068–081 (1,125 files ≈ 8 GB), names 070/079/085/086/087, sections 088/089, singles 090 (407),
+  reports 05–08 rebuilt/new, local mirror + expansion queue, insights (reports/overnight/03).
+- Running: inspect_files.py (paced, ~1 MB/s while others game), inspect_ocr.py; resume_when_calm.sh waits for a calm
+  network to run 083 (local expansion), 080 (improved samples), 084, 082 (almtoon), 073 (missing volumes retry).
+- Owner: do NOT open Brave until the whole job is finished (data/.no-open); then delete data/.no-open and open once.
+- Next when inspection progresses: renumber_inside_plan.py (32 folders in review), singles_plan.py (1,337 waiting),
+  names_plan.py (all folders), verify_names.py → fixes, quality_report.py → crop recipes at scale, same-edition scans
+  (keep best → «نسخ مستبعدة» only on the owner's word), remap_paths.py before each inspect restart.

@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from textnorm import norm, title_key
 from special_dirs import NOT_BOOKS
 from rename_plan import clean, fit, deficient, canonical_folder, split_wname, author_short, redundant
-from names_plan import short, BAD_FOLDER
+from names_plan import short, compose, BAD_FOLDER
 J = lambda p: os.path.join(ROOT, p)
 
 def parse_folder(name):
@@ -51,18 +51,25 @@ def main(index, out):
         vm = re.match(r'^(\d{1,3}) - ', fn) or re.search(r'\((?:جزء|الجزء|المجلد|مجلد)\s*(\d+)\)', fn)
         if (nvol and int(nvol) > 1) or (vm and int(vm.group(1)) > 1) or re.search(r'الجزء (الثاني|الثالث|الرابع)', fn):
             stats['keep: part of a multi-volume work'] += 1; continue
-        if b and (BAD_FOLDER.search(name) or deficient(name) or ' - ' not in name):
-            canon, title, a = canonical_folder(b)
-            t, au, ed = parse_folder(canon)
-        else:
-            t, au, ed = parse_folder(name)
+        stem = fn[:-4]
+        if re.match(r'^0*1 - ', fn) and nvol != '1':
+            stats['wait: «01 - …» alone (first volume of more?)'] += 1; continue
+        if re.search(r'[A-Za-z]', stem) and re.search(r'\d', stem):
+            stats['wait: raw file name with digits (volume?)'] += 1; continue
+        if re.search(r'[A-Za-z_\-]\d{1,3}$|^\d{1,3}[_\-]|(^|[^\d])\d{1,2}$', stem) and re.search(r'[A-Za-z]', stem):
+            stats['keep: raw file name with a volume number'] += 1; continue
+        extra = {w for w in norm(stem).split() if len(w) > 2} - set(norm(name).split()) - {'pdf'}
+        if len(extra) >= 2 and re.search(r'[\u0600-\u06FF]', stem):
+            stats['wait: the file name carries more than the folder name'] += 1; continue
+        t0 = re.split(r'\s+-\s+', re.sub(r'\([^()]*\)', '', name))[0].split()
+        if t0 and norm(t0[-1]) in {norm(w) for w in 'بن ابن أبي أبو عبد في من على عن إلى و'.split()}:
+            stats['wait: cut title'] += 1; continue
+        if BAD_FOLDER.search(name) or deficient(name) or ' - ' not in name:
+            stats['wait: junk or authorless name (renamed from the PDF after inspection)'] += 1; continue
+        t, au, ed = parse_folder(name)
         t, au, ed = clean(t), clean(au), clean(ed)
         if not t: stats['skip: no title'] += 1; continue
-        st = short(t, au)
-        cand = st + (f' - {au}' if au and ' - ' not in st and not redundant(au, st) else '') + (f' ({ed})' if ed else '')
-        if len(cand.encode()) > 196:
-            cand = st + (f' - {au}' if au and ' - ' not in st and not redundant(au, st) else '')
-        new = fit(cand, 196) + '.pdf'
+        new = compose(t, au if au and not redundant(au, t) else '', ed, 196) + '.pdf'      # title shortened only for length
         if new in plain[cat]: stats['skip: name taken'] += 1; continue
         plain[cat].add(new)
         rows.append((f'Books/{ps[0]}', f'Books/{cat}/{new}', 'single-volume book: plain file in its section (§4)'))
