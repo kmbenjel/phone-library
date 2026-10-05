@@ -158,3 +158,6 @@ Phone FTP: 192.168.11.103:2221 since 2026-10-05 noon (was .102; scripts/phone_ho
   margins + dark borders + spreads (≈ 4,500 files, smallest first), copies made, measured before upload, substituted.
   `scratch/after_139.sh` waits for 139 to end, then measures and substitutes its last copies as plan 143.
   If interrupted: re-run the same commands (resumable). 136 complete (136a/136b/136c, 771 files).
+- 15:35: the phone left the network (FTP not answering anywhere on 192.168.11.0/24). fix_at_scale.py now waits for the phone
+  (and no longer counts merely-listed files as done; batches b02–b06 had failed and will be redone); after_139.sh waits too.
+  Owner notified to reopen the FTP app. Everything resumes by itself when the phone answers (any known address).

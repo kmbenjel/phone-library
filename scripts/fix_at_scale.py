@@ -9,7 +9,7 @@ Never touches files already handled (substituted, judged no-op, or listed in an 
 or the owner's protected local folders (phone only). Resumable: re-run the same command.
 Usage: python3 scripts/fix_at_scale.py PREFIX [--batch 150] [--max-batches N] [--problems margins,dark-borders,spreads]
   PREFIX = plan number for this run, e.g. 142 → plans/142-b01a…, lists/142-b01.tsv"""
-import argparse, csv, glob, os, re, subprocess, sys, time
+import argparse, csv, os, re, subprocess, sys, time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 J = lambda p: os.path.join(ROOT, p)
 IMP, OUT = 'نسخ محسنة للاستبدال/', 'نسخ مستبعدة/__المستبدل/'
@@ -23,13 +23,34 @@ def sh(cmd, env=None, log=None):
         return subprocess.run(cmd, cwd=ROOT, env=e, stdout=out, stderr=subprocess.STDOUT).returncode
 
 def handled():
-    """paths already listed in a fixed-copies list, judged no-op, or substituted"""
+    """paths that already have a fixed copy (made by any plan), were judged no-op, or are being recompressed — NOT
+    merely listed: a batch that failed (phone offline) gives its files back to the pool"""
     h = set()
-    for fn in glob.glob(J('lists/1[3-9][0-9]*.tsv')):
-        h |= {r[0] for r in csv.reader(open(fn, encoding='utf-8'), delimiter='\t') if r}
+    for r in csv.reader(open(J('data/changes/changes.tsv'), encoding='utf-8'), delimiter='\t'):
+        if len(r) > 5 and r[1] == 'add' and r[3].startswith('Books/' + IMP): h.add(r[3][6 + len(IMP):])
     if os.path.exists(J('data/improve/noop.tsv')):
         h |= {l.split('\t')[0] for l in open(J('data/improve/noop.tsv'), encoding='utf-8')}
+    for fn in ('lists/135-recompress.tsv', 'data/improve/139-measure.tsv'):
+        if os.path.exists(J(fn)): h |= {r[0] for r in csv.reader(open(J(fn), encoding='utf-8'), delimiter='\t') if r}
     return h
+
+def phone_up():
+    import socket
+    sys.path.insert(0, J('scripts'))
+    from phone_host import CANDIDATES, PORT
+    for h in CANDIDATES:
+        try:
+            socket.create_connection((h, PORT), timeout=3).close()
+            subprocess.run(['rclone', 'config', 'update', 'phone', 'host', h], capture_output=True)
+            return h
+        except OSError: pass
+    return None
+
+def wait_phone():
+    t = 0
+    while not phone_up():
+        if t % 30 == 0: print(time.strftime('%T'), 'phone offline: waiting', flush=True)
+        time.sleep(60); t += 1
 
 def candidates(problems):
     idx = {p: int(s) for p, s in csv.reader(open(J('data/phone/index-now.tsv'), encoding='utf-8'), delimiter='\t') if s.isdigit()}
@@ -90,9 +111,13 @@ def main():
             with open(lst, 'w', encoding='utf-8') as w:
                 for p, o in rows[:a.batch]: w.write(f'{p}\t{o}\n')
         print(time.strftime('%T'), name, sum(1 for _ in open(lst)), 'files', flush=True)
-        for attempt in range(2):                               # a second pass picks up phone drops
+        for attempt in range(3):                               # later passes pick up phone drops
+            wait_phone()
             sh(['nice', '/usr/bin/python3', 'scripts/improve_copies.py', lst, f'{name}-copies'],
                {'PYTHONPATH': TOOLS, 'MAX_KEPT': '0.9', 'NETPACE': os.environ.get('NETPACE', '0')}, f'logs/{name}-copies.log')
+            left = {r[0] for r in csv.reader(open(lst, encoding='utf-8'), delimiter='\t') if r} - handled()
+            if not left: break
+        wait_phone()                                           # never substitute while the phone is away
         idx = {p: int(s) for p, s in csv.reader(open(J('data/phone/index-now.tsv'), encoding='utf-8'), delimiter='\t') if s.isdigit()}
         done_subs = {r[2][6:] for r in csv.reader(open(J('data/changes/changes.tsv'), encoding='utf-8'), delimiter='\t')
                      if len(r) > 5 and r[5] == f'{name}a-substitute-fixed-step1'}

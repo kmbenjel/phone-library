@@ -3,6 +3,15 @@
 # measure the rest and substitute them as plan 143 (like 141).
 cd "$(dirname "$0")/.."
 while pgrep -f "[i]mprove_copies.py lists/139-split-and-crop" >/dev/null || pgrep -f "[u]nattended_2026-10-05" >/dev/null; do sleep 60; done
+phone(){ python3 -c "
+import socket, sys, subprocess; sys.path.insert(0, 'scripts'); from phone_host import CANDIDATES, PORT
+for h in CANDIDATES:
+    try: socket.create_connection((h, PORT), timeout=3).close(); subprocess.run(['rclone', 'config', 'update', 'phone', 'host', h], capture_output=True); sys.exit(0)
+    except OSError: pass
+sys.exit(1)"; }
+until phone; do sleep 60; done                     # the phone drops off the network at times: measure only when it is back
+PYTHONPATH=~/.local/share/phone-library-tools/site nice /usr/bin/python3 scripts/improve_copies.py lists/139-split-and-crop.tsv 139-split-and-crop >> logs/139-split-and-crop.log 2>&1   # last retry pass
+until phone; do sleep 60; done
 PYTHONPATH=~/.local/share/phone-library-tools/site /usr/bin/python3 scratch/measure_139.py >> logs/measure-139.log 2>&1
 python3 scratch/substitute_139.py 143 > logs/143.log 2>&1
 ALLOW_PROTECTED=1 python3 scripts/apply_plan.py plans/143a-substitute-fixed-step1.tsv >> logs/143.log 2>&1 && \
