@@ -48,6 +48,10 @@ Read this file first. Keep it current when you change a convention.
 3. **Names come from evidence, not guesses.** Match the exact size with the original download source only (which is usually archive.org). If unsure, leave the name and
    list it under "needs review" in the report.
    **Matching principle**: When generating indexes or comparing (Shamela/Waqfeya vs phone), base the logic on whether a book is *conceptually present* on the phone. If the author and title are present on the phone, the book exists. Do not rely on literal, exact string matches of titles and authors to declare a book missing, as differences between the phone's filenames and catalog records are expected.
+   **Labels can be wrong** (Waqfeya pages sometimes link one file under two volume titles, and earlier passes copied
+   those labels): before renumbering a set, check each file against its exact source file and read the title page or
+   the PDF's embedded title («… - ج N: …»). A volume missing on the phone because its record linked another volume's
+   file is usually still in the same archive.org item under the next file name.
    **One archive.org item often holds several sections or editions** (e.g. خريدة القصر: Iraq and Sham sections of
    two academies in one item). Never name all its files from the item title: read each volume's title page first
    (`pdftotext -l 8`; for image-only scans a low-resolution render of the first pages, `pdftoppm -r 25`).
@@ -183,9 +187,20 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `publish.py` | uploads `site/`, `reports/`, data tables and this guide to the phone (copy, never deletes) — only when the owner asks |
 | `open_index.sh` | opens `site/00 - الفهرس العام.html` in Brave on the laptop (`NO_OPEN=1` skips) |
 | `refresh.sh` | everything above in order |
-| `fetch_queue.py` | THE download/upload pipeline (§7): parallel aria2c, verify, one serialized phone connection, resumable |
+| `fetch_queue.py` | THE download/upload pipeline (§7): parallel aria2c, verify, one serialized phone connection, resumable; `file:///…` = a file already downloaded and read; falls back to the item's own storage servers when archive.org's redirect lands on a failing node (HTTP 500) |
 | `waq_queue.py` | Waqfeya records → `fetch_queue.py` lines (only the files each record links; skips what the phone already has) |
 | `local_selection.py` | picks the best of the phone library for the laptop's local `~/Books` (group budgets) |
+| `local_sync_plan.py`, `apply_local_plan.py` | local `~/Books` mirrors the phone's names/sections by MD5 (`md5sum` in ~/Books → plan → apply, logged in `data/local/changes.tsv`; the two protected local folders are never touched) |
+| `phone_md5.py` | server-side `MD5` of every phone file → `data/phone/md5.tsv` (exact duplicates, local mirroring) |
+| `exact_dups_plan.py` | groups of byte-identical phone files → which copy to keep (section, completeness, name quality) |
+| `inspect_files.py` | reads every phone file (download → analyse → delete): PDF metadata (Waqfeya titles «… - ج N: label»), page sizes, image ppi/colour (page windows), text layer, margins, OCR queue → `data/inspect/files.jsonl`; `SHARD=k/n` runs n in parallel; `CROP_RECIPES=1` also stores per-page crop boxes |
+| `inspect_ocr.py` | tesseract (ara+eng) on the front pages of image-only files → `data/inspect/ocr.jsonl`, keeps the page JPEGs |
+| `remap_paths.py` | after renames: carries md5.tsv / files.jsonl records along the logged moves (chained), only for paths that no longer exist |
+| `index_update.py` | keeps `data/phone/index-now.tsv` current from the change log without listing the phone (`--add` for uploads) |
+| `names_plan.py`, `renumber_inside_plan.py`, `singles_plan.py`, `verify_names.py` | names and volume numbers from the files themselves (`data/phone/renumber-from-inside.txt` lists sets to renumber); single-file folders → plain files; name/edition checks |
+| `quality_report.py`, `fix_pdf.py`, `improve_copies.py`, `front_pages.py` | scan problems (margins, spreads, low resolution, bloat) → lossless fixed copies into `Books/نسخ محسنة للاستبدال/` |
+| `excerpt.py` | citations («book | volume | pages») → one bookmarked PDF for the phone, or Brave tabs at the right pages |
+| `find_on_archive.py` | other archive.org uploads of books whose Waqfeya items went dark (candidates to read before adding) |
 
 Only reusable tools live in `scripts/`. A one-off generator goes in `scratch/`; the plan or queue it writes is the
 record. Nothing goes in the repo root. Removed one-offs (2026-10-05) are in git history at commit `0e64d80`.

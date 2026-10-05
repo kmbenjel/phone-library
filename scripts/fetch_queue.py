@@ -108,6 +108,17 @@ def phone_worker():
             with stage_cv: staged[0] -= size or 0; stage_cv.notify_all()
         upq.task_done()
 
+def archive_mirrors(url):
+    """https://archive.org/download/<item>/<file> → the same file on each of the item's storage servers
+    (https://<server><dir>/<file>); archive.org's own redirect sometimes lands on a node that answers HTTP 500."""
+    import json, urllib.parse, urllib.request
+    item, _, f = url.split('/download/', 1)[1].partition('/')
+    try:
+        m = json.load(urllib.request.urlopen(f'https://archive.org/metadata/{item}', timeout=60))
+    except Exception:
+        return []
+    return [f'https://{s}{m["dir"]}/{f}' for s in (m.get('workable_servers') or [m.get('d1'), m.get('d2')]) if s and m.get('dir')]
+
 def download(row):
     url, size, target, reason = row[0], int(row[1] or 0), row[2], row[3] if len(row) > 3 else ''
     if 'سلسلة عالم المعرفة (المجلس الوطني للثقافة - الكويت)' in target and 'الأعداد ' not in target:
@@ -144,6 +155,12 @@ def download(row):
         lim_c = ['--limit-rate', str(int(NET_MB * 1e6 / DL_JOBS))] if NET_MB else []
         r = subprocess.run(['curl', '-sfL', '--retry', '5', '--retry-delay', '10', *lim_c, '-A', 'personal-library/1.0', '-o', out, url], capture_output=True, text=True)
         why = f'curl exit {r.returncode}' if r.returncode else ok_pdf(out, size)
+        if why and '://archive.org/download/' in url:   # the redirect picked a failing node: try the item's own servers
+            for alt in archive_mirrors(url):
+                if os.path.exists(out): os.remove(out)
+                r = subprocess.run(['curl', '-sfL', '--retry', '3', *lim_c, '-A', 'personal-library/1.0', '-o', out, alt], capture_output=True, text=True)
+                why = f'curl exit {r.returncode} (mirrors)' if r.returncode else ok_pdf(out, size)
+                if not why: break
     else:
         why = ok_pdf(out, size)
     if why:
