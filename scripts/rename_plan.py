@@ -177,7 +177,7 @@ def main(index, out):
     books, link_label, prov = load()
     files = defaultdict(list)
     for p, s in csv.reader(open(index), delimiter='\t'):
-        if p.startswith(INDEX_DIR + '/'): continue
+        if p.startswith(INDEX_DIR + '/') or p.count('/') < 2: continue     # plain single-book files: names_plan.py
         files[p.rsplit('/', 1)[0]].append(p)
     moves, review = [], []
     target_of_book = {}     # waqfeya id -> (category, folder) already chosen (merge destination)
