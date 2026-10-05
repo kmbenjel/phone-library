@@ -51,7 +51,7 @@ def ok_pdf(p, size):
         if size and n != size: return f'size {n}≠{size}'
         with open(p, 'rb') as f:
             if f.read(4) != b'%PDF': return 'not %PDF'
-            f.seek(max(0, n - 2048)); 
+            f.seek(max(0, n - 8192)); 
             if b'%%EOF' not in f.read(): return 'no %%EOF'
         if subprocess.run(['pdfinfo', p], capture_output=True).returncode: return 'pdfinfo fails'
     except OSError as e: return str(e)
