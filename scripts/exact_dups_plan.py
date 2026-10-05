@@ -40,8 +40,11 @@ def book_name(p):
 
 def author_of(name):
     """Author words of «title - author (edition)»; segments that are editions («ت - X», «ط. Y», «ج 1») are not authors."""
-    segs = [x.strip() for x in re.sub(r'\([^()]*\)', ' ', name).split(' - ')[1:]]
-    segs = [x for x in segs if x and not re.match(r'^(ت|ط|ج|و\s?ط)\b|^(ت|ط)[.\-]', x) and len(x) > 2]
+    raw = [x.strip() for x in re.sub(r'\([^()]*\)', ' ', name).split(' - ')[1:]]
+    segs = []
+    for i, x in enumerate(raw):
+        if i and raw[i - 1] in ('ت', 'ط', 'و ط', 'ت.', 'ط.'): continue          # «- ت - هيتو»: investigator, not author
+        if x and not re.match(r'^(ت|ط|ج|و\s?ط)\b|^(ت|ط)[.\-]', x) and len(x) > 2: segs.append(x)
     return author_tokens(segs[-1]) if segs else set()
 
 JUNK_META = re.compile(r'binder|\.pdf$|^[A-Za-z0-9 _\-.]+$|acdsee|microsoft|untitled|^\s*$', re.I)
