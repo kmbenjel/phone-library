@@ -16,7 +16,7 @@ Staged bytes are capped (STAGE_GB, default 6) because the laptop disk is small.
 State: data/queue/<queue name>.done (one target per line) → rerun to resume.
 Usage: python3 scripts/fetch_queue.py QUEUE.tsv PLAN_NAME
 """
-import csv, fcntl, hashlib, os, queue, subprocess, sys, threading, time
+import csv, fcntl, hashlib, os, posixpath, queue, subprocess, sys, threading, time
 from concurrent.futures import ThreadPoolExecutor
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -107,7 +107,7 @@ def phone_worker():
                 except OSError as e:
                     fail(dst, f'rename fail: {e}')
         if kind == 'up':
-            if os.path.exists(src):
+            if not r.returncode and os.path.exists(src):     # kept after a failed upload: a rerun resumes from it
                 try: os.remove(src)
                 except OSError: pass
             with stage_cv: staged[0] -= size or 0; stage_cv.notify_all()

@@ -2,7 +2,7 @@
 PHONE_HOST overrides; otherwise the first candidate whose FTP port answers is used."""
 import os, socket
 
-CANDIDATES = ['192.168.11.102', '192.168.11.100']
+CANDIDATES = ['192.168.11.103', '192.168.11.102', '192.168.11.100']
 PORT = int(os.environ.get('PHONE_PORT', '2221'))
 
 
