@@ -201,6 +201,7 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `index_update.py` | keeps `data/phone/index-now.tsv` current from the change log without listing the phone (`--add` for uploads) |
 | `names_plan.py`, `renumber_inside_plan.py`, `singles_plan.py`, `verify_names.py` | names and volume numbers from the files themselves (`data/phone/renumber-from-inside.txt` lists sets to renumber); single-file folders → plain files; name/edition checks |
 | `quality_report.py`, `fix_pdf.py`, `improve_copies.py`, `front_pages.py` | scan problems (margins, spreads, low resolution, bloat) → lossless fixed copies into `Books/نسخ محسنة للاستبدال/` |
+| `fix_at_scale.py` | fixed copies at scale, batch by batch: copies made (`improve_copies.py` with `MAX_KEPT=0.9`: a crop still showing > 90 % of the page is not uploaded — `data/improve/noop.tsv`), then substituted (original → «نسخ مستبعدة/__المستبدل», copy → its place, original deleted) and the index kept current. Lossy recompression only for gray/bitonal scans and never for a colour edition the owner likes (the Shakir Tabari stays in colour). Check crops with `pdftoppm -cropbox` (without it the full page is drawn) |
 | `excerpt.py` | citations («book | volume | pages») → one bookmarked PDF for the phone, or Brave tabs at the right pages |
 | `find_on_archive.py` | other archive.org uploads of books whose Waqfeya items went dark (candidates to read before adding) |
 

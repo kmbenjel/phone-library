@@ -154,3 +154,7 @@ Phone FTP: 192.168.11.103:2221 since 2026-10-05 noon (was .102; scripts/phone_ho
   and المحرر في أسباب النزول left out until their files download (archive.org nodes fail).
 - 140: 17 recompressed copies substituted (≤ 50 % of the original; saving 3.8 GB), 9 unworthy copies deleted.
 - Lid: systemd-inhibit blocks lid-close suspend until ~21:00 (pid in `systemd-inhibit --list`).
+- 16:40: running `scripts/fix_at_scale.py 142 --batch 150` (log logs/fix-at-scale-142.log; per batch logs/142-bNN*.log):
+  margins + dark borders + spreads (≈ 4,500 files, smallest first), copies made, measured before upload, substituted.
+  `scratch/after_139.sh` waits for 139 to end, then measures and substitutes its last copies as plan 143.
+  If interrupted: re-run the same commands (resumable). 136 complete (136a/136b/136c, 771 files).

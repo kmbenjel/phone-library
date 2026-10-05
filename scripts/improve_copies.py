@@ -2,6 +2,7 @@
 download each listed phone file (paced), apply scripts/fix_pdf.py operations, check it (opens, page count, %PDF),
 upload it to Books/نسخ محسنة للاستبدال/<same relative path> (paced), log each upload (action add, plan name).
 List format (TSV): path<TAB>ops   ops = comma list of crop | split | recompress
+MAX_KEPT=0.9: a crop still showing more than 90 % of the median page is not uploaded (logged in data/improve/noop.tsv).
 Usage: PYTHONPATH=~/.local/share/phone-library-tools/site /usr/bin/python3 scripts/improve_copies.py list.tsv PLAN"""
 import csv, ftplib, json, os, subprocess, sys, time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -10,7 +11,7 @@ from phone_host import HOST, PORT
 from netpace import Pacer
 J = lambda p: os.path.join(ROOT, p)
 DEST = 'نسخ محسنة للاستبدال'
-TMP = J('data/improve-tmp'); os.makedirs(TMP, exist_ok=True)
+TMP = J(f'data/improve-tmp/{os.getpid()}'); os.makedirs(TMP, exist_ok=True)   # per run: several runs may overlap
 rows = [r for r in csv.reader(open(sys.argv[1], encoding='utf-8'), delimiter='\t') if r and not r[0].startswith('#')]
 plan = sys.argv[2]
 pacer = Pacer()
@@ -24,6 +25,10 @@ def mkdirs(f, path):
         except ftplib.error_perm: pass
 f = connect(); log = open(J('data/changes/changes.tsv'), 'a', newline='', encoding='utf-8'); w = csv.writer(log, delimiter='\t')
 done = {r[3] for r in csv.reader(open(J('data/changes/changes.tsv'), encoding='utf-8'), delimiter='\t') if len(r) > 5 and r[5] == plan}
+MAX_KEPT = float(os.environ.get('MAX_KEPT', 1.0))   # crops showing more than this share of the page are not uploaded
+NOOP_F = J('data/improve/noop.tsv'); os.makedirs(os.path.dirname(NOOP_F), exist_ok=True)
+noop = {l.split('\t')[0] for l in open(NOOP_F, encoding='utf-8')} if os.path.exists(NOOP_F) else set()
+done |= {'Books/' + DEST + '/' + p for p in noop}
 for path, ops in rows:
     dst = f'{DEST}/{path}'
     if 'Books/' + dst in done: continue
@@ -36,6 +41,14 @@ for path, ops in rows:
         if r.returncode: print('FIX FAIL', path, r.stderr[-300:]); continue
         res = json.loads(r.stdout.strip().splitlines()[-1])
         if open(out, 'rb').read(4) != b'%PDF': print('BAD OUTPUT', path); continue
+        if 'crop' in ops and 'split' not in ops:          # share of the page still shown (median page): a crop that
+            import pymupdf                                 # keeps nearly everything changes nothing on the phone
+            d = pymupdf.open(out); ks = sorted(p.cropbox.get_area() / p.mediabox.get_area() for p in d); d.close()
+            res['kept'] = round(ks[len(ks) // 2], 3) if ks else 1.0
+            if res['kept'] > MAX_KEPT:
+                print('NOOP', path, ops, res, flush=True)
+                with open(NOOP_F, 'a', encoding='utf-8') as n: n.write(f'{path}\t{ops}\t{res["kept"]}\n')
+                continue
         mkdirs(f, os.path.dirname(dst))
         with open(out, 'rb') as i:
             f.storbinary('STOR /Books/' + dst, i, blocksize=1 << 16, callback=lambda b: pacer.wait(len(b)))
@@ -48,4 +61,4 @@ for path, ops in rows:
     finally:
         for x in (src, out):
             if os.path.exists(x): os.remove(x)
-print('done')
+print('done'); os.rmdir(TMP) if not os.listdir(TMP) else None
