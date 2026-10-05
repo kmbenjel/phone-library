@@ -692,16 +692,8 @@
     "vols_edition": "18",
     "complete": false,
     "bytes": 139169820,
-    "quality": {
-     "files": 19,
-     "pages": 7446,
-     "kbpp": 18,
-     "px": 1948,
-     "colour": "أبيض وأسود",
-     "width_used": 0.72,
-     "text": false
-    },
-    "score": 64.4,
+    "quality": null,
+    "score": -1,
     "waqfeya": [
      "https://waqfeya.net/books/التمهيد-لما-في-الموطأ-من-المعاني-والأسانيد-مرتبا-على-الأبواب-الفقهية-ط-الفاروق-ef001acb6e7549979e5111543b7f7a37"
     ]
@@ -1778,16 +1770,8 @@
     "vols_edition": "15",
     "complete": true,
     "bytes": 209096869,
-    "quality": {
-     "files": 16,
-     "pages": 8440,
-     "kbpp": 24,
-     "px": 1938,
-     "colour": "أبيض وأسود",
-     "width_used": 0.82,
-     "text": false
-    },
-    "score": 81.4,
+    "quality": null,
+    "score": -1,
     "waqfeya": [
      "https://waqfeya.net/books/-إرشاد-الساري-لشرح-صحيح-البخاري-ط-العلمية-0ed5aa357ad04931a70d22a8402fd0d1"
     ]
@@ -4115,8 +4099,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 83829685,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 8,
+     "pages": 3900,
+     "kbpp": 21,
+     "px": 1946,
+     "colour": "أبيض وأسود",
+     "width_used": 0.78,
+     "text": false
+    },
+    "score": 65.6,
     "waqfeya": []
    },
    {
@@ -4129,8 +4121,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 46290871,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 3408,
+     "kbpp": 13,
+     "px": 1795,
+     "colour": "أبيض وأسود",
+     "width_used": 0.73,
+     "text": false
+    },
+    "score": 64.6,
     "waqfeya": []
    }
   ],
@@ -6293,7 +6293,7 @@
      "https://waqfeya.net/books/مسند-الإمام-أبي-يعلى-الموصلي-المسند-الصغير-ط-التأصيل-8e1d9aa4cbe94c699b833cf826fd580e"
     ],
     "same_edition": true,
-    "best_scan": false
+    "best_scan": true
    },
    {
     "folder": "مسند الإمام أبي يعلى الموصلي - المسند الصغير - ط. التأصيل - أبو يعلى (ت مرك",
@@ -6305,21 +6305,13 @@
     "vols_edition": "5",
     "complete": true,
     "bytes": 74556136,
-    "quality": {
-     "files": 5,
-     "pages": 2789,
-     "kbpp": 26,
-     "px": 2455,
-     "colour": "أبيض وأسود",
-     "width_used": 0.85,
-     "text": false
-    },
-    "score": 82.0,
+    "quality": null,
+    "score": -1,
     "waqfeya": [
      "https://waqfeya.net/books/مسند-الإمام-أبي-يعلى-الموصلي-المسند-الصغير-ط-التأصيل-8e1d9aa4cbe94c699b833cf826fd580e"
     ],
     "same_edition": true,
-    "best_scan": true
+    "best_scan": false
    }
   ],
   "note": null
@@ -11546,8 +11538,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 12593171,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 634,
+     "kbpp": 19,
+     "px": 1957,
+     "colour": "أبيض وأسود",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 65.0,
     "waqfeya": []
    },
    {
@@ -11560,8 +11560,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 12017563,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 634,
+     "kbpp": 18,
+     "px": 1957,
+     "colour": "أبيض وأسود",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 65.0,
     "waqfeya": []
    }
   ],
@@ -12916,8 +12924,16 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 4179722,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 226,
+     "kbpp": 18,
+     "px": 1951,
+     "colour": "أبيض وأسود",
+     "width_used": 0.76,
+     "text": false
+    },
+    "score": 80.2,
     "waqfeya": [
      "https://waqfeya.net/books/إيضاح-المسالك-إلى-قواعد-الإمام-أبي-عبد-الله-مالك-ت-الغرياني-ddc83180bfbf476aaa5772172b4b6b3b"
     ]
@@ -12932,8 +12948,16 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 7150064,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 2,
+     "pages": 478,
+     "kbpp": 14,
+     "px": 2204,
+     "colour": "أبيض وأسود",
+     "width_used": 0.6,
+     "text": false
+    },
+    "score": 77.0,
     "waqfeya": [
      "https://waqfeya.net/books/إيضاح-المسالك-إلى-قواعد-الإمام-مالك-2f421eec5a1c473b8b9acb1ef2018252"
     ]
@@ -13355,8 +13379,16 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 3817962,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 214,
+     "kbpp": 17,
+     "px": 1810,
+     "colour": "أبيض وأسود",
+     "width_used": 0.8,
+     "text": false
+    },
+    "score": 81.0,
     "waqfeya": [
      "https://waqfeya.net/books/الإشارة-في-أصول-الفقه-ويليه-الحدود-في-الأصول-ويليه-تقريب-الوصول-إلي-علم-الأصول-f675d59fd392452188d6b55bad832e19"
     ]
@@ -13371,8 +13403,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 11482250,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 2,
+     "pages": 842,
+     "kbpp": 13,
+     "px": 1301,
+     "colour": "أبيض وأسود",
+     "width_used": 0.73,
+     "text": false
+    },
+    "score": 61.1,
     "waqfeya": []
    }
   ],
@@ -16311,8 +16351,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 2555791,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 94,
+     "kbpp": 27,
+     "px": 1702,
+     "colour": "أبيض وأسود",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 65.0,
     "waqfeya": []
    },
    {

@@ -21,7 +21,7 @@ RAW = re.compile(r'^(\d{1,3})[_-]\d+(?:-\d+)?(p?)[a-z]?\.pdf$', re.I)
 BAD_FOLDER = re.compile(r'\s-\s*-\s|\s-\sو\s?ط\b|\s-\s*ط\.?\s*$|\sت-\s|\sط\.\s|؛|\s-\s*$|\s\S{1,2}$')
 CONV = re.compile(r'^(\d{2,4}) - .+\.pdf$')
 
-WEAK_END = {norm(w) for w in 'بن ابن أبي أبو عبد ذي ذو أهل دار شيخ الإمام الشيخ العلامة'.split()}
+WEAK_END = {norm(w) for w in 'بن ابن أبي أبو عبد ذي ذو أهل دار شيخ الإمام الشيخ العلامة لما ما لمن الذي التي فيما عما'.split()}
 STOPS = {norm(w) for w in 'في من على عن إلى إلي بين مع رواية تأليف شرح بشرح وهو أو المسمى المسماة'.split()}
 
 def short(title, author=''):

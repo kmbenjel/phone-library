@@ -12,7 +12,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from textnorm import norm, title_key, author_tokens
 from rename_plan import clean, fit
-from names_plan import short
+from names_plan import short, compose
 J = lambda p: os.path.join(ROOT, p)
 ORD = {norm(w): i for i, w in enumerate('الأول الثاني الثالث الرابع الخامس السادس السابع الثامن التاسع العاشر'.split(), 1)}
 
@@ -67,9 +67,18 @@ def main(index, out, review_out):
         if title_key(name)[:10] != title_key(base)[:10] and any(title_key(name)[:10] in title_key(v[3]) for v in info.values()):
             review.append((folder, f'the files are volumes of the series «{base}»; the folder is the book in it — left as is')); continue
         ed = re.search(r'\(([^()]*)\)\s*$', name)
-        same_book = title_key(name)[:10] == title_key(base)[:10] and (not author or not author_tokens(name) or author_tokens(name) & author_tokens(author))
-        new_folder_name = clean(base) + (f' - {author}' if author and norm(author) not in norm(base) else '') + (f' ({ed.group(1)})' if ed and same_book else '')
-        new_folder = f'{cat}/{fit(new_folder_name, 196)}'
+        marker = re.search(r'\s(لابن\s+\S+|لل\S{3,}|لأبي\s+\S+)\s*$', base)        # «… لابن عثيمين»: the PDF names its author
+        other_author = bool(marker) and norm(marker.group(1)).replace('لابن ', '').replace('لابي ', '').lstrip('ل') not in norm(name)
+        same_book = title_key(name)[:10] == title_key(base)[:10] and not other_author
+        if same_book:                                   # file names take the author as the folder writes it
+            segs = [x.strip() for x in re.sub(r'\([^()]*\)', ' ', name).split(' - ')[1:] if x.strip() and not re.match(r'^(ت|ط)\b|^(ت|ط)[.\-]', x.strip())]
+            author = segs[-1] if segs else author
+        if same_book:
+            new_folder = folder                                   # the folder is about this book: keep its name
+        else:                                                     # named after another book: title + author from the PDFs
+            a_short = re.split(r'\s+-\s+|،|؛', author)[0].split()
+            while len(a_short) > 1 and norm(a_short[-1]) in {'بن', 'ابن', 'ابو', 'ابي', 'عبد'}: a_short.pop()
+            new_folder = f'{cat}/' + compose(clean(base), ' '.join(a_short[:5]))
         order = sorted((v[1], p) for p, v in info.items() if v[1] is not None)
         unplaced = [p for p, v in info.items() if v[1] is None]
         if unplaced:
