@@ -17,7 +17,7 @@ IDX = sys.argv[1] if len(sys.argv) > 1 else J('data/phone/index-now.tsv')
 PRI = sys.argv[2] if len(sys.argv) > 2 else None
 OUT, TMP, OCRQ, THUMBS = J('data/inspect/files.jsonl'), J('data/inspect/tmp'), J('data/inspect/ocr-queue'), J('data/inspect/thumbs')
 for d in (TMP, OCRQ, THUMBS): os.makedirs(d, exist_ok=True)
-WORKERS, MAX_STAGED = 3, 4
+WORKERS, MAX_STAGED, OCR_CAP = 3, 4, 12000
 
 def run(cmd, timeout=600):
     try:
@@ -91,7 +91,8 @@ def analyse(pdf, path, size, md5, key):
     rec['margins'] = [m for m in (margins(pdf, p, key) for p in samples) if m]
     run(['pdftoppm', '-gray', '-jpeg', '-jpegopt', 'quality=60', '-r', '18', '-f', '1', '-l', '1', '-singlefile', pdf, os.path.join(THUMBS, key)], 120)
     if rec['text_first_chars'] < 300:            # image-only front matter: queue the first 4 pages for OCR
-        run(['pdftoppm', '-gray', '-png', '-r', '150', '-f', '1', '-l', str(min(4, pages)), pdf, os.path.join(OCRQ, key)], 300)
+        while len(os.listdir(OCRQ)) > OCR_CAP: time.sleep(30)     # OCR is slower than the download: cap the backlog
+        run(['pdftoppm', '-gray', '-jpeg', '-jpegopt', 'quality=85', '-r', '150', '-f', '1', '-l', str(min(4, pages)), pdf, os.path.join(OCRQ, key)], 300)
         rec['ocr_queued'] = True
     return rec
 
