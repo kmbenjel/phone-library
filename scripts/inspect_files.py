@@ -129,6 +129,11 @@ def main():
     if PRI:
         for i, l in enumerate(open(PRI, encoding='utf-8')): pri.setdefault(l.rstrip('\n'), i)
     todo = sorted((r for r in rows if r not in done), key=lambda r: (pri.get(r[0], 10 ** 9), r[0]))
+    if os.environ.get('SHARD'):                                # SHARD=k/n: run n processes in parallel on disjoint files
+        k, n = (int(x) for x in os.environ['SHARD'].split('/'))
+        todo = [r for i, r in enumerate(todo) if i % n == k]
+        global TMP
+        TMP = os.path.join(TMP, f'shard{k}'); os.makedirs(TMP, exist_ok=True)
     print('to inspect:', len(todo), 'GB', round(sum(s for _, s in todo) / 1e9, 1), flush=True)
     q, lock, out = queue.Queue(MAX_STAGED), threading.Lock(), open(OUT, 'a', encoding='utf-8')
     def worker():

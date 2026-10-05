@@ -206,7 +206,9 @@ record. Nothing goes in the repo root. Removed one-offs (2026-10-05) are in git 
    downloads). A new request from the owner never cancels a running job; only an explicit order does.
 7. **Everything is resumable:** `data/queue/<name>.done` lists finished targets, `<name>.failed` the failures with the
    reason. Re-running the same queue continues where it stopped.
-8. **Never make the home network lag** (other people game and call on it — owner, 2026-10-05, twice). Only ONE bulk
+8. **Never make the home network lag** (other people game and call on it — owner, 2026-10-05, twice; latency-based
+   pacing alone did NOT stop the lag: while someone games, PAUSE bulk transfers entirely; when the owner says they are done,
+   run at full speed, `NETPACE=0`). Only ONE bulk
    transfer at a time. Long phone transfers pace themselves (`scripts/netpace.py`): worst Wi-Fi ping to the router
    > 10 ms or internet ping > its baseline + 15 ms → 40 % slower; ceiling 6 MB/s. Internet downloads (`fetch_queue.py`,
    `NET_MB`, default 3 MB/s, 1.5 while anyone is home) and other queues start only after `scripts/wait_calm.py 10`
