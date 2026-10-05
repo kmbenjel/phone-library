@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Unified, resumable download → verify → upload pipeline (AGENTS.md §7).
 
-Input: a TSV queue  `url<TAB>size<TAB>target<TAB>reason`  (size 0 = unknown).
+Input: a TSV queue  `url<TAB>size<TAB>target<TAB>reason`  (size 0 = unknown; url `file:///abs/path` = a file already
+  downloaded and checked: verified, uploaded, then deleted).
   target `Books/...`        → uploaded to the phone (phone:Books/...), staged copy deleted after upload
   target `local:<path>`     → saved under ~/Books/<path> (no phone involved)
   url `phone:Books/...`     → copied FROM the phone (target must be local:)
@@ -122,6 +123,11 @@ def download(row):
     if target in done: stats['skip'] += 1; return
     if url.startswith('phone:'):
         upq.put(('down', url, os.path.join(LOCAL_BOOKS, target[6:]), size, reason, url)); return
+    if url.startswith('file://'):         # already downloaded and read (staged for checking): verify, upload, then removed
+        src = url[7:]; why = ok_pdf(src, size)
+        if why: fail(target, why); return
+        with stage_cv: staged[0] += size
+        upq.put(('up', src, target, size, reason, url)); return
     to_local = target.startswith('local:')
     out = os.path.join(LOCAL_BOOKS, target[6:]) if to_local else os.path.join(STAGE, hashlib.md5(target.encode()).hexdigest() + '.pdf')
     if to_local and os.path.exists(out) and not ok_pdf(out, size): done_mark(target, reason, url); return

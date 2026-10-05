@@ -74,7 +74,10 @@ def analyse(pdf, path, size, md5, key):
         k = f'{5 * round(float(w) / 5)}x{5 * round(float(h) / 5)}' + (f'r{rot}' if rot != '0' else '')   # 5-pt buckets: scanner jitter is not a problem
         sizes[k] = sizes.get(k, 0) + 1
     rec['page_sizes'] = dict(sorted(sizes.items(), key=lambda kv: -kv[1])[:12]); rec['n_page_sizes'] = len(sizes)
-    imgs = [l.split() for l in run(['pdfimages', '-list', pdf], 300).splitlines()[2:]]
+    # image statistics from page windows (start, middle, end): listing every image of a 1,000-page scan took minutes
+    wins = sorted({(1, min(pages, 12)), (max(1, pages // 2 - 5), min(pages, pages // 2 + 5)), (max(1, pages - 5), pages)})
+    sampled = len({p for a, b in wins for p in range(a, b + 1)})
+    imgs = [l.split() for a, b in wins for l in run(['pdfimages', '-f', str(a), '-l', str(b), '-list', pdf], 120).splitlines()[2:]]
     imgs = [x for x in imgs if len(x) >= 14 and x[2] in ('image', 'smask', 'mask')]
     img = [x for x in imgs if x[2] == 'image']
     if img:
@@ -82,7 +85,7 @@ def analyse(pdf, path, size, md5, key):
         col, enc = {}, {}
         for x in img:
             col[x[5]] = col.get(x[5], 0) + 1; enc[x[8]] = enc.get(x[8], 0) + 1
-        rec['images'] = {'n': len(img), 'per_page': round(len(img) / pages, 2), 'ppi_median': ppi[len(ppi) // 2] if ppi else None,
+        rec['images'] = {'n': round(len(img) * pages / sampled), 'sampled_pages': sampled, 'per_page': round(len(img) / sampled, 2), 'ppi_median': ppi[len(ppi) // 2] if ppi else None,
                          'ppi_min': ppi[0] if ppi else None, 'color': col, 'enc': enc,
                          'bpc1_share': round(sum(1 for x in img if x[7] == '1') / len(img), 3),
                          'px_median': sorted(int(x[3]) * int(x[4]) for x in img)[len(img) // 2]}
@@ -94,8 +97,11 @@ def analyse(pdf, path, size, md5, key):
     samples = sorted({min(pages, p) for p in (max(1, pages // 4), max(1, pages // 2), max(1, 3 * pages // 4))})
     rec['margins'] = [m for m in (margins(pdf, p, key) for p in samples) if m]
     mm = [m for m in rec['margins'] if not m.get('blank')]
-    if pymupdf and mm and (statistics.median(m['l'] + m['r'] for m in mm) > 0.30 or max(max(m['l'], m['r']) for m in mm) > 0.20
-                           or max(max(m.get('edge_dark_rows', 0), m.get('edge_dark_cols', 0)) for m in mm) >= 0.35):
+    wide = mm and (statistics.median(m['l'] + m['r'] for m in mm) > 0.30 or max(max(m['l'], m['r']) for m in mm) > 0.20
+                   or max(max(m.get('edge_dark_rows', 0), m.get('edge_dark_cols', 0)) for m in mm) >= 0.35)
+    if wide: rec['crop_candidate'] = True
+    # the per-page crop recipe renders every page (minutes per big book): computed when a fixed copy is made, or here with CROP_RECIPES=1
+    if wide and pymupdf and os.environ.get('CROP_RECIPES') == '1':
         tmpb = os.path.join(TMP, key + '.boxes.json')
         try:
             subprocess.run(['/usr/bin/python3', os.path.join(ROOT, 'scripts/fix_pdf.py'), pdf, '/dev/null', '--boxes-only', tmpb],

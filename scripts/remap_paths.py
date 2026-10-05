@@ -1,32 +1,46 @@
-"""Keep the per-file evidence in step with renames: apply the moves (and deletions) logged in
-data/changes/changes.tsv for the given plans to data/phone/md5.tsv and data/inspect/files.jsonl.
+"""Keep the per-file evidence in step with renames: records of data/phone/md5.tsv and data/inspect/files.jsonl whose path
+no longer exists in data/phone/index-now.tsv are carried along every move logged in data/changes/changes.tsv (in log order,
+so two-step renames and folder moves compose); a record is updated only when it lands on a current path of the same size,
+and dropped when its file was deleted. Records whose path still exists are never touched (names get reused by renumbering).
 Run it while phone_md5.py / inspect_files.py are NOT running (they append to these files).
-Usage: python3 scripts/remap_paths.py PLAN [PLAN...]"""
-import csv, json, os, sys
+Usage: python3 scripts/remap_paths.py"""
+import csv, json, os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 J = lambda p: os.path.join(ROOT, p)
-plans = set(sys.argv[1:])
 strip = lambda p: p[6:] if p.startswith('Books/') else p
-moves, gone = {}, set()
-for r in csv.reader(open(J('data/changes/changes.tsv'), encoding='utf-8'), delimiter='\t'):
-    if len(r) >= 6 and r[5] in plans:
-        if r[1] == 'move': moves[strip(r[2])] = strip(r[3])
-        elif r[1] == 'delete': gone.add(strip(r[2]))
-def new(p):
-    if p in moves: return moves[p]
-    for a, b in moves.items():
-        if p.startswith(a + '/'): return b + p[len(a):]
+idx = {p: int(s) for p, s in csv.reader(open(J('data/phone/index-now.tsv'), encoding='utf-8'), delimiter='\t') if s.isdigit()}
+log = [(r[1], strip(r[2]), strip(r[3])) for r in csv.reader(open(J('data/changes/changes.tsv'), encoding='utf-8'), delimiter='\t')
+       if len(r) >= 4 and r[1] in ('move', 'delete')]
+
+def follow(p):
+    for act, a, b in log:
+        if p == a: p = None if act == 'delete' else b
+        elif act == 'move' and p.startswith(a + '/'): p = b + p[len(a):]
+        if p is None: return None
     return p
-n = 0
-rows = [r for r in csv.reader(open(J('data/phone/md5.tsv'), encoding='utf-8'), delimiter='\t') if len(r) == 3 and r[0] not in gone]
+
+stats = {'kept': 0, 'remapped': 0, 'dropped': 0, 'unresolved': 0}
+def fix(path, size):
+    if path in idx: stats['kept'] += 1; return path
+    q = follow(path)
+    if q is None: stats['dropped'] += 1; return None
+    if q in idx and (not size or idx[q] == int(size)): stats['remapped'] += 1; return q
+    stats['unresolved'] += 1; return path                        # left as it is (listed below)
+
+rows = [r for r in csv.reader(open(J('data/phone/md5.tsv'), encoding='utf-8'), delimiter='\t') if len(r) == 3]
 with open(J('data/phone/md5.tsv'), 'w', encoding='utf-8', newline='') as o:
     w = csv.writer(o, delimiter='\t', lineterminator='\n')
     for r in rows:
-        q = new(r[0]); n += q != r[0]; w.writerow([q, r[1], r[2]])
+        q = fix(r[0], r[1] if r[1].isdigit() else 0)
+        if q: w.writerow([q, r[1], r[2]])
+print('md5.tsv', stats); stats.update({k: 0 for k in stats})
 recs = [json.loads(l) for l in open(J('data/inspect/files.jsonl'), encoding='utf-8')]
+left = []
 with open(J('data/inspect/files.jsonl'), 'w', encoding='utf-8') as o:
     for d in recs:
-        if d['path'] in gone: continue
-        q = new(d['path']); n += q != d['path']; d['path'] = q
-        o.write(json.dumps(d, ensure_ascii=False) + '\n')
-print('remapped', n, 'paths')
+        q = fix(d['path'], d.get('size') or 0)
+        if not q: continue
+        if q not in idx: left.append(q)
+        d['path'] = q; o.write(json.dumps(d, ensure_ascii=False) + '\n')
+print('files.jsonl', stats)
+for p in left[:10]: print('  unresolved:', p)
