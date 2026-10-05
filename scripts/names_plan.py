@@ -119,6 +119,8 @@ def main(index, out, review_out, only_raw=False):
             if mt and title_key(mt.group(1))[:10] == title_key(title)[:10]:
                 num, kind, lab = int(mt.group(2)), 'vol', lab_w or clean(mt.group(3) or '')   # number from the file, label: Waqfeya's (cleaner)
                 if raw and raw.group(2): kind, lab = 'pref', 'المقدمة'
+                elif re.match(r'^(مقدمة|المقدمة|تقديم|مقدمة التحقيق)\b', norm(clean(mt.group(3) or ''))) or re.match(r'^مقدمه', norm(lab or '')):
+                    kind, lab = 'pref', clean(mt.group(3) or '') or 'المقدمة'                # «ج 1: مقدمة التحقيق» = preface of vol 1, not a second vol 1
             elif mt and 'مقدم' in mt.group(1):
                 num, kind, lab = 0, 'front', clean(f'{mt.group(1)} {mt.group(2)}')
             elif raw:
@@ -133,6 +135,11 @@ def main(index, out, review_out, only_raw=False):
             else:
                 plan.append((p, fn)); continue                                       # no evidence: leave as is
             lab = re.sub(r'^\((.+)\)$', r'\1', lab or '')
+            old = re.search(r'\(([^()]+)\)\.pdf$', fn)                                  # never lose an informative label
+            if not lab and old and not re.fullmatch(r'(ال)?(جزء|مجلد|ج)\s*\d+|alt.*|\d+', norm(old.group(1)).strip()):
+                lab = old.group(1)
+            if norm(lab or '') == norm('مقدمة'): lab = 'المقدمة'
+            lab = re.sub(r'\s*\(([^()]*)\)\s*', r' - \1', lab or '').strip(' -')           # one level of parentheses
             if kind == 'vol' and lab and re.fullmatch(r'(ال)?(جزء|مجلد|ج)\s*\d+', norm(lab)): lab = ''
             if kind == 'vol' and lab and title_key(lab)[:10] == title_key(title)[:10]: lab = ''
             plan.append((p, (num, kind, fit(clean(lab), 90))))
