@@ -202,3 +202,15 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
 - 09:15 (2026-10-06): imprint reading reveals misfiled content too: 149 — «الرسائل الأدبية - الجاحظ» and «العمدة - ابن رشيق» held
   only an article / a thesis (renamed to what they are). TO FETCH: العمدة في محاسن الشعر (ابن رشيق) and رسائل الجاحظ (هارون).
   148/148c: قادة فتح الأندلس vol 1 and فتح الباري 02-03 added (re-upload of the same scan); 147/148b names.
+- 12:20 (2026-10-06): sheets 32–46 read (books 192–281). Reading keeps finding misfiled content → plans 152–155 (articles and
+  Algerian university theses filed under classical titles «رسائل الثعالبي», «طوق الحمامة», «تحسين القبيح»; other works of
+  اليوسي under «زهر الأكم»; الإمتاع ج 2 under «الصداقة والصديق»; «النحو الكوفي» under «معاني القرآن للفراء»; wrong publisher
+  labels of the 2026-10-03 «عيون الأدب» batch: الرافعي = وكالة الصحافة العربية, فيض الخاطر = مكتبة النهضة المصرية,
+  الأغاني = دار صادر). NOT ON THE PHONE (only misfiled stand-ins were): رسائل الثعالبي، طوق الحمامة (other edition kept),
+  تحسين القبيح، زهر الأكم، الصداقة والصديق → candidates to fetch from Waqfeya.
+  NEEDS REVIEW (owner): «Momen Tak Terlupakan …» (Indonesian AI-assisted translation of «مواقف لا تنسى») — keep?;
+  «رسالة جامعية - بيان الصاف» (title in a broken font); two Shakir «دلائل الإعجاز» scans remain (الأدب 400 ppi 1-bit,
+  البلاغة 300 ppi with text) — keep one?
+  TODO: the 300-poem «منظومات» batch (data/mappings/mandumat_catalog.json) — its parser split titles at «لـ…» («ميسر التحصيل
+  فيما - مالك من التأصيل», «منظومة المكفرات - كل ذنب سابق وآت»), and all 300 were put in الأدب whatever their subject: one
+  pass over them (raw_title → full title, author from the title page, Shamela section by subject). 155 fixed six of them.
