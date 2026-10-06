@@ -41,7 +41,7 @@ def text_read(t):
     lines = [l.strip() for l in t.translate(DIG).splitlines() if l.strip()]
     hits = []
     for i, l in enumerate(lines):
-        if not re.search(r'الطبع[ةه]|طبعة', l): continue
+        if not re.search(r'الطبع[ةه]|طبعة|سنة الطبع|سنة النشر', l): continue
         ctx = ' '.join(lines[i:i + 2])
         hs = [int(y) for y in re.findall(r'(?<!\d)(1[23]\d\d|14[0-4]\d)(?!\d)', ctx)]
         gs = [int(y) for y in re.findall(r'(?<!\d)(18[3-9]\d|19\d\d|20[0-2]\d)(?!\d)', ctx)]
@@ -53,6 +53,12 @@ def text_read(t):
         if len(set(pair)) == 1: hits.append((pair[0][0], pair[0][1], ed, ctx))
         elif not pair and len(set(marked_h)) == 1 and not gs: hits.append((int(marked_h[0]), None, ed, ctx))
         elif not pair and len(set(marked_g)) == 1 and not hs: hits.append((None, int(marked_g[0]), ed, ctx))
+        else:                                       # one plain year on the edition line itself (a text layer has no OCR noise)
+            own = re.findall(r'(?<!\d)(\d{4})(?!\d)', l)
+            if len(own) == 1:
+                y = int(own[0])
+                if 1250 <= y <= 1447: hits.append((y, None, ed, l))
+                elif 1830 <= y <= 2026: hits.append((None, y, ed, l))
     years = {(h, g) for h, g, e, c in hits}
     return hits[0] if len(years) == 1 else None
 

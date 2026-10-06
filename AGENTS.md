@@ -221,12 +221,12 @@ record. Nothing goes in the repo root. Removed one-offs (2026-10-05) are in git 
    (2026-10-06). `gc.auto` is set to 300; if `git count-objects -vH` shows GBs of loose objects, run `nice git gc --prune=now`.
 5. **Staging cap:** the laptop disk is small (≈15 GB free on 2026-10-03). Staged files ≤ `STAGE_GB` (6), each staged
    file is deleted right after a successful upload.
-5. **Verification runs in parallel** with the downloads: exact size, `%PDF`, `%%EOF`, `pdfinfo`.
-6. **Independent tasks run at the same time in the background** (catalog fetches, dup checks, phone uploads, local
+6. **Verification runs in parallel** with the downloads: exact size, `%PDF`, `%%EOF`, `pdfinfo`.
+7. **Independent tasks run at the same time in the background** (catalog fetches, dup checks, phone uploads, local
    downloads). A new request from the owner never cancels a running job; only an explicit order does.
-7. **Everything is resumable:** `data/queue/<name>.done` lists finished targets, `<name>.failed` the failures with the
+8. **Everything is resumable:** `data/queue/<name>.done` lists finished targets, `<name>.failed` the failures with the
    reason. Re-running the same queue continues where it stopped.
-8. **Never make the home network lag** (other people game and call on it — owner, 2026-10-05, twice; latency-based
+9. **Never make the home network lag** (other people game and call on it — owner, 2026-10-05, twice; latency-based
    pacing alone did NOT stop the lag: while someone games, PAUSE bulk transfers entirely; when the owner says they are done,
    run at full speed, `NETPACE=0`). Only ONE bulk
    transfer at a time. Long phone transfers pace themselves (`scripts/netpace.py`): worst Wi-Fi ping to the router
@@ -234,5 +234,5 @@ record. Nothing goes in the repo root. Removed one-offs (2026-10-05) are in git 
    `NET_MB`, default 3 MB/s, 1.5 while anyone is home) and other queues start only after `scripts/wait_calm.py 10`
    (10 calm minutes); `scripts/resume_when_calm.sh` chains the paused queues that way. CPU-heavy jobs run with
    `nice`. Phone-side work (`MD5`, moves, renames, deletes) costs no bandwidth and can run any time.
-9. **Stopping a job:** `kill <pid>` with the PID from `pgrep -f "[n]ame"` in a separate command — a `pkill -f name`
+10. **Stopping a job:** `kill <pid>` with the PID from `pgrep -f "[n]ame"` in a separate command — a `pkill -f name`
    in the same command line that restarts the job kills the shell itself.
