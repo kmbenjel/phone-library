@@ -178,7 +178,14 @@ Phone FTP: 192.168.11.103:2221 since 2026-10-05 noon (was .102; scripts/phone_ho
 ## 2026-10-06: index improvements (owner approved, 07:45; credit renews ≈ 11:10 — resume task set for 11:17)
 Owner: «الطبعة وسنة الطبع غير مذكورة في معظم الحالات» → make the indexes more helpful for knowledge; use the local official
 Shamela (~/.local/share/shamela) when useful; ABSOLUTE ACCURACY first; tesseract again if needed. Steps:
-1. [todo] Edition card per book (data/editions/edition-info.json via scripts/edition_info.py): editor, publisher (+city),
+1. [DONE 08:40, published] Edition card per book (data/editions/edition-info.json via scripts/edition_info.py; Shamela cards dumped
+   with tools/shamela-dump → data/shamela/book-cards.jsonl; provenance kept across substitutions via scripts/substituted_sizes.py).
+   Year known for 48%. Tesseract cannot read calligraphic imprints → READ BY EYE: scripts/imprint_sheets.py (running in the
+   background, resumable: `nice python3 scripts/imprint_sheets.py --workers 4`) writes data/editions/imprint-sheets/sNNNN.png
+   (6 books each, numbered) + books.tsv; read each sheet and append to data/editions/imprint-read.tsv (n, hijri, gregorian,
+   edition, note) ONLY what is plainly printed (no year printed → no row); then edition_info.py + build_site.py + publish_web.sh.
+   Done: 145 (111 books to Shamela's section), 145b, 146/146b (§4 names from records), Western digits everywhere (owner).
+   [old text] Edition card per book (data/editions/edition-info.json via scripts/edition_info.py): editor, publisher (+city),
    edition number, year (hijri/gregorian), volumes, pages, each with its source. Evidence must be the phone's OWN edition:
    (a) Waqfeya record linked to the phone file by exact size (provenance) → yearOfPublish, copyNumber, pages, publisher,
    researcher; (b) Shamela book card ONLY when the editor/publisher in the phone name match the card; (c) title/imprint
