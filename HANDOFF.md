@@ -174,3 +174,19 @@ Phone FTP: 192.168.11.103:2221 since 2026-10-05 noon (was .102; scripts/phone_ho
 - 2026-10-06 07:40: 142 crawled overnight (batch 13: 52 files in 10.5 h — the phone dozes with its screen off; a 7 MB
   download now takes 0.7 s) and is moving again (~3 files/min). ≈ 1,800 of ≈ 4,600 quality rows done; later batches
   hold bigger books. Keeping the phone awake (charger + screen-on/«stay awake» in the FTP app) keeps it fast.
+
+## 2026-10-06: index improvements (owner approved, 07:45; credit renews ≈ 11:10 — resume task set for 11:17)
+Owner: «الطبعة وسنة الطبع غير مذكورة في معظم الحالات» → make the indexes more helpful for knowledge; use the local official
+Shamela (~/.local/share/shamela) when useful; ABSOLUTE ACCURACY first; tesseract again if needed. Steps:
+1. [todo] Edition card per book (data/editions/edition-info.json via scripts/edition_info.py): editor, publisher (+city),
+   edition number, year (hijri/gregorian), volumes, pages, each with its source. Evidence must be the phone's OWN edition:
+   (a) Waqfeya record linked to the phone file by exact size (provenance) → yearOfPublish, copyNumber, pages, publisher,
+   researcher; (b) Shamela book card ONLY when the editor/publisher in the phone name match the card; (c) title/imprint
+   page OCR (tesseract ara, data/inspect/pages + new renders of pages 2-4) for the rest, accepted only when the year and
+   publisher are read cleanly; (d) the phone folder name «(ت …- …)». Never guess.
+2. [todo] Author death year (not only the century) from Shamela's author table, matched on the author + the work.
+3. [todo] One-line description from Waqfeya; editions of the same work side by side with scan quality and notes.
+4. [todo] Category audit (e.g. «أرجوزة في علم رسم الخط - الموصلي» sits in أصول الفقه → التجويد والقراءات).
+5. [todo] Header numbers consistent («نحو 6,044 عنوانًا» vs «الكل 5,891»); sizes in GB (169.3) not GiB (157.6).
+6. [later] Work tree (متن → شروح، حواشي، مختصرات، منظومات), author/editor pages, filters (century, printer, old prints).
+Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
