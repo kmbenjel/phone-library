@@ -62,16 +62,22 @@ if __name__ == '__main__':
     out = csv.writer(open(J('data/phone/provenance.tsv'), 'w'), delimiter='\t')
     out.writerow(['path', 'size', 'match', 'archive_id', 'orig_name', 'waqfeya_id', 'waqfeya_name', 'waqfeya_author', 'waqfeya_category', 'archive_title'])
     stats = Counter()
+    sub = {}                                   # fixed copies that took an original's place: match by the original's size
+    if os.path.exists(J('data/phone/substituted.tsv')):
+        sub = {r['path']: int(r['original_size']) for r in csv.DictReader(open(J('data/phone/substituted.tsv'), encoding='utf-8'), delimiter='\t')}
     for p, s in rows:
         folder = p.rsplit('/', 1)[0]; c = [x for x in by_size.get(int(s), []) if (p, x[0], x[1]) not in reject]
+        via = ''
+        if not c and p in sub:
+            c = [x for x in by_size.get(sub[p], []) if (p, x[0], x[1]) not in reject]; via = 'substituted-'
         if not c: stats['none'] += 1; out.writerow([p, s, 'none'] + [''] * 7); continue
-        if len(c) == 1: pick, kind = c[0], 'unique'
+        if len(c) == 1: pick, kind = c[0], via + 'unique'
         else:
             fav = folder_items[folder]
             pick = max(c, key=lambda x: (fav.get(x[0], 0), sim(folder, (books.get((wq_by_item.get(x[0]) or [''])[0], {}) or {}).get('name', '') or titles.get(x[0], '') or x[1])))
-            kind = 'ambiguous-%d' % len(c)
+            kind = via + 'ambiguous-%d' % len(c)
         wid = (wq_by_item.get(pick[0]) or [''])[0]; b = books.get(wid, {})
-        stats['waqfeya' if wid else 'archive-only'] += 1; stats[kind.split('-')[0]] += 1
+        stats['waqfeya' if wid else 'archive-only'] += 1; stats[kind.replace('substituted-', '').split('-')[0]] += 1; stats['via substitution'] += bool(via)
         out.writerow([p, s, kind, pick[0], pick[1], wid, b.get('name', ''), (b.get('author') or {}).get('name', ''),
                       (b.get('category') or {}).get('name', ''), titles.get(pick[0], '')])
     print(dict(stats), 'of', len(rows))
