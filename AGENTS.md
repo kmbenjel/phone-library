@@ -217,7 +217,9 @@ record. Nothing goes in the repo root. Removed one-offs (2026-10-05) are in git 
    (upload, copy from phone, moves, listings) holds the shared lock `/tmp/phone-ftp.lock` (`flock`), so several
    jobs can run at once without fighting over the phone. The phone thread is never idle while files are waiting:
    download → verify → upload are separate stages; downloads never wait for uploads (except the staging cap).
-4. **Staging cap:** the laptop disk is small (≈15 GB free on 2026-10-03). Staged files ≤ `STAGE_GB` (6), each staged
+4. **Git stays packed:** large derived files (site/00 is ~30 MB) are committed often; loose objects once grew `.git` to 9 GB
+   (2026-10-06). `gc.auto` is set to 300; if `git count-objects -vH` shows GBs of loose objects, run `nice git gc --prune=now`.
+5. **Staging cap:** the laptop disk is small (≈15 GB free on 2026-10-03). Staged files ≤ `STAGE_GB` (6), each staged
    file is deleted right after a successful upload.
 5. **Verification runs in parallel** with the downloads: exact size, `%PDF`, `%%EOF`, `pdfinfo`.
 6. **Independent tasks run at the same time in the background** (catalog fetches, dup checks, phone uploads, local
