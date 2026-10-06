@@ -226,3 +226,6 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   ج 4 ت سعيد أعراب ومحمد بن تاويت; «للمقري» 1–3 look like the Cairo لجنة التأليف volumes (same as the third folder «ت السقا
   والإبياري»?) and 4–5 like ج 5 / ج 4 of the صندوق edition — check sizes/md5 against the third folder for duplicates,
   then one folder per edition.
+- 17:00: NEEDS REVIEW (owner): «النكت والعيون تفسير الماوردي … (دار الكتب العلمية).pdf» (one file, 3,085 pages) is the same DKI
+  edition as the 6-volume folder «ت السيد بن عبد المقصود» (3,021 pages) with 64 more pages — keep both or only one?
+  «البحر المحيط - دار إحياء التراث (ت المهدي)» has vols 1–4 of 8 → candidates to fetch.
