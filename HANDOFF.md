@@ -199,3 +199,6 @@ Shamela (~/.local/share/shamela) when useful; ABSOLUTE ACCURACY first; tesseract
    Owner 08:20: the «before 700 AH» filter belongs ONLY in the comparison reports (01 الشاملة، 02 الوقفية: what early
    books are missing), not in the main index. Reading paths per science: not now.
 Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
+- 09:15 (2026-10-06): imprint reading reveals misfiled content too: 149 — «الرسائل الأدبية - الجاحظ» and «العمدة - ابن رشيق» held
+  only an article / a thesis (renamed to what they are). TO FETCH: العمدة في محاسن الشعر (ابن رشيق) and رسائل الجاحظ (هارون).
+  148/148c: قادة فتح الأندلس vol 1 and فتح الباري 02-03 added (re-upload of the same scan); 147/148b names.
