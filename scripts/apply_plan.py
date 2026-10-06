@@ -17,8 +17,16 @@ def protected(p):
     if os.environ.get('ALLOW_PROTECTED') == '1': return False      # deliberate step only (substituting improved copies)
     return any(p == d or p.startswith(d + '/') for d in PROTECTED)
 
-def connect():
-    f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=60); f.login(); return f
+def connect(tries=8):
+    """the phone's FTP app sometimes accepts the TCP connection but sends no greeting for a few minutes (stale sessions
+    after timeouts, 2026-10-06): wait and retry instead of failing the plan"""
+    import time
+    for i in range(tries):
+        try:
+            f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=60); f.login(); return f
+        except (OSError, EOFError, ftplib.Error) as e:
+            if i == tries - 1: raise
+            print(f'phone FTP not answering ({type(e).__name__}); retry {i + 1}/{tries - 1} in 30 s', flush=True); time.sleep(30)
 
 CACHE = {}   # folder -> set of entry names (loaded once per folder, updated on every change)
 
