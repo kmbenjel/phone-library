@@ -109,6 +109,10 @@ def main():
         nkey = {r[0]: r[1] for r in csv.reader(open(mapf, encoding='utf-8'), delimiter='\t') if r}
         for r in csv.DictReader(open(readf, encoding='utf-8'), delimiter='\t'):
             if r['n'] in nkey: seen[nkey[r['n']]] = r
+    textread = {}                               # imprint lines read from the PDF's own text layer (imprint_sheets.py)
+    if os.path.exists(J('data/editions/imprint-text.tsv')):
+        for r in csv.reader(open(J('data/editions/imprint-text.tsv'), encoding='utf-8'), delimiter='\t'):
+            if len(r) >= 6: textread[r[0]] = {'hijri': r[3], 'gregorian': r[4], 'edition': r[5]}
     out, review, stats = {}, [], collections.Counter()
     for b in cat['books']:
         key = f"{b['cat']}/{b['folder']}"
@@ -153,9 +157,8 @@ def main():
             put('edition_no', c['edition_no'], 'الشاملة'); put('pages', c['pages'], 'الشاملة')
             put('editor', c['editor'], 'الشاملة'); put('publisher', c['publisher'], 'الشاملة'); put('volumes', c['volumes'], 'الشاملة')
         # 3. the imprint page read by eye (60-85 dpi render of the very file)
-        v = seen.get(key)
+        v, src = (seen.get(key), 'صفحة الحقوق') if key in seen else (textread.get(key), 'صفحة الحقوق (نص)')
         if v:
-            src = 'صفحة الحقوق'
             if 'hijri' in info and v['hijri'] and int(v['hijri']) != info['hijri']['v']:
                 review.append([key, 'imprint', f"page {v['hijri']} vs {info['hijri']['v']} ({info['hijri']['s']})"])
             put('hijri', int(v['hijri']) if v['hijri'] else None, src); put('gregorian', int(v['gregorian']) if v['gregorian'] else None, src)

@@ -27,8 +27,34 @@ def score(local, page, d):
         t = subprocess.run(['tesseract', png + '.png', '-', '-l', 'ara+eng', '--psm', '6'], capture_output=True, text=True,
                            env={**os.environ, 'OMP_THREAD_LIMIT': '1'}, timeout=300).stdout
         os.remove(png + '.png')
+    else:
+        auto = text_read(t)
+        if auto: return 99, auto                     # a clean edition line in the PDF's own text layer
     words = len(t.split())
     return len(KEY.findall(t)), words
+
+DIG = str.maketrans('٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹', '01234567890123456789')
+ORD = 'الأولى الاولى الثانية الثالثة الرابعة الخامسة السادسة السابعة الثامنة التاسعة العاشرة'.split()
+def text_read(t):
+    """edition + year from a TEXT LAYER (not OCR) — only when the page has exactly one edition line carrying a year,
+    the year is hijri+gregorian that agree, or one year marked هـ / م; anything else goes to the eye"""
+    lines = [l.strip() for l in t.translate(DIG).splitlines() if l.strip()]
+    hits = []
+    for i, l in enumerate(lines):
+        if not re.search(r'الطبع[ةه]|طبعة', l): continue
+        ctx = ' '.join(lines[i:i + 2])
+        hs = [int(y) for y in re.findall(r'(?<!\d)(1[23]\d\d|14[0-4]\d)(?!\d)', ctx)]
+        gs = [int(y) for y in re.findall(r'(?<!\d)(18[3-9]\d|19\d\d|20[0-2]\d)(?!\d)', ctx)]
+        pair = [(h, g) for h in hs for g in gs if abs(g - (0.970229 * h + 621.57)) <= 2]
+        marked_h = re.findall(r'(?<!\d)(1[23]\d\d|14[0-4]\d)\s*(?:هـ|ه)', ctx)
+        marked_g = re.findall(r'(?<!\d)(18[3-9]\d|19\d\d|20[0-2]\d)\s*م(?![ا-ي])', ctx)
+        ed = next((w for w in ORD if w in ctx), '')
+        if len(set(pair)) > 1 or (len(set(marked_h)) > 1 and not pair): return None      # several editions/years: the eye decides
+        if len(set(pair)) == 1: hits.append((pair[0][0], pair[0][1], ed, ctx))
+        elif not pair and len(set(marked_h)) == 1 and not gs: hits.append((int(marked_h[0]), None, ed, ctx))
+        elif not pair and len(set(marked_g)) == 1 and not hs: hits.append((None, int(marked_g[0]), ed, ctx))
+    years = {(h, g) for h, g, e, c in hits}
+    return hits[0] if len(years) == 1 else None
 
 def first_file(b):
     fs = [f for f, s in sorted(b['files']) if not re.search(r'الواجهة|الفهارس|صور المخطوط', f)] or [f for f, s in sorted(b['files'])]
@@ -49,7 +75,11 @@ def prepare(tag, b):
         pages = int(re.search(r'Pages:\s*(\d+)', info).group(1)) if 'Pages:' in info else 1
         cands = []
         for p in [x for x in (2, 4, 3, 1, 5, 6) if x <= pages]:      # where imprints usually are; stop at a clear one
-            sc = score(local, p, d); cands.append((sc, p))
+            sc = score(local, p, d)
+            if sc[0] == 99:                                         # read from the text layer: no sheet needed
+                h, g, ed, line = sc[1]
+                return {'key': key, 'file': f, 'auto': True, 'page': p, 'hijri': h, 'gregorian': g, 'edition': ed, 'line': line[:200]}
+            cands.append((sc, p))
             if sc[0] >= 3: break
         best = max(cands, key=lambda x: x[0][0])
         show = [best[1]] if best[0][0] else sorted({1, min(2, pages)})    # the imprint page; else title + verso
@@ -96,6 +126,8 @@ def main():
         for f in os.listdir(OUT):
             if f.startswith(('tmp-', 't0')): os.remove(os.path.join(OUT, f))
     done = {r[1] for r in csv.reader(open(mapf, encoding='utf-8'), delimiter='\t')} if os.path.exists(mapf) else set()
+    if os.path.exists(J('data/editions/imprint-text.tsv')):
+        done |= {r[0] for r in csv.reader(open(J('data/editions/imprint-text.tsv'), encoding='utf-8'), delimiter='\t') if r}
     start = sum(1 for _ in open(mapf, encoding='utf-8')) if os.path.exists(mapf) else 0
     start = (start + PER - 1) // PER * PER                                  # a new run starts on a fresh sheet
     todo = [b for b in cat['books'] if f"{b['cat']}/{b['folder']}" not in done
@@ -110,6 +142,10 @@ def main():
         for fu in as_completed(futs):                              # as they finish: one slow book does not hold the rest
             res = fu.result()
             if not res: continue
+            if res.get('auto'):                                    # text layer read cleanly → data/editions/imprint-text.tsv
+                with open(J('data/editions/imprint-text.tsv'), 'a', encoding='utf-8') as w:
+                    w.write('\t'.join(str(res[k] or '') for k in ('key', 'file', 'page', 'hijri', 'gregorian', 'edition', 'line')) + '\n')
+                continue
             res['n'] = nxt[0]; nxt[0] += 1                     # numbers only for prepared books: sheets without gaps
             with open(mapf, 'a', encoding='utf-8') as w:
                 w.write(f"{res['n']}\t{res['key']}\t{res['file']}\t{','.join(map(str, res['pages']))}\t{res['score']}\n")
