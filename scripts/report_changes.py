@@ -45,6 +45,7 @@ if pending:
     for f in pending:
         rows = [l.rstrip('\n').split('\t') for l in open(f) if l.strip() and not l.startswith('#')]
         R.h3(f'{os.path.basename(f)[:-4]} — {len(rows):,} عملية')
+        rows = [r if len(r) >= 3 else [r[0], '(حذف)', r[-1]] for r in rows]          # delete plans: path, reason
         R.p('الأسباب: ' + '، '.join(f'{k} ({v:,})' for k, v in Counter(r[2].split(':')[0].split(' «')[0] for r in rows).most_common()))
         R.table(['من', 'إلى', 'السبب'], [[r[0].removeprefix('Books/'), r[1].removeprefix('Books/'), r[2]] for r in rows], fold=f'عرض العمليات ({len(rows):,})', md_limit=40)
 import glob as _g

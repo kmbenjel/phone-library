@@ -103,6 +103,12 @@ def main():
     if os.path.exists(J('data/editions/imprint-ocr.jsonl')):
         for l in open(J('data/editions/imprint-ocr.jsonl'), encoding='utf-8'):
             d = json.loads(l); ocr[d['key']] = d
+    seen = {}                                   # imprint pages read by eye (scripts/imprint_sheets.py → imprint-read.tsv)
+    mapf, readf = J('data/editions/imprint-sheets/books.tsv'), J('data/editions/imprint-read.tsv')
+    if os.path.exists(mapf) and os.path.exists(readf):
+        nkey = {r[0]: r[1] for r in csv.reader(open(mapf, encoding='utf-8'), delimiter='\t') if r}
+        for r in csv.DictReader(open(readf, encoding='utf-8'), delimiter='\t'):
+            if r['n'] in nkey: seen[nkey[r['n']]] = r
     out, review, stats = {}, [], collections.Counter()
     for b in cat['books']:
         key = f"{b['cat']}/{b['folder']}"
@@ -146,7 +152,15 @@ def main():
             put('hijri', c['hijri'], 'الشاملة'); put('gregorian', c['gregorian'], 'الشاملة')
             put('edition_no', c['edition_no'], 'الشاملة'); put('pages', c['pages'], 'الشاملة')
             put('editor', c['editor'], 'الشاملة'); put('publisher', c['publisher'], 'الشاملة'); put('volumes', c['volumes'], 'الشاملة')
-        # 3. imprint OCR (tesseract), only clean reads
+        # 3. the imprint page read by eye (60-85 dpi render of the very file)
+        v = seen.get(key)
+        if v:
+            src = 'صفحة الحقوق'
+            if 'hijri' in info and v['hijri'] and int(v['hijri']) != info['hijri']['v']:
+                review.append([key, 'imprint', f"page {v['hijri']} vs {info['hijri']['v']} ({info['hijri']['s']})"])
+            put('hijri', int(v['hijri']) if v['hijri'] else None, src); put('gregorian', int(v['gregorian']) if v['gregorian'] else None, src)
+            put('edition_no', v['edition'], src)
+        # 4. imprint OCR (tesseract), only clean reads
         o = ocr.get(key)
         if o and o.get('ok'):
             put('hijri', o.get('hijri'), 'صفحة العنوان'); put('gregorian', o.get('gregorian'), 'صفحة العنوان')

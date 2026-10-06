@@ -839,12 +839,12 @@
    {
     "folder": "الشفا بتعريف حقوق المصطفى صلى الله - القاضي عياض",
     "cat": "السيرة النبوية",
-    "edition": "",
+    "edition": "1436",
     "researcher": "",
     "publisher": "",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 327622634,
     "quality": {
      "files": 1,
@@ -855,8 +855,10 @@
      "width_used": 0.98,
      "text": false
     },
-    "score": -6.4,
-    "waqfeya": []
+    "score": 8.6,
+    "waqfeya": [
+     "https://waqfeya.net/books/الشفا-بتعريف-حقوق-المصطفى-صلى-الله-عليه-وسلم--مخطوط-نادر-ملون-1d22d95c2b684bddbee30699c9b751fd"
+    ]
    },
    {
     "folder": "الشفا بتعريف حقوق المصطفى صلى الله - القاضي عياض (ط جائزة دبي الدولية للقرآن الكريم)",
@@ -4903,12 +4905,12 @@
    {
     "folder": "كتاب فتوح البلدان - البلاذري (ط مطبعة بريل - ليدن)",
     "cat": "التاريخ",
-    "edition": "ط مطبعة بريل - ليدن",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت دي خويه - ط مطبعة بريل - ليدن - 1866",
+    "researcher": "دي خويه",
+    "publisher": "مطبعة بريل - ليدن",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 133100329,
     "quality": {
      "files": 1,
@@ -4919,8 +4921,10 @@
      "width_used": 0.42,
      "text": false
     },
-    "score": 46.9,
-    "waqfeya": []
+    "score": 61.9,
+    "waqfeya": [
+     "https://waqfeya.net/books/كتاب-فتوح-البلدان--ت-دي-خويه--ملون-855a1185981749f7a3c025ffadacdeb5"
+    ]
    }
   ],
   "note": null
@@ -8696,18 +8700,18 @@
  {
   "work": "اثار الاول في ترتيب",
   "title": "آثار الأول في ترتيب الدول",
-  "author": "",
+  "author": "العباسي؛ الحسن بن عبد الله (أبي محمد) ابن عمر بن محاسن، من نسل هارون (الرشيد) بن محمد العباسي",
   "bytes": 75942652,
   "editions": [
    {
     "folder": "آثار الأول في ترتيب الدول",
     "cat": "السياسة الشرعية والقضاء",
-    "edition": "",
+    "edition": "ط مطبعة بولاق الأميرية - القاهرة - 1295 - 1878",
     "researcher": "",
-    "publisher": "",
+    "publisher": "مطبعة بولاق الأميرية - القاهرة",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 64914379,
     "quality": {
      "files": 1,
@@ -8718,8 +8722,10 @@
      "width_used": 0.77,
      "text": false
     },
-    "score": 43.2,
-    "waqfeya": []
+    "score": 58.2,
+    "waqfeya": [
+     "https://waqfeya.net/books/آثار-الأول-في-ترتيب-الدول-bbb47fc9eb7d454885bf7a39b7868b82"
+    ]
    },
    {
     "folder": "آثار الأول في ترتيب الدول - العباسي (ت عبد الرحمن عميرة - دار الجيل)",
@@ -11834,11 +11840,11 @@
    {
     "folder": "الجامع المسند الصحيح المختصر = صحيح البخاري - ط. بيت السنة",
     "cat": "كتب السنة",
-    "edition": "ط. بيت السنة",
+    "edition": "ط بيت السنة - 1442 - 2022",
     "researcher": "",
-    "publisher": "",
+    "publisher": "بيت السنة",
     "files": 1,
-    "vols_edition": "",
+    "vols_edition": "7",
     "complete": false,
     "bytes": 2737052,
     "quality": {
@@ -11851,7 +11857,9 @@
      "text": false
     },
     "score": 10.0,
-    "waqfeya": []
+    "waqfeya": [
+     "https://waqfeya.net/books/صحيح-2f800d13c8e8462299f11e9549c98195"
+    ]
    }
   ],
   "note": null
@@ -14634,16 +14642,18 @@
    {
     "folder": "الغريب المصنف - أبو عبيد (ط مكتبة الثقافة الدينية - بورسعيد)",
     "cat": "الغريب والمعاجم",
-    "edition": "ط مكتبة الثقافة الدينية - بورسعيد",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت رمضان عبد التواب - ط مكتبة الثقافة الدينية - بورسعيد - 1409 - 1989",
+    "researcher": "رمضان عبد التواب",
+    "publisher": "مكتبة الثقافة الدينية - بورسعيد",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 4317995,
     "quality": null,
     "score": -1,
-    "waqfeya": []
+    "waqfeya": [
+     "https://waqfeya.net/books/الغريب-المصنف-ت-عبد-التواب-6a536dd29335456ba88661cf10971027"
+    ]
    },
    {
     "folder": "الغريب المصنف - أبو عبيد (ط نزار مصطفى الباز)",
@@ -15305,12 +15315,12 @@
    {
     "folder": "الصمت وآداب اللسان - ابن أبي الدنيا (ط دار الكتاب العربي)",
     "cat": "كتب السنة",
-    "edition": "ط دار الكتاب العربي",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت أبو إسحاق الحويني - ط دار الكتاب العربي - 1410 - 1990",
+    "researcher": "أبو إسحاق الحويني",
+    "publisher": "دار الكتاب العربي",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 4398711,
     "quality": {
      "files": 1,
@@ -15321,8 +15331,10 @@
      "width_used": 0.73,
      "text": false
     },
-    "score": 61.2,
-    "waqfeya": []
+    "score": 76.2,
+    "waqfeya": [
+     "https://waqfeya.net/books/الصمت-وآداب-اللسان-ت-الحويني-e0f969726b1c4fa5a175f42d3f29142e"
+    ]
    },
    {
     "folder": "الصمت وآداب اللسان - ابن أبي الدنيا (ط مؤسسة الكتب الثقافية)",
@@ -15705,8 +15717,8 @@
     "researcher": "",
     "publisher": "",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 1903175,
     "quality": {
      "files": 1,
@@ -15717,8 +15729,10 @@
      "width_used": 0.57,
      "text": true
     },
-    "score": 21.8,
-    "waqfeya": []
+    "score": 36.8,
+    "waqfeya": [
+     "https://waqfeya.net/books/متممة-الآجرومية-في-علم-العربية-5b36e41d09a44dddb8e4f3e5d708bc94"
+    ]
    }
   ],
   "note": null
@@ -17079,12 +17093,12 @@
    {
     "folder": "التبيان في آداب حملة القرآن - النووي (ط دار المؤيد - دار البيان)",
     "cat": "علوم القرآن وأصول التفسير",
-    "edition": "ط دار المؤيد - دار البيان",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت بشير محمد عيون - ط دار المؤيد - دار البيان - 1413 - 1991",
+    "researcher": "بشير محمد عيون",
+    "publisher": "دار المؤيد - دار البيان",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 5252126,
     "quality": {
      "files": 1,
@@ -17095,8 +17109,12 @@
      "width_used": 0.55,
      "text": false
     },
-    "score": 11.0,
-    "waqfeya": []
+    "score": 26.0,
+    "waqfeya": [
+     "https://waqfeya.net/books/التبيان-في-آداب-حملة-القرآن-ت-عيون-5c10f6d0effd414ba977071bba8108fa"
+    ],
+    "same_edition": true,
+    "best_scan": false
    }
   ],
   "note": null
@@ -17265,111 +17283,6 @@
     },
     "score": 63.2,
     "waqfeya": []
-   }
-  ],
-  "note": null
- },
- {
-  "work": "ديوان لبيد بن ربيعه",
-  "title": "ديوان لبيد بن ربيعة",
-  "author": "الشنقيطي، محمد بن الطلبة اليعقوبي المورتاني",
-  "bytes": 18945453,
-  "editions": [
-   {
-    "folder": "ديوان لبيد بن ربيعة - ط. صادر",
-    "cat": "الشعر ودواوينه",
-    "edition": "ت محمد بن عبد الله بن الشبيه بن ابوه - ط أحمد سالك بن محمد الأمين بن ابوه - 1999",
-    "researcher": "محمد بن عبد الله بن الشبيه بن ابوه",
-    "publisher": "أحمد سالك بن محمد الأمين بن ابوه",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 7355978,
-    "quality": {
-     "files": 1,
-     "pages": 247,
-     "kbpp": 29,
-     "px": 1994,
-     "colour": "أبيض وأسود",
-     "width_used": 0.67,
-     "text": false
-    },
-    "score": 78.4,
-    "waqfeya": [
-     "https://waqfeya.net/books/ديوان-محمد-بن-الطلبة-اليعقوبي-الشنقيطي-المورتاني-043c17e6c3dc4490ac6366c78be00ba9"
-    ],
-    "same_edition": true,
-    "best_scan": false
-   },
-   {
-    "folder": "ديوان لبيد بن ربيعة العامري",
-    "cat": "الشعر ودواوينه",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 3154889,
-    "quality": {
-     "files": 1,
-     "pages": 144,
-     "kbpp": 21,
-     "px": 1582,
-     "colour": "أبيض وأسود",
-     "width_used": 0.85,
-     "text": false
-    },
-    "score": 67.0,
-    "waqfeya": []
-   },
-   {
-    "folder": "ديوان لبيد بن ربيعة العامري (ط دار صادر)",
-    "cat": "الشعر ودواوينه",
-    "edition": "ط دار صادر",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 3427158,
-    "quality": {
-     "files": 1,
-     "pages": 247,
-     "kbpp": 13,
-     "px": 1979,
-     "colour": "أبيض وأسود",
-     "width_used": 0.68,
-     "text": false
-    },
-    "score": 63.6,
-    "waqfeya": []
-   },
-   {
-    "folder": "ديوان لبيد بن ربيعة شرح الطوسي",
-    "cat": "الشعر ودواوينه",
-    "edition": "ت محمد بن عبد الله بن الشبيه بن ابوه - ط أحمد سالك بن محمد الأمين بن ابوه - 1999",
-    "researcher": "محمد بن عبد الله بن الشبيه بن ابوه",
-    "publisher": "أحمد سالك بن محمد الأمين بن ابوه",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 5007428,
-    "quality": {
-     "files": 1,
-     "pages": 326,
-     "kbpp": 15,
-     "px": 1696,
-     "colour": "أبيض وأسود",
-     "width_used": 0.87,
-     "text": false
-    },
-    "score": 82.4,
-    "waqfeya": [
-     "https://waqfeya.net/books/ديوان-محمد-بن-الطلبة-اليعقوبي-الشنقيطي-المورتاني-043c17e6c3dc4490ac6366c78be00ba9"
-    ],
-    "same_edition": true,
-    "best_scan": true
    }
   ],
   "note": null
@@ -17574,12 +17487,12 @@
    {
     "folder": "المعجم الصغير - الطبراني (ط 1403-1983)",
     "cat": "كتب السنة",
-    "edition": "ط 1403-1983",
+    "edition": "1403 - 1983",
     "researcher": "",
     "publisher": "",
     "files": 3,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 9113649,
     "quality": {
      "files": 3,
@@ -17590,8 +17503,10 @@
      "width_used": 0.69,
      "text": false
     },
-    "score": 63.8,
-    "waqfeya": []
+    "score": 78.8,
+    "waqfeya": [
+     "https://waqfeya.net/books/المعجم-الصغير-للطبراني-ويليه-غنية-الألمعي--التحفة-المرضية-في-حل-بعض-المشكلات-الحديثيةسنية-رفع-اليدين-في-الدعاء-بعد-الصلوات-المكتوبة-لمن-شاء--رسالة-الكشف-في-بيان-خروج-المهدي-613077974d624c20988795376dc0c980"
+    ]
    }
   ],
   "note": null
@@ -18455,6 +18370,89 @@
   "note": null
  },
  {
+  "work": "ديوان لبيد بن ربيعه",
+  "title": "ديوان لبيد بن ربيعة",
+  "author": "الشنقيطي، محمد بن الطلبة اليعقوبي المورتاني",
+  "bytes": 15518295,
+  "editions": [
+   {
+    "folder": "ديوان لبيد بن ربيعة - ط. صادر",
+    "cat": "الشعر ودواوينه",
+    "edition": "ت محمد بن عبد الله بن الشبيه بن ابوه - ط أحمد سالك بن محمد الأمين بن ابوه - 1999",
+    "researcher": "محمد بن عبد الله بن الشبيه بن ابوه",
+    "publisher": "أحمد سالك بن محمد الأمين بن ابوه",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 7355978,
+    "quality": {
+     "files": 1,
+     "pages": 247,
+     "kbpp": 29,
+     "px": 1994,
+     "colour": "أبيض وأسود",
+     "width_used": 0.67,
+     "text": false
+    },
+    "score": 78.4,
+    "waqfeya": [
+     "https://waqfeya.net/books/ديوان-محمد-بن-الطلبة-اليعقوبي-الشنقيطي-المورتاني-043c17e6c3dc4490ac6366c78be00ba9"
+    ],
+    "same_edition": true,
+    "best_scan": false
+   },
+   {
+    "folder": "ديوان لبيد بن ربيعة العامري",
+    "cat": "الشعر ودواوينه",
+    "edition": "",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 3154889,
+    "quality": {
+     "files": 1,
+     "pages": 144,
+     "kbpp": 21,
+     "px": 1582,
+     "colour": "أبيض وأسود",
+     "width_used": 0.85,
+     "text": false
+    },
+    "score": 67.0,
+    "waqfeya": []
+   },
+   {
+    "folder": "ديوان لبيد بن ربيعة شرح الطوسي",
+    "cat": "الشعر ودواوينه",
+    "edition": "ت محمد بن عبد الله بن الشبيه بن ابوه - ط أحمد سالك بن محمد الأمين بن ابوه - 1999",
+    "researcher": "محمد بن عبد الله بن الشبيه بن ابوه",
+    "publisher": "أحمد سالك بن محمد الأمين بن ابوه",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 5007428,
+    "quality": {
+     "files": 1,
+     "pages": 326,
+     "kbpp": 15,
+     "px": 1696,
+     "colour": "أبيض وأسود",
+     "width_used": 0.87,
+     "text": false
+    },
+    "score": 82.4,
+    "waqfeya": [
+     "https://waqfeya.net/books/ديوان-محمد-بن-الطلبة-اليعقوبي-الشنقيطي-المورتاني-043c17e6c3dc4490ac6366c78be00ba9"
+    ],
+    "same_edition": true,
+    "best_scan": true
+   }
+  ],
+  "note": null
+ },
+ {
   "work": "الاشاره في اصول الفقه",
   "title": "الإشارة في أصول الفقه",
   "author": "أبو الوليد الباجي",
@@ -19169,16 +19167,18 @@
    {
     "folder": "الكبائر - الذهبي (ت محي الدين نجيب - قاسم النوري - الدار المتحدة)",
     "cat": "الرقائق والآداب والأذكار",
-    "edition": "ت محي الدين نجيب - قاسم النوري - الدار المتحدة",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت محي الدين نجيب - قاسم النوري - ط الدار المتحدة - سوريا - 1411 - 1990",
+    "researcher": "محي الدين نجيب - قاسم النوري",
+    "publisher": "الدار المتحدة - سوريا",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 4217206,
     "quality": null,
     "score": -1,
-    "waqfeya": [],
+    "waqfeya": [
+     "https://waqfeya.net/books/الكبائر-ت-نجيب-والنوري-fc4006140f3a409690d9c265e7e44221"
+    ],
     "same_edition": true,
     "best_scan": false
    },
@@ -19211,12 +19211,12 @@
    {
     "folder": "الكبائر - ط. الندوة",
     "cat": "الرقائق والآداب والأذكار",
-    "edition": "ط. الندوة",
+    "edition": "ط دار الندوة الجديدة",
     "researcher": "",
-    "publisher": "",
+    "publisher": "دار الندوة الجديدة",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 5311739,
     "quality": {
      "files": 1,
@@ -19227,8 +19227,10 @@
      "width_used": 0.68,
      "text": false
     },
-    "score": 63.6,
-    "waqfeya": []
+    "score": 78.6,
+    "waqfeya": [
+     "https://waqfeya.net/books/الكبائر-ط-الندوة-1ef1e611dc694532b543ba19a9821f12"
+    ]
    }
   ],
   "note": null
@@ -19268,12 +19270,12 @@
    {
     "folder": "سيرة ومناقب عمر بن عبد العزيز - ابن الجوزي (ط دار الكتب العلمية)",
     "cat": "التراجم والطبقات",
-    "edition": "ط دار الكتب العلمية",
+    "edition": "ط دار الكتب العلمية - 1404 - 1984",
     "researcher": "",
-    "publisher": "",
+    "publisher": "دار الكتب العلمية",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 5565675,
     "quality": {
      "files": 1,
@@ -19284,8 +19286,10 @@
      "width_used": 0.58,
      "text": false
     },
-    "score": 61.6,
-    "waqfeya": [],
+    "score": 76.6,
+    "waqfeya": [
+     "https://waqfeya.net/books/سيرة-ومناقب-عمر-بن-عبد-العزيز-الخليفة-الزاهد-ط-1404-63c3df280cc14d64a4dec93bb7c79177"
+    ],
     "same_edition": true,
     "best_scan": false
    }
@@ -19462,75 +19466,20 @@
   "note": null
  },
  {
-  "work": "الطب النبوي",
-  "title": "الطب النبوي",
-  "author": "",
-  "bytes": 12951200,
-  "editions": [
-   {
-    "folder": "الطب النبوي",
-    "cat": "الطب",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 4775267,
-    "quality": {
-     "files": 1,
-     "pages": 328,
-     "kbpp": 14,
-     "px": 1947,
-     "colour": "أبيض وأسود",
-     "width_used": 0.68,
-     "text": false
-    },
-    "score": 63.6,
-    "waqfeya": []
-   },
-   {
-    "folder": "الطب النبوي - ابن قيم الجوزية (ت عبد الغني عبد الخالق - دار إحياء الكتاب العربية)",
-    "cat": "الطب",
-    "edition": "ت عبد الغني عبد الخالق - ط دار إحياء الكتاب العربية - 1377 - 1957",
-    "researcher": "عبد الغني عبد الخالق",
-    "publisher": "دار إحياء الكتاب العربية",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 8175933,
-    "quality": {
-     "files": 1,
-     "pages": 335,
-     "kbpp": 24,
-     "px": 1849,
-     "colour": "أبيض وأسود",
-     "width_used": 0.78,
-     "text": false
-    },
-    "score": 80.6,
-    "waqfeya": [
-     "https://waqfeya.net/books/الطب-النبوي-ت-عبد-الخالق-801aae4148aa4601889fe81c6b77b29a"
-    ]
-   }
-  ],
-  "note": null
- },
- {
   "work": "تاريخ عثمان بن سعيد",
   "title": "تاريخ عثمان بن سعيد الدارمي عن أبي زكريا يحيى بن معين",
-  "author": "",
+  "author": "ابن معين؛ يحيى بن معين بن عون بن زياد المرى بالولاء، البغدادي، أبو زكريا",
   "bytes": 12804394,
   "editions": [
    {
     "folder": "تاريخ عثمان بن سعيد الدارمي عن أبي زكريا يحيى بن معين (ت أحمد محمد نور سيف)",
     "cat": "العلل والسؤلات الحديثية",
     "edition": "ت أحمد محمد نور سيف",
-    "researcher": "",
+    "researcher": "أحمد محمد نور سيف",
     "publisher": "",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 4731776,
     "quality": {
      "files": 1,
@@ -19541,8 +19490,10 @@
      "width_used": 0.68,
      "text": false
     },
-    "score": 63.6,
-    "waqfeya": [],
+    "score": 78.6,
+    "waqfeya": [
+     "https://waqfeya.net/books/تاريخ-عثمان-بن-سعيد-الدارمي-عن-أبي-زكريا-يحي-بن-معين-d0cadfe9e404402f8a9a566a890ec202"
+    ],
     "same_edition": true,
     "best_scan": false
    },
@@ -19724,12 +19675,12 @@
    {
     "folder": "شمائل النبى صلى الله عليه وسلم - الترمذي (ط دار الغرب الإسلامي)",
     "cat": "السيرة النبوية",
-    "edition": "ط دار الغرب الإسلامي",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت ماهر ياسين الفحل - ط دار الغرب الإسلامي - 1420 - 2000",
+    "researcher": "ماهر ياسين الفحل",
+    "publisher": "دار الغرب الإسلامي",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 5108626,
     "quality": {
      "files": 1,
@@ -19740,8 +19691,10 @@
      "width_used": 0.64,
      "text": false
     },
-    "score": 62.8,
-    "waqfeya": []
+    "score": 77.8,
+    "waqfeya": [
+     "https://waqfeya.net/books/شمائل-النبى-صلى-الله-عليه-وسلم-ت-الفحل-0f928e8f18f5412eb6fa4d3436905b10"
+    ]
    },
    {
     "folder": "شمائل النبي صلى الله عليه وسلم - الترمذي (ط مكتبة العلوم والحكم)",
@@ -19803,12 +19756,12 @@
    {
     "folder": "ديوان امرئ القيس - امرؤ القيس (ط دار الكتب العلمية)",
     "cat": "الشعر ودواوينه",
-    "edition": "ط دار الكتب العلمية",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت مصطفى عبد الشافي - ط دار الكتب العلمية - 1425 - 2004",
+    "researcher": "مصطفى عبد الشافي",
+    "publisher": "دار الكتب العلمية",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 3515778,
     "quality": {
      "files": 1,
@@ -19819,8 +19772,10 @@
      "width_used": 0.7,
      "text": false
     },
-    "score": 64.0,
-    "waqfeya": []
+    "score": 79.0,
+    "waqfeya": [
+     "https://waqfeya.net/books/ديوان-امرئ-القيس-ط-العلمية-1f7d98affbd042609c6876dc2f5fb5ff"
+    ]
    }
   ],
   "note": null
@@ -19977,12 +19932,12 @@
    {
     "folder": "شواهد التوضيح والتصحيح لمشكلات الجامع الصحيح - ابن مالك (ط مكتبة دار العروبة - تصوير - عالم الكتب - بيروت)",
     "cat": "شروح الحديث",
-    "edition": "ط مكتبة دار العروبة - تصوير - عالم الكتب - بيروت",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت عبد الباقي؛ محمد فؤاد بن عبد الباقي بن صالح بن محمد - ط مكتبة دار العروبة - تصوير: عالم الكتب - بيروت - 1376 - 1957",
+    "researcher": "عبد الباقي؛ محمد فؤاد بن عبد الباقي بن صالح بن محمد",
+    "publisher": "مكتبة دار العروبة - تصوير: عالم الكتب - بيروت",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 4175315,
     "quality": {
      "files": 1,
@@ -19993,8 +19948,10 @@
      "width_used": 0.68,
      "text": false
     },
-    "score": 63.6,
-    "waqfeya": []
+    "score": 78.6,
+    "waqfeya": [
+     "https://waqfeya.net/books/شواهد-التوضيح-والتصحيح-لمشكلات-الجامع-الصحيح--ت-عبد-الباقي-3f437ddece054ef7953f5c4d75b18b4b"
+    ]
    }
   ],
   "note": null
@@ -20384,12 +20341,12 @@
    {
     "folder": "تقويم اللسان - ابن الجوزي (ت عبد العزيز مطر - دار المعارف)",
     "cat": "الغريب والمعاجم",
-    "edition": "ت عبد العزيز مطر - دار المعارف",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت عبد العزيز مطر - ط دار المعارف - 1983",
+    "researcher": "عبد العزيز مطر",
+    "publisher": "دار المعارف",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 3923770,
     "quality": {
      "files": 1,
@@ -20400,8 +20357,10 @@
      "width_used": 0.61,
      "text": false
     },
-    "score": 62.2,
-    "waqfeya": [],
+    "score": 77.2,
+    "waqfeya": [
+     "https://waqfeya.net/books/تقويم-اللسان-ط-2-9932acdd333a4d04a57fe5591aba2045"
+    ],
     "same_edition": true,
     "best_scan": false
    }
@@ -20472,16 +20431,18 @@
    {
     "folder": "الفرقان بين الحق والباطل - ابن تيمية (ت حسين يوسف غزال - دار إحياء العلوم)",
     "cat": "العقيدة",
-    "edition": "ت حسين يوسف غزال - دار إحياء العلوم",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت حسين يوسف غزال - ط دار إحياء العلوم - بيروت - 1407 - 1987",
+    "researcher": "حسين يوسف غزال",
+    "publisher": "دار إحياء العلوم - بيروت",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 3793546,
     "quality": null,
     "score": -1,
-    "waqfeya": []
+    "waqfeya": [
+     "https://waqfeya.net/books/الفرقان-بين-الحق-والباطل-ت-غزال-517ea9e61bd0472691fe6aad574aa362"
+    ]
    },
    {
     "folder": "الفرقان بين الحق والباطل - ابن تيمية (ت خليل الميس - دار القلم)",
@@ -20543,12 +20504,12 @@
    {
     "folder": "بغية الرائد لما تضمنه حديث أم زرع من الفوائد - القاضي عياض",
     "cat": "شروح الحديث",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت صلاح الدين بن أحمد الإدلبي - محمد الحسن اجانف - محمد عبد السلام الشرقاوي - ط وزارة الأوقاف والشؤون الإسلامية - المملكة المغربية - 1395 - 1975",
+    "researcher": "صلاح الدين بن أحمد الإدلبي - محمد الحسن اجانف - محمد عبد السلام الشرقاوي",
+    "publisher": "وزارة الأوقاف والشؤون الإسلامية - المملكة المغربية",
     "files": 2,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 4147083,
     "quality": {
      "files": 2,
@@ -20559,8 +20520,10 @@
      "width_used": 0.77,
      "text": false
     },
-    "score": 65.4,
-    "waqfeya": []
+    "score": 80.4,
+    "waqfeya": [
+     "https://waqfeya.net/books/بغية-الرائد-لما-تضمنه-حديث-أم-زرع-من-الفوائد-28679b5ca6f74da8b3b39ec5e3067a77"
+    ]
    },
    {
     "folder": "بغية الرائد لما تضمنه حديث أم زرع من الفوائد للسبتي",
@@ -20582,59 +20545,6 @@
      "text": false
     },
     "score": 66.4,
-    "waqfeya": []
-   }
-  ],
-  "note": null
- },
- {
-  "work": "رفع اليدين في الصلاه",
-  "title": "رفع اليدين في الصلاة وبهامشه جلاء العينين بتخريج روايات البخاري في جزء رفع اليدين",
-  "author": "",
-  "bytes": 9605874,
-  "editions": [
-   {
-    "folder": "رفع اليدين في الصلاة وبهامشه جلاء العينين بتخريج روايات البخاري في جزء رفع اليدين",
-    "cat": "شروح الحديث",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 4429116,
-    "quality": {
-     "files": 1,
-     "pages": 189,
-     "kbpp": 23,
-     "px": 1956,
-     "colour": "أبيض وأسود",
-     "width_used": 0.65,
-     "text": false
-    },
-    "score": 63.0,
-    "waqfeya": []
-   },
-   {
-    "folder": "رفع اليدين في الصلاة - ابن قيم الجوزية (عالم الفوائد)",
-    "cat": "مسائل فقهية",
-    "edition": "عالم الفوائد",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 5176758,
-    "quality": {
-     "files": 1,
-     "pages": 432,
-     "kbpp": 11,
-     "px": 1795,
-     "colour": "أبيض وأسود",
-     "width_used": 0.76,
-     "text": false
-    },
-    "score": 65.2,
     "waqfeya": []
    }
   ],
@@ -20911,30 +20821,38 @@
    {
     "folder": "صفة الجنة - أبو نعيم",
     "cat": "كتب السنة",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت ناصر بن عبد الكريم العقل - ط مكتبة الرشد",
+    "researcher": "ناصر بن عبد الكريم العقل",
+    "publisher": "مكتبة الرشد",
     "files": 2,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "2",
+    "complete": true,
     "bytes": 8264245,
     "quality": null,
     "score": -1,
-    "waqfeya": []
+    "waqfeya": [
+     "https://waqfeya.net/books/اقتضاء-الصراط-المستقيم-لمخالفة-أصحاب-الجحيم-ت-العقل-ط-الرشد-bf3a4ce8603645d3ba55c07253010b47"
+    ],
+    "same_edition": true,
+    "best_scan": true
    },
    {
     "folder": "صفة الجنة - أبو نعيم - أبو نعيم؛ أحمد بن عبد الله بن أحمد الأصبهاني، ابو نعيم",
     "cat": "كتب السنة",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت ناصر بن عبد الكريم العقل - ط مكتبة الرشد",
+    "researcher": "ناصر بن عبد الكريم العقل",
+    "publisher": "مكتبة الرشد",
     "files": 1,
-    "vols_edition": "",
+    "vols_edition": "2",
     "complete": false,
     "bytes": 12640,
     "quality": null,
     "score": -1,
-    "waqfeya": []
+    "waqfeya": [
+     "https://waqfeya.net/books/اقتضاء-الصراط-المستقيم-لمخالفة-أصحاب-الجحيم-ت-العقل-ط-الرشد-bf3a4ce8603645d3ba55c07253010b47"
+    ],
+    "same_edition": true,
+    "best_scan": false
    }
   ],
   "note": null
@@ -21001,59 +20919,6 @@
   "note": null
  },
  {
-  "work": "ديوان حاتم الطايي",
-  "title": "ديوان حاتم الطائي",
-  "author": "حاتم الطائي",
-  "bytes": 7788828,
-  "editions": [
-   {
-    "folder": "ديوان حاتم الطائي - حاتم الطائي",
-    "cat": "الشعر ودواوينه",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 5866919,
-    "quality": {
-     "files": 1,
-     "pages": 432,
-     "kbpp": 13,
-     "px": 151,
-     "colour": "رمادي",
-     "width_used": 0.57,
-     "text": false
-    },
-    "score": 16.8,
-    "waqfeya": []
-   },
-   {
-    "folder": "ديوان حاتم الطائي - ط. صادر",
-    "cat": "الشعر ودواوينه",
-    "edition": "ط. صادر",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 1921909,
-    "quality": {
-     "files": 1,
-     "pages": 95,
-     "kbpp": 20,
-     "px": 1994,
-     "colour": "أبيض وأسود",
-     "width_used": 0.69,
-     "text": false
-    },
-    "score": 63.8,
-    "waqfeya": []
-   }
-  ],
-  "note": null
- },
- {
   "work": "جواب اهل العلم والايمان",
   "title": "جواب أهل العلم والإيمان بتحقيق ما أخبر به رسول الرحمن من أن قل هو الله أحد تعدل ثلث القرآن",
   "author": "ابن تيمية؛ أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم الخضر النميري الحراني الدمشقي الحنبلي، أبو العباس، تقي الدين ابن تيمية",
@@ -21113,18 +20978,18 @@
  {
   "work": "ديوان حميد بن ثور",
   "title": "ديوان حميد بن ثور الهلالي وفيه بائية أبي داود الإيادي",
-  "author": "",
+  "author": "حميد بن ثور؛ حميد بن ثور بن حزن الهلالي العامري، أبو المثنى",
   "bytes": 7694193,
   "editions": [
    {
     "folder": "ديوان حميد بن ثور الهلالي وفيه بائية أبي داود الإيادي (ت عبد العزيز الميمني - دار الكتب المصرية)",
     "cat": "الأدب",
-    "edition": "ت عبد العزيز الميمني - دار الكتب المصرية",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت عبد العزيز الميمني - ط دار الكتب المصرية",
+    "researcher": "عبد العزيز الميمني",
+    "publisher": "دار الكتب المصرية",
     "files": 2,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 4100645,
     "quality": {
      "files": 2,
@@ -21135,8 +21000,10 @@
      "width_used": 0.64,
      "text": false
     },
-    "score": 62.8,
-    "waqfeya": [],
+    "score": 77.8,
+    "waqfeya": [
+     "https://waqfeya.net/books/ديوان-حميد-بن-ثور-الهلالي-وفيه-بائية-أبي-داود-الإيادي-6b92d14333b34a3fa95ddfed70ae158e"
+    ],
     "same_edition": true,
     "best_scan": true
    },
@@ -21632,18 +21499,18 @@
  {
   "work": "ديوان ابن عبد ربه",
   "title": "ديوان ابن عبد ربه",
-  "author": "",
+  "author": "ابن عبد ربه؛ أحمد بن محمد بن عبد ربه ابن حبيب ابن حدير بن سالم، أبو عمر",
   "bytes": 6863032,
   "editions": [
    {
     "folder": "ديوان ابن عبد ربه (ط مؤسسة الرسالة)",
     "cat": "الشعر ودواوينه",
-    "edition": "ط مؤسسة الرسالة",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت محمد رضوان الداية - ط مؤسسة الرسالة - 1399 - 1979",
+    "researcher": "محمد رضوان الداية",
+    "publisher": "مؤسسة الرسالة",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 3665989,
     "quality": {
      "files": 1,
@@ -21654,8 +21521,12 @@
      "width_used": 0.59,
      "text": false
     },
-    "score": 61.8,
-    "waqfeya": []
+    "score": 76.8,
+    "waqfeya": [
+     "https://waqfeya.net/books/ديوان-ابن-عبد-ربه-33a9cc9fa63d4751857eb8d75395e072"
+    ],
+    "same_edition": true,
+    "best_scan": false
    },
    {
     "folder": "ديوان ابن عبد ربه الأندلسي (ط دار الكتاب العربي)",
@@ -21679,7 +21550,9 @@
     "score": 81.6,
     "waqfeya": [
      "https://waqfeya.net/books/ديوان-ابن-عبد-ربه-الأندلسي-مع-دراسة-لحياته-وشعره-db44b34cfc024f5b888c5e80daa38de7"
-    ]
+    ],
+    "same_edition": true,
+    "best_scan": true
    }
   ],
   "note": null
@@ -21693,12 +21566,12 @@
    {
     "folder": "نزهة المقلتين في أخبار الدولتين - ابن الطوير (ط المعهد الألماني للبحوث الشرقية - بيروت)",
     "cat": "التاريخ",
-    "edition": "ط المعهد الألماني للبحوث الشرقية - بيروت",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت أيمن فؤاد سيد - ط المعهد الألماني للبحوث الشرقية - بيروت - 1412 - 1992",
+    "researcher": "أيمن فؤاد سيد",
+    "publisher": "المعهد الألماني للبحوث الشرقية - بيروت",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 5154139,
     "quality": {
      "files": 1,
@@ -21709,17 +21582,21 @@
      "width_used": 0.67,
      "text": false
     },
-    "score": 63.4,
-    "waqfeya": []
+    "score": 78.4,
+    "waqfeya": [
+     "https://waqfeya.net/books/نزهة-المقلتين-في-أخبار-الدولتين-b798f8d393c24524ba3ab411763bd311"
+    ],
+    "same_edition": true,
+    "best_scan": true
    },
    {
     "folder": "نزهة المقلتين في أخبار الدولتين - ابن الطوير،",
     "cat": "التاريخ",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت أيمن فؤاد سيد - ط المعهد الألماني للبحوث الشرقية - بيروت - 1412 - 1992",
+    "researcher": "أيمن فؤاد سيد",
+    "publisher": "المعهد الألماني للبحوث الشرقية - بيروت",
     "files": 1,
-    "vols_edition": "",
+    "vols_edition": "1",
     "complete": false,
     "bytes": 1586534,
     "quality": {
@@ -21732,7 +21609,11 @@
      "text": false
     },
     "score": 63.2,
-    "waqfeya": []
+    "waqfeya": [
+     "https://waqfeya.net/books/نزهة-المقلتين-في-أخبار-الدولتين-b798f8d393c24524ba3ab411763bd311"
+    ],
+    "same_edition": true,
+    "best_scan": false
    }
   ],
   "note": null
@@ -21913,12 +21794,12 @@
    {
     "folder": "الورع (ت - الجابي) - ابن أبي الدنيا (ط دار ابن حزم)",
     "cat": "كتب السنة",
-    "edition": "ط دار ابن حزم",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت بسام عبد الوهاب الجابي - ط دار ابن حزم - 1423 - 2002",
+    "researcher": "بسام عبد الوهاب الجابي",
+    "publisher": "دار ابن حزم",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 2399097,
     "quality": {
      "files": 1,
@@ -21929,8 +21810,12 @@
      "width_used": 0.61,
      "text": false
     },
-    "score": 62.2,
-    "waqfeya": []
+    "score": 77.2,
+    "waqfeya": [
+     "https://waqfeya.net/books/الورع-ت-الجابي-d71d08586fd140f8bb1d1fee536f40ee"
+    ],
+    "same_edition": true,
+    "best_scan": false
    },
    {
     "folder": "الورع (ت - السعدني) - ابن أبي الدنيا (ط مكتبة القرآن)",
@@ -22020,12 +21905,12 @@
    {
     "folder": "كتاب البديع - ابن المعتز (ت كراتشقوفسكي؛ أغناطيوس جوليانوفتش كراتشقوفسكي)",
     "cat": "البلاغة",
-    "edition": "ت كراتشقوفسكي؛ أغناطيوس جوليانوفتش كراتشقوفسكي",
-    "researcher": "",
+    "edition": "ت  كراتشقوفسكي؛ أغناطيوس جوليانوفتش كراتشقوفسكي",
+    "researcher": " كراتشقوفسكي؛ أغناطيوس جوليانوفتش كراتشقوفسكي",
     "publisher": "",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 3891029,
     "quality": {
      "files": 1,
@@ -22036,8 +21921,10 @@
      "width_used": 0.54,
      "text": false
     },
-    "score": 60.8,
-    "waqfeya": []
+    "score": 75.8,
+    "waqfeya": [
+     "https://waqfeya.net/books/كتاب-البديع-5d5456533f224f1293d183c6dedeeb3f"
+    ]
    }
   ],
   "note": null
@@ -22228,12 +22115,12 @@
    {
     "folder": "بذل المجهود في إفحام اليهود - السموأل بن يحيى (ط دار القلم - الدار الشامية)",
     "cat": "العقيدة",
-    "edition": "ط دار القلم - الدار الشامية",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت عبد الوهاب طويلة - ط دار القلم - الدار الشامية - 1410 - 1989",
+    "researcher": "عبد الوهاب طويلة",
+    "publisher": "دار القلم - الدار الشامية",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 3428723,
     "quality": {
      "files": 1,
@@ -22244,18 +22131,20 @@
      "width_used": 0.6,
      "text": false
     },
-    "score": 62.0,
-    "waqfeya": []
+    "score": 77.0,
+    "waqfeya": [
+     "https://waqfeya.net/books/بذل-المجهود-في-إفحام-اليهود-ت-طويلة-0a25be7e222446c2a1be1060a9d5b9d0"
+    ]
    },
    {
     "folder": "بذل المجهود في إفحام اليهود - السموأل بن يحيى (ط مكتبة الجهاد الكبرى)",
     "cat": "العقيدة",
     "edition": "ط مكتبة الجهاد الكبرى",
     "researcher": "",
-    "publisher": "",
+    "publisher": "مكتبة الجهاد الكبرى",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 2269389,
     "quality": {
      "files": 1,
@@ -22266,8 +22155,10 @@
      "width_used": 0.62,
      "text": false
     },
-    "score": 12.4,
-    "waqfeya": []
+    "score": 27.4,
+    "waqfeya": [
+     "https://waqfeya.net/books/بذل-المجهود-في-إفحام-اليهود--يليه-الرسالة-السبيعية-بإبطال-الديانة-اليهودية-2f8e05f657a642f0a6a2de464268570c"
+    ]
    }
   ],
   "note": null
@@ -22305,12 +22196,12 @@
    {
     "folder": "فضائل الصحابة - النسائي (ط دار الكتب العلمية)",
     "cat": "التراجم والطبقات",
-    "edition": "ط دار الكتب العلمية",
+    "edition": "ط دار الكتب العلمية - 1405 - 1984",
     "researcher": "",
-    "publisher": "",
+    "publisher": "دار الكتب العلمية",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 1675046,
     "quality": {
      "files": 1,
@@ -22321,8 +22212,10 @@
      "width_used": 0.65,
      "text": false
     },
-    "score": 63.0,
-    "waqfeya": []
+    "score": 78.0,
+    "waqfeya": [
+     "https://waqfeya.net/books/فضائل-الصحابة-ط-العلمية-cb0b1d79a72940d99ef79216d9b067b8"
+    ]
    }
   ],
   "note": null
@@ -22415,12 +22308,12 @@
    {
     "folder": "الإجماع - المنذر (ط دار الآثار للنشر والتوزيع)",
     "cat": "الفقه العام",
-    "edition": "ط دار الآثار للنشر والتوزيع",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت خالد بن محمد عثمان أبو عبد الأعلى - ط دار الآثار للنشر والتوزيع - 1425 - 2004",
+    "researcher": "خالد بن محمد عثمان أبو عبد الأعلى",
+    "publisher": "دار الآثار للنشر والتوزيع",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 2846778,
     "quality": {
      "files": 1,
@@ -22431,8 +22324,10 @@
      "width_used": 0.6,
      "text": false
     },
-    "score": 62.0,
-    "waqfeya": []
+    "score": 77.0,
+    "waqfeya": [
+     "https://waqfeya.net/books/الإجماع-ط-الآثار-b9badfc99b544c13a2f9881ec443d5aa"
+    ]
    }
   ],
   "note": null
@@ -22527,12 +22422,12 @@
    {
     "folder": "البدع والنهي عنها - ابن وضاح (ت محمد أحمد دهمان)",
     "cat": "كتب السنة",
-    "edition": "ت محمد أحمد دهمان",
-    "researcher": "",
+    "edition": "ت محمد أحمد دهمان - 1411 - 1990",
+    "researcher": "محمد أحمد دهمان",
     "publisher": "",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 2303334,
     "quality": {
      "files": 1,
@@ -22543,8 +22438,10 @@
      "width_used": 0.66,
      "text": false
     },
-    "score": 59.6,
-    "waqfeya": []
+    "score": 74.6,
+    "waqfeya": [
+     "https://waqfeya.net/books/البدع-والنهي-عنها--ت-دهمان-62314d7ec73f404c92ecc2bac77dd35a"
+    ]
    }
   ],
   "note": null
@@ -22867,12 +22764,12 @@
    {
     "folder": "جماع العلم - الإمام الشافعي (ط مكتبة ابن تيمية)",
     "cat": "أصول الفقه",
-    "edition": "ط مكتبة ابن تيمية",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت أحمد محمد شاكر أبو الأشبال - ط مكتبة ابن تيمية",
+    "researcher": "أحمد محمد شاكر أبو الأشبال",
+    "publisher": "مكتبة ابن تيمية",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 2034766,
     "quality": {
      "files": 1,
@@ -22883,8 +22780,10 @@
      "width_used": 0.67,
      "text": false
     },
-    "score": 63.4,
-    "waqfeya": []
+    "score": 78.4,
+    "waqfeya": [
+     "https://waqfeya.net/books/جماع-العلم-14e6bc6152fc4b40867728d40e9728af"
+    ]
    }
   ],
   "note": null
@@ -22977,12 +22876,12 @@
    {
     "folder": "حسن السمت في الصمت - الجلال السيوطي (ط دار العلم والإيمان للنشر والتوزيع - كفر الشيخ)",
     "cat": "الرقائق والآداب والأذكار",
-    "edition": "ط دار العلم والإيمان للنشر والتوزيع - كفر الشيخ",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت أحمد محمد سليمان - ط دار العلم والإيمان للنشر والتوزيع - كفر الشيخ - 1430 - 2010",
+    "researcher": "أحمد محمد سليمان",
+    "publisher": "دار العلم والإيمان للنشر والتوزيع - كفر الشيخ",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 3230046,
     "quality": {
      "files": 1,
@@ -22993,8 +22892,10 @@
      "width_used": 0.57,
      "text": true
     },
-    "score": 25.7,
-    "waqfeya": []
+    "score": 40.7,
+    "waqfeya": [
+     "https://waqfeya.net/books/حسن-السمت-في-الصمت-93a97a89c7ff49da9cd4ad3fef92b80e"
+    ]
    }
   ],
   "note": null
@@ -23065,12 +22966,12 @@
    {
     "folder": "أحسن ما سمعت - الثعالبي (ط دار الطلائع)",
     "cat": "الأدب",
-    "edition": "ط دار الطلائع",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت محمد إبراهيم سليم - ط دار الطلائع",
+    "researcher": "محمد إبراهيم سليم",
+    "publisher": "دار الطلائع",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 2447021,
     "quality": {
      "files": 1,
@@ -23081,8 +22982,10 @@
      "width_used": 0.69,
      "text": false
     },
-    "score": 63.8,
-    "waqfeya": []
+    "score": 78.8,
+    "waqfeya": [
+     "https://waqfeya.net/books/أحسن-ما-سمعت-ط-الطلائع-bab520816194471496ac7874d826e7a6"
+    ]
    },
    {
     "folder": "أحسن ما سمعت - الثعالبي (ط دار الكتب العلمية)",
@@ -23120,12 +23023,12 @@
    {
     "folder": "جزء فيه قراءات النبي صلى الله - حفص القارئ (ط مكتبة الدار - المدينة المنورة)",
     "cat": "التجويد والقراءات",
-    "edition": "ط مكتبة الدار - المدينة المنورة",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت حكمت بشير ياسين - ط مكتبة الدار - المدينة المنورة - 1408 - 1988",
+    "researcher": "حكمت بشير ياسين",
+    "publisher": "مكتبة الدار - المدينة المنورة",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 2984662,
     "quality": {
      "files": 1,
@@ -23136,8 +23039,10 @@
      "width_used": 0.68,
      "text": false
     },
-    "score": 63.6,
-    "waqfeya": []
+    "score": 78.6,
+    "waqfeya": [
+     "https://waqfeya.net/books/جزء-فيه--قراءات-النبي-صلى-الله-عليه-وسلم-4b00b355ff23421c8bcf74235a7ebdde"
+    ]
    },
    {
     "folder": "جزء فيه قراءات النبي - حفص بن عمر الدوري (ت أبو الفداء سامي أنور - دار عمار)",
@@ -23291,12 +23196,12 @@
    {
     "folder": "أخلاق العلماء - الآجري (ط دار القلم - الدار الشامية)",
     "cat": "الرقائق والآداب والأذكار",
-    "edition": "ط دار القلم - الدار الشامية",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت أمينة عمر الخراط - ط دار القلم - الدار الشامية - 1422 - 2001",
+    "researcher": "أمينة عمر الخراط",
+    "publisher": "دار القلم - الدار الشامية",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 2283948,
     "quality": {
      "files": 1,
@@ -23307,8 +23212,10 @@
      "width_used": 0.7,
      "text": false
     },
-    "score": 64.0,
-    "waqfeya": []
+    "score": 79.0,
+    "waqfeya": [
+     "https://waqfeya.net/books/أخلاق-العلماء-ت-الخراط-e7fced1ef7d14ec69edbb2b62fe6ee83"
+    ]
    },
    {
     "folder": "أخلاق العلماء - الآجري (ط رئاسة إدارات البحوث العلمية والإفتاء والدعوة والإرشاد - السعودية)",
@@ -23370,12 +23277,12 @@
    {
     "folder": "كتاب القدر وما ورد - ابن وهب (ط دار العطاء للنشر والتوزيع)",
     "cat": "كتب السنة",
-    "edition": "ط دار العطاء للنشر والتوزيع",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت عمر بن سليمان الحفيان - ط دار العطاء للنشر والتوزيع - 1422 - 2001",
+    "researcher": "عمر بن سليمان الحفيان",
+    "publisher": "دار العطاء للنشر والتوزيع",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 1463498,
     "quality": {
      "files": 1,
@@ -23386,8 +23293,10 @@
      "width_used": 0.7,
      "text": false
     },
-    "score": 64.0,
-    "waqfeya": []
+    "score": 79.0,
+    "waqfeya": [
+     "https://waqfeya.net/books/كتاب-القدر-وما-ورد-في-ذلك-من-الآثار-ت-الحفيان-9fc29e44b704465ba6634443defbfbd1"
+    ]
    }
   ],
   "note": null
@@ -23629,12 +23538,12 @@
    {
     "folder": "نزهة الجلساء في أشعار النساء - الجلال السيوطي",
     "cat": "الأدب",
-    "edition": "",
-    "researcher": "",
+    "edition": "ت عبد اللطيف عاشور - 1986",
+    "researcher": "عبد اللطيف عاشور",
     "publisher": "",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 1726830,
     "quality": {
      "files": 1,
@@ -23645,18 +23554,22 @@
      "width_used": 0.66,
      "text": false
     },
-    "score": 63.2,
-    "waqfeya": []
+    "score": 78.2,
+    "waqfeya": [
+     "https://waqfeya.net/books/نزهة-الجلساء-في-أشعار-النساء-b8d8b815cbcf438ab3d9f845d13137d1"
+    ],
+    "same_edition": true,
+    "best_scan": true
    },
    {
     "folder": "نزهة الجلساء في أشعار النساء - الجلال السيوطي (ط مكتبة القرآن)",
     "cat": "الأدب",
-    "edition": "ط مكتبة القرآن",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت عبد اللطيف عاشور - ط مكتبة القرآن",
+    "researcher": "عبد اللطيف عاشور",
+    "publisher": "مكتبة القرآن",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 1484159,
     "quality": {
      "files": 1,
@@ -23667,8 +23580,12 @@
      "width_used": 0.66,
      "text": false
     },
-    "score": 63.2,
-    "waqfeya": []
+    "score": 78.2,
+    "waqfeya": [
+     "https://waqfeya.net/books/نزهة-الجلساء-في-أشعار-النساء-f9b8c7f022e04bd0a1c2f7c250f890ce"
+    ],
+    "same_edition": true,
+    "best_scan": false
    }
   ],
   "note": null
@@ -23682,12 +23599,12 @@
    {
     "folder": "شرح غريب ألفاظ المدونة - الجبي",
     "cat": "الغريب والمعاجم",
-    "edition": "",
-    "researcher": "",
+    "edition": "ت محمد محفوظ - 1425 - 2005",
+    "researcher": "محمد محفوظ",
     "publisher": "",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 1380934,
     "quality": {
      "files": 1,
@@ -23698,8 +23615,10 @@
      "width_used": 0.7,
      "text": false
     },
-    "score": 57.7,
-    "waqfeya": []
+    "score": 72.7,
+    "waqfeya": [
+     "https://waqfeya.net/books/شرح-غريب-ألفاظ-المدونة-d9f5bebd3903494eb23bdec0253ec5dd"
+    ]
    },
    {
     "folder": "شرح غريب الفاظ المدونة للجبي",
@@ -23782,18 +23701,18 @@
  {
   "work": "ايضاح الدلاله في عموم",
   "title": "إيضاح الدلالة في عموم الرسالة",
-  "author": "",
+  "author": "ابن تيمية؛ أحمد بن عبد الحليم بن عبد السلام بن عبد الله بن أبي القاسم الخضر النميري الحراني الدمشقي الحنبلي، أبو العباس، تقي الدين ابن تيمية",
   "bytes": 2687393,
   "editions": [
    {
     "folder": "إيضاح الدلالة في عموم الرسالة",
     "cat": "العقيدة",
-    "edition": "",
+    "edition": "ط مكتبة الرياض الحديثة",
     "researcher": "",
-    "publisher": "",
+    "publisher": "مكتبة الرياض الحديثة",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 1256284,
     "quality": {
      "files": 1,
@@ -23804,8 +23723,10 @@
      "width_used": 0.77,
      "text": false
     },
-    "score": 65.4,
-    "waqfeya": []
+    "score": 80.4,
+    "waqfeya": [
+     "https://waqfeya.net/books/إيضاح-الدلالة-في-عموم-الرسالة-a45b0329a4554fda9142011b4d45574b"
+    ]
    },
    {
     "folder": "إيضاح الدلالة في عموم الرسالة والتعريف بأحوال الجن ويليه شرح حديث بدأ الإسلام غريبا",
@@ -24228,59 +24149,6 @@
   "note": null
  },
  {
-  "work": "اختيارات شيخ الاسلام ابن",
-  "title": "اختيارات شيخ الإسلام ابن تيمية النميري",
-  "author": "",
-  "bytes": 2267650,
-  "editions": [
-   {
-    "folder": "اختيارات شيخ الإسلام ابن تيمية النميري - ط. الهلال",
-    "cat": "الفقه الحنبلي",
-    "edition": "ط. الهلال",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 298776,
-    "quality": {
-     "files": 1,
-     "pages": 30,
-     "kbpp": 10,
-     "px": 1557,
-     "colour": "أبيض وأسود",
-     "width_used": 0.65,
-     "text": false
-    },
-    "score": 63.0,
-    "waqfeya": []
-   },
-   {
-    "folder": "اختيارات شيخ الإسلام ابن تيمية - ابن عبدالهادي",
-    "cat": "الفقه العام",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 1968874,
-    "quality": {
-     "files": 1,
-     "pages": 167,
-     "kbpp": 11,
-     "px": 1918,
-     "colour": "أبيض وأسود",
-     "width_used": 0.72,
-     "text": false
-    },
-    "score": 64.4,
-    "waqfeya": []
-   }
-  ],
-  "note": null
- },
- {
   "work": "الطب الروحاني",
   "title": "الطب الروحاني",
   "author": "ابن الجوزي",
@@ -24289,12 +24157,12 @@
    {
     "folder": "الطب الروحاني - ابن الجوزي",
     "cat": "الرقائق والآداب والأذكار",
-    "edition": "",
-    "researcher": "",
+    "edition": "ت محمد السعيد بن بسيوني زغلول  - 1406 - 1986",
+    "researcher": "محمد السعيد بن بسيوني زغلول ",
     "publisher": "",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 1000808,
     "quality": {
      "files": 1,
@@ -24305,18 +24173,22 @@
      "width_used": 0.62,
      "text": false
     },
-    "score": 62.4,
-    "waqfeya": []
+    "score": 77.4,
+    "waqfeya": [
+     "https://waqfeya.net/books/الطب-الروحاني-f97500253f6643439179fb16d8d10028"
+    ],
+    "same_edition": true,
+    "best_scan": true
    },
    {
     "folder": "الطب الروحاني - ابن الجوزي (ط مكتبة الثقافة الدينية)",
     "cat": "الرقائق والآداب والأذكار",
-    "edition": "ط مكتبة الثقافة الدينية",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت محمد السعيد بن بسيوني زغلول أبو هاجر - ط مكتبة الثقافة الدينية  - 1406 - 1986",
+    "researcher": "محمد السعيد بن بسيوني زغلول أبو هاجر",
+    "publisher": "مكتبة الثقافة الدينية ",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 1001342,
     "quality": {
      "files": 1,
@@ -24327,8 +24199,12 @@
      "width_used": 0.62,
      "text": false
     },
-    "score": 62.4,
-    "waqfeya": []
+    "score": 77.4,
+    "waqfeya": [
+     "https://waqfeya.net/books/الطب-الروحاني-ط-الثقافة-الدينية-6b6cef0a44ad4f3fbadee944df24f0da"
+    ],
+    "same_edition": true,
+    "best_scan": false
    }
   ],
   "note": null
@@ -24476,12 +24352,12 @@
    {
     "folder": "أسماء الذين راموا الخلافة، و نسب الأيوبيين",
     "cat": "التاريخ",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
+    "edition": "ت صلاح الدين المنجد - ط دار الكتاب الجديد - 1398 - 1978",
+    "researcher": "صلاح الدين المنجد",
+    "publisher": "دار الكتاب الجديد",
     "files": 1,
-    "vols_edition": "",
-    "complete": false,
+    "vols_edition": "1",
+    "complete": true,
     "bytes": 755311,
     "quality": {
      "files": 1,
@@ -24492,8 +24368,10 @@
      "width_used": 0.68,
      "text": false
     },
-    "score": 63.6,
-    "waqfeya": []
+    "score": 78.6,
+    "waqfeya": [
+     "https://waqfeya.net/books/أسماء-الذين-راموا-الخلافة-و-نسب-الأيوبيين-76f393876971402a97fb7b880af9497b"
+    ]
    }
   ],
   "note": null

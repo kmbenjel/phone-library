@@ -1,5 +1,5 @@
 """Tiny report builder: the same content rendered to phone-friendly HTML (site/) and Markdown (reports/)."""
-import html, os, time
+import html, os, re, time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 CSS = """
@@ -54,7 +54,7 @@ var B=[].slice.call(document.querySelectorAll('input.pk')),bar=document.getEleme
 var n=document.getElementById('pk-n'),ta=document.getElementById('pk-list'),cl=document.getElementById('pk-clear');
 function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
 function txt(){return Object.keys(P).map(function(k){return k+' '+P[k]}).join('\n')}
-function paint(){n.textContent=Object.keys(P).length.toLocaleString('ar');B.forEach(function(b){b.checked=!!P[b.dataset.k]});if(!ta.hidden)ta.value=txt()}
+function paint(){n.textContent=Object.keys(P).length.toLocaleString('en-US');B.forEach(function(b){b.checked=!!P[b.dataset.k]});if(!ta.hidden)ta.value=txt()}
 B.forEach(function(b){b.onchange=function(){if(b.checked)P[b.dataset.k]=b.dataset.t;else delete P[b.dataset.k];save();paint()}});
 document.getElementById('pk-show').onclick=function(){ta.hidden=!ta.hidden;ta.value=txt()};
 document.getElementById('pk-copy').onclick=function(){var t=txt(),btn=this;function ok(){btn.textContent='نُسخت ✓';setTimeout(function(){btn.textContent='انسخ القائمة'},2000)}
@@ -63,6 +63,12 @@ document.getElementById('pk-copy').onclick=function(){var t=txt(),btn=this;funct
 cl.onclick=function(){if(cl.dataset.c){P={};save();paint();delete cl.dataset.c;cl.textContent='امسح التحديد'}else{cl.dataset.c=1;cl.textContent='اضغط للتأكيد';setTimeout(function(){delete cl.dataset.c;cl.textContent='امسح التحديد'},4000)}};
 window.addEventListener('storage',function(){try{P=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){}paint()});paint()})();</script>'''
 
+
+_DIG = str.maketrans('٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹', '01234567890123456789')
+def western_digits(html):
+    """Western digits (1234) in every report (owner, 2026-10-06) — but not inside links, which must stay exact"""
+    parts = re.split(r'(href="[^"]*")', html)
+    return ''.join(p if p.startswith('href="') else p.translate(_DIG) for p in parts)
 
 class Report:
     def __init__(self, title, subtitle=''):
@@ -132,6 +138,7 @@ class Report:
                 f'<h1>{esc(self.title)}</h1><div class="sub">{esc(self.subtitle)} · أُنشئ {stamp}</div>' + '\n'.join(self.h) + '</main>'
                 + (PICK_BAR + PICK_JS if getattr(self, 'has_pick', False) else '') + '</body></html>')
         os.makedirs(os.path.join(ROOT, 'site'), exist_ok=True); os.makedirs(os.path.join(ROOT, 'reports'), exist_ok=True)
+        page = western_digits(page)
         open(os.path.join(ROOT, 'site', name + '.html'), 'w').write(page)
         open(os.path.join(ROOT, 'reports', name + '.md'), 'w').write('\n'.join(self.m + ['', f'_Generated {stamp}_', '']))
         return name

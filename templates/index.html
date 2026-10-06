@@ -79,10 +79,10 @@ const R=JSON.parse(document.getElementById('reports-data').textContent);
 const $=id=>document.getElementById(id);
 const norm=s=>(s||'').replace(/[ً-ْـ]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي').toLowerCase();
 const gb=b=>b>=1e9?(b/1e9).toFixed(1)+' غ.ب':(b/1e6).toFixed(b<1.6e7?1:0)+' م.ب';      // decimal units, as the phone and the owner count
-const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc=s=>String(s??'').replace(/[٠-٩۰-۹]/g,d=>String(d.charCodeAt(0)%16)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));   // Western digits everywhere (owner, 2026-10-06)
 const href=(b,f)=>'../'+[b.cat,...b.folder.split('/'),f].map(encodeURIComponent).join('/');
 D.books.forEach(b=>b._k=norm([b.title,b.author,b.edition,b.folder,b.researcher,b.publisher,b.cat].join(' ')));
-$('stats').textContent=`${D.stats.books.toLocaleString('ar')} مدخلًا (كتابًا أو مجموعة أو دورية)${D.stats.titles?`، فيها نحو ${D.stats.titles.toLocaleString('ar')} عنوانًا`:''}${D.stats.issues?` و${D.stats.issues.toLocaleString('ar')} عددًا من الدوريات`:''} · ${D.stats.files.toLocaleString('ar')} ملف PDF · ${gb(D.stats.bytes)} · ${D.stats.categories.toLocaleString('ar')} قسمًا · حُدِّث ${D.generated}`;
+$('stats').textContent=`${D.stats.books.toLocaleString('en-US')} مدخلًا (كتابًا أو مجموعة أو دورية)${D.stats.titles?`، فيها نحو ${D.stats.titles.toLocaleString('en-US')} عنوانًا`:''}${D.stats.issues?` و${D.stats.issues.toLocaleString('en-US')} عددًا من الدوريات`:''} · ${D.stats.files.toLocaleString('en-US')} ملف PDF · ${gb(D.stats.bytes)} · ${D.stats.categories.toLocaleString('en-US')} قسمًا · حُدِّث ${D.generated}`;
 const TABS=[{id:'home',title:'الفهرس'}].concat(R.map((r,i)=>({id:'r'+i,title:r.title})));
 function tabs(cur){$('tabs').innerHTML=TABS.map(t=>`<button data-t="${t.id}" aria-current="${t.id===cur}">${esc(t.title)}</button>`).join('');}
 function show(id,user){tabs(id);const home=id==='home';$('home').hidden=!home;$('bar').hidden=!home;$('catbox').hidden=!home;
@@ -94,9 +94,9 @@ $('tabs').onclick=e=>{const b=e.target.closest('button');if(b)show(b.dataset.t,t
 $('totabs').onclick=()=>scrollTo({top:0,behavior:'smooth'});
 let cat='',shown=0,res=[];const PAGE=60;
 function chips(){const all=[{name:'',books:D.stats.books}].concat(D.categories);
- $('cats').innerHTML=all.map(c=>`<button class="chip" data-c="${esc(c.name)}" aria-pressed="${c.name===cat}">${esc(c.name||'الكل')} <small>${c.books.toLocaleString('ar')}</small></button>`).join('');
- $('catsel').innerHTML=all.map(c=>`<option value="${esc(c.name)}"${c.name===cat?' selected':''}>${c.name?esc(c.name)+' ('+c.books.toLocaleString('ar')+')':'كل الأقسام'}</option>`).join('');
- $('catbox').querySelector('summary').textContent=cat?`القسم: ${cat}`:`الأقسام (${D.categories.length.toLocaleString('ar')})`;}
+ $('cats').innerHTML=all.map(c=>`<button class="chip" data-c="${esc(c.name)}" aria-pressed="${c.name===cat}">${esc(c.name||'الكل')} <small>${c.books.toLocaleString('en-US')}</small></button>`).join('');
+ $('catsel').innerHTML=all.map(c=>`<option value="${esc(c.name)}"${c.name===cat?' selected':''}>${c.name?esc(c.name)+' ('+c.books.toLocaleString('en-US')+')':'كل الأقسام'}</option>`).join('');
+ $('catbox').querySelector('summary').textContent=cat?`القسم: ${cat}`:`الأقسام (${D.categories.length.toLocaleString('en-US')})`;}
 function setCat(c){cat=c;chips();run();try{localStorage.setItem('cat',cat)}catch(_){}}
 $('cats').onclick=e=>{const b=e.target.closest('.chip');if(b)setCat(b.dataset.c);};
 $('catsel').onchange=e=>{setCat(e.target.value);scrollTo(0,0);};
@@ -104,7 +104,7 @@ try{const o=localStorage.getItem('catbox');$('catbox').open=o?o==='1':matchMedia
 $('catbox').ontoggle=()=>{try{localStorage.setItem('catbox',$('catbox').open?'1':'0')}catch(_){}};
 function hl(s,terms){s=esc(s);return s}
 const ORDW=[,'الأولى','الثانية','الثالثة','الرابعة','الخامسة','السادسة','السابعة','الثامنة','التاسعة','العاشرة'];
-const AR=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const AR=n=>String(n);                    // Western digits throughout (owner, 2026-10-06)
 function edLine(b){                       // edition card from scripts/edition_info.py; every value carries its source
  const e=b.ed||{},v=k=>e[k]&&e[k][0],src={};
  for(const k in e)(src[e[k][1]]=src[e[k][1]]||[]).push(k);
@@ -123,7 +123,7 @@ function card(b){
  const desc=b.ed&&b.ed.note?`<div class="desc">ملاحظة: ${esc(b.ed.note[0])}</div>`:'';
  const files=b.files.map(([f,s])=>`<li><a href="${href(b,f)}">${esc(f.replace(/\.pdf$/i,''))}</a><span class="sz">${gb(s)}</span></li>`).join('')+`<li class="path">المسار في الهاتف: Books/${esc(b.cat)}/${esc(b.folder)}/</li>`;
  const src=(b.waqfeya||[]).map(w=>`<a href="${esc(w.url)}">الوقفية</a>`).concat((b.archive||[]).slice(0,3).map(a=>`<a href="https://archive.org/details/${encodeURIComponent(a)}">archive.org</a>`)).join(' · ');
- return `<details class="book"><summary><div class="t">${esc(b.title)}</div><div class="m">${meta?esc(meta)+' · ':''}${cat?'':'<b>'+esc(b.cat)+'</b> · '}${b.files.length>1?b.files.length.toLocaleString('ar')+' مجلدات · ':''}${gb(b.bytes)}${b.century&&!d?' · '+esc(b.century):''}</div>${edLine(b)}</summary>${desc}<ul class="files">${files}</ul>${src?`<div class="src">المصدر: ${src}</div>`:''}</details>`;}
+ return `<details class="book"><summary><div class="t">${esc(b.title)}</div><div class="m">${meta?esc(meta)+' · ':''}${cat?'':'<b>'+esc(b.cat)+'</b> · '}${b.files.length>1?b.files.length.toLocaleString('en-US')+' مجلدات · ':''}${gb(b.bytes)}${b.century&&!d?' · '+esc(b.century):''}</div>${edLine(b)}</summary>${desc}<ul class="files">${files}</ul>${src?`<div class="src">المصدر: ${src}</div>`:''}</details>`;}
 function run(){const t=norm($('q').value).split(/\s+/).filter(Boolean);
  res=D.books.filter(b=>(!cat||b.cat===cat)&&t.every(w=>b._k.includes(w)));shown=0;$('list').innerHTML='';more();}
 function more(){const chunk=res.slice(shown,shown+PAGE);shown+=chunk.length;

@@ -35,7 +35,7 @@ tr:has(input.pk:checked){background:color-mix(in srgb,var(--accent) 12%,transpar
 #pickbar button.main{background:var(--accent);color:var(--bg)}
 #pickbar textarea{flex:1 1 100%;min-height:7em;font:13px/1.5 monospace;direction:ltr;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px}
 #pickbar .hint{flex:1 1 100%;color:var(--muted);font-size:.8rem}
-</style></head><body><main><div class="back"><a href="00 - الفهرس العام.html">→ الفهرس العام</a></div><h1>توصيات لتوسعة المكتبة</h1><div class="sub">مبنية على المقارنة بالشاملة والوقفية وعلى حالة ملفات الهاتف · أُنشئ 2026-10-06 08:14</div><div class="kpis"><div class="kpi"><b>24</b><span>كتب ناقصة المجلدات</span></div><div class="kpi"><b>0.8 GB</b><span>حجم إكمالها</span></div><div class="kpi"><b>0 من 83</b><span>من قائمة الأمهات: غير موجود</span></div><div class="kpi"><b>105</b><span>كتب المتقدمين المقترحة</span></div><div class="kpi"><b>140</b><span>ملفات على الحاسوب ليست في الهاتف</span></div></div>
+</style></head><body><main><div class="back"><a href="00 - الفهرس العام.html">→ الفهرس العام</a></div><h1>توصيات لتوسعة المكتبة</h1><div class="sub">مبنية على المقارنة بالشاملة والوقفية وعلى حالة ملفات الهاتف · أُنشئ 2026-10-06 08:43</div><div class="kpis"><div class="kpi"><b>24</b><span>كتب ناقصة المجلدات</span></div><div class="kpi"><b>0.8 GB</b><span>حجم إكمالها</span></div><div class="kpi"><b>0 من 83</b><span>من قائمة الأمهات: غير موجود</span></div><div class="kpi"><b>105</b><span>كتب المتقدمين المقترحة</span></div><div class="kpi"><b>140</b><span>ملفات على الحاسوب ليست في الهاتف</span></div></div>
 <h2 id="finish">1. أولًا: إتمام ما بدأ</h2>
 <ul><li>تم: حذف 841 نسخة مكررة (8 GB) بعد التحقق من تطابقها، وتصحيح أسماء نحو 5,500 ملف، ونقل 238 كتابًا إلى أقسامها الصحيحة (انظر «04 - سجل التغييرات»).</li><li>مراجعة البنود المتبقية في «04 - سجل التغييرات» (قسم: يحتاج مراجعة) — أسماء لم يكفِ الدليل لتصحيحها آليًا.</li><li>إكمال الكتب الناقصة (البند 2) قبل إضافة عناوين جديدة: كتاب ناقص الأجزاء أقل نفعًا من كتاب واحد كامل.</li></ul>
 <h2 id="partial">2. إكمال الكتب الناقصة (24)</h2>
@@ -83,7 +83,7 @@ var B=[].slice.call(document.querySelectorAll('input.pk')),bar=document.getEleme
 var n=document.getElementById('pk-n'),ta=document.getElementById('pk-list'),cl=document.getElementById('pk-clear');
 function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
 function txt(){return Object.keys(P).map(function(k){return k+' '+P[k]}).join('\n')}
-function paint(){n.textContent=Object.keys(P).length.toLocaleString('ar');B.forEach(function(b){b.checked=!!P[b.dataset.k]});if(!ta.hidden)ta.value=txt()}
+function paint(){n.textContent=Object.keys(P).length.toLocaleString('en-US');B.forEach(function(b){b.checked=!!P[b.dataset.k]});if(!ta.hidden)ta.value=txt()}
 B.forEach(function(b){b.onchange=function(){if(b.checked)P[b.dataset.k]=b.dataset.t;else delete P[b.dataset.k];save();paint()}});
 document.getElementById('pk-show').onclick=function(){ta.hidden=!ta.hidden;ta.value=txt()};
 document.getElementById('pk-copy').onclick=function(){var t=txt(),btn=this;function ok(){btn.textContent='نُسخت ✓';setTimeout(function(){btn.textContent='انسخ القائمة'},2000)}
