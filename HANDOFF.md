@@ -171,3 +171,6 @@ Phone FTP: 192.168.11.103:2221 since 2026-10-05 noon (was .102; scripts/phone_ho
 - 20:30: 142 at batch 10 (≈ 1,330 books substituted so far; 3 checked by eye: nothing cut, footnotes/page numbers kept).
   139 retry pass running, then after_139.sh → 143. Nothing else pending for tonight; fix_at_scale writes its WORKLOG
   line when it ends. Morning: refresh.sh --no-list, commit, local ~/Books sync for today's additions.
+- 2026-10-06 07:40: 142 crawled overnight (batch 13: 52 files in 10.5 h — the phone dozes with its screen off; a 7 MB
+  download now takes 0.7 s) and is moving again (~3 files/min). ≈ 1,800 of ≈ 4,600 quality rows done; later batches
+  hold bigger books. Keeping the phone awake (charger + screen-on/«stay awake» in the FTP app) keeps it fast.
