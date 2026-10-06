@@ -214,3 +214,7 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   TODO: the 300-poem «منظومات» batch (data/mappings/mandumat_catalog.json) — its parser split titles at «لـ…» («ميسر التحصيل
   فيما - مالك من التأصيل», «منظومة المكفرات - كل ذنب سابق وآت»), and all 300 were put in الأدب whatever their subject: one
   pass over them (raw_title → full title, author from the title page, Shamela section by subject). 155 fixed six of them.
+- 13:55: sheets 62–67 read (books 372–407) → plans 162 (seven التاريخ files to their subjects: الفرق والردود، التفسير، العقيدة،
+  النحو، البلدان), 163 (المفصل في تاريخ العرب قبل الإسلام, only vols 1–4 of 10 on the phone → TO FETCH vols 5–10 of the
+  جامعة بغداد 2nd ed. 1413/1993; تاريخ خليفة ت العمري; ابن طولون → التفسير). The التاريخ section holds many stray single
+  files from the منظومات/blog batches: worth one dedicated pass over التاريخ plain files after the sheets.
