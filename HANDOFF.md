@@ -232,3 +232,7 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
 - 18:30 NEEDS REVIEW (owner): «الروض الأنف» ت الوكيل (دار الكتب الحديثة 1387) exists as two scans: the complete 7-volume «المسهم»
   scan (1582×2599 px + a logo on every page) and a sharper Waqfeya scan (WAQ164489, ≈1940×2770 px) of vols 1–3 only — keep
   both until the Waqfeya vols 4–7 are fetched? «النكت والعيون» DKI exists as one file and as 6 volumes (see 17:00).
+- 19:10 NEEDS REVIEW (owner, two scans of one edition — keep the better?): «جامع العلوم والحكم» ت الأرناؤوط (الرسالة) as one file in
+  شروح الحديث and as a folder in الجوامع (1,073 pages each, different scans; the work belongs in شروح الحديث); «نصب الراية»
+  ت عوامة (مؤسسة الريان / دار القبلة) as one file and as a folder (2,342 pages each, different scans).
+  Plans 183/185/190/193 removed split copies that were the same scan as a one-file copy (image lists identical).
