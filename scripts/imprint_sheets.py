@@ -87,12 +87,20 @@ def main():
     cat = json.load(open(J('data/catalog.json'), encoding='utf-8'))
     info = json.load(open(J('data/editions/edition-info.json'), encoding='utf-8'))
     mapf = os.path.join(OUT, 'books.tsv')
+    if os.path.exists(mapf):                    # a stopped run: books prepared but never laid on a sheet go back to the queue
+        rows = [r for r in csv.reader(open(mapf, encoding='utf-8'), delimiter='\t') if r]
+        keep = [r for r in rows if os.path.exists(os.path.join(OUT, f's{int(r[0]) // PER:04d}.png'))]
+        if len(keep) < len(rows):
+            with open(mapf, 'w', encoding='utf-8') as w:
+                for r in keep: w.write('\t'.join(r) + '\n')
+        for f in os.listdir(OUT):
+            if f.startswith(('tmp-', 't0')): os.remove(os.path.join(OUT, f))
     done = {r[1] for r in csv.reader(open(mapf, encoding='utf-8'), delimiter='\t')} if os.path.exists(mapf) else set()
     start = sum(1 for _ in open(mapf, encoding='utf-8')) if os.path.exists(mapf) else 0
     start = (start + PER - 1) // PER * PER                                  # a new run starts on a fresh sheet
     todo = [b for b in cat['books'] if f"{b['cat']}/{b['folder']}" not in done
             and not ({'hijri', 'gregorian'} & set(info.get(f"{b['cat']}/{b['folder']}", {})))
-            and b['cat'] not in ('علوم أخرى',) and not re.search(r'^مجلة|^سلسلة', b['folder'])]
+            and b['cat'] not in ('علوم أخرى',) and not re.search(r'^مجلة|^سلسلة|^أدب عالمي', b['folder'])]   # no Arabic imprint page
     if a.limit: todo = todo[:a.limit]
     print(len(todo), 'books to prepare', flush=True)
     pending, nxt = [], [start]
