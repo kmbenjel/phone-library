@@ -188,5 +188,7 @@ Shamela (~/.local/share/shamela) when useful; ABSOLUTE ACCURACY first; tesseract
 3. [todo] One-line description from Waqfeya; editions of the same work side by side with scan quality and notes.
 4. [todo] Category audit (e.g. «أرجوزة في علم رسم الخط - الموصلي» sits in أصول الفقه → التجويد والقراءات).
 5. [todo] Header numbers consistent («نحو 6,044 عنوانًا» vs «الكل 5,891»); sizes in GB (169.3) not GiB (157.6).
-6. [later] Work tree (متن → شروح، حواشي، مختصرات، منظومات), author/editor pages, filters (century, printer, old prints).
+6. [later] Work tree (متن → شروح، حواشي، مختصرات، منظومات), author/editor pages, filters (printer, old prints).
+   Owner 08:20: the «before 700 AH» filter belongs ONLY in the comparison reports (01 الشاملة، 02 الوقفية: what early
+   books are missing), not in the main index. Reading paths per science: not now.
 Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.

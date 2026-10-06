@@ -42,6 +42,8 @@ main{padding:10px 12px 60px;max-width:900px;margin:auto}
 .t{font-weight:700;font-size:1.02rem}
 .m{color:var(--muted);font-size:.85rem}
 .m b{font-weight:400;color:var(--accent)}
+.ed{color:var(--muted);font-size:.8rem;line-height:1.5;overflow-wrap:anywhere}
+.desc{font-size:.85rem;margin:6px 0 2px;color:var(--ink);opacity:.85}
 ul.files{margin:6px 0 2px;padding:0;list-style:none;font-size:.92rem}
 ul.files li{padding:2px 0;border-top:1px dashed var(--line)}
 ul.files a{color:var(--ink);text-decoration:none;overflow-wrap:anywhere}
@@ -76,11 +78,11 @@ const D=JSON.parse(document.getElementById('data').textContent);
 const R=JSON.parse(document.getElementById('reports-data').textContent);
 const $=id=>document.getElementById(id);
 const norm=s=>(s||'').replace(/[ً-ْـ]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي').toLowerCase();
-const gb=b=>b>=2**30?(b/2**30).toFixed(1)+' غ.ب':(b/2**20).toFixed(b<2**24?1:0)+' م.ب';
+const gb=b=>b>=1e9?(b/1e9).toFixed(1)+' غ.ب':(b/1e6).toFixed(b<1.6e7?1:0)+' م.ب';      // decimal units, as the phone and the owner count
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const href=(b,f)=>'../'+[b.cat,...b.folder.split('/'),f].map(encodeURIComponent).join('/');
 D.books.forEach(b=>b._k=norm([b.title,b.author,b.edition,b.folder,b.researcher,b.publisher,b.cat].join(' ')));
-$('stats').textContent=`نحو ${(D.stats.titles||D.stats.books).toLocaleString('ar')} عنوانًا${D.stats.issues?` و${D.stats.issues.toLocaleString('ar')} عددًا من الدوريات`:''} · ${D.stats.files.toLocaleString('ar')} ملف PDF · ${gb(D.stats.bytes)} · ${D.stats.categories.toLocaleString('ar')} قسمًا · حُدِّث ${D.generated}`;
+$('stats').textContent=`${D.stats.books.toLocaleString('ar')} مدخلًا (كتابًا أو مجموعة أو دورية)${D.stats.titles?`، فيها نحو ${D.stats.titles.toLocaleString('ar')} عنوانًا`:''}${D.stats.issues?` و${D.stats.issues.toLocaleString('ar')} عددًا من الدوريات`:''} · ${D.stats.files.toLocaleString('ar')} ملف PDF · ${gb(D.stats.bytes)} · ${D.stats.categories.toLocaleString('ar')} قسمًا · حُدِّث ${D.generated}`;
 const TABS=[{id:'home',title:'الفهرس'}].concat(R.map((r,i)=>({id:'r'+i,title:r.title})));
 function tabs(cur){$('tabs').innerHTML=TABS.map(t=>`<button data-t="${t.id}" aria-current="${t.id===cur}">${esc(t.title)}</button>`).join('');}
 function show(id,user){tabs(id);const home=id==='home';$('home').hidden=!home;$('bar').hidden=!home;$('catbox').hidden=!home;
@@ -101,11 +103,27 @@ $('catsel').onchange=e=>{setCat(e.target.value);scrollTo(0,0);};
 try{const o=localStorage.getItem('catbox');$('catbox').open=o?o==='1':matchMedia('(min-width:700px)').matches}catch(_){$('catbox').open=innerWidth>=700}
 $('catbox').ontoggle=()=>{try{localStorage.setItem('catbox',$('catbox').open?'1':'0')}catch(_){}};
 function hl(s,terms){s=esc(s);return s}
+const ORDW=[,'الأولى','الثانية','الثالثة','الرابعة','الخامسة','السادسة','السابعة','الثامنة','التاسعة','العاشرة'];
+const AR=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+function edLine(b){                       // edition card from scripts/edition_info.py; every value carries its source
+ const e=b.ed||{},v=k=>e[k]&&e[k][0],src={};
+ for(const k in e)(src[e[k][1]]=src[e[k][1]]||[]).push(k);
+ const year=[v('hijri')&&AR(v('hijri'))+'هـ',v('gregorian')&&AR(v('gregorian'))+'م'].filter(Boolean).join(' / ');
+ const no=v('edition_no');
+ const tab=[v('editor')&&'تحقيق: '+v('editor'),v('publisher')&&'الناشر: '+v('publisher'),
+  (no||year)&&('الطبعة'+(no?' '+(ORDW[+no]||(/^\d+$/.test(no)?AR(no):no)):'')+(year?'، '+year:'')),
+  v('pages')&&AR(v('pages'))+' صفحة'].filter(Boolean);
+ const names={editor:'المحقق',publisher:'الناشر',hijri:'السنة',gregorian:'السنة',edition_no:'رقم الطبعة',pages:'الصفحات',death:'الوفاة',note:'الملاحظة',volumes:'الأجزاء'};
+ const title=Object.entries(src).map(([s,ks])=>s+': '+[...new Set(ks.map(k=>names[k]||k))].join('، ')).join(' — ');
+ return tab.length?`<div class="ed" title="${esc('المصادر — '+title)}">${esc(tab.join(' · '))}</div>`:'';}
 function card(b){
- const meta=[b.author,b.edition||[b.researcher&&('ت '+b.researcher),b.publisher].filter(Boolean).join(' - ')].filter(Boolean).join(' · ');
+ const d=b.ed&&b.ed.death&&b.ed.death[0];
+ const who=b.author?(b.author+(d?' (ت '+AR(d)+'هـ)':'')):'';
+ const meta=[who,b.ed?'':(b.edition||[b.researcher&&('ت '+b.researcher),b.publisher].filter(Boolean).join(' - '))].filter(Boolean).join(' · ');
+ const desc=b.ed&&b.ed.note?`<div class="desc">ملاحظة: ${esc(b.ed.note[0])}</div>`:'';
  const files=b.files.map(([f,s])=>`<li><a href="${href(b,f)}">${esc(f.replace(/\.pdf$/i,''))}</a><span class="sz">${gb(s)}</span></li>`).join('')+`<li class="path">المسار في الهاتف: Books/${esc(b.cat)}/${esc(b.folder)}/</li>`;
  const src=(b.waqfeya||[]).map(w=>`<a href="${esc(w.url)}">الوقفية</a>`).concat((b.archive||[]).slice(0,3).map(a=>`<a href="https://archive.org/details/${encodeURIComponent(a)}">archive.org</a>`)).join(' · ');
- return `<details class="book"><summary><div class="t">${esc(b.title)}</div><div class="m">${meta?esc(meta)+' · ':''}${cat?'':'<b>'+esc(b.cat)+'</b> · '}${b.files.length>1?b.files.length.toLocaleString('ar')+' مجلدات · ':''}${gb(b.bytes)}${b.century?' · '+esc(b.century):''}</div></summary><ul class="files">${files}</ul>${src?`<div class="src">المصدر: ${src}</div>`:''}</details>`;}
+ return `<details class="book"><summary><div class="t">${esc(b.title)}</div><div class="m">${meta?esc(meta)+' · ':''}${cat?'':'<b>'+esc(b.cat)+'</b> · '}${b.files.length>1?b.files.length.toLocaleString('ar')+' مجلدات · ':''}${gb(b.bytes)}${b.century&&!d?' · '+esc(b.century):''}</div>${edLine(b)}</summary>${desc}<ul class="files">${files}</ul>${src?`<div class="src">المصدر: ${src}</div>`:''}</details>`;}
 function run(){const t=norm($('q').value).split(/\s+/).filter(Boolean);
  res=D.books.filter(b=>(!cat||b.cat===cat)&&t.every(w=>b._k.includes(w)));shown=0;$('list').innerHTML='';more();}
 function more(){const chunk=res.slice(shown,shown+PAGE);shown+=chunk.length;

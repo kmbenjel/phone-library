@@ -5,7 +5,15 @@ import json, os, glob, re, subprocess
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 J = lambda p: os.path.join(ROOT, p)
 os.makedirs(J('site'), exist_ok=True)
-cat = open(J('data/catalog.json')).read().replace('</', '<\\/')
+catalog = json.load(open(J('data/catalog.json'), encoding='utf-8'))
+# edition card (scripts/edition_info.py): year, edition number, editor, publisher, pages, death year, description, sources
+EI = J('data/editions/edition-info.json')
+if os.path.exists(EI):
+    info = json.load(open(EI, encoding='utf-8'))
+    for b in catalog['books']:
+        e = info.get(f"{b['cat']}/{b['folder']}")
+        if e: b['ed'] = {k: [v['v'], v['s']] for k, v in e.items()}
+cat = json.dumps(catalog, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
 reports, sources = [], []
 WEB = os.environ.get('WEB') == '1'          # the online copy (benjelloun.dev/library): no change log (owner, 2026-10-05)
 pages = [p for p in sorted(glob.glob(J('site/[0-9][0-9] - *.html'))) if not os.path.basename(p).startswith('00 ')]
