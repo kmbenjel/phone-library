@@ -79,6 +79,23 @@ def waq_note(desc):
         keep.append(line)
     return ' — '.join(keep)[:300]
 
+MOVES = None
+def sheet_key(key, file):
+    """the book key a sheet was made for, carried along the renames logged since the sheets began (2026-10-06): the
+    sheet's own file is followed, so a file moved out of a misnamed folder lands on its new book, not the old folder"""
+    global MOVES
+    if MOVES is None:
+        strip = lambda p: p[6:] if p.startswith('Books/') else p
+        MOVES = [(strip(r[2]), strip(r[3])) for r in csv.reader(open(J('data/changes/changes.tsv'), encoding='utf-8'), delimiter='\t')
+                 if len(r) >= 4 and r[0] >= '2026-10-06' and r[1] == 'move' and 'substitute' not in (r[5] if len(r) > 5 else '')]
+    cat, folder = key.split('/', 1)
+    p = f'{cat}/{file}' if file == folder + '.pdf' else f'{key}/{file}'
+    for a, b in MOVES:
+        if p == a: p = b
+        elif p.startswith(a + '/'): p = b + p[len(a):]
+    parts = p.split('/')
+    return f'{parts[0]}/{parts[1][:-4]}' if len(parts) == 2 else f'{parts[0]}/{parts[1]}'
+
 def main():
     cat = json.load(open(J('data/catalog.json'), encoding='utf-8'))
     wq = {}
@@ -106,7 +123,7 @@ def main():
     seen = {}                                   # imprint pages read by eye (scripts/imprint_sheets.py → imprint-read.tsv)
     mapf, readf = J('data/editions/imprint-sheets/books.tsv'), J('data/editions/imprint-read.tsv')
     if os.path.exists(mapf) and os.path.exists(readf):
-        nkey = {r[0]: r[1] for r in csv.reader(open(mapf, encoding='utf-8'), delimiter='\t') if r}
+        nkey = {r[0]: sheet_key(r[1], r[2]) for r in csv.reader(open(mapf, encoding='utf-8'), delimiter='\t') if len(r) > 2}
         for r in csv.DictReader(open(readf, encoding='utf-8'), delimiter='\t'):
             if r['n'] in nkey: seen[nkey[r['n']]] = r
     textread = {}                               # imprint lines read from the PDF's own text layer (imprint_sheets.py)
