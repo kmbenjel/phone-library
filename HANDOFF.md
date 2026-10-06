@@ -229,3 +229,6 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
 - 17:00: NEEDS REVIEW (owner): «النكت والعيون تفسير الماوردي … (دار الكتب العلمية).pdf» (one file, 3,085 pages) is the same DKI
   edition as the 6-volume folder «ت السيد بن عبد المقصود» (3,021 pages) with 64 more pages — keep both or only one?
   «البحر المحيط - دار إحياء التراث (ت المهدي)» has vols 1–4 of 8 → candidates to fetch.
+- 18:30 NEEDS REVIEW (owner): «الروض الأنف» ت الوكيل (دار الكتب الحديثة 1387) exists as two scans: the complete 7-volume «المسهم»
+  scan (1582×2599 px + a logo on every page) and a sharper Waqfeya scan (WAQ164489, ≈1940×2770 px) of vols 1–3 only — keep
+  both until the Waqfeya vols 4–7 are fetched? «النكت والعيون» DKI exists as one file and as 6 volumes (see 17:00).
