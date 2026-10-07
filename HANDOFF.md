@@ -247,3 +247,8 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   سامي جاد الله» (16 MB) show the same عطاءات ISBN 978-9959-857-88-0: is the small file a part of the big one?
 - 2026-10-07 22:40: plans/211-sections-read.tsv written (4 moves: الطب النبوي لأبي نعيم → كتب السنة، نخبة الأصول → أصول
   الفقه، نظم الأخضري → الفقه المالكي، رسالة أهل السنة في المغرب → العقيدة) — NOT YET APPLIED (phone FTP down): apply it first.
+- 2026-10-07 23:00: OWNER DECIDED «قم باللازم» → undo all crops. scratch/revert_chain.sh (log logs/revert-chain.log) waits
+  for the phone, applies 211, then scripts/revert_crops.py lists/212-uncrop.tsv (3,734 files, 30 GB, paced): fix_pdf.py
+  --uncrop = every CropBox := MediaBox by incremental save (asserts: same pages, same images, no page cropped), upload size
+  checked, three-step substitution (plans 212-uNNa/b/c). Split spreads stay split (halves tile the page). Recompressed (19):
+  still to restore from archive.org by their original sizes (data/phone/substituted.tsv). Report 09 to be reworked after.

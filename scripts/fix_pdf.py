@@ -104,9 +104,36 @@ def recompress(doc, max_ppi=200, quality=60):
             except Exception as e:
                 print('skip image', xref, e, file=sys.stderr)
 
+def images_of(doc):
+    """every page's image list (xref, width, height, compressed length): proof that no image was touched"""
+    return [[(x[0], x[2], x[3], len(doc.xref_stream_raw(x[0]) or b'')) for x in p.get_images(full=True)] for p in doc]
+
+def uncrop(src, dst):
+    """undo a crop (owner, 2026-10-07: the crops of plans 139/141/142 were wrong): every page shows its whole MediaBox again.
+    Only the page dictionaries change (incremental save: every other byte of the file stays as it was), so no image,
+    text layer or annotation can be lost; checked: same pages, same images byte for byte, every CropBox = MediaBox."""
+    import shutil
+    shutil.copyfile(src, dst)
+    before = pymupdf.open(src); imgs = images_of(before); n = len(before); before.close()
+    doc = pymupdf.open(dst); changed = 0
+    for page in doc:
+        mb = page.mediabox
+        if page.cropbox != mb:
+            page.set_cropbox(mb); changed += 1
+    if changed: doc.save(dst, incremental=True, encryption=pymupdf.PDF_ENCRYPT_KEEP)
+    doc.close()
+    chk = pymupdf.open(dst)
+    assert len(chk) == n, 'page count changed'
+    assert all(p.cropbox == p.mediabox for p in chk), 'a page still cropped'
+    assert images_of(chk) == imgs, 'images changed'
+    chk.close()
+    return {'pages_in': n, 'pages_out': n, 'uncropped': changed, 'bytes_out': __import__('os').path.getsize(dst)}
+
 def main():
     a = sys.argv[1:]
     src, dst = a[0], a[1]
+    if '--uncrop' in a:
+        print(json.dumps(uncrop(src, dst))); return
     if '--boxes-only' in a:                       # crop recipe only (used by inspect_files.py in a subprocess)
         json.dump(crop_boxes(pymupdf.open(src)), open(a[a.index('--boxes-only') + 1], 'w')); return
     doc = pymupdf.open(src); n0 = len(doc)

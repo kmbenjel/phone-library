@@ -41,7 +41,7 @@ for path, ops in rows:
         if r.returncode: print('FIX FAIL', path, r.stderr[-300:]); continue
         res = json.loads(r.stdout.strip().splitlines()[-1])
         if open(out, 'rb').read(4) != b'%PDF': print('BAD OUTPUT', path); continue
-        if 'crop' in ops and 'split' not in ops:          # share of the page still shown (median page): a crop that
+        if 'crop' in ops.split(',') and 'split' not in ops:   # share of the page still shown (median page): a crop that
             import pymupdf                                 # keeps nearly everything changes nothing on the phone
             d = pymupdf.open(out); ks = sorted(p.cropbox.get_area() / p.mediabox.get_area() for p in d); d.close()
             res['kept'] = round(ks[len(ks) // 2], 3) if ks else 1.0
@@ -52,6 +52,9 @@ for path, ops in rows:
         mkdirs(f, os.path.dirname(dst))
         with open(out, 'rb') as i:
             f.storbinary('STOR /Books/' + dst, i, blocksize=1 << 16, callback=lambda b: pacer.wait(len(b)))
+        f.voidcmd('TYPE I')
+        if f.size('/Books/' + dst) != os.path.getsize(out):               # the upload arrived whole, or it is not logged
+            print('UPLOAD SIZE MISMATCH', path, flush=True); continue
         w.writerow([time.strftime('%F %T'), 'add', '', 'Books/' + dst, f'improved copy ({ops}): {res}', plan]); log.flush()
         print('OK', path, ops, res, flush=True)
     except Exception as e:

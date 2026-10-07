@@ -65,14 +65,17 @@ def copies_of(plan):
             if m: out[r[3][6 + len(IMP):]] = int(m.group(1))
     return out
 
-def substitute(name, copies, idx):
+WHY = ('replaced by its lossless fixed copy (text shown larger on the phone)', 'lossless fixed copy takes the original\'s place',
+       'replaced by its lossless fixed copy (owner 2026-10-05: substitute the improved copies)')
+
+def substitute(name, copies, idx, why=WHY):
     """three-step substitution of the uploaded copies; returns how many"""
     a, b, c = [], [], []
     for p in copies:
         if p not in idx: continue
-        a.append((f'Books/{p}', f'Books/{OUT}{p}', 'replaced by its lossless fixed copy (text shown larger on the phone)'))
-        b.append((f'Books/{IMP}{p}', f'Books/{p}', 'lossless fixed copy takes the original\'s place'))
-        c.append((f'Books/{OUT}{p}', 'replaced by its lossless fixed copy (owner 2026-10-05: substitute the improved copies)'))
+        a.append((f'Books/{p}', f'Books/{OUT}{p}', why[0]))
+        b.append((f'Books/{IMP}{p}', f'Books/{p}', why[1]))
+        c.append((f'Books/{OUT}{p}', why[2]))
     if not a: return 0
     for suffix, rows in (('a-substitute-fixed-step1', a), ('b-substitute-fixed', b), ('c-delete-replaced-originals', c)):
         with open(J(f'plans/{name}{suffix}.tsv'), 'w', encoding='utf-8') as w:
