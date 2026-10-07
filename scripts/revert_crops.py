@@ -5,7 +5,9 @@ the file stays byte for byte; checked: same page count, same images, no page sti
 «نسخ محسنة للاستبدال» (upload size checked), then substituted batch by batch with the three logged steps of
 fix_at_scale.py (cropped file set aside → uncropped file in its place → set-aside file deleted). Split spreads stay split
 (the two halves tile the page exactly: nothing is hidden); only their crop is undone. Resumable; waits while the phone is away.
-Usage: python3 scripts/revert_crops.py lists/212-uncrop.tsv [--batch 200]"""
+Lanes (owner, 2026-10-07: «تزامن ذكي غير ضار»): run two instances on disjoint lists with their own --prefix; each skips
+files any 212 plan has already substituted. Two FTP lanes stay within the phone's limit (≤ 3 sessions with apply_plan).
+Usage: python3 scripts/revert_crops.py LIST [--batch 200] [--prefix 212-u]"""
 import argparse, csv, os, sys, time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 J = lambda p: os.path.join(ROOT, p)
@@ -16,15 +18,19 @@ WHY = ('the crop is undone (owner 2026-10-07): set aside while its whole-page co
        'cropped copy replaced by its whole-page copy (owner 2026-10-07: undo the crops)')
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('list'); ap.add_argument('--batch', type=int, default=200); a = ap.parse_args()
-    rows = [r for r in csv.reader(open(a.list, encoding='utf-8'), delimiter='\t') if r]
+    ap = argparse.ArgumentParser(); ap.add_argument('list'); ap.add_argument('--batch', type=int, default=200)
+    ap.add_argument('--prefix', default='212-u'); a = ap.parse_args()
+    reverted = {r[2][6:] for r in csv.reader(open(J('data/changes/changes.tsv'), encoding='utf-8'), delimiter='\t')
+                if len(r) > 5 and r[5].startswith('212-') and r[5].endswith('a-substitute-fixed-step1')}
+    rows = [r for r in csv.reader(open(a.list, encoding='utf-8'), delimiter='\t') if r]     # stable offsets: resumable
     total = 0
     for k in range(0, len(rows), a.batch):
-        name = f'212-u{k // a.batch + 1:02d}'
+        name = f'{a.prefix}{k // a.batch + 1:02d}'
         lst = J(f'lists/{name}.tsv')
         if not os.path.exists(lst):
             with open(lst, 'w', encoding='utf-8') as w:
-                for r in rows[k:k + a.batch]: w.write('\t'.join(r) + '\n')
+                for r in rows[k:k + a.batch]:
+                    if r[0] not in reverted: w.write('\t'.join(r) + '\n')   # never redo a file another lane reverted
         want = {r[0] for r in csv.reader(open(lst, encoding='utf-8'), delimiter='\t') if r}
         done_subs = {r[2][6:] for r in csv.reader(open(J('data/changes/changes.tsv'), encoding='utf-8'), delimiter='\t')
                      if len(r) > 5 and r[5] == f'{name}a-substitute-fixed-step1'}

@@ -252,3 +252,5 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   --uncrop = every CropBox := MediaBox by incremental save (asserts: same pages, same images, no page cropped), upload size
   checked, three-step substitution (plans 212-uNNa/b/c). Split spreads stay split (halves tile the page). Recompressed (19):
   still to restore from archive.org by their original sizes (data/phone/substituted.tsv). Report 09 to be reworked after.
+- 2026-10-07 22:55 owner: transfers at full speed (NETPACE=0) until he says otherwise; revert chain restarted with NETPACE=0.
+- 2026-10-07 23:05: revert switched to two FTP lanes (scratch/revert_lanes.sh; lists/212-uncrop-x/-y.tsv; logs/212-uncrop-x/-y.log); u01–u05 done by the single lane.
