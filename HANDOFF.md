@@ -220,7 +220,7 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   files from the منظومات/blog batches: worth one dedicated pass over التاريخ plain files after the sheets.
 - 12:20 PAUSE (owner: 80 % of the session used; renewal ≈ 16:20). Running unattended: scratch/unattended_2026-10-06.sh
   (log logs/unattended-2026-10-06.log): phone MD5s → waits for fix_at_scale 142 + after_139 → remap → refresh (web) → commit.
-  No internet downloads during the pause. RESUME HERE: imprint sheets from s0224 (book 1344); plans 168–174 applied after the pause began (أزهار الرياض case DONE in 168).
+  No internet downloads during the pause. RESUME HERE: imprint sheets from s0227 (book 1362); plans 168–174 applied after the pause began (أزهار الرياض case DONE in 168).
   OPEN CASE «أزهار الرياض» (3 folders in التراجم والطبقات, title pages seen at 25 dpi, read them larger before any plan):
   «- المقري التلمساني» arfaa1–3 = ج 1–3 of the صندوق إحياء التراث الإسلامي (المغرب والإمارات) reprint 1398/1978, arfaa4 =
   ج 4 ت سعيد أعراب ومحمد بن تاويت; «للمقري» 1–3 look like the Cairo لجنة التأليف volumes (same as the third folder «ت السقا
@@ -276,3 +276,6 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
 10. Review lists: edition-review.tsv (131), renumber-inside-review.tsv (54 sets), 15 «- ت-» names, 2 raw names, 35 doubtful
     section pairs. Owner decisions pending: the 11 files in «نسخ مستبعدة», duplicate editions (النكت والعيون، جامع العلوم
     والحكم، نصب الراية، الروض الأنف), Momen Tak Terlupakan, «رسالة جامعية - بيان الصاف».
+- 2026-10-08 00:00: «النوادر والزيادات» دار الغرب 1999 twice: one file «(دار الغرب الإسلامي - نسخة أخرى)» 116 MB, 7,836 pages,
+  and the 14-file folder «النوادر والزيادات على ما في المدونة … (دار الغرب الإسلامي)» 120 MB, 7,835 pages → same edition:
+  compare after the revert, keep the better (owner's permission), delete the other.
