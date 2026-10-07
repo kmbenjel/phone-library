@@ -236,3 +236,9 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   شروح الحديث and as a folder in الجوامع (1,073 pages each, different scans; the work belongs in شروح الحديث); «نصب الراية»
   ت عوامة (مؤسسة الريان / دار القبلة) as one file and as a folder (2,342 pages each, different scans).
   Plans 183/185/190/193 removed split copies that were the same scan as a one-file copy (image lists identical).
+- 2026-10-07 15:20 STOPPED fix_at_scale.py 142 (owner: crops made pages of unequal width, ate the natural margins of e.g. the
+  هارون editions, and a speck kept a page of «اللآلئ المصنوعة» wider). DO NOT RESUME. 3,542 files had been substituted.
+  Audit of 40 random crop files (scratch/crop_audit.py → data/fixed/crop-audit.tsv): median margin left 2.8 % of the page,
+  10/40 with text touching the edge; 22/40 with a page ≥ 10 % wider than the median, 8/40 ≥ 20 %. Selection was too broad:
+  of 1,743 files with a measure, 1,220 had text using 60–69 % of the width (an ordinary book). Crops are CropBox-only
+  (images untouched): reverting = CropBox := MediaBox per page, lossless. Awaiting the owner's decision (revert all / redo few).
