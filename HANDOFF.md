@@ -252,6 +252,3 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   --uncrop = every CropBox := MediaBox by incremental save (asserts: same pages, same images, no page cropped), upload size
   checked, three-step substitution (plans 212-uNNa/b/c). Split spreads stay split (halves tile the page). Recompressed (19):
   still to restore from archive.org by their original sizes (data/phone/substituted.tsv). Report 09 to be reworked after.
-- 2026-10-07 22:40 (phone FTP down; for a later plan): 1343 «العبقري في حكم سهو الأخضري - محمد المياوي (دار الفكر)» — the
-  title page reads «النظم المسمى العبقري في حكم سهو الأخضري» للسيد محمد بن أب بن أحمد بن عثمان التواتي (ت 1160)، جمع عبد الجليل
-  أبو محمد: author and «دار الفكر» in the name are wrong.
