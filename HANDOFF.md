@@ -258,3 +258,24 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   scripts/contents.py (collections, «ويليه/ومعه/وبهامشه», a commentary kept with its text) → data/editions/contents.json,
   counted as present in compare_shamela.py (match «contained»), shown in the index as «يضم N عملًا» (✓ = in Shamela).
   Plan 214 put العبقري and its commentary back in one folder. Hourly check-in cron 7dc09905 (:23) carries the current plan.
+
+## TASK QUEUE (2026-10-08 00:20, in order; the hourly check-in works through it)
+1. [running] crop revert, two lanes (scratch/revert_lanes.sh). After it: delete the leftover cropped copies in
+   «نسخ محسنة للاستبدال» that no plan substituted (from the stopped 142 batches and the killed u03/u06 batches; the originals are
+   in place — check each path still exists before deleting its copy).
+2. Restore the 19 recompressed files from archive.org by their original sizes (data/phone/substituted.tsv; fetch_queue.py).
+3. Rework report 09 (report_fixed.py) for the state after the revert (splits and repairs remain; crops undone).
+4. inspect_files.py on the 1,349 phone files never inspected (added since 10-05; one FTP lane, after the revert).
+5. Imprint sheets s0224–s0312 (books 1344–1868); refresh every ~10 sheets.
+6. contents.py: widen matching (titles joined by «و», author-less items via the collection's author) — keep it conservative.
+7. Old queues of 2026-10-03 (pre700_web_all, smart_queue_clean, strictly_compliant_pre700, malikiaa_properly_classified,
+   abuyaala_combined, amalmantab_queue, pre700_full, pre700_waqfeya_direct …) were built before the rules (no size check,
+   catch-all sections): never resume them as they are. Reconcile their remaining targets with the catalog/comparisons and fetch
+   only books still missing, from their Waqfeya records, by the rules (AGENTS §3–§7).
+8. To fetch (found while reading): المفصل لجواد علي ج 5–10؛ البحر المحيط (دار إحياء التراث) ج 5–8؛ العمدة لابن رشيق؛ رسائل
+   الثعالبي؛ تحسين القبيح؛ زهر الأكم؛ الصداقة والصديق؛ كتاب المحن؛ الغرر في فضائل عمر؛ التفسير البسيط؛ رجال المعلقات العشر.
+9. Local ~/Books mirror: re-sync names/sections with the phone (local_sync_plan.py → apply_local_plan.py; the two protected
+   local folders are never touched).
+10. Review lists: edition-review.tsv (131), renumber-inside-review.tsv (54 sets), 15 «- ت-» names, 2 raw names, 35 doubtful
+    section pairs. Owner decisions pending: the 11 files in «نسخ مستبعدة», duplicate editions (النكت والعيون، جامع العلوم
+    والحكم، نصب الراية، الروض الأنف), Momen Tak Terlupakan, «رسالة جامعية - بيان الصاف».
