@@ -245,7 +245,3 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
 - 2026-10-07 18:30: phone not on the network (no FTP at .102, network scan found none) — renames from sheets wait for it.
   To check later: books 1257 «اختيارات شيخ الإسلام - ابن عبد الهادي» (1.9 MB) and 1261 «الاختيارات الفقهية … لدى تلاميذه -
   سامي جاد الله» (16 MB) show the same عطاءات ISBN 978-9959-857-88-0: is the small file a part of the big one?
-- 2026-10-07 21:30: phone offline again. Moves to apply when it is back (sheets 218–220; title pages read, check Shamela first):
-  1317 «نخبة الأصول تلخيص إرشاد الفحول» (عبد المنان النورفوري، دار ابن حزم) الفقه العام → أصول الفقه;
-  1318 «نظم متن الأخضري للقلاوي» الفقه العام → الفقه المالكي; 1325 «أهل السنة والجماعة في المغرب وجهودهم في مقاومة
-  الانحرافات العقدية» الفقه المالكي → العقيدة or الفرق والردود; 1311 «موسوعة الطب النبوي - أبو نعيم» الفقه العام → الطب?
