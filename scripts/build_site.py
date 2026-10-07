@@ -13,6 +13,13 @@ if os.path.exists(EI):
     for b in catalog['books']:
         e = info.get(f"{b['cat']}/{b['folder']}")
         if e: b['ed'] = {k: [v['v'], v['s']] for k, v in e.items()}
+# works contained in a book (scripts/contents.py): shown as «يضم», ✓ when the work is in Shamela (counted as present)
+CF = J('data/editions/contents.json')
+if os.path.exists(CF):
+    inc = json.load(open(CF, encoding='utf-8'))
+    for b in catalog['books']:
+        it = inc.get(f"{b['cat']}/{b['folder']}")
+        if it: b['inc'] = [[x['t'], x['a'], 1 if x['sh'] else 0] for x in it]
 cat = json.dumps(catalog, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
 reports, sources = [], []
 WEB = os.environ.get('WEB') == '1'          # the online copy (benjelloun.dev/library): no change log (owner, 2026-10-05)

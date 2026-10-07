@@ -13,7 +13,7 @@ fi
 echo "    $(wc -l < "data/phone/index-$D.tsv") files"
 echo "2/6 provenance";  python3 scripts/substituted_sizes.py; python3 scripts/provenance.py "data/phone/index-$D.tsv"
 echo "3/6 catalog";     python3 scripts/build_catalog.py "data/phone/index-$D.tsv"
-echo "4/6 comparisons"; python3 scripts/compare_shamela.py; python3 scripts/compare_waqfeya.py
+echo "4/6 comparisons"; python3 scripts/contents.py; python3 scripts/compare_shamela.py; python3 scripts/compare_waqfeya.py   # contents.py: works inside a book count as present
 echo "5/6 reports";     python3 scripts/report_shamela.py; python3 scripts/report_waqfeya.py; python3 scripts/report_recommend.py; python3 scripts/report_multi_editions.py; python3 scripts/report_manzumat.py; python3 scripts/report_people.py
                         [ -s data/changes/changes.tsv ] && python3 scripts/report_changes.py || true
 python3 scripts/build_selection.py   # selection page catalogue (publish it with the Artifact tool when it changed)

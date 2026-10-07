@@ -43,7 +43,7 @@ main{padding:10px 12px 60px;max-width:900px;margin:auto}
 .m{color:var(--muted);font-size:.85rem}
 .m b{font-weight:400;color:var(--accent)}
 .ed{color:var(--muted);font-size:.8rem;line-height:1.5;overflow-wrap:anywhere}
-.desc{font-size:.85rem;margin:6px 0 2px;color:var(--ink);opacity:.85}
+.desc{font-size:.85rem;margin:6px 0 2px;color:var(--ink);opacity:.85}.inc{font-size:.85rem;color:var(--muted);margin:4px 0 6px;line-height:1.7}.inc summary{cursor:pointer;color:var(--ink)}.inc ol{margin:4px 0;padding-inline-start:1.6em}
 ul.files{margin:6px 0 2px;padding:0;list-style:none;font-size:.92rem}
 ul.files li{padding:2px 0;border-top:1px dashed var(--line)}
 ul.files a{color:var(--ink);text-decoration:none;overflow-wrap:anywhere}
@@ -121,9 +121,10 @@ function card(b){
  const who=b.author?(b.author+(d?' (ت '+AR(d)+'هـ)':'')):'';
  const meta=[who,b.ed?'':(b.edition||[b.researcher&&('ت '+b.researcher),b.publisher].filter(Boolean).join(' - '))].filter(Boolean).join(' · ');
  const desc=b.ed&&b.ed.note?`<div class="desc">ملاحظة: ${esc(b.ed.note[0])}</div>`:'';
+ const inc=b.inc&&b.inc.length?(n=>`<details class="inc"><summary>يضم ${n==1?'عملًا واحدًا':n==2?'عملين':n.toLocaleString('en-US')+(n<=10?' أعمال':' عملًا')}${b.inc.some(x=>x[2])?' · '+b.inc.filter(x=>x[2]).length.toLocaleString('en-US')+' منها في الشاملة ✓ (تُعدّ موجودة في المقارنة)':''}</summary><ol>`+b.inc.map(x=>'<li>'+esc(x[0])+(x[1]?' – '+esc(x[1]):'')+(x[2]?' ✓':'')+'</li>').join('')+'</ol></details>')(b.inc.length):'';
  const files=b.files.map(([f,s])=>`<li><a href="${href(b,f)}">${esc(f.replace(/\.pdf$/i,''))}</a><span class="sz">${gb(s)}</span></li>`).join('')+`<li class="path">المسار في الهاتف: Books/${esc(b.cat)}/${esc(b.folder)}/</li>`;
  const src=(b.waqfeya||[]).map(w=>`<a href="${esc(w.url)}">الوقفية</a>`).concat((b.archive||[]).slice(0,3).map(a=>`<a href="https://archive.org/details/${encodeURIComponent(a)}">archive.org</a>`)).join(' · ');
- return `<details class="book"><summary><div class="t">${esc(b.title)}</div><div class="m">${meta?esc(meta)+' · ':''}${cat?'':'<b>'+esc(b.cat)+'</b> · '}${b.files.length>1?b.files.length.toLocaleString('en-US')+' مجلدات · ':''}${gb(b.bytes)}${b.century&&!d?' · '+esc(b.century):''}</div>${edLine(b)}</summary>${desc}<ul class="files">${files}</ul>${src?`<div class="src">المصدر: ${src}</div>`:''}</details>`;}
+ return `<details class="book"><summary><div class="t">${esc(b.title)}</div><div class="m">${meta?esc(meta)+' · ':''}${cat?'':'<b>'+esc(b.cat)+'</b> · '}${b.files.length>1?b.files.length.toLocaleString('en-US')+' مجلدات · ':''}${gb(b.bytes)}${b.century&&!d?' · '+esc(b.century):''}</div>${edLine(b)}</summary>${desc}${inc}<ul class="files">${files}</ul>${src?`<div class="src">المصدر: ${src}</div>`:''}</details>`;}
 function run(){const t=norm($('q').value).split(/\s+/).filter(Boolean);
  res=D.books.filter(b=>(!cat||b.cat===cat)&&t.every(w=>b._k.includes(w)));shown=0;$('list').innerHTML='';more();}
 function more(){const chunk=res.slice(shown,shown+PAGE);shown+=chunk.length;

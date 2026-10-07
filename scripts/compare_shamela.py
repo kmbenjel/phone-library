@@ -42,6 +42,16 @@ for b in cat['books']:
         if len(w) > 2 and w not in ('كتاب', 'رسالة', 'جزء', 'شرح', 'مختصر'):
             word_to_books[w].add(b['id'])
 
+# works contained in a phone book (scripts/contents.py; owner 2026-10-07: count them as present, never split the volume)
+contained = defaultdict(set)
+_CF = J('data/editions/contents.json')
+if os.path.exists(_CF):
+    _ids = {f"{b['cat']}/{b['folder']}": b['id'] for b in cat['books']}
+    for _k, _items in json.load(open(_CF, encoding='utf-8')).items():
+        for _it in _items:
+            for _sid in _it.get('sh') or []:
+                if _k in _ids: contained[_sid].add(_ids[_k])
+
 rows = []
 col_keywords = {'مجموع', 'مؤلفات', 'رسائل', 'أعمال', 'فتاوى', 'تراث', 'موسوعة', 'جامع', 'الجامع'}
 
@@ -92,6 +102,8 @@ for r in csv.DictReader(open(J('data/shamela/books.tsv')), delimiter='\t'):
         if valid:
             hit, how = valid, 'in-collection'
             
+    if not hit and int(r['book_id']) in contained:          # printed inside a phone book (collection, «ويليه», commentary kept with its text)
+        hit, how = contained[int(r['book_id'])], 'contained'
     rows.append([r['book_id'], r['title'], r['author'], r['death'], r['category'], r['has_pdf'], how, ' '.join(map(str, sorted(hit)))])
 with open(J('data/compare/shamela-matches.tsv'), 'w') as f:
     w = csv.writer(f, delimiter='\t'); w.writerow(['shamela_id', 'title', 'author', 'death', 'category', 'shamela_pdf', 'match', 'phone_book_ids']); w.writerows(rows)
