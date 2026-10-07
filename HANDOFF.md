@@ -279,3 +279,7 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
 - 2026-10-08 00:00: «النوادر والزيادات» دار الغرب 1999 twice: one file «(دار الغرب الإسلامي - نسخة أخرى)» 116 MB, 7,836 pages,
   and the 14-file folder «النوادر والزيادات على ما في المدونة … (دار الغرب الإسلامي)» 120 MB, 7,835 pages → same edition:
   compare after the revert, keep the better (owner's permission), delete the other.
+- «الكافي في فقه أهل المدينة» DKI edition three times (title pages read): «… (مكتبة الرياض الحديثة).pdf» (mislabelled, 644 p,
+  62 MB), «… المالكي (ط دار الكتب العلمية).pdf» (636 p, 12 MB, Waqfeya fp73997), folder «الكافي … لابن عبد البر/» (636 p,
+  60 MB); the 1,184-page «(ط مكتبة الرياض الحديثة)» (Waqfeya fp16620, ت ولد ماديك) is another edition and stays. After the
+  revert: compare the three DKI copies page by page, keep the best, delete the others (plan 216 was skipped: name taken).
