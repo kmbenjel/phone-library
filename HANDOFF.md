@@ -220,7 +220,7 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   files from the منظومات/blog batches: worth one dedicated pass over التاريخ plain files after the sheets.
 - 12:20 PAUSE (owner: 80 % of the session used; renewal ≈ 16:20). Running unattended: scratch/unattended_2026-10-06.sh
   (log logs/unattended-2026-10-06.log): phone MD5s → waits for fix_at_scale 142 + after_139 → remap → refresh (web) → commit.
-  No internet downloads during the pause. RESUME HERE: imprint sheets from s0221 (book 1326); plans 168–174 applied after the pause began (أزهار الرياض case DONE in 168).
+  No internet downloads during the pause. RESUME HERE: imprint sheets from s0224 (book 1344); plans 168–174 applied after the pause began (أزهار الرياض case DONE in 168).
   OPEN CASE «أزهار الرياض» (3 folders in التراجم والطبقات, title pages seen at 25 dpi, read them larger before any plan):
   «- المقري التلمساني» arfaa1–3 = ج 1–3 of the صندوق إحياء التراث الإسلامي (المغرب والإمارات) reprint 1398/1978, arfaa4 =
   ج 4 ت سعيد أعراب ومحمد بن تاويت; «للمقري» 1–3 look like the Cairo لجنة التأليف volumes (same as the third folder «ت السقا
@@ -252,3 +252,6 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   --uncrop = every CropBox := MediaBox by incremental save (asserts: same pages, same images, no page cropped), upload size
   checked, three-step substitution (plans 212-uNNa/b/c). Split spreads stay split (halves tile the page). Recompressed (19):
   still to restore from archive.org by their original sizes (data/phone/substituted.tsv). Report 09 to be reworked after.
+- 2026-10-07 22:40 (phone FTP down; for a later plan): 1343 «العبقري في حكم سهو الأخضري - محمد المياوي (دار الفكر)» — the
+  title page reads «النظم المسمى العبقري في حكم سهو الأخضري» للسيد محمد بن أب بن أحمد بن عثمان التواتي (ت 1160)، جمع عبد الجليل
+  أبو محمد: author and «دار الفكر» in the name are wrong.
