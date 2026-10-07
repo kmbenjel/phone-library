@@ -43,6 +43,11 @@ Read this file first. Keep it current when you change a convention.
 
 1. **Deleting:** Verified duplicates can be deleted directly by the agent without moving them to a temporary folder or asking for permission.
    "Verified" = same byte size + identical 64 KB samples at start, 25%, 50%, 75% and end (`dup_check.py` + `verify_dups_deep.py`).
+   **Duplicate editions (owner, 2026-10-08, standing permission):** when several copies are the same edition (same editor
+   and publisher/printing, shown by title/imprint pages, or the same scan shown by identical page images), keep the best one
+   and delete the others without asking. Best = complete (every volume, introduction, indexes) > whole pages (no crop or
+   quality defect) > higher true resolution > text layer > known source (Waqfeya/archive.org). Different editions (another
+   editor, publisher or printing) are not duplicates and stay. A volume/folder that holds several books is never split.
 2. **Every change goes through a plan** (`plans/NNN-*.tsv`: `from<TAB>to<TAB>reason`) applied with
    `scripts/apply_plan.py` (dry-run first). It never overwrites, removes emptied folders and logs to
    `data/changes/changes.tsv`. Undo a plan: `python3 scripts/apply_plan.py --undo NNN-name`.

@@ -20,6 +20,10 @@ WHY = ('the crop is undone (owner 2026-10-07): set aside while its whole-page co
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('list'); ap.add_argument('--batch', type=int, default=200)
     ap.add_argument('--prefix', default='212-u'); a = ap.parse_args()
+    import fcntl                                                   # one instance per lane, whoever starts it
+    lock = open(f'/tmp/revert-{a.prefix}.lock', 'w')
+    try: fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError: print('lane', a.prefix, 'already running'); return
     reverted = {r[2][6:] for r in csv.reader(open(J('data/changes/changes.tsv'), encoding='utf-8'), delimiter='\t')
                 if len(r) > 5 and r[5].startswith('212-') and r[5].endswith('a-substitute-fixed-step1')}
     rows = [r for r in csv.reader(open(a.list, encoding='utf-8'), delimiter='\t') if r]     # stable offsets: resumable

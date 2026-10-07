@@ -268,10 +268,7 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
 4. inspect_files.py on the 1,349 phone files never inspected (added since 10-05; one FTP lane, after the revert).
 5. Imprint sheets s0224–s0312 (books 1344–1868); refresh every ~10 sheets.
 6. contents.py: widen matching (titles joined by «و», author-less items via the collection's author) — keep it conservative.
-7. Old queues of 2026-10-03 (pre700_web_all, smart_queue_clean, strictly_compliant_pre700, malikiaa_properly_classified,
-   abuyaala_combined, amalmantab_queue, pre700_full, pre700_waqfeya_direct …) were built before the rules (no size check,
-   catch-all sections): never resume them as they are. Reconcile their remaining targets with the catalog/comparisons and fetch
-   only books still missing, from their Waqfeya records, by the rules (AGENTS §3–§7).
+7. [cancelled by the owner 2026-10-08] old queues of 2026-10-03 → data/queue/cancelled/ (see its README).
 8. To fetch (found while reading): المفصل لجواد علي ج 5–10؛ البحر المحيط (دار إحياء التراث) ج 5–8؛ العمدة لابن رشيق؛ رسائل
    الثعالبي؛ تحسين القبيح؛ زهر الأكم؛ الصداقة والصديق؛ كتاب المحن؛ الغرر في فضائل عمر؛ التفسير البسيط؛ رجال المعلقات العشر.
 9. Local ~/Books mirror: re-sync names/sections with the phone (local_sync_plan.py → apply_local_plan.py; the two protected
