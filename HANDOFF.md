@@ -220,7 +220,7 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   files from the منظومات/blog batches: worth one dedicated pass over التاريخ plain files after the sheets.
 - 12:20 PAUSE (owner: 80 % of the session used; renewal ≈ 16:20). Running unattended: scratch/unattended_2026-10-06.sh
   (log logs/unattended-2026-10-06.log): phone MD5s → waits for fix_at_scale 142 + after_139 → remap → refresh (web) → commit.
-  No internet downloads during the pause. RESUME HERE: imprint sheets from s0212 (book 1272); plans 168–174 applied after the pause began (أزهار الرياض case DONE in 168).
+  No internet downloads during the pause. RESUME HERE: imprint sheets from s0215 (book 1290); plans 168–174 applied after the pause began (أزهار الرياض case DONE in 168).
   OPEN CASE «أزهار الرياض» (3 folders in التراجم والطبقات, title pages seen at 25 dpi, read them larger before any plan):
   «- المقري التلمساني» arfaa1–3 = ج 1–3 of the صندوق إحياء التراث الإسلامي (المغرب والإمارات) reprint 1398/1978, arfaa4 =
   ج 4 ت سعيد أعراب ومحمد بن تاويت; «للمقري» 1–3 look like the Cairo لجنة التأليف volumes (same as the third folder «ت السقا
