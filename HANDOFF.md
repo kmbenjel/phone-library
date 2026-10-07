@@ -254,3 +254,7 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   still to restore from archive.org by their original sizes (data/phone/substituted.tsv). Report 09 to be reworked after.
 - 2026-10-07 22:55 owner: transfers at full speed (NETPACE=0) until he says otherwise; revert chain restarted with NETPACE=0.
 - 2026-10-07 23:05: revert switched to two FTP lanes (scratch/revert_lanes.sh; lists/212-uncrop-x/-y.tsv; logs/212-uncrop-x/-y.log); u01–u05 done by the single lane.
+- 2026-10-08 00:00 owner: a volume/folder holding several books is never split; its contents are recorded by
+  scripts/contents.py (collections, «ويليه/ومعه/وبهامشه», a commentary kept with its text) → data/editions/contents.json,
+  counted as present in compare_shamela.py (match «contained»), shown in the index as «يضم N عملًا» (✓ = in Shamela).
+  Plan 214 put العبقري and its commentary back in one folder. Hourly check-in cron 7dc09905 (:23) carries the current plan.
