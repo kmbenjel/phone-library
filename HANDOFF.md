@@ -48,6 +48,9 @@ Each workstream appends its progress below (newest last). Everything is resumabl
   (sheet 298) is حسين سليم أسد، دار السقا 1996, the edition of «كتب السنة/مسند الحميدي (ت حسين سليم أسد الداراني)»: compare.
 - Renumber: «كتب السنة/موطأ مالك - رواية يحيى (ت محمد مصطفى الأعظمي - مؤسسة زايد…)» holds «01 - موطأ مالك (alt - 01).pdf»
   (24.8 MB, «alt» is forbidden by §4) next to «01 - … (المقدمة)» (8 KB): read the volumes, renumber.
+- To check: «كتب اللغة/الصاحبي في فقه اللغة العربية … (ت أحمد حسن بسج - دار الكتب العلمية)» (2 files): file 1 is عمر فاروق
+  الطباع's edition (مكتبة المعارف 1414/1993, sheet 303) — read file 2, then name (two editions? two copies?).
+- Missing now: البطليوسي «ذكر الفرق بين الأحرف الخمسة» (the file so named was الحميد's رقية book, moved by plan 246).
 - To check: «شروح الحديث/مفتاح المنهل العذب المورود … (ت ابن بيومي - مطبعة الإستقامة)» (8 files): its file read on sheet 251
   is «المنهل العذب المورود» ج 2 by the father محمود محمد خطاب السبكي (مؤسسة التاريخ العربي) — read every volume, then name.
 - To check: «الدرة الألفية - ابن معط (دار الف)» (cut publisher; German apparatus = Zetterstéen's edition?); «الروضة
@@ -287,7 +290,7 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   files from the منظومات/blog batches: worth one dedicated pass over التاريخ plain files after the sheets.
 - 12:20 PAUSE (owner: 80 % of the session used; renewal ≈ 16:20). Running unattended: scratch/unattended_2026-10-06.sh
   (log logs/unattended-2026-10-06.log): phone MD5s → waits for fix_at_scale 142 + after_139 → remap → refresh (web) → commit.
-  No internet downloads during the pause. RESUME HERE: imprint sheets from s0303 (book 1818); plans 168–174 applied after the pause began (أزهار الرياض case DONE in 168).
+  No internet downloads during the pause. RESUME HERE: imprint sheets from s0306 (book 1836); plans 168–174 applied after the pause began (أزهار الرياض case DONE in 168).
   OPEN CASE «أزهار الرياض» (3 folders in التراجم والطبقات, title pages seen at 25 dpi, read them larger before any plan):
   «- المقري التلمساني» arfaa1–3 = ج 1–3 of the صندوق إحياء التراث الإسلامي (المغرب والإمارات) reprint 1398/1978, arfaa4 =
   ج 4 ت سعيد أعراب ومحمد بن تاويت; «للمقري» 1–3 look like the Cairo لجنة التأليف volumes (same as the third folder «ت السقا
