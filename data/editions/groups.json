@@ -11068,25 +11068,17 @@
     ]
    },
    {
-    "folder": "مشارق الانوار على صحاح الآثار للقاضي عياض السبتي",
-    "cat": "كتب اللغة",
-    "edition": "",
+    "folder": "مشارق الأنوار على صحاح الآثار - القاضي عياض (ط المكتبة العتيقة ودار التراث)",
+    "cat": "الغريب والمعاجم",
+    "edition": "ط المكتبة العتيقة ودار التراث",
     "researcher": "",
     "publisher": "",
     "files": 2,
     "vols_edition": "",
     "complete": false,
     "bytes": 25623172,
-    "quality": {
-     "files": 2,
-     "pages": 816,
-     "kbpp": 31,
-     "px": 1726,
-     "colour": "أبيض وأسود",
-     "width_used": 0.68,
-     "text": false
-    },
-    "score": 63.6,
+    "quality": null,
+    "score": -1,
     "waqfeya": []
    }
   ],
