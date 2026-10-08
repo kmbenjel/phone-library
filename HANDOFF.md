@@ -3,6 +3,12 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (newest last). Everything is resumable.
 
+## 2026-10-08 02:20 — phone off the network; chain waiting (scratch/when_phone_back_2026-10-08.sh, log logs/when-phone-back.log)
+- 224 restore: 18 of 19 originals uploaded into «نسخ محسنة للاستبدال» (exact sizes); «الشفا» (1.77 GB) staged in
+  downloads/queue, its upload refused when the phone left. NOTHING substituted yet. The chain reruns the restore (upload
+  resumes from the staged file), substitutes the 19, applies plans 236–238, refreshes (guarded full listing), commits.
+- Plans 218, 220–223, 225–235 applied tonight (sheets 230–272). If the chain did not run: start it again (resumable).
+
 ## 2026-10-08 03:00 — crop revert finished; title-page plans waiting
 - Crop revert (212): 3,734 listed; 3,638 by the two lanes; 92 more by scratch/redo_revert_212.py (lanes had raced on
   «نسخ مستبعدة/__المستبدل» folders: 553/550 errors, originals stayed, copies waited — all substituted 01:30, 0 FAIL);
@@ -26,6 +32,8 @@ Each workstream appends its progress below (newest last). Everything is resumabl
 - To check: «علوم القرآن وأصول التفسير/مداخل إعجاز القرآن - محمود محمد شاكر (ط. مكتبة الخانجي)» holds two files; the one read
   (02, sheet 266) is مطبعة المدني ودار المدني بجدة — read the other, then name/compare. «المصطلحات الأربعة في القرآن» holds two files
   (two copies?). «الأدب/لامية العرب - الشنفرى (مكتبة الآ)» and «الشعر ودواوينه/المقصورة - ابن دريد (مكتبة المعا)»: cut names.
+- To check: «كتب السنة/الجامع المسند الصحيح المختصر - الإمام البخاري (طوق النجاة)»: its introduction (sheet 278, دمشق 1423/2002)
+  describes a one-volume two-colour printing (دار ابن كثير?) — read its imprint page before naming.
 - To check: «شروح الحديث/مفتاح المنهل العذب المورود … (ت ابن بيومي - مطبعة الإستقامة)» (8 files): its file read on sheet 251
   is «المنهل العذب المورود» ج 2 by the father محمود محمد خطاب السبكي (مؤسسة التاريخ العربي) — read every volume, then name.
 - To check: «الدرة الألفية - ابن معط (دار الف)» (cut publisher; German apparatus = Zetterstéen's edition?); «الروضة
@@ -265,7 +273,7 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   files from the منظومات/blog batches: worth one dedicated pass over التاريخ plain files after the sheets.
 - 12:20 PAUSE (owner: 80 % of the session used; renewal ≈ 16:20). Running unattended: scratch/unattended_2026-10-06.sh
   (log logs/unattended-2026-10-06.log): phone MD5s → waits for fix_at_scale 142 + after_139 → remap → refresh (web) → commit.
-  No internet downloads during the pause. RESUME HERE: imprint sheets from s0267 (book 1602); plans 168–174 applied after the pause began (أزهار الرياض case DONE in 168).
+  No internet downloads during the pause. RESUME HERE: imprint sheets from s0282 (book 1692); plans 168–174 applied after the pause began (أزهار الرياض case DONE in 168).
   OPEN CASE «أزهار الرياض» (3 folders in التراجم والطبقات, title pages seen at 25 dpi, read them larger before any plan):
   «- المقري التلمساني» arfaa1–3 = ج 1–3 of the صندوق إحياء التراث الإسلامي (المغرب والإمارات) reprint 1398/1978, arfaa4 =
   ج 4 ت سعيد أعراب ومحمد بن تاويت; «للمقري» 1–3 look like the Cairo لجنة التأليف volumes (same as the third folder «ت السقا
