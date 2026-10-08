@@ -36,7 +36,8 @@ Each workstream appends its progress below (newest last). Everything is resumabl
 - Sample run in the session scratchpad (v4/drive.py → v4/build.py → site/samples/crop-2026-10-08/index.html). Waiting.
 - Owner asked whether to continue the expansion in parallel: I said yes (crop work is local), with the phone on the charger
   and paced downloads; waiting for the go. Earlier queues are complete; library 172.2 GB (target 200 GB).
-- Found: «الكتاب - سيبويه (ت هارون)/02» is البكاء's edition (2015) — folder to read and fix.
+- DONE 270: the folder «الكتاب - سيبويه (ت هارون)» was محمد كاظم البكاء's 6-volume edition (covers) — renamed; Haroun's is the
+  folder «الكتاب (كتاب سيبويه) (ت عبد السلام هارون - الخانجي)».
 
 ## 2026-10-08 08:55 GMT — session ended; unattended chain scratch/after_v3_2026-10-08.sh (log logs/after-v3-2026-10-08.log)
 - Owner on the first crop sample: «مبهر», but asked (a) the text centred horizontally, consistently on every page, (b) ordinary
