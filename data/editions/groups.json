@@ -15208,6 +15208,51 @@
   "note": null
  },
  {
+  "work": "الاحكام في تمييز الفتاوي",
+  "title": "الإحكام في تمييز الفتاوى عن الأحكام وتصرفات القاضي والإمام",
+  "author": "القرافي",
+  "bytes": 25860688,
+  "editions": [
+   {
+    "folder": "الإحكام في تمييز الفتاوى عن الأحكام وتصرفات القاضي والإمام - القرافي",
+    "cat": "أصول الفقه",
+    "edition": "",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 17000763,
+    "quality": null,
+    "score": -1,
+    "waqfeya": []
+   },
+   {
+    "folder": "الإحكام في تمييز الفتاوى عن الأحكام و تصرفات القاضي و الإمام للقرافي",
+    "cat": "السياسة الشرعية والقضاء",
+    "edition": "",
+    "researcher": "",
+    "publisher": "",
+    "files": 3,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 8859925,
+    "quality": {
+     "files": 3,
+     "pages": 440,
+     "kbpp": 20,
+     "px": 1907,
+     "colour": "أبيض وأسود",
+     "width_used": 0.76,
+     "text": false
+    },
+    "score": 65.2,
+    "waqfeya": []
+   }
+  ],
+  "note": null
+ },
+ {
   "work": "صله الخلف بموصول السلف",
   "title": "صلة الخلف بموصول السلف",
   "author": "محمد بن سليمان الروداني",
