@@ -49,9 +49,7 @@ Each workstream appends its progress below (newest last). Everything is resumabl
 - To check: «كتب السنة/خصائص أمير المؤمنين علي بن أبي طالب رضي الله عنه - النسائي» (3 files: introduction, a file
   labelled «(بن أبي طالب…)», the book) next to the plain file «… بن أبي - النسائي (ط دار الكتاب العربي)»: which edition is
   each (sheet 287 showed مكتبة الآداب، عبد الرحمن حسن محمود)?
-- Duplicate to resolve (standing permission): «شروح الحديث/عارضة الأحوذي بشرح سنن الترمذي - ابن العربي المالكي (دار الكتب العلمية)»
-  and «شروح الحديث/عارضة الأحوذي بشرح صحيح الترمذي - أبو بكر ابن العربي (ط دار الكتب العلمية)» (after plan 242): 14 files each,
-  sizes differ by ≤ 20 KB per volume (same scan, metadata edited?) — verify the page images, keep the labelled set.
+- DONE 250: عارضة الأحوذي — the «بشرح سنن الترمذي» set (14 files) deleted: same scan as the «بشرح صحيح الترمذي» set (same_scan.py).
 - Duplicate to resolve: «كتب السنة/فضائل شهر رمضان - ابن شاهين (ت سعد آل حميد - مكتبة المنار)» (949,589 B) and «… (ط مكتبة
   المنار)» (1,382,605 B): identical imprint pages (مكتبة المنار، الطبعة الثانية 1410) — compare the scans, keep the better.
 - Duplicate to resolve: «كتب السنة/مسند الحميدي - عبد الله بن الزبير الحميدي (ت الأعظمي - عالم الكتب)» — its vol 1 imprint
