@@ -41,8 +41,11 @@ def forward(page, p):
 def check(row, rec, pdf):
     path, page, what, expect = row[0], int(row[1]), row[2], row[3]
     p = rec['pages'][page - 1]; crop = p.get('crop')
-    if what == 'turn':
-        got = 'yes' if p.get('skew') else 'no'; return got == expect, f'turned {p.get("skew")}'
+    if what == 'turn':                               # turned or not as expected — and a turned page reads level
+        got = 'yes' if p.get('skew') else 'no'
+        lvl = p.get('after_tilt')
+        ok = got == expect and (got == 'no' or (lvl is not None and lvl <= 0.15)) and not p.get('untreated_tilt')
+        return ok, f'turned {p.get("skew")}, left after turning {lvl}, untreated {p.get("untreated_tilt")}'
     if what == 'parity':
         got = 'yes' if any(float(v) for v in (rec.get('parity_offsets') or {}).values()) else 'no'
         return got == expect, f'offsets {rec.get("parity_offsets")}'
@@ -72,7 +75,12 @@ def main():
         ok, why = check(r, recs[pdf], pdf)
         fails += not ok
         print(('PASS' if ok else 'FAIL'), r[0].rsplit('/', 1)[-1][:45], 'p.', r[1], r[2], r[3], '—', why, '|', r[4] if len(r) > 4 else '', flush=True)
-    print(f'{len(rows) - fails}/{len(rows)} pass')
+    for pdf, rec in recs.items():                    # whole books: no page may keep a tilt after turning
+        rt = rec.get('residual_tilt') or []
+        if rt: fails += 1
+        print(('PASS' if not rt else 'FAIL'), os.path.basename(pdf), 'pages still tilted after turning:', rt[:12],
+              '| tilted but not turned:', (rec.get('untreated_tilt') or [])[:12])
+    print(f'{fails} failures')
     sys.exit(1 if fails else 0)
 
 if __name__ == '__main__':

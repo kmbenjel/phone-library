@@ -52,8 +52,13 @@ draws the same image turned (and/or shifted). The image streams, the text layer 
    leave the page, on white paper (≥ 235) the content is moved instead so it stays centred; otherwise the box stops at the
    edge. On a page with a stain, the box slides away from it as far as the content allows. A page whose content is wider
    or taller than the box stays whole (uncropped).
-6. SECOND LOOK at 1,000 px: every content mark found outside a page's box must lie (± 3 pt) on something the first look
-   left out on purpose (a stain, edge noise); otherwise the box moves up to 2 % to take it in, or the page stays whole.
+6. SECOND LOOK at 1,000 px, on each page as the reader will see it:
+   - LEVEL CHECK: a turned page must read level (whole-page angle ≤ 0.1°); what is left is turned away once more (both
+     signs tried), else the smaller remaining tilt is kept and the page is listed (`residual_tilt`). An untouched page that
+     shows a consistent tilt the first look did not treat is turned here if that makes it level, else listed
+     (`untreated_tilt`). An untouched page cannot gain a tilt.
+   - every content mark found outside a page's box must lie (± 3 pt) on something the first look left out on purpose (a
+     stain, edge noise); otherwise the box moves up to 2 % to take it in, or the page stays whole.
 7. DECISION (plan): the narrowest width (95 %, 98 %, 100 %) with at most 5 % of the text pages left whole after the second
    look. The file is cropped when the text gets ≥ 6 % larger on a phone, or was ≥ 2 % off-centre on the median page, or
    loses scanner bands, or has ≥ 5 % tilted pages; otherwise it is left as it is.
@@ -484,10 +489,37 @@ def verify(path, rec, px=1000):
     the box may move up to 2 % to take it in, else the page stays whole"""
     doc = pymupdf.open(path); moved = []
     near = lambda b, regions: any(b[0] < r[2] + 3 and b[2] > r[0] - 3 and b[1] < r[3] + 3 and b[3] > r[1] - 3 for r in regions)
+    def look(i, q):                                   # the page as the reader will see it, measured at px
+        t = transformed(doc, i, q); page = t[0]; a, z = gray(page, px); mk = marks(a, z, page.rect.width); t.close()
+        return mk
     for i, p in enumerate(rec['pages']):
+        if not p.get('crop') and not p.get('skew'): continue
+        mk = look(i, p)
+        # LEVEL CHECK (owner: «اختبار يضمن أننا أزلنا الميل تماما ولم نصطنع ميلا جديدا أو نبق شيئا من الميل»):
+        # a turned page must read level (whole-page angle ≤ 0.1°); what is left is turned away once more (both signs tried),
+        # else the smaller of the remaining tilts is kept and reported. An untouched page showing a tilt the first look did
+        # not treat is turned here if that makes it level, else reported; an untouched page cannot gain a tilt.
+        if p.get('skew'):
+            res, _ = skew_of(mk['xy'], raw=True)
+            if abs(res) > 0.1:
+                best = (abs(res), p['skew'], mk)
+                for d2 in (p['skew'] - res, p['skew'] + res):
+                    mk2 = look(i, dict(p, skew=round(d2, 3)))
+                    if mk2['xy'] is None: continue
+                    r2, _ = skew_of(mk2['xy'], raw=True)
+                    if abs(r2) < best[0]: best = (abs(r2), round(d2, 3), mk2)
+                p['skew'], mk, res = best[1], best[2], best[0]
+            p['after_tilt'] = round(abs(res), 3)
+        elif mk['xy'] is not None:
+            u, g = skew_of(mk['xy'])
+            if abs(u) >= SKEW_MIN and g >= 1.02:
+                for d2 in (-u, u):
+                    mk2 = look(i, dict(p, skew=round(d2, 3)))
+                    if mk2['xy'] is None or not (0.6 <= len(mk2['xy'][0]) / len(mk['xy'][0]) <= 1.6): continue
+                    r2, _ = skew_of(mk2['xy'], raw=True)
+                    if abs(r2) <= max(0.1, abs(u) / 3): p['skew'] = round(d2, 3); p['after_tilt'] = round(abs(r2), 3); p['turned_in_check'] = True; mk = mk2; break
+                else: p['untreated_tilt'] = round(u, 3)
         if not p.get('crop'): continue
-        t = transformed(doc, i, p); page = t[0]; a, z = gray(page, px)
-        mk = marks(a, z, page.rect.width); t.close()
         c = p['crop']; known = (p.get('blots') or []) + (p.get('edge') or [])
         out = [b for b in mk.get('parts', []) if not inside(b, c, 1.0) and not near(b, known)]
         if out:
@@ -504,6 +536,9 @@ def verify(path, rec, px=1000):
     doc.close()
     rec['whole'] = sorted(set(rec.get('whole', [])) | set(moved)); rec['verify_whole'] = moved
     rec['blot_pages'] = sum(1 for p in rec['pages'] if p.get('crop') and p.get('blots'))
+    rec['skewed'] = sum(1 for p in rec['pages'] if p.get('skew'))
+    rec['residual_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('skew') and p.get('after_tilt', 0) > 0.15]
+    rec['untreated_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('untreated_tilt')]
     if rec.get('decision') == 'crop' and len(rec['whole']) > MAX_WHOLE * max(1, rec['measured']):
         rec['decision'] = f'skip: {len(rec["whole"])} pages do not fit one box (second check, 1,000 px)'
     return rec
@@ -630,7 +665,7 @@ def review_page(cases, skipped, outdir, stats):
         cards.append(f'''<section class="card"><h3>{n}. {title}</h3><p class="where">{where}</p>
 <ul class="facts"><li>يكبر النص على الهاتف <b>{round((rec["gain"] - 1) * 100)}٪</b></li><li>{rec["n"]} صفحة، منها {len(rec.get("whole", []))} تبقى كاملة</li>
 <li>انحراف النص عن وسط الصفحة: {round(rec.get("offcentre_before", 0) * 100, 1)}٪ ← {round(rec.get("offcentre_after", 0) * 100, 1)}٪</li>
-<li>التوسط الأفقي: {"مختلف للفردية والزوجية (في الهامش مادة ثابتة في جهة)" if any(float(v) for v in (rec.get("parity_offsets") or {}).values()) else "واحد للفردية والزوجية"}</li><li>صفحات مائلة قُوِّمت: {rec.get("skewed", 0)}</li><li>صفحات فيها بقع تُركت خارج الإطار: {rec.get("blot_pages", 0)}</li><li>صفحات شاذة وُسِّطت على نصها: {rec.get("own_centre", 0)}</li></ul>{"".join(figs)}</section>''')
+<li>التوسط الأفقي: {"مختلف للفردية والزوجية (في الهامش مادة ثابتة في جهة)" if any(float(v) for v in (rec.get("parity_offsets") or {}).values()) else "واحد للفردية والزوجية"}</li><li>صفحات مائلة قُوِّمت: {rec.get("skewed", 0)}</li><li>بقي فيها ميل بعد التقويم: {len(rec.get("residual_tilt") or [])}{(" (ص " + "، ".join(map(str, rec["residual_tilt"][:8])) + ")") if rec.get("residual_tilt") else ""}</li><li>مائلة لم تُقوَّم: {len(rec.get("untreated_tilt") or [])}{(" (ص " + "، ".join(map(str, rec["untreated_tilt"][:8])) + ")") if rec.get("untreated_tilt") else ""}</li><li>صفحات فيها بقع تُركت خارج الإطار: {rec.get("blot_pages", 0)}</li><li>صفحات شاذة وُسِّطت على نصها: {rec.get("own_centre", 0)}</li></ul>{"".join(figs)}</section>''')
     skips = []
     for s in skipped:
         dst = 'skip-' + os.path.basename(s['image']); shutil.copyfile(s['image'], os.path.join(img, dst))
