@@ -5,7 +5,8 @@ copies of one edition.) Downloads both (the shared phone lock), and compares pag
   * the text layer (pages with text), bookmarks (outline entries), metadata title/author.
 Verdict «same scan» only when every page's images are identical; otherwise «different» with the first differing page.
 The extra bookmarks/text/metadata tell which copy to keep. Usage:
-  python3 scripts/same_scan.py "<phone path A>" "<phone path B>" [A B …]   (paths relative to Books/)"""
+  python3 scripts/same_scan.py "<phone path A>" "<phone path B>" [A B …]   (paths relative to Books/)
+  python3 scripts/same_scan.py --sets "A1|A2|…" "B1|…"   (copies split differently: pages of each set missing from the other)"""
 import hashlib, json, os, subprocess, sys, tempfile
 sys.path.insert(0, os.path.expanduser('~/.local/share/phone-library-tools/site'))
 import pymupdf
@@ -41,7 +42,27 @@ def compare(a, b):
     r['verdict'] = 'same scan' if diff is None else f'different ({diff})'
     return r
 
+def compare_sets(A, B):
+    """two copies split differently (one file vs three volumes): every page's images as one key; which pages of each set
+    are missing from the other (both empty = the same scan; one side empty = that side is contained in the other)"""
+    prof = {}
+    with tempfile.TemporaryDirectory() as t:
+        for n, p in enumerate(A + B):
+            f = os.path.join(t, f'{n}.pdf'); fetch(p, f); prof[p] = profile(f); os.remove(f)
+    keys = lambda S: [(p, i + 1, tuple(x['imgs'])) for p in S for i, x in enumerate(prof[p]['pages'])]
+    ka, kb = keys(A), keys(B)
+    sa, sb = {k for *_, k in ka if k}, {k for *_, k in kb if k}
+    only = lambda K, other: [(p.rsplit('/', 1)[-1], i) for p, i, k in K if not k or k not in other]
+    oa, ob = only(ka, sb), only(kb, sa)
+    return {'A': A, 'B': B, 'pages': [len(ka), len(kb)], 'outline': [sum(prof[p]['outline'] for p in A), sum(prof[p]['outline'] for p in B)],
+            'text_pages': [sum(1 for p in A for x in prof[p]['pages'] if x['text']), sum(1 for p in B for x in prof[p]['pages'] if x['text'])],
+            'bytes': [sum(prof[p]['bytes'] for p in A), sum(prof[p]['bytes'] for p in B)],
+            'only_in_A': oa[:40], 'only_in_A_count': len(oa), 'only_in_B': ob[:40], 'only_in_B_count': len(ob),
+            'verdict': 'same scan' if not oa and not ob else 'B contained in A' if not ob else 'A contained in B' if not oa else 'different'}
+
 if __name__ == '__main__':
     args = sys.argv[1:]
+    if args and args[0] == '--sets':          # same_scan.py --sets "A1|A2|…" "B1|B2|…"
+        print(json.dumps(compare_sets(args[1].split('|'), args[2].split('|')), ensure_ascii=False)); sys.exit()
     for a, b in zip(args[0::2], args[1::2]):
         print(json.dumps(compare(a, b), ensure_ascii=False), flush=True)

@@ -3,6 +3,26 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (newest last). Everything is resumable.
 
+## 2026-10-08 09:00 — crop method v2 (sample waiting for the owner) + duplicate editions resolved
+- scripts/book_crop.py: ONE box per file, same size on every text page (odd/even placed separately), holding every ink mark
+  of the book (marginal notes, page numbers, running heads) + 12 % of the text width each side; only isolated specks
+  (≤ 1.4 mm, ≥ 5 mm from any mark) may fall outside; every page re-checked at 1,000 px (a page that does not fit stays
+  whole; > 3 % such pages → file left as is); crop only when the text gets ≥ 18 % larger on a phone. CropBox only.
+- Findings: the inspection's margins (20 dpi, 3 pages) lose thin print → most «wide» files are ordinary books (text
+  70–85 % of the width) and are rightly left alone; of the files analysed so far ≈ 1 in 3 of the screened ones is a
+  clear case. Sample page: site/samples/crop-2026-10-08/index.html (20 books + 3 left alone) — NOTHING applied; wait for
+  the owner's word, then batches, each with its own sample page (book_crop.review_page).
+- Exploration run (scratchpad, phone read-only): streams the 668 screened files (data/inspect «all 3 sampled pages
+  < 62 % wide») through book_crop analyse; recipes are only kept in the session scratchpad.
+- Duplicate editions resolved (same_scan.py, now also --sets for copies split differently): 254/255 فضائل شهر رمضان,
+  استيفاء الأقوال; 256/257 مسند الحميدي (the «الأعظمي» set was حسين أسد's, same scan; its cover joined the kept set);
+  258/259 المنتقى للباجي (شروح الحديث set deleted, ج 2/3 there lacked 2 pages each; kept set renumbered 01–07, binding cover
+  + title page as 00); 260–262 المفهم (set without author deleted; kept set named and labelled from the PDF titles — 261
+  shifted the labels by one (zsh arrays start at 1), 262 corrected it); 263/264 دلائل الإعجاز (100 ppi 3-file copy deleted,
+  the 400 ppi file kept in البلاغة); 265/266 الإتقان: the 3,102-page file is مجمع الملك فهد's edition (مركز الدراسات
+  القرآنية; its 114-page مقدمة التحقيق joined it), the 4-volume set is أبو الفضل إبراهيم's (two copies of its تصدير deleted,
+  one of them labelled «الفهارس العامة»). Still to compare: المقاصد الشافية, التمهيد, and the «To check» list below.
+
 ## 2026-10-08 06:35 — incident: 19 restored originals deleted by a rerun; fetched again (queue 247)
 - 05:33 phone back → my chain: 224 substituted the 19 originals (05:38), plans 236–246 applied, refresh, commit de0d1a7.
 - 06:14 the owner asked Antigravity (Gemini, ~/.gemini/antigravity/brain/068a0a41…) whether the ready scripts would be launched;
