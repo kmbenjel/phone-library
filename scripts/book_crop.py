@@ -255,7 +255,7 @@ def turned(doc, i, deg, dx=0.0, dy=0.0):
 def inside(b, box, tol=0.5):
     return b[0] >= box[0] - tol and b[1] >= box[1] - tol and b[2] <= box[2] + tol and b[3] <= box[3] + tol
 
-def analyse(path):
+def analyse_pages(path):
     doc = pymupdf.open(path)
     pages = []
     for i, page in enumerate(doc):
@@ -283,7 +283,23 @@ def analyse(path):
         rec['box'] = mk['box']
         pages.append(rec)
     doc.close()
-    return decide(pages)
+    return pages
+
+def analyse(path):
+    """kept for the old callers: the measured pages and the decision at the narrowest box"""
+    return decide(analyse_pages(path))
+
+def plan(path):
+    """the whole method: measure every page once, then the narrowest box that works — the width of 95 % of the pages,
+    else 98 %, else all; each tried with the second check (a book is cropped only if few pages stay whole)"""
+    import copy
+    pages = analyse_pages(path); rec = None
+    for wq in (0.95, 0.98, 1.0):
+        rec = decide(copy.deepcopy(pages), wq)
+        if rec.get('decision') != 'crop': continue
+        rec = verify(path, rec)
+        if rec.get('decision') == 'crop': rec['width_quantile'] = wq; return rec
+    return rec
 
 def q(vals, f):
     s = sorted(vals); return s[min(len(s) - 1, max(0, int(round(f * (len(s) - 1)))))]
@@ -293,7 +309,7 @@ def iou(a, b):
     if x1 <= x0 or y1 <= y0: return 0.0
     i = (x1 - x0) * (y1 - y0); return i / ((a[2] - a[0]) * (a[3] - a[1]) + (b[2] - b[0]) * (b[3] - b[1]) - i)
 
-def decide(pages):
+def decide(pages, wq=0.95):
     out = {'pages': pages, 'n': len(pages)}
     text = [i for i, p in enumerate(pages) if p['kind'] == 'text']
     out['measured'] = len(text)
@@ -314,7 +330,7 @@ def decide(pages):
     core = {i: pages[i].get('core') or pages[i]['box'] for i in text}
     cw = {i: core[i][2] - core[i][0] for i in text}
     pw = q([pages[i]['w'] for i in text], 0.5); ph = q([pages[i]['h'] for i in text], 0.5)
-    Tw, Th = q(bw.values(), 0.98), q(bh.values(), 1.0)          # height: the tallest page (on a phone the gain is in the width)
+    Tw, Th = q(bw.values(), wq), q(bh.values(), 1.0)            # width: wq of the pages (wider ones centre on their own content); height: the tallest page
     full_w = [i for i in text if cw[i] >= 0.9 * q(cw.values(), 0.5)]
     full_h = [i for i in text if bh[i] >= 0.9 * q(bh.values(), 0.5)]
     m0 = M * pw / REF
@@ -358,6 +374,13 @@ def decide(pages):
                 p['specks'] = [[v[0] + sx, v[1] + sy, v[2] + sx, v[3] + sy] for v in p.get('specks', [])]
                 p['edge'] = [[v[0] + sx, v[1] + sy, v[2] + sx, v[3] + sy] for v in p.get('edge', [])]
         b = [round(b[0] + sx, 1), round(b[1] + sy, 1), round(b[2] + sx, 1), round(b[3] + sy, 1)]
+        if bx and p.get('blots'):                    # dodge a stain: slide the box away from it, as far as the content and
+            lo, hi = max(0, bx[2] - (b[2] - b[0])), min(bx[0], p['w'] - (b[2] - b[0]))      # the page allow (same size)
+            for bl in p['blots']:
+                if bl[2] > b[0] and bl[0] < b[2] and bl[3] > b[1] and bl[1] < b[3]:
+                    nx = bl[2] + 2 if bl[2] <= bx[0] else (bl[0] - 2 - (b[2] - b[0]) if bl[0] >= bx[2] else None)
+                    if nx is not None and lo <= hi:
+                        nx = min(max(nx, lo), hi); b = [round(nx, 1), b[1], round(nx + b[2] - b[0], 1), b[3]]; p['dodged'] = True
         b = [max(0, b[0]), max(0, b[1]), min(p['w'], b[2]), min(p['h'], b[3])]
         if p['kind'] == 'text' and not inside(bx, b): p['crop'] = None; whole.append(i); continue
         p['crop'] = b
@@ -573,8 +596,7 @@ figure{{margin:0}}img{{width:100%;height:auto;border:1px solid var(--line);backg
 if __name__ == '__main__':
     cmd, a = sys.argv[1], sys.argv[2:]
     if cmd == 'analyse':
-        rec = analyse(a[0])
-        if rec.get('decision') == 'crop': rec = verify(a[0], rec)
+        rec = plan(a[0])
         json.dump(rec, open(a[1], 'w'), ensure_ascii=False)
         print(json.dumps({k: rec.get(k) for k in ('decision', 'n', 'measured', 'gain', 'gain_h', 'banded', 'boxes')} | {'whole': len(rec.get('whole', []))}, ensure_ascii=False))
     elif cmd == 'apply':
