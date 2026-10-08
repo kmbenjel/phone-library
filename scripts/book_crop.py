@@ -32,12 +32,15 @@ draws the same image turned (and/or shifted). The image streams, the text layer 
    The text block, used for these tests and for centring, is measured mark by mark (2nd–98th percentile of the marks'
    edges, each mark counted once, border-strip marks left out of the first estimate), so one heavy streak cannot drag it.
 3. LEVEL tilted pages: the tilt is the shear angle that makes the content's row profile sharpest (±4°, to 0.025°), measured
-   on the whole text and on its right, middle and left thirds; the thirds must agree within 0.3° (and the whole within 0.2°
-   of their median), else nothing is turned (layouts that only look tilted). A page is turned when the tilt is ≥ 0.3° and the
-   profile gets ≥ 3 % sharper; both directions are tried and kept only if the turned page measures level (residual ≤
-   max(0.1°, a third of the tilt)) and still shows the page's ink (×0.6–1.6).
+   on the whole text and on its right and left halves; the halves must agree within 0.4° and the whole lie within 0.3° of
+   them, else nothing is turned (index pages, verse, tables only look tilted to the profile). A small tilt (0.1–0.35°) is
+   measured again at 1,000 px. A page is turned when the tilt is ≥ 0.2° and the profile gets ≥ 2 % sharper; both directions
+   are tried and kept only if the turned page's whole-page angle reads level (≤ max(0.1°, a third of the tilt)) and the
+   page still shows its ink (×0.6–1.6).
 4. BOX SIZE, one for the whole file: width = the content width of 95 % of the text pages (else 98 %, else all — see 7)
-   + 12 % of it on each side (at least M); height = the tallest page's content + 6 % above and below. Narrowed only as far as
+   + 8 % of it on each side (at least M); height = the tallest page's content + 5 % above and below. A book whose text is
+   framed by a printed border (a rule on both sides on half its full pages or more) keeps only a hairline outside the
+   frame: 2 % of the content's width and height. Narrowed only as far as
    needed to centre the text on 95 % of the full pages (a scan with one tight margin), never below the content width,
    never beyond the page.
 5. BOX PLACE, page by page: a full page (text block ≥ 90 % of the usual width; content ≥ 90 % of the usual height) is
@@ -232,11 +235,12 @@ def marks(a, scale, width):
     out['xy'] = (xs, ys)
     return out
 
-def skew_of(xy):
+def skew_of(xy, raw=False):
     """the angle (degrees) that makes the text lines level: shear the ink by tan(a) and keep the angle whose row profile is
-    sharpest. Measured on the whole text and on its right, middle and left thirds: a real tilt is the same everywhere; a
-    layout that merely looks tilted to the profile (verse in columns, tables, a single long line) gives thirds that
-    disagree, and then nothing is turned. Returns (a, sharpness gain over a = 0); (0, 1) when unsure or too little ink"""
+    sharpest. Measured on the whole text and on its right and left halves: a real tilt is the same everywhere (owner,
+    2026-10-08: index pages and verse turned by mistake — their whole-page angle disagreed with their halves'). Accepted when
+    the halves agree within 0.4° and the whole lies within 0.3° of them; else (0, 1). raw=True: the whole-page angle alone.
+    Returns (a, sharpness gain over a = 0); (0, 1) with too little ink"""
     if xy is None or len(xy[0]) < 1500: return 0.0, 1.0
     xs, ys = xy
     if len(xs) > 60000:
@@ -251,13 +255,14 @@ def skew_of(xy):
         return float(fine[int(np.argmax(sc))]), max(sc) / base
     x, y = xs.astype(float), ys.astype(float)
     a, gain = best(x, y)
-    t1, t2 = np.percentile(x, [33.3, 66.7]); parts = []
-    for m in (x < t1, (x >= t1) & (x < t2), x >= t2):
+    if raw: return a, gain
+    h = np.percentile(x, 50); parts = []
+    for m in (x < h, x >= h):
         if m.sum() >= 500: parts.append(best(x[m] - x[m].min(), y[m])[0])
-    if len(parts) < 3 or max(parts) - min(parts) > 0.3 or abs(a - float(np.median(parts))) > 0.2: return 0.0, 1.0
-    return float(np.median(parts)), gain
+    if len(parts) < 2 or abs(parts[0] - parts[1]) > 0.4 or abs(a - sum(parts) / 2) > 0.3: return 0.0, 1.0
+    return a, gain
 
-SKEW_MIN = 0.3    # degrees: below it a tilt is hardly seen
+SKEW_MIN = 0.2    # degrees: the owner sees a 0.25° tilt on a full line
 def raw_box(doc, x, key):
     """a page's own or inherited box, as numbers (PDF coordinates)"""
     while x:
@@ -306,17 +311,20 @@ def analyse_pages(path):
         mk = marks(a, z, r.width)
         if mk['box'] is not None and mk['dark'] <= 0.35:     # a tilted text page: turn it level (the sign is checked)
             ang, gain = skew_of(mk['xy'])
-            if abs(ang) >= SKEW_MIN and gain >= 1.03:
+            if 0.1 <= abs(ang) < 0.35:                   # small: measure again at twice the resolution
+                a2, z2 = gray(page, 1000); ang, gain = skew_of(marks(a2, z2, r.width)['xy'])
+            if abs(ang) >= SKEW_MIN and gain >= 1.02:
                 for deg in (-ang, ang):
                     t = turned(doc, i, deg); a2, z2 = gray(t[0], 500); mk2 = marks(a2, z2, r.width); t.close()
                     # the turned page must still show the page's ink (a broken drawing would show none); its text block is
                     # naturally narrower once level, so its size is not compared
                     if mk2['box'] is None or mk2['xy'] is None or not (0.6 <= len(mk2['xy'][0]) / len(mk['xy'][0]) <= 1.6):
                         continue
-                    left, _ = skew_of(mk2['xy'])
+                    left, _ = skew_of(mk2['xy'], raw=True)   # the plain whole-page angle must now read level
                     if abs(left) <= max(0.1, abs(ang) / 3): rec['skew'] = round(deg, 3); mk = mk2; break
         mk.pop('xy', None); mk.pop('parts', None)
-        rec.update(allowed=mk['allowed'], specks=mk['specks'], blots=mk['blots'], edge=mk['edge'], core=mk['core'], paper=round(mk.get('paper', 0)))
+        rec.update(allowed=mk['allowed'], specks=mk['specks'], blots=mk['blots'], edge=mk['edge'], core=mk['core'], paper=round(mk.get('paper', 0)),
+                   rules=mk.get('rules', []))
         if mk['box'] is None: rec['kind'] = 'blank' if mk['dark'] < 0.5 else 'picture'
         elif mk['dark'] > 0.35: rec['kind'] = 'picture'   # dark pages only: a tight light scan is text (stays whole if it cannot fit)
         else: rec['kind'] = 'text'
@@ -373,8 +381,16 @@ def decide(pages, wq=0.95):
     Tw, Th = q(bw.values(), wq), q(bh.values(), 1.0)            # width: wq of the pages (wider ones centre on their own content); height: the tallest page
     full_w = [i for i in text if cw[i] >= 0.9 * q(cw.values(), 0.5)]
     full_h = [i for i in text if bh[i] >= 0.9 * q(bh.values(), 0.5)]
+    # a printed frame around the text (a vertical rule on both sides on most full pages) is the page's own border: the box
+    # keeps a hairline outside it (owner, وحي القلم: «كل ما خارج الإطار الظاهر الخفيف… يمكن أن يقص»); otherwise a margin of
+    # 8 % of the text width each side (owner: the margins of the third sample were «كبيرة قليلا»), 5 % above and below
+    def framed(i):
+        c = core[i]; rs = pages[i].get('rules') or []
+        return any(r[2] <= c[0] for r in rs) and any(r[0] >= c[2] for r in rs)
+    out['framed'] = sum(1 for i in full_w if framed(i)) >= 0.5 * max(1, len(full_w))
     m0 = M * pw / REF
-    W, H = Tw + 2 * max(m0, 0.12 * Tw), Th + 2 * max(m0, 0.06 * Th)
+    if out['framed']: W, H = Tw + 2 * 0.02 * Tw, Th + 2 * 0.02 * Th
+    else: W, H = Tw + 2 * max(m0, 0.08 * Tw), Th + 2 * max(m0, 0.05 * Th)
     cx = {i: (core[i][0] + core[i][2]) / 2 for i in text}            # centred on the text block, not on a stray mark
     cy = {i: (pages[i]['box'][1] + pages[i]['box'][3]) / 2 for i in text}
     lim = lambda i: pages[i].get('allowed') or [0, 0, pages[i]['w'], pages[i]['h']]
@@ -396,7 +412,7 @@ def decide(pages, wq=0.95):
     if off[0] or off[1]:
         cx = {i: v + off[i % 2] for i, v in cx.items()}   # the box follows the page's printed layout, per parity
         fitW = [2 * min(cx[i] - lim(i)[0], lim(i)[2] - cx[i]) for i in full_w]
-        W = min(Tw + 2 * max(m0, 0.12 * Tw), max(Tw, q(fitW, 0.05)) if fitW else W, pw)
+        W = min((Tw + 2 * 0.02 * Tw) if out['framed'] else (Tw + 2 * max(m0, 0.08 * Tw)), max(Tw, q(fitW, 0.05)) if fitW else W, pw)
     def near(i, pool, val):                         # a short page takes the place of its full neighbours (same parity)
         same = [j for j in pool if j % 2 == i % 2] or pool
         k = sorted(same, key=lambda j: abs(j - i))[:6]

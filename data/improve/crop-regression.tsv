@@ -1,0 +1,14 @@
+# Pages the crop method once got wrong, or the owner pointed at (2026-10-08). Every change to scripts/book_crop.py is
+# checked against all of them (scripts/crop_regress.py) before a sample is shown. Columns: phone path, page (1-based),
+# check, expected, note. Checks: turn = the page is levelled (expected: yes/no); out = a mark region (x0,y0,x1,y1 in pt) must
+# lie outside the box; in = a region that must lie inside the box; centred = the page's content centred in its box (±2 %);
+# parity = the book's odd/even pages get different horizontal places (yes/no).
+العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/01 - اللآلئ المصنوعة في الأحاديث الموضوعة (التوحيد - مناقب البلدان والأيام).pdf	4	out	11,265,33,459	the black torn-edge streak on the left
+العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/02 - اللآلئ المصنوعة في الأحاديث الموضوعة (الطهارة - فوائد متفرقة).pdf	236	turn	yes	tilted ≈ 0.95°
+العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/02 - اللآلئ المصنوعة في الأحاديث الموضوعة (الطهارة - فوائد متفرقة).pdf	466	turn	yes	tilted ≈ 1.1° (once refused by a too strict guard)
+العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/02 - اللآلئ المصنوعة في الأحاديث الموضوعة (الطهارة - فوائد متفرقة).pdf	469	turn	yes	tilted ≈ 2.6°
+فهارس الكتب والأدلة/فهرسة ابن خير الإشبيلي/1 - فهرسة ابن خير الإشبيلي.pdf	381	centred	yes	the uploader's stamp page: one line at the far left
+كتب اللغة/المثلث - ابن السيد البطليوسي (ت صلاح مهدي الفرطوسي)/1 - المثلَّث للبطليوسي.pdf	499	turn	no	not tilted; once turned by mistake
+الغريب والمعاجم/الاتباع والمزاوجة - ابن فارس.pdf	98	turn	no	an index page (العباس، عبد الصمد بن بابك…) once turned by mistake
+العلل والسؤلات الحديثية/سؤالات أبي داود للإمام أحمد بن حنبل في جرح الرواة وتعديلهم (ت أبو عمر محمد بن علي الأزهري - الفاروق الحديثة).pdf	177	turn	no	not tilted; once turned by mistake
+النحو والصرف/الكتاب - سيبويه (ت محمد كاظم البكاء - منشورات زين الحقوقية)/02 - الكتاب - سيبويه (إسناد الاسم وأحوال إجرائه).pdf	1	parity	yes	folio numbers of the manuscript in the outer margins
