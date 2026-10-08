@@ -3,6 +3,26 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (newest last). Everything is resumable.
 
+## 2026-10-08 17:15 GMT — crop method v4 (owner's review of the second sample)
+- Done: 267 (المقاصد front pages, by the chain) and 268 (the 100 ppi المقاصد copy deleted); refresh committed.
+- Owner's notes on sample 2 and what v4 does (scripts/book_crop.py):
+  * stains / torn-edge streaks (اللآلئ ج 1 p. 4) → left out of the box (orange): streaks = tall ragged marks near a side
+    beyond the text block; stains = solid irregular marks ≥ 5 mm, alone, ≥ 5 mm from the text, ≤ 3 % of the page, not
+    repeated on 3+ pages (else print); their detached pieces too. Scanner edge noise, sheet-edge lines and corner marks
+    (purple) and dust groups (blue) also stay out. The text block is measured mark by mark (one streak cannot drag it).
+  * tilted pages → levelled LOSSLESSLY (a «q cos sin -sin cos e f cm» stream + «Q» around the content; images untouched;
+    the sign is checked by re-measuring); vertical centring kept; box height = tallest page (gain is in the width).
+  * the stamp page glued to an edge (فهرسة ابن خير p. 381) → odd pages are centred on their own text; when the box cannot
+    move enough on the page, the CONTENT moves (white paper ≥ 235 only). A page needing a > 2 % shift of the usual place is
+    such an odd page; whole pages only when the text is wider than the box (≤ 5 % per book).
+  * second check at 1,000 px: every mark outside a box must be one the first pass excluded (same place ± 3 pt).
+  * cleaning (painting specks/stains) DROPPED by the owner — never paint.
+  * المجلد 78 (مجمع دمشق) is a 70 ppi 1-bit al-mostafa scan: owner: no need to replace it.
+- Sample run in the session scratchpad (v4/drive.py → v4/build.py → site/samples/crop-2026-10-08/index.html). Waiting.
+- Owner asked whether to continue the expansion in parallel: I said yes (crop work is local), with the phone on the charger
+  and paced downloads; waiting for the go. Earlier queues are complete; library 172.2 GB (target 200 GB).
+- Found: «الكتاب - سيبويه (ت هارون)/02» is البكاء's edition (2015) — folder to read and fix.
+
 ## 2026-10-08 08:55 GMT — session ended; unattended chain scratch/after_v3_2026-10-08.sh (log logs/after-v3-2026-10-08.log)
 - Owner on the first crop sample: «مبهر», but asked (a) the text centred horizontally, consistently on every page, (b) ordinary
   books (text ≈ 72 % wide, e.g. وحي القلم) enlarged moderately too, if consistent on every page. → book_crop.py v3: one box
