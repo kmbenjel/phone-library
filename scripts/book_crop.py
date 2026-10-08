@@ -1,33 +1,60 @@
-"""Book-level crop — the method after the 2026-10-07 revert (owner: the per-page crops swayed, ate the natural margins of
-good editions and kept a speck as content; «لا يضيع شيء من النص ولو تعليقة صغيرة في الهامش»; specks surely not text may go;
-2026-10-08 on the first sample: «مبهر» — and centre the text horizontally, consistently on every page; ordinary books
-(text ≈ 72 % of the width) may also grow «على حساب شيء من الهامش», if every page of the book stays consistent).
-LOSSLESS: only the pages' CropBox changes (incremental save); images, text layer and annotations stay byte for byte.
+"""Book-level crop and levelling of scanned books — the method after the 2026-10-07 revert, shaped by the owner's reviews of
+three samples (2026-10-08). Owner's rules: nothing of the text may be lost («ولو تعليقة صغيرة في الهامش»); pages must not
+sway; the text centred, horizontally and vertically, consistently on every page; ordinary books enlarged moderately;
+tilted pages levelled; stains left out but never confused with print or an illustration; no pixel cleaning.
 
-One box SIZE per file; on every page the box is centred on that page's own text block, so pages never sway and the text
-sits in the middle of every page whatever the scanner did:
-  1. every page rendered gray, 500 px wide (1,000 for the check); paper = 90th percentile; ink = darker than paper − 50.
-     Sizes are fractions of the page width (scans come with any page unit: 1147 pt wide for one of 14 cm); below,
-     «pt» means pt on a page scaled to 420 pt wide (≈ 14.8 cm).
-  2. not content: scanner bands (rows/columns from an edge more than 60 % dark) and edge shadows (a mark touching a side
-     of the page, long along it and thin across it: the shadow of the book's fore-edge or gutter).
-  3. ink marks (8-connected). A speck = a mark ≤ 4×4 pt (≈ 1.4 mm) with no other mark within M = 14 pt (≈ 5 mm):
-     isolated dirt. Every other mark is content, however small or faint: the letters of a marginal note have neighbours.
-  4. picture pages (dark: covers, photographs) and blank pages are not measured.
-  5. the box: the text block of the book (98th percentile of the pages' widths and heights) + a generous margin
-     (12 % of the text width each side, 6 % of its height, at least M), made smaller only as far as needed to centre the
-     text on the pages (a scan with a narrow margin on one side). Same size on every page.
-  6. its place on each page: centred on the page's own text block when the page is full (≥ 90 % of the usual width /
-     height); a short page (chapter end, heading) takes the place of its full neighbours of the same parity. Then moved
-     the least needed to hold every mark of the page and to stay on the page.
-  7. a crop is made when it is worth it: the text gets ≥ 6 % larger on a phone, or it was visibly off-centre
-     (≥ 2 % of the width on the median page), or scanner bands go. Otherwise the file is left as it is.
-  8. every page is checked again at 1,000 px wide: nothing but isolated specks may fall outside its box; a page that fails
-     (outlier, plate, fold-out, marginal note far out) stays WHOLE. More than 3 % such pages → the file is left as is.
+WHAT CHANGES IN THE FILE. A scanned page holds an image (the scan) and drawing instructions (where to draw it, which part
+to show). Only the instructions change: (1) each page's CropBox — the part shown; what lies outside stays in the file;
+(2) for a tilted or moved page, one stream «q a b c d e f cm» before the page's content and one «Q» after it — the reader
+draws the same image turned (and/or shifted). The image streams, the text layer and everything else stay byte for byte
+(incremental save; checked: same page count, same images). Removing the CropBox and the two streams restores the page.
+
+1. MEASURE every page: rendered gray 500 px wide; paper = 90th percentile of the grey levels; ink = darker than
+   paper − 50; ink marks = 8-connected components. Sizes below are fractions of the page width («pt» = pt on a page scaled
+   to 420 pt wide); M = 14 pt (≈ 5 mm), SPECK = 4 pt (≈ 1.4 mm). A page is a picture if more than 35 % of it is dark (or its
+   paper is darker than 110), blank if it has no content. A file with fewer than 5 text pages, or text on fewer than half
+   its pages, is left as it is.
+2. NOT CONTENT (kept out of the box), by careful rules:
+   - scanner bands: rows/columns from an edge more than 60 % dark;
+   - edge shadows: a mark touching a side, at least 40 % of it long and at most 6 % thick (the box keeps out of them);
+   - isolated specks: a mark ≤ SPECK × SPECK with no other mark within M; dust: a group of marks within M of one another,
+     all ≤ SPECK, lying wholly outside the text block — unless they form a long thin line (≥ 20 % long, ≤ 3 % thick);
+   - scanner edge noise: marks wholly in the outer 3 % of a side, at most 2 % thick, on a side the text block is ≥ 5 % away
+     from; the edge of the sheet: a thin sparse line (ink < 8 % of its bounding box) touching the border with < 10 % of its
+     ink inside the text block; corner marks: a mark ≤ 5 % × 5 % touching the border in a corner, outside the text block;
+   - stains: (a) streaks — beyond the text block, ≥ 25 % of the page tall, 0.6–6 % wide, ragged (ink < 85 % of the box),
+     within the outer 15 % of the width; (b) blots — at least M across, solid but irregular (ink 45–85 % of the box), alone
+     in their group, at least M from the text block, at most 3 % of the page; plus the detached pieces of a stain on the same
+     side. A «stain» found at the same place (centre within 3 %, size within ×2) on ≥ max(3, 3 % of the text pages) other
+     pages is print (ornament, logo) and counts as content again.
+   Everything else is content, however small or faint, including faint printed rules and frames: beyond the text block,
+   light ink (paper − 20) running along ≥ 50 % of the text block's height (or width) in a band 1 % wide.
+   The text block, used for these tests and for centring, is measured mark by mark (2nd–98th percentile of the marks'
+   edges, each mark counted once, border-strip marks left out of the first estimate), so one heavy streak cannot drag it.
+3. LEVEL tilted pages: the tilt is the shear angle that makes the content's row profile sharpest (±4°, to 0.025°). A page is
+   turned when the tilt is ≥ 0.3° and the profile gets ≥ 3 % sharper; both directions are tried and kept only if the turned
+   page measures level (residual ≤ max(0.1°, a third of the tilt)) and shows the same text block (±5 %) and ink (×0.6–1.6).
+4. BOX SIZE, one for the whole file: width = the content width of 95 % of the text pages (else 98 %, else all — see 7)
+   + 12 % of it on each side (at least M); height = the tallest page's content + 6 % above and below. Narrowed only as far as
+   needed to centre the text on 95 % of the full pages (a scan with one tight margin), never below the content width,
+   never beyond the page.
+5. BOX PLACE, page by page: a full page (text block ≥ 90 % of the usual width; content ≥ 90 % of the usual height) is
+   centred on its own text block; a short page (a chapter end with a few lines) takes the median place of its 6 nearest
+   full pages of the same parity, so its lines stay where the neighbours' lines are. If the page's marks do not fit there
+   (a stamp page, a plate, a far marginal note), the box is centred on that page's own content instead. If the box would
+   leave the page, on white paper (≥ 235) the content is moved instead so it stays centred; otherwise the box stops at the
+   edge. On a page with a stain, the box slides away from it as far as the content allows. A page whose content is wider
+   or taller than the box stays whole (uncropped).
+6. SECOND LOOK at 1,000 px: every content mark found outside a page's box must lie (± 3 pt) on something the first look
+   left out on purpose (a stain, edge noise); otherwise the box moves up to 2 % to take it in, or the page stays whole.
+7. DECISION (plan): the narrowest width (95 %, 98 %, 100 %) with at most 5 % of the text pages left whole after the second
+   look. The file is cropped when the text gets ≥ 6 % larger on a phone, or was ≥ 2 % off-centre on the median page, or
+   loses scanner bands, or has ≥ 5 % tilted pages; otherwise it is left as it is.
+Nothing is applied to the phone without the owner's approval of a sample page (review_page()).
 Usage:
-  book_crop.py analyse in.pdf recipe.json          → recipe: boxes, decision, per-page notes (no output PDF)
-  book_crop.py apply in.pdf recipe.json out.pdf    → lossless copy with the recipe's boxes, checked
-  book_crop.py sheet in.pdf recipe.json outdir     → JPEGs: before (box in red, cut specks circled in blue) / after
+  book_crop.py analyse in.pdf recipe.json          → plan(): recipe — per page box, tilt, move, stains (no output PDF)
+  book_crop.py apply in.pdf recipe.json out.pdf    → lossless copy with the recipe's boxes and drawing instructions, checked
+  book_crop.py sheet in.pdf recipe.json outdir     → JPEGs: before (box red, stains orange, edge noise purple, specks blue) / after
 Needs PyMuPDF (~/.local/share/phone-library-tools/site), numpy, scipy."""
 import json, os, sys
 sys.path.insert(0, os.path.expanduser('~/.local/share/phone-library-tools/site'))
