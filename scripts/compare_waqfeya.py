@@ -1,5 +1,9 @@
 """Compare the phone library with the whole Waqfeya catalog.
 status per Waqfeya book: complete | partial (some volumes) | other-copy (same title, different files/edition) | missing
+A matched file counts only if the phone book holding it carries the Waqfeya title (owner 2026-10-08: «كتب ناقصة المجلدات
+(22)» held records whose link points to another book's file — صيام الصالحين → «مقاصد الصوم» …): such records are missing,
+listed in data/review/waqfeya-link-mismatch.tsv. A partial book is complete when another phone folder of the same title holds
+as many volumes (the same edition stored twice: الروض الأنف ت الوكيل).
 Output: data/compare/waqfeya-matches.tsv"""
 import csv, json, os, re, sys
 from collections import defaultdict
@@ -38,9 +42,12 @@ keys = defaultdict(set); pauth = {}
 word_to_books = defaultdict(set)
 phone_full_tks = {}
 phone_folder_words = {}
+STOP0 = {'كتاب', 'رسالة', 'جزء', 'شرح', 'مختصر', 'في', 'على', 'من', 'الى', 'إلى', 'عن', 'ومعه', 'ويليه', 'ط', 'ت'}
+def _w(t): return {w for w in title_key(t).split() if len(w) > 2 and w not in STOP0}
 for b in cat['books']:
     pk = b['cat'] + '/' + b['folder']
-    ts = {b['title']} | {w['name'] for w in b.get('waqfeya', [])}
+    own = _w(b['title'] + ' ' + b['folder'])        # a Waqfeya name joins the phone book's titles only if it resembles them
+    ts = {b['title']} | {w['name'] for w in b.get('waqfeya', []) if len(_w(w['name']) & own) >= max(1, 0.5 * min(len(_w(w['name'])), len(own) or 1))}
     for t in ts:
         k = title_key(t)
         if k: keys[k].add(pk)
@@ -54,6 +61,19 @@ for b in cat['books']:
         if len(w) > 2 and w not in ('كتاب', 'رسالة', 'جزء', 'شرح', 'مختصر'):
             word_to_books[w].add(pk)
 col_keywords = {'مجموع', 'مؤلفات', 'رسائل', 'أعمال', 'فتاوى', 'تراث', 'موسوعة', 'جامع', 'الجامع'}
+STOP = {'كتاب', 'رسالة', 'جزء', 'شرح', 'مختصر', 'في', 'على', 'من', 'الى', 'إلى', 'عن', 'ومعه', 'ويليه', 'ط', 'ت'}
+def words(t): return {w for w in title_key(t).split() if len(w) > 2 and w not in STOP}
+own_title = {b['cat'] + '/' + b['folder']: b['title'] + ' ' + b['folder'] for b in cat['books']}
+def book_key(path):                                   # a phone file → its catalog book (folder, or the single file)
+    parts = path.split('/')
+    return '/'.join(parts[:2]) if len(parts) > 2 else path[:-4] if path.endswith('.pdf') else path
+def same_book(wname, path):
+    a, b = words(wname), words(own_title.get(book_key(path), path))
+    return bool(a) and len(a & b) >= max(1, 0.5 * min(len(a), len(b) or 1))
+prov_paths = defaultdict(set)
+for r in csv.DictReader(open(J('data/phone/provenance.tsv')), delimiter='\t'):
+    if r['waqfeya_id']: prov_paths[r['waqfeya_id']].add(r['path'])
+mismatch = []
 rows = []
 for wid, b in books.items():
     links = b.get('links') or []
@@ -73,6 +93,9 @@ for wid, b in books.items():
     vols = {x for x in allv if (vol_from_orig(x[1]) or (1, 'vol'))[1] == 'vol'}      # main volumes only (no cover/preface files)
     have = prov.get(wid, set()) & (vols or allv) or prov.get(wid, set())
     wcat, pcat = phone_cat((b.get('category') or {}).get('name'))
+    if have and prov_paths.get(wid) and not any(same_book(b['name'], pp) for pp in prov_paths[wid]):
+        mismatch.append([wid, b['name'], ' | '.join(sorted(prov_paths[wid]))[:600]])      # the link points to another book
+        have = set()
     if have:
         where = sorted(prov_books[wid])
         folder_max_vols = max([cat_books_files.get(pf, 0) for pf in where] if where else [0])
@@ -80,7 +103,15 @@ for wid, b in books.items():
         if not vols or have >= vols or folder_max_vols >= len(vols):
             status = 'complete'
         else:
-            status = 'partial' 
+            status = 'partial'
+            head = [w for w in title_key(b['name']).split() if len(w) > 2 and w not in STOP][:2]   # the title's first words
+            other = [pk for pk, n in cat_books_files.items() if n >= len(vols) and pk not in where and head
+                     and ' '.join(head) in ' '.join(w for w in title_key(own_title.get(pk, '')).split() if len(w) > 2 and w not in STOP)]
+            if other:                                # the same edition stored twice → complete; another edition → other-copy
+                ed = words(re.sub(r'.*?\((.*)\).*', r'\1', ' '.join(where))) if where else set()
+                same_ed = [pk for pk in other if ed and len(ed & words(pk.rsplit('/', 1)[-1])) >= max(1, 0.5 * len(ed))]
+                status = 'complete' if same_ed else 'other-copy'
+                where = sorted(set(where) | set(same_ed or other))
     else:
         k = title_key(b['name']); at = author_tokens((b.get('author') or {}).get('name', ''))
         cand = keys.get(k, set())
@@ -128,5 +159,7 @@ with open(J('data/compare/waqfeya-matches.tsv'), 'w') as f:
     w = csv.writer(f, delimiter='\t')
     w.writerow(['waqfeya_id', 'name', 'author', 'waqfeya_category', 'phone_category', 'century', 'visits', 'volumes', 'volumes_on_phone', 'size_mb', 'missing_mb', 'status', 'phone_folders', 'url', 'archive_ids', 'files_known'])
     w.writerows(rows)
+with open(J('data/review/waqfeya-link-mismatch.tsv'), 'w') as f:
+    w = csv.writer(f, delimiter='\t'); w.writerow(['waqfeya_id', 'waqfeya_name', 'phone files the record links (another book)']); w.writerows(mismatch)
 from collections import Counter
-print(Counter(r[11] for r in rows))
+print(Counter(r[11] for r in rows), '| link to another book:', len(mismatch))
