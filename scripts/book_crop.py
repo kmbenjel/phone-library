@@ -269,8 +269,10 @@ def analyse(path):
             if abs(ang) >= SKEW_MIN and gain >= 1.03:
                 for deg in (-ang, ang):
                     t = turned(doc, i, deg); a2, z2 = gray(t[0], 500); mk2 = marks(a2, z2, r.width); t.close()
-                    if mk2['box'] is None or abs(len(mk2['xy'][0]) - len(mk['xy'][0])) > 0.1 * len(mk['xy'][0]):
-                        continue                          # the turned page must show the same ink, or it is not used
+                    c1, c2 = mk['core'], mk2['core']       # the turned page must show the same text block and ink, or it is not used
+                    if mk2['box'] is None or c2 is None or not (0.6 <= len(mk2['xy'][0]) / len(mk['xy'][0]) <= 1.6) \
+                       or abs((c2[2] - c2[0]) - (c1[2] - c1[0])) > 0.05 * (c1[2] - c1[0]) or abs((c2[3] - c2[1]) - (c1[3] - c1[1])) > 0.05 * (c1[3] - c1[1]):
+                        continue
                     left, _ = skew_of(mk2['xy'])
                     if abs(left) <= max(0.1, abs(ang) / 3): rec['skew'] = round(deg, 3); mk = mk2; break
         mk.pop('xy', None); mk.pop('parts', None)
