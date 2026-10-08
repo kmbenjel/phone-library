@@ -241,13 +241,16 @@ WHY_AR = {'mid': 'صفحة من وسط الكتاب', 'speck': 'أكثر صفح�
           'tight': 'الصفحة التي يقترب نصها من الإطار أكثر من غيرها', 'whole': 'صفحة تبقى كاملة (لا تدخل في الإطار)'}
 
 def page_reasons(rec, pages):
+    """why each page of sample_pages() was chosen (the same rules, recomputed)"""
     P = rec['pages']; out = {}
     text = [i for i, p in enumerate(P) if p.get('crop') and p['kind'] == 'text']
-    sp = max(text, key=lambda i: len(P[i].get('cut_specks', []))) if text else None
+    if not text: return {i: 'whole' for i in pages}
+    mid = text[len(text) // 2]; mids = {mid, mid + 1 if mid + 1 < len(P) and P[mid + 1].get('crop') else mid - 1}
+    sp = max(text, key=lambda i: len(P[i].get('cut_specks', [])))
     for i in pages:
         if not P[i].get('crop'): out[i] = 'whole'
+        elif i in mids: out[i] = 'mid'
         elif i == sp and P[i].get('cut_specks'): out[i] = 'speck'
-        elif i in pages[:2]: out[i] = 'mid'
         else: out[i] = 'tight'
     return out
 

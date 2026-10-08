@@ -60,8 +60,90 @@ def compare_sets(A, B):
             'only_in_A': oa[:40], 'only_in_A_count': len(oa), 'only_in_B': ob[:40], 'only_in_B_count': len(ob),
             'verdict': 'same scan' if not oa and not ob else 'B contained in A' if not ob else 'A contained in B' if not oa else 'different'}
 
+def signature(page):
+    """the page's text block, drawn 48×72 (blurred, normalised): two scans of one printed page give nearly the same
+    signature whatever the scanner, resolution or margins; None for a blank or dark page"""
+    import numpy as np
+    from scipy import ndimage
+    z = 240 / page.rect.width
+    pix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), colorspace=pymupdf.csGRAY, alpha=False)
+    a = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width].astype(float)
+    paper = np.percentile(a, 90)
+    if paper < 100: return None
+    m = a < paper - 60
+    h, w = m.shape; by, bx = max(1, h // 30), max(1, w // 30)
+    m[:by] = m[-by:] = False; m[:, :bx] = m[:, -bx:] = False          # scanner edges
+    ys, xs = np.nonzero(m)
+    if len(ys) < 50: return None
+    y0, y1 = (int(v) for v in np.percentile(ys, [0.5, 99.5])); x0, x1 = (int(v) for v in np.percentile(xs, [0.5, 99.5]))
+    if y1 - y0 < 5 or x1 - x0 < 5: return None                # the text block, specks and stray marks left out
+    sub = a[y0:y1 + 1, x0:x1 + 1]
+    s = ndimage.gaussian_filter(ndimage.zoom(sub, (72 / sub.shape[0], 48 / sub.shape[1]), order=1), 1.0)[:72, :48]
+    if s.shape != (72, 48): return None
+    v = (s - s.mean()).ravel(); n = np.linalg.norm(v)
+    return v / n if n else None
+
+def signatures(f):
+    import numpy as np
+    doc = pymupdf.open(f); sig = [signature(p) for p in doc]; doc.close()
+    return sig
+
+def align(SA, SB, T=0.75):
+    """order-keeping alignment of two page sequences (Needleman–Wunsch on similarity − T): matched pairs, unmatched pages"""
+    import numpy as np
+    ia = [i for i, s in enumerate(SA) if s is not None]; ib = [j for j, s in enumerate(SB) if s is not None]
+    if not ia or not ib: return [], ia, ib, None
+    sim = np.array([SA[i] for i in ia]) @ np.array([SB[j] for j in ib]).T
+    n, m = sim.shape; D = np.zeros((n + 1, m + 1)); bt = np.zeros((n + 1, m + 1), np.int8)
+    for i in range(1, n + 1):
+        for j in range(1, m + 1):
+            d, u, l = D[i - 1, j - 1] + sim[i - 1, j - 1] - T, D[i - 1, j], D[i, j - 1]
+            if d >= u and d >= l: D[i, j], bt[i, j] = d, 0
+            elif u >= l: D[i, j], bt[i, j] = u, 1
+            else: D[i, j], bt[i, j] = l, 2
+    i, j, pairs = n, m, []
+    while i and j:
+        if bt[i, j] == 0: pairs.append((ia[i - 1], ib[j - 1], round(float(sim[i - 1, j - 1]), 3))); i -= 1; j -= 1
+        elif bt[i, j] == 1: i -= 1
+        else: j -= 1
+    pairs.reverse()
+    ma, mb = {p[0] for p in pairs}, {p[1] for p in pairs}
+    return pairs, [x for x in ia if x not in ma], [x for x in ib if x not in mb], sim
+
+def compare_visual(A, B, keep=None):
+    """same printing, different scans? Signatures of every page; each file of A paired with the file of B it resembles most,
+    aligned page by page. Reports per pair: matched pages (similarity), pages of each side without a counterpart (blank
+    pages are listed apart). keep=dir saves the local copies there (to look at the unmatched pages)."""
+    import numpy as np
+    sig, npages = {}, {}
+    with tempfile.TemporaryDirectory() as t:
+        for n, p in enumerate(A + B):
+            f = os.path.join(keep or t, f'{"A" if p in A else "B"}{n:02d}.pdf')
+            if not os.path.exists(f): fetch(p, f)
+            sig[p] = signatures(f); npages[p] = len(sig[p])
+    def quick(a, b):                                     # how much a resembles b: median of each page's best match
+        SA = [s for s in sig[a] if s is not None]; SB = [s for s in sig[b] if s is not None]
+        if not SA or not SB: return 0
+        return float(np.median((np.array(SA) @ np.array(SB).T).max(1)))
+    out = []
+    usedB = set()
+    for a in A:
+        b = max(B, key=lambda b: quick(a, b))
+        pairs, ua, ub, _ = align(sig[a], sig[b])
+        usedB.add(b)
+        out.append({'a': a, 'b': b, 'pages': [npages[a], npages[b]], 'matched': len(pairs),
+                    'sim_median': round(float(np.median([p[2] for p in pairs])), 3) if pairs else None,
+                    'sim_min': min((p[2] for p in pairs), default=None),
+                    'only_a': [i + 1 for i in ua], 'only_b': [j + 1 for j in ub],
+                    'blank_a': [i + 1 for i, s in enumerate(sig[a]) if s is None], 'blank_b': [j + 1 for j, s in enumerate(sig[b]) if s is None]})
+    return {'pairs': out, 'B_unpaired': [b for b in B if b not in usedB]}
+
 if __name__ == '__main__':
     args = sys.argv[1:]
+    if args and args[0] == '--visual':        # same_scan.py --visual "A1|A2|…" "B1|…" [keep_dir]
+        r = compare_visual(args[1].split('|'), args[2].split('|'), args[3] if len(args) > 3 else None)
+        for x in r['pairs']: print(json.dumps(x, ensure_ascii=False), flush=True)
+        print(json.dumps({'B_unpaired': r['B_unpaired']}, ensure_ascii=False)); sys.exit()
     if args and args[0] == '--sets':          # same_scan.py --sets "A1|A2|…" "B1|B2|…"
         print(json.dumps(compare_sets(args[1].split('|'), args[2].split('|')), ensure_ascii=False)); sys.exit()
     for a, b in zip(args[0::2], args[1::2]):
