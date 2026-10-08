@@ -155,6 +155,7 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `fetch_archive_files.py` | archive.org `<id>_files.xml` → file names + exact sizes (fast) |
 | `fetch_archive_titles.py` | archive.org titles in bulk (advancedsearch) |
 | `export_shamela.py` | local Shamela `master.db` → `data/shamela/books.tsv` |
+| `export_shamela_cards.py`, `shamela_cards.py` | the local Shamela's book cards (printed title, full author, editor, publisher, edition, volumes, نبذة) and author biographies, read from its Lucene store with `tools/shamela-dump` → `data/shamela/cards.jsonl`, `authors.jsonl`; helpers for the edition line, «same edition?» and the match evidence (report 01) |
 | `dup_check.py` | fingerprints same-size files on the phone |
 | `provenance.py` | phone file → archive.org file → Waqfeya book |
 | `dedup_plan.py` | picks the copy to keep, writes a quarantine plan |
@@ -163,7 +164,7 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `periodical_plan.py` | periodicals: issue range per file + what the source item still has |
 | `anthologies_check.py` | a canon of poetry anthologies checked against the library and Waqfeya |
 | `build_site.py` | ONE self-contained file (index + every report as tabs, reports shown in a frame) — Android browsers do not follow links between local files |
-| `compare_shamela.py`, `compare_waqfeya.py` | status of every Shamela / Waqfeya book vs the phone → `data/compare/*.tsv` |
+| `compare_shamela.py`, `compare_waqfeya.py` | status of every Shamela / Waqfeya book vs the phone → `data/compare/*.tsv`. Shamela: a work is present in any edition, with the author agreeing (not on a common name); never an abridgement, commentary, selection, other part or recension; card titles and «ضمن …» collections count; rejected matches → `data/review/shamela-vetoed.tsv`, doubtful Waqfeya links → `data/review/waqfeya-link-doubts.tsv` |
 | `report_shamela.py`, `report_waqfeya.py`, `report_recommend.py`, `report_changes.py` | reports 01–04 (HTML + MD) |
 | `report_multi_editions.py` | report 05: works in several editions or scans — completeness, scan quality from the files, sourced notes (`data/editions/notes.json`) |
 | `report_manzumat.py` | report 06: the teaching poems of each science (`data/mappings/manzumat-canon.tsv`) with their text and commentaries on the phone, Waqfeya offers for the missing; all other poems by section (replaces the old static «خزانة المنظومات» page) |
