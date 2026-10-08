@@ -340,10 +340,12 @@ def decide(pages):
             b = [x - W / 2, y - H / 2, x + W / 2, y + H / 2]
             dx = bx[0] - b[0] if bx[0] < b[0] else (bx[2] - b[2] if bx[2] > b[2] else 0)
             dy = bx[1] - b[1] if bx[1] < b[1] else (bx[3] - b[3] if bx[3] > b[3] else 0)
-            if abs(dx) > 0.02 * p['w'] or abs(dy) > 0.02 * p['h']:
-                # the usual place does not suit this page (a stamp, a plate, a chapter start): centre it on its own text
-                x, y = (bx[0] + bx[2]) / 2, (bx[1] + bx[3]) / 2; p['own_centre'] = True; own += 1
-            else: x, y = x + dx, y + dy
+            if dx or dy:
+                # the usual place does not hold this page's marks (a stamp, a plate, a chapter start, a marginal note):
+                # centre the box on the page's own content on that axis — equal margins, never text against the frame
+                if dx: x = (bx[0] + bx[2]) / 2
+                if dy: y = (bx[1] + bx[3]) / 2
+                p['own_centre'] = True; own += 1
         b = [x - W / 2, y - H / 2, x + W / 2, y + H / 2]
         sx = -b[0] if b[0] < 0 else (p['w'] - b[2] if b[2] > p['w'] else 0)     # the box must stay on the page:
         sy = -b[1] if b[1] < 0 else (p['h'] - b[3] if b[3] > p['h'] else 0)     # on white paper the CONTENT moves
