@@ -3,6 +3,17 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (newest last). Everything is resumable.
 
+## 2026-10-08 20:30 GMT — owner paused me until 21:10; unattended chain scratch/pre700_2026-10-08.sh running
+- Owner: «نواقص ما قبل 700 هـ (113 كتابًا مفقودًا) حمّلها كلها بعد التدقيق…». Chain (log logs/pre700-2026-10-08.log): ids from the
+  fixed Waqfeya comparison → queue 271 (only linked files, sizes already on the phone skipped) → fetch_queue (full speed,
+  verified) → index → additions_audit (272 remove bundled other books/copies, 273 names) → refresh → commit. If it stopped
+  before «chain done», rerunning it resumes (fetch_queue .done/.failed); after «chain done» never rerun.
+- Waqfeya comparison fixed (0f9a4c2): «ناقصة المجلدات» 22 → 5 real gaps (الزركشي ت ابن جبرين cover only, فهارس مسند أحمد,
+  التنبيه والإيقاظ, التفسير البياني ج 2, النحو الوافي ج 2–4); 67 records whose link points to another book's file are now missing
+  (data/review/waqfeya-link-mismatch.tsv). Duplicate to compare: الروض الأنف ت الوكيل stored twice (a 4-file set and the complete
+  7-volume set). Owner to decide: completing المغني ط المنار / البحر المحيط ت المهدي (other complete editions on the phone).
+- Crop: level check added; scripts/crop_regress.py running (logs/crop-regress.log) — all PASS before the next sample.
+
 ## 2026-10-08 19:30 GMT — crop sample 3 open for the owner; scope review page published
 - Crop sample «الصيغة الثالثة» (24 books incl. the owner's own examples: اللآلئ ج 1 p. 4 streak now outside the box, the
   stamp page p. 381 centred by moving its content, وحي القلم's faint chain frame kept, levelled pages in اللآلئ (292/337),
