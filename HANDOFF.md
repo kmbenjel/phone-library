@@ -3,6 +3,22 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (newest last). Everything is resumable.
 
+## 2026-10-08 08:55 GMT — session ended; unattended chain scratch/after_v3_2026-10-08.sh (log logs/after-v3-2026-10-08.log)
+- Owner on the first crop sample: «مبهر», but asked (a) the text centred horizontally, consistently on every page, (b) ordinary
+  books (text ≈ 72 % wide, e.g. وحي القلم) enlarged moderately too, if consistent on every page. → book_crop.py v3: one box
+  size per file, centred on each page's own text block (short pages take their full neighbours' place), edge shadows
+  excluded and bounding the box, printed frames kept (وحي القلم's faint chain frame = 82 % of the width → only +7 %),
+  crop when the text gets ≥ 6 % larger or was ≥ 2 % off-centre; the 1,000 px check moves the box before leaving a page whole.
+- The chain waits for the v3 re-analysis of the 22 sample books (session scratchpad crop/v3_drive.py), rebuilds
+  site/samples/crop-2026-10-08/index.html («الصيغة الثانية») and opens it in Brave → owner's verdict needed before any batch.
+- Then it uploads queue 267 (المقاصد الشافية: title pages + imprint of ج 4, 5, 6, 9, lossless copies) and commits.
+  NEXT SESSION: check the log ends with «chain done» and the 4 files are in index-now; then plan 268 = delete the 11 files
+  of «النحو والصرف/المقاصد الشافية في شرح الخلاصة الكافية للشاطبي/» (proof in the section below), refresh, commit.
+- Found: «النحو والصرف/الكتاب - سيبويه (ت عبد السلام هارون - مكتبة الخانجي)/02 - الكتاب - ت هارون.pdf» is NOT Haroun's
+  edition: title page «الطبعة الكاملة الأولى… أ.د. محمد كاظم البكاء… منشورات زين الحقوقية 2015» (it quotes Haroun's notes).
+  Read every file of that folder's title page, then split/rename by edition (plan).
+- The old exploration stream (v2 rules) was stopped; its results are obsolete. Crop batches: not started (owner's approval first).
+
 ## 2026-10-08 08:15 — PAUSED by the owner until 10:10 GMT (laptop clock = GMT; times in these notes are GMT)
 - Still running (read-only on the phone, safe): the crop exploration stream (session scratchpad crop/sample_drive.py).
 - المقاصد الشافية — IN PROGRESS, nothing changed on the phone yet: the 100 ppi set «النحو والصرف/المقاصد الشافية في شرح الخلاصة
