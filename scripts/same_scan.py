@@ -62,22 +62,23 @@ def compare_sets(A, B):
 
 def signature(page):
     """the page's text block, drawn 48×72 (blurred, normalised): two scans of one printed page give nearly the same
-    signature whatever the scanner, resolution or margins; None for a blank or dark page"""
+    signature whatever the scanner, resolution, margins or shading; None for a blank or dark page.
+    Ink = darker than the local background (a grey closing wipes the text out; shaded photocopies, 2026-10-08)."""
     import numpy as np
     from scipy import ndimage
     z = 240 / page.rect.width
     pix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), colorspace=pymupdf.csGRAY, alpha=False)
     a = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width].astype(float)
-    paper = np.percentile(a, 90)
-    if paper < 100: return None
-    m = a < paper - 60
+    if np.percentile(a, 90) < 100: return None
+    ink = np.clip(ndimage.grey_closing(a, size=(15, 15)) - a, 0, None)
+    m = ink > 40
     h, w = m.shape; by, bx = max(1, h // 30), max(1, w // 30)
     m[:by] = m[-by:] = False; m[:, :bx] = m[:, -bx:] = False          # scanner edges
     ys, xs = np.nonzero(m)
     if len(ys) < 50: return None
     y0, y1 = (int(v) for v in np.percentile(ys, [0.5, 99.5])); x0, x1 = (int(v) for v in np.percentile(xs, [0.5, 99.5]))
     if y1 - y0 < 5 or x1 - x0 < 5: return None                # the text block, specks and stray marks left out
-    sub = a[y0:y1 + 1, x0:x1 + 1]
+    sub = ink[y0:y1 + 1, x0:x1 + 1]
     s = ndimage.gaussian_filter(ndimage.zoom(sub, (72 / sub.shape[0], 48 / sub.shape[1]), order=1), 1.0)[:72, :48]
     if s.shape != (72, 48): return None
     v = (s - s.mean()).ravel(); n = np.linalg.norm(v)
@@ -88,7 +89,7 @@ def signatures(f):
     doc = pymupdf.open(f); sig = [signature(p) for p in doc]; doc.close()
     return sig
 
-def align(SA, SB, T=0.75):
+def align(SA, SB, T=0.6):
     """order-keeping alignment of two page sequences (Needleman–Wunsch on similarity − T): matched pairs, unmatched pages"""
     import numpy as np
     ia = [i for i, s in enumerate(SA) if s is not None]; ib = [j for j, s in enumerate(SB) if s is not None]

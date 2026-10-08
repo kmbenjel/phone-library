@@ -3,7 +3,18 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (newest last). Everything is resumable.
 
-## 2026-10-08 09:00 — crop method v2 (sample waiting for the owner) + duplicate editions resolved
+## 2026-10-08 08:15 — PAUSED by the owner until 10:10 GMT (laptop clock = GMT; times in these notes are GMT)
+- Still running (read-only on the phone, safe): the crop exploration stream (session scratchpad crop/sample_drive.py).
+- المقاصد الشافية — IN PROGRESS, nothing changed on the phone yet: the 100 ppi set «النحو والصرف/المقاصد الشافية في شرح الخلاصة
+  الكافية للشاطبي/» (11 files) is the same printing (جامعة أم القرى 1428، العثيمين وآخرون) as the 300 ppi set «… - الشاطبي (ت عبد
+  الرحمن بن سليمان العثيمين وآخرون - جامعة أم القرى)»: same_scan.py --visual (new background-relative signatures) paired every
+  volume at a constant page offset; the extra pages of the 100 ppi set are (a) the detailed contents of each volume copied
+  byte for byte from its own ج 10 (present in the 300 ppi ج 10), (b) decorative basmala pages (one kept in the 300 ppi
+  ج 1 «تقديم»), (c) the title page + imprint of ج 4, 5, 6, 9, which the 300 ppi set lacks → extracted losslessly (same image
+  streams) into downloads/maq-fronts/{04,05,06,09}.pdf, queue data/queue/267-maqasid-fronts.tsv (NOT run yet). Next: run 267,
+  index_update --add, then delete the 11 files (plan 268), refresh, commit.
+
+## 2026-10-08 07:50 — crop method v2 (sample waiting for the owner) + duplicate editions resolved
 - scripts/book_crop.py: ONE box per file, same size on every text page (odd/even placed separately), holding every ink mark
   of the book (marginal notes, page numbers, running heads) + 12 % of the text width each side; only isolated specks
   (≤ 1.4 mm, ≥ 5 mm from any mark) may fall outside; every page re-checked at 1,000 px (a page that does not fit stays
