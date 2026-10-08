@@ -10,7 +10,7 @@ WHY = ('lossy recompressed copy (plan 140) set aside: its original file takes it
        'recompressed copy replaced by the original file (owner 2026-10-07: undo the page changes)')
 Q = 'data/queue/224-restore-recompressed.tsv'
 fx.wait_phone()
-subprocess.run(['python3', 'scripts/fetch_queue.py', Q, '224-restore-recompressed'], env=dict(os.environ, NETPACE='0'))
+subprocess.run(['python3', 'scripts/fetch_queue.py', Q, '224-restore-recompressed'], env=dict(os.environ, NETPACE='0', NET_MB='0'))   # owner: full speed until he says otherwise
 done = set(open('data/queue/224-restore-recompressed.done', encoding='utf-8').read().split('\n')) if os.path.exists('data/queue/224-restore-recompressed.done') else set()
 copies = {}
 for url, size, target, why in csv.reader(open(Q, encoding='utf-8'), delimiter='\t'):
