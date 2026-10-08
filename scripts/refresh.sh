@@ -7,8 +7,20 @@ if [ "${1:-}" = "--no-list" ]; then   # phone busy: use index-now.tsv kept curre
     shift; echo "1/6 using data/phone/index-now.tsv (not re-listed)"; cp data/phone/index-now.tsv "data/phone/index-$D.tsv"
 else
     echo "1/6 indexing phone:Books ..."
-    rclone lsf -R --files-only --format ps --separator $'\t' --checkers 2 phone:Books > "data/phone/index-$D.tsv"
-    cp "data/phone/index-$D.tsv" data/phone/index-now.tsv   # stable name for scripts run by hand
+    # A listing can come back cut short with no error (2026-10-08: 3,953 of 16,579 files with --checkers 2 while the phone
+    # dozed): one connection, retried once, and refused if it holds fewer than 95 % of the files index-now.tsv knows.
+    prev=$(wc -l < data/phone/index-now.tsv 2>/dev/null || echo 0)
+    for try in 1 2; do
+        flock /tmp/phone-ftp.lock rclone lsf -R --files-only --format ps --separator $'\t' --checkers 1 --low-level-retries 20 phone:Books > "data/phone/index-$D.tsv" || true
+        n=$(wc -l < "data/phone/index-$D.tsv")
+        [ "$n" -ge $(( prev * 95 / 100 )) ] && break
+        echo "    listing cut short ($n files, index-now has $prev): retrying"; sleep 60
+    done
+    if [ "$n" -lt $(( prev * 95 / 100 )) ]; then
+        echo "    listing still short ($n of $prev): keeping data/phone/index-now.tsv"; cp data/phone/index-now.tsv "data/phone/index-$D.tsv"
+    else
+        cp "data/phone/index-$D.tsv" data/phone/index-now.tsv   # stable name for scripts run by hand
+    fi
 fi
 echo "    $(wc -l < "data/phone/index-$D.tsv") files"
 echo "2/6 provenance";  python3 scripts/substituted_sizes.py; python3 scripts/provenance.py "data/phone/index-$D.tsv"

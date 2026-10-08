@@ -12,6 +12,11 @@ Everything comes from the logs, nothing is guessed:
 Per book: what was wrong, what was done (lossless CropBox crop / page split, or lossy recompression), pages, sizes,
 source, and a ready description for publishing the improved copy. Old prints (≤ 1370 هـ / 1950 م) with a known source
 and a fully fixed set are listed first as candidates. Also writes data/fixed/fixed-copies.tsv (one row per file).
+After 2026-10-07 (owner: the crops left pages of unequal width and cut margins) every crop was undone (plans 212-*,
+«uncrop»: CropBox = MediaBox again) and the lossy recompressions were replaced by their original files (224, «restore»).
+Each file's history is replayed and its NET state reported: crop + uncrop = the original page again; recompress +
+restore = the original file again; what remains is the split of two-page spreads (lossless: the two halves tile the
+scanned page exactly) and the repairs of damaged or cut files.
 Usage: python3 scripts/report_fixed.py"""
 import ast, collections, csv, html, json, os, re, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +25,14 @@ from report_lib import Report, RawHTML, gb
 J = lambda p: os.path.join(ROOT, p)
 FIXDIR, ASIDE = 'نسخ محسنة للاستبدال/', 'نسخ مستبعدة/'
 strip = lambda p: p[6:] if p.startswith('Books/') else p
-FIXNAME = {'crop': 'قص الهوامش', 'split': 'فصل الصفحات المزدوجة', 'recompress': 'إعادة ضغط', 'repair': 'إصلاح ملف تالف أو ناقص'}
+FIXNAME = {'crop': 'قص الهوامش', 'split': 'فصل الصفحات المزدوجة', 'recompress': 'إعادة ضغط', 'repair': 'إصلاح ملف تالف أو ناقص',
+           'uncrop': 'إلغاء القص', 'restore': 'إرجاع الملف الأصلي'}
+def net(fixes):
+    """what a file's history leaves: crop then uncrop = nothing; recompress then restore = nothing"""
+    n = set(fixes)
+    if 'uncrop' in n: n -= {'crop', 'uncrop'}
+    if 'restore' in n: n -= {'recompress', 'restore'}
+    return n
 PROB = {'margins': 'هوامش بيضاء واسعة', 'dark-borders': 'حواف سوداء من الماسح', 'spreads': 'صفحتان في صفحة',
         'bloated': 'حجم مفرط', 'low-res': 'دقة منخفضة', 'mixed-sizes': 'مقاسات صفحات مختلطة', 'colour-text': 'نص ملوّن مصوّر'}
 
@@ -32,7 +44,9 @@ def replay():
         t, act, a, b, why, plan = r[0], r[1], strip(r[2]), strip(r[3]), r[4], r[5]
         if act == 'add' and b.startswith(FIXDIR):
             m = re.match(r'improved copy \(([^)]*)\): (\{.*\})', why)
-            if m:
+            if plan.startswith('224-'):                                       # the original file fetched again (224)
+                copies[b] = {'fixes': ['restore'], 'stats': {}, 'why': why, 'made': t[:10], 'copy_plan': plan}
+            elif m:
                 try: st = ast.literal_eval(m.group(2))
                 except (ValueError, SyntaxError): st = {}
                 copies[b] = {'fixes': m.group(1).split(','), 'stats': st, 'why': '', 'made': t[:10], 'copy_plan': plan}
@@ -45,6 +59,9 @@ def replay():
                 rec.update({'orig': a[len(FIXDIR):], 'done': t[:10], 'plan': plan})
                 if b in prev:                                                         # fixed twice: keep both steps
                     old = prev.pop(b); rec['fixes'] = sorted(set(old['fixes']) | set(rec['fixes'])); rec['earlier'] = old
+                    if 'split' in old['fixes'] or (old.get('earlier') or {}).get('stats', {}).get('pages_out', 0) > \
+                            (old.get('earlier') or {}).get('stats', {}).get('pages_in', 0):
+                        rec['split_stats'] = old.get('split_stats') or old['stats']   # pages before/after the split
                 fixed[b] = rec; continue
             if b.startswith(ASIDE + '__المستبدل/') and a in fixed:                   # a fixed file replaced again
                 prev[a] = fixed.pop(a); continue
@@ -60,6 +77,10 @@ def main():
     idx = {p: int(s) for p, s in csv.reader(open(J('data/phone/index-now.tsv'), encoding='utf-8'), delimiter='\t') if s.isdigit()}
     fixed, copies = replay()
     fixed = {p: r for p, r in fixed.items() if p in idx and not p.startswith((FIXDIR, ASIDE, 'فهارس الويب/'))}
+    undone = {p: r for p, r in fixed.items() if not net(r['fixes'])}            # back to the original page / file
+    fixed = {p: dict(r, fixes=sorted(net(r['fixes']))) for p, r in fixed.items() if net(r['fixes'])}
+    for r in fixed.values():
+        if 'split' in r['fixes'] and r.get('split_stats'): r['stats'] = r['split_stats']
     waiting = [p for p in idx if p.startswith(FIXDIR)]
     quality = collections.defaultdict(dict)
     for r in csv.reader(open(J('data/phone/quality.tsv'), encoding='utf-8'), delimiter='\t'):
@@ -125,14 +146,17 @@ def main():
     lossless_n = sum(1 for x in rows if 'recompress' not in x['rec']['fixes'])
     split_pages = sum((x['pages_out'] or 0) - (x['pages_in'] or 0) for x in rows if 'split' in x['rec']['fixes'])
     cand = [e for e in entries if e['old'] and (e['items'] or e['waq']) and e['n'] == e['total']]
-    R.kpis([('كتابًا أُصلحت', f'{nb:,}'), ('ملفًا مُصلحًا', f'{nf:,}'), ('إصلاح بلا فقد (قص/فصل)', f'{lossless_n:,}'),
+    n_uncrop = sum(1 for r in undone.values() if 'uncrop' in r['fixes'])
+    n_restore = sum(1 for r in undone.values() if 'restore' in r['fixes'])
+    R.kpis([('كتابًا أُصلحت', f'{nb:,}'), ('ملفًا مُصلحًا', f'{nf:,}'), ('إصلاح بلا فقد (فصل/إصلاح)', f'{lossless_n:,}'),
+            ('أُعيدت صفحاتها كاملة (أُلغي القص)', f'{n_uncrop:,} ملفًا'), ('أُعيد ملفها الأصلي (أُلغي الضغط)', f'{n_restore:,} ملفًا'),
             ('صفحة فُصلت من صفحات مزدوجة', f'{split_pages:,}'), ('مصدر الأصل معروف', f"{sum(1 for e in entries if e['items'] or e['waq']):,} كتابًا"),
             ('مرشّحة للنشر أولًا', f'{len(cand):,} كتابًا')])
-    R.note('طريقة الإصلاح: «قص الهوامش» و«فصل الصفحات» بلا فقد — لا يُعاد ترميز الصور، وإنما يُضبط إطار العرض (CropBox) لكل صفحة '
-           'على حدود النص مع هامش 3٪، فتبقى صورة الماسح الأصلية كاملة داخل الملف، ويظهر النص أكبر على شاشة الهاتف. والصفحة المزدوجة '
-           'تُعرض صفحتين (اليمنى أولًا). أما «إعادة الضغط» فبفقد: صور رمادية JPEG بجودة 60 ودقة لا تتجاوز 200 نقطة في البوصة، '
-           'ولم تُستعمل إلا لمسوح ملونة متضخمة لنص أسود، ولا تُستعمل مع الطبعات الملونة المقصودة. كل ملف فُحص بعد الإصلاح '
-           '(عدد الصفحات، الفتح) ثم حلّ محل الأصل، وحُذف الأصل.')
+    R.note('ما بقي من الإصلاح بعد مراجعة 7 أكتوبر 2026: أُلغي قصّ الهوامش كله بقرار صاحب المكتبة (كان يُخرج صفحات متفاوتة العرض '
+           'ويقصّ من الهوامش ما فيه تعليقات)، فعادت كل صفحة إلى صورتها الممسوحة كاملة (إطار العرض CropBox = MediaBox، والصور لم تُمسّ). '
+           'وأُلغيت إعادة الضغط فأُعيدت الملفات الأصلية من archive.org بأحجامها الأصلية. وبقي: «فصل الصفحات المزدوجة» بلا فقد — '
+           'تُعرض كل صفحة ممسوحة فيها صفحتا كتاب صفحتين (اليمنى أولًا) ونصفاهما يغطيان الصفحة كلها، فلا يُخفى شيء — و«إصلاح الملفات» '
+           'التالفة أو الناقصة. ولا يُعاد أي تغيير في هندسة الصفحات إلا بعد أن يرى صاحب المكتبة عيّنته ويوافق عليها.')
     R.note('للنشر لاحقًا: الأَولى الطبعات القديمة (1370 هـ / 1950 م فما قبل) التي عُرف مصدر أصلها وأُصلحت مجلداتها كلها؛ '
            'ولكل كتاب وصفٌ جاهز للنسخ (زر «وصف النشر») يذكر الأصل ورابطه وما أُصلح. حقوق الطبع يُتحقق منها قبل نشر أي طبعة حديثة. '
            'والقائمة الكاملة لكل ملف في data/fixed/fixed-copies.tsv.')

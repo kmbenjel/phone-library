@@ -119,12 +119,33 @@ def uncrop(src, dst):
     for page in doc:
         mb = page.mediabox
         if page.cropbox != mb:
-            page.set_cropbox(mb); changed += 1
+            try: page.set_cropbox(mb)
+            except Exception:                                  # MuPDF refuses some boxes (offset or inherited MediaBox):
+                raw = None                                     # copy the page's own MediaBox value into its CropBox key
+                x = page.xref
+                while x and raw is None:                       # MediaBox may be inherited from a Pages node
+                    t, v = doc.xref_get_key(x, 'MediaBox')
+                    if t == 'array': raw = v
+                    else:
+                        t2, par = doc.xref_get_key(x, 'Parent')
+                        x = int(par.split()[0]) if t2 == 'xref' else 0
+                if raw is None: raise
+                doc.xref_set_key(page.xref, 'CropBox', raw)
+            changed += 1
     if changed: doc.save(dst, incremental=True, encryption=pymupdf.PDF_ENCRYPT_KEEP)
     doc.close()
     chk = pymupdf.open(dst)
     assert len(chk) == n, 'page count changed'
-    assert all(p.cropbox == p.mediabox for p in chk), 'a page still cropped'
+    def box(d, x, key):                                    # a page's own or inherited box, as numbers
+        while x:
+            t, v = d.xref_get_key(x, key)
+            if t == 'array': return tuple(round(float(z), 3) for z in v.strip('[] ').split())
+            t, par = d.xref_get_key(x, 'Parent'); x = int(par.split()[0]) if t == 'xref' else 0
+        return None
+    # whole page = no CropBox, or a CropBox equal to the MediaBox (raw PDF values: MuPDF's rectangles are shifted on pages
+    # whose MediaBox does not start at 0,0, so p.cropbox == p.mediabox can be false there although nothing is cut)
+    assert all(p.cropbox == p.mediabox or box(chk, p.xref, 'CropBox') in (None, box(chk, p.xref, 'MediaBox'))
+               for p in chk), 'a page still cropped'
     assert images_of(chk) == imgs, 'images changed'
     chk.close()
     return {'pages_in': n, 'pages_out': n, 'uncropped': changed, 'bytes_out': __import__('os').path.getsize(dst)}

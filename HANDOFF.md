@@ -3,6 +3,24 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (newest last). Everything is resumable.
 
+## 2026-10-08 03:00 — crop revert finished; title-page plans waiting
+- Crop revert (212): 3,734 listed; 3,638 by the two lanes; 92 more by scratch/redo_revert_212.py (lanes had raced on
+  «نسخ مستبعدة/__المستبدل» folders: 553/550 errors, originals stayed, copies waited — all substituted 01:30, 0 FAIL);
+  4 left (نكات القرآن، الحاجب المصحفي، إحياء علوم الدين ج3/ج4: offset MediaBox) — fix_pdf.uncrop fallback written and
+  tested on a synthetic file; redo with `python3 scripts/revert_crops.py lists/212-redo.tsv --prefix 212-r2-`.
+  219 deleted 12 obsolete cropped copies; 2 lossy copies stay in «نسخ محسنة» (المقنع، تفسير الطبري شاكر: originals intact).
+  NEVER run two lanes that create/remove folders under the same parent again.
+- refresh.sh now refuses a cut-short listing (one 2-checker listing returned 3,953 of 16,579 files with no error).
+- Plans written, to apply when the phone is free (dry-run, then apply + index_update): 218 (retry), 220, 221, 222, 223.
+- To compare (duplicate editions, owner's standing permission): المقاصد الشافية (two folders, both جامعة أم القرى 1428;
+  one has an 89 KB ج 8); التمهيد (folder «(وزارة الأوقاف المغربية)» 17 files vs the unlabeled 27-file Awqaf set; a 1-page
+  cover of the الفرقان edition «172271 - …» sits in the first); شرح التصريح على التوضيح files numbered 00/01/02 but 00 has
+  758 pages (renumber from the title pages).
+- To check: «الدرة الألفية - ابن معط (دار الف)» (cut publisher; German apparatus = Zetterstéen's edition?); «الروضة
+  الأنيقة في نصرة العفيفة الصديقة - الصامولي» filed under النحو (subject?); «المسائل الاعتزالية …» linked to Waqfeya
+  «التبصير في معالم الدين» (data/review/waqfeya-link-doubts.tsv); phone names whose author slot holds the editor
+  («المحدث الفاصل - ت - الخطيب», «الفروق اللغوية - ت - سليم», «ذم قرناء السوء لاين عساكر», «تفسير القرآن - تفسير السمعاني»).
+
 ## 2026-10-08 01:30 — Shamela comparison made accurate (owner: «الآن تستطيع تماما تمييز ما هو غير موجود؟», «… تعتمد على البطاقات»)
 - scripts/export_shamela_cards.py: the local Shamela's book cards (8,598: printed title, full author, editor, publisher,
   edition, volumes, نبذة) + author biographies (3,190) → data/shamela/cards.jsonl, authors.jsonl (tools/shamela-dump, Shamela's JRE).
@@ -235,7 +253,7 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   files from the منظومات/blog batches: worth one dedicated pass over التاريخ plain files after the sheets.
 - 12:20 PAUSE (owner: 80 % of the session used; renewal ≈ 16:20). Running unattended: scratch/unattended_2026-10-06.sh
   (log logs/unattended-2026-10-06.log): phone MD5s → waits for fix_at_scale 142 + after_139 → remap → refresh (web) → commit.
-  No internet downloads during the pause. RESUME HERE: imprint sheets from s0233 (book 1398); plans 168–174 applied after the pause began (أزهار الرياض case DONE in 168).
+  No internet downloads during the pause. RESUME HERE: imprint sheets from s0245 (book 1470); plans 168–174 applied after the pause began (أزهار الرياض case DONE in 168).
   OPEN CASE «أزهار الرياض» (3 folders in التراجم والطبقات, title pages seen at 25 dpi, read them larger before any plan):
   «- المقري التلمساني» arfaa1–3 = ج 1–3 of the صندوق إحياء التراث الإسلامي (المغرب والإمارات) reprint 1398/1978, arfaa4 =
   ج 4 ت سعيد أعراب ومحمد بن تاويت; «للمقري» 1–3 look like the Cairo لجنة التأليف volumes (same as the third folder «ت السقا

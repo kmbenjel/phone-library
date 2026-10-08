@@ -75,6 +75,15 @@ def is_empty(f, d):
 def log(w, action, a, b, reason, plan):
     w.writerow([time.strftime('%F %T'), action, a, b, reason, plan])
 
+_KNOWN = None
+def known_paths():
+    """paths of data/phone/index-now.tsv (relative to Books/), for the dry run"""
+    global _KNOWN
+    if _KNOWN is None:
+        p = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data/phone/index-now.tsv')
+        _KNOWN = {l.split('\t', 1)[0] for l in open(p, encoding='utf-8')} if os.path.exists(p) else set()
+    return _KNOWN
+
 def run(rows, plan, dry):
     f = None if dry else connect(); made = set(); ok = skipped = 0
     os.makedirs(os.path.dirname(LOG), exist_ok=True)
@@ -83,7 +92,12 @@ def run(rows, plan, dry):
         for a, b, reason in rows:
             if a == b: continue
             if protected(a): print('REFUSED (index folder)', a); skipped += 1; continue
-            if dry: print('MOVE', a, '->', b); ok += 1; continue
+            if dry:                                    # check against index-now.tsv (2026-10-08: plans written without
+                known = known_paths()                  # «Books/» passed a dry run and failed on the phone with 553)
+                if known and a[6:] not in known and not any(k.startswith(a[6:] + '/') for k in known):
+                    print('NOT IN INDEX (path wrong or «Books/» missing?)', a); skipped += 1; continue
+                if known and b[6:] in known: print('TARGET EXISTS', b); skipped += 1; continue
+                print('MOVE', a, '->', b); ok += 1; continue
             for attempt in range(3):
                 try:
                     if exists(f, b): print('SKIP (exists)', b); skipped += 1; break

@@ -96,3 +96,6 @@ Newest entries at the bottom. "Context left" = tokens remaining in the working s
 - 2026-10-08 00:35 — Shamela comparison: book cards + author bios exported from the local Shamela (export_shamela_cards.py); matching rebuilt with author/derivation/part checks, card titles, «ضمن» collections; 3,064 of 8,598 present (was 2,868, with errors both ways); report 01 shows each Shamela edition and whether the phone copy is the same edition.
 - 2026-10-08 00:46 — revert_crops.py: 1366 cropped files brought back to their whole scanned pages (owner 2026-10-07).
 - 2026-10-08 00:47 — revert_crops.py: 0 cropped files brought back to their whole scanned pages (owner 2026-10-07).
+- 2026-10-08 00:53 — revert_crops.py: 1165 cropped files brought back to their whole scanned pages (owner 2026-10-07).
+- 2026-10-08 01:31 — revert_crops.py: 0 cropped files brought back to their whole scanned pages (owner 2026-10-07).
+- 2026-10-08 01:41 — revert_crops.py: 4 cropped files brought back to their whole scanned pages (owner 2026-10-07).
