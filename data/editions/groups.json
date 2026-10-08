@@ -92,6 +92,213 @@
   }
  },
  {
+  "work": "الشفا بتعريف حقوق المصطفي",
+  "title": "الشفا بتعريف حقوق المصطفى صلى الله",
+  "author": "القاضي عياض",
+  "bytes": 1904998174,
+  "editions": [
+   {
+    "folder": "الشفا بتعريف حقوق المصطفى صلى الله - القاضي عياض",
+    "cat": "السيرة النبوية",
+    "edition": "1436",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 1768908143,
+    "quality": {
+     "files": 1,
+     "pages": 448,
+     "kbpp": 3948,
+     "px": 2449,
+     "colour": "ملون",
+     "width_used": 0.98,
+     "text": false
+    },
+    "score": 8.6,
+    "waqfeya": [
+     "https://waqfeya.net/books/الشفا-بتعريف-حقوق-المصطفى-صلى-الله-عليه-وسلم--مخطوط-نادر-ملون-1d22d95c2b684bddbee30699c9b751fd"
+    ]
+   },
+   {
+    "folder": "الشفا بتعريف حقوق المصطفى صلى الله - القاضي عياض (ط جائزة دبي الدولية للقرآن الكريم)",
+    "cat": "السيرة النبوية",
+    "edition": "ت عبده علي كوشك - ط جائزة دبي الدولية للقرآن الكريم - 1434 - 2013",
+    "researcher": "عبده علي كوشك",
+    "publisher": "جائزة دبي الدولية للقرآن الكريم",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 20177706,
+    "quality": {
+     "files": 1,
+     "pages": 952,
+     "kbpp": 21,
+     "px": 1879,
+     "colour": "أبيض وأسود",
+     "width_used": 0.79,
+     "text": true
+    },
+    "score": 90.8,
+    "waqfeya": [
+     "https://waqfeya.net/books/الشفا-بتعريف-حقوق-المصطفى-صلى-الله-عليه-وسلم-ط-دبي-dd0635aa6ec24ab2bdcd9a9180f7319f"
+    ],
+    "same_edition": true,
+    "best_scan": true
+   },
+   {
+    "folder": "الشفا بتعريف حقوق المصطفى صلى الله - القاضي عياض (ط دار الحديث)",
+    "cat": "السيرة النبوية",
+    "edition": "ت عامر الجزار - ط دار الحديث - 1425 - 2004",
+    "researcher": "عامر الجزار",
+    "publisher": "دار الحديث",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 9371829,
+    "quality": {
+     "files": 1,
+     "pages": 502,
+     "kbpp": 18,
+     "px": 1837,
+     "colour": "أبيض وأسود",
+     "width_used": 0.83,
+     "text": false
+    },
+    "score": 81.6,
+    "waqfeya": [
+     "https://waqfeya.net/books/الشفا-بتعريف-حقوق-المصطفى-صلى-الله-عليه-وسلم-ط-دار-الحديث-5bc02dd8adfb45e7b52bcc5da8ade4c1"
+    ]
+   },
+   {
+    "folder": "الشفا بتعريف حقوق المصطفى صلى الله عليه وسلم - القاضي عياض (ت علي محمد البجاوي - دار الكتاب العربي)",
+    "cat": "السيرة النبوية",
+    "edition": "ت علي محمد البجاوي - ط دار الكتاب العربي - 1404 - 1984",
+    "researcher": "علي محمد البجاوي",
+    "publisher": "دار الكتاب العربي",
+    "files": 2,
+    "vols_edition": "2",
+    "complete": false,
+    "bytes": 23142735,
+    "quality": {
+     "files": 2,
+     "pages": 1226,
+     "kbpp": 18,
+     "px": 1917,
+     "colour": "أبيض وأسود",
+     "width_used": 0.83,
+     "text": false
+    },
+    "score": 66.6,
+    "waqfeya": [
+     "https://waqfeya.net/books/الشفا-بتعريف-حقوق-المصطفى-صلى-الله-عليه-وسلم-ت-البجاوي-c0393d23bb774fa982528972279e3d32"
+    ],
+    "same_edition": true,
+    "best_scan": false
+   },
+   {
+    "folder": "الشفا بتعريف حقوق المصطفى صلى الله عليه وسلم - القاضي عياض (ط عبد الحميد أحمد حنفي)",
+    "cat": "السيرة النبوية",
+    "edition": "ط عبد الحميد أحمد حنفي",
+    "researcher": "",
+    "publisher": "عبد الحميد أحمد حنفي",
+    "files": 3,
+    "vols_edition": "2",
+    "complete": true,
+    "bytes": 21564441,
+    "quality": {
+     "files": 3,
+     "pages": 654,
+     "kbpp": 32,
+     "px": 2082,
+     "colour": "أبيض وأسود",
+     "width_used": 0.7,
+     "text": false
+    },
+    "score": 79.0,
+    "waqfeya": [
+     "https://waqfeya.net/books/الشفا-بتعريف-حقوق-المصطفى-صلى-الله-عليه-وسلم-ط-حنفي-4206c3d9eea64369b44c2b11d4b76b9c"
+    ],
+    "same_edition": true,
+    "best_scan": false
+   },
+   {
+    "folder": "الشفا بتعريف حقوق المصطفى صلى الله عليه وسلم، ومعه مزيل الخفاء عن ألفاظ الشفاء - القاضي عياض",
+    "cat": "السيرة النبوية",
+    "edition": "ط دار الكتب العلمية (تصوير) - 1399 - 1979",
+    "researcher": "",
+    "publisher": "دار الكتب العلمية (تصوير)",
+    "files": 4,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 16614783,
+    "quality": {
+     "files": 4,
+     "pages": 702,
+     "kbpp": 23,
+     "px": 1882,
+     "colour": "أبيض وأسود",
+     "width_used": 0.85,
+     "text": false
+    },
+    "score": 82.0,
+    "waqfeya": [
+     "https://waqfeya.net/books/الشفا-بتعريف-حقوق-المصطفى-صلى-الله-عليه-وسلم-ومعه-مزيل-الخفاء-عن-ألفاظ-الشفاء-1390d90ca81b41b1bda2ee3592cde993"
+    ]
+   },
+   {
+    "folder": "الشفا بتعريف حقوق المصطفى صلى الله عليه وسلم، ومعه مزيل الخفاء عن ألفاظ الشفاء - ط. العلمية",
+    "cat": "السيرة النبوية",
+    "edition": "ت عبد السلام محمد أمين - ط دار الكتب العلمية - 1422 - 2002",
+    "researcher": "عبد السلام محمد أمين",
+    "publisher": "دار الكتب العلمية",
+    "files": 3,
+    "vols_edition": "2",
+    "complete": true,
+    "bytes": 11770328,
+    "quality": {
+     "files": 3,
+     "pages": 424,
+     "kbpp": 27,
+     "px": 1910,
+     "colour": "أبيض وأسود",
+     "width_used": 0.81,
+     "text": false
+    },
+    "score": 81.2,
+    "waqfeya": [
+     "https://waqfeya.net/books/الشفا-بتعريف-حقوق-المصطفى-صلى-الله-عليه-وسلم-ومعه-مزيل-الخفاء-عن-ألفاظ-الشفاء-ط-العلمية-3da41a62dbe042da90773a38e8f174d1"
+    ],
+    "same_edition": true,
+    "best_scan": true
+   },
+   {
+    "folder": "الشفا بتعريف حقوق المصطفى للقاضي عياض السبتي",
+    "cat": "السيرة النبوية",
+    "edition": "",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 33448209,
+    "quality": {
+     "files": 1,
+     "pages": 620,
+     "kbpp": 54,
+     "px": 1865,
+     "colour": "ملون",
+     "width_used": 0.67,
+     "text": true
+    },
+    "score": 73.4,
+    "waqfeya": []
+   }
+  ],
+  "note": null
+ },
+ {
   "work": "فتح الباري بشرح صحيح",
   "title": "فتح الباري بشرح صحيح البخاري",
   "author": "ابن حجر العسقلاني",
@@ -597,6 +804,63 @@
   "note": null
  },
  {
+  "work": "فتوح البلدان",
+  "title": "فتوح البلدان",
+  "author": "البلاذري",
+  "bytes": 502605298,
+  "editions": [
+   {
+    "folder": "فتوح البلدان - البلاذري (ت عبد الله أنيس الطباع)",
+    "cat": "التاريخ",
+    "edition": "ت عبد الله أنيس الطباع",
+    "researcher": "عبد الله أنيس الطباع",
+    "publisher": "",
+    "files": 2,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 11546137,
+    "quality": {
+     "files": 2,
+     "pages": 772,
+     "kbpp": 14,
+     "px": 1948,
+     "colour": "أبيض وأسود",
+     "width_used": 0.76,
+     "text": false
+    },
+    "score": 80.2,
+    "waqfeya": [
+     "https://waqfeya.net/books/فتوح-البلدان--ت-الطباع-6be3b5b33c1a423a978ae84e8e9bb824"
+    ]
+   },
+   {
+    "folder": "كتاب فتوح البلدان - البلاذري (ط مطبعة بريل - ليدن)",
+    "cat": "التاريخ",
+    "edition": "ت دي خويه - ط مطبعة بريل - ليدن - 1866",
+    "researcher": "دي خويه",
+    "publisher": "مطبعة بريل - ليدن",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 491059161,
+    "quality": {
+     "files": 1,
+     "pages": 678,
+     "kbpp": 724,
+     "px": 2060,
+     "colour": "ملون",
+     "width_used": 0.42,
+     "text": false
+    },
+    "score": 61.9,
+    "waqfeya": [
+     "https://waqfeya.net/books/كتاب-فتوح-البلدان--ت-دي-خويه--ملون-855a1185981749f7a3c025ffadacdeb5"
+    ]
+   }
+  ],
+  "note": null
+ },
+ {
   "work": "التمهيد لما في الموطا",
   "title": "التمهيد لما في الموطأ",
   "author": "ابن عبد البر",
@@ -854,213 +1118,6 @@
     "waqfeya": [
      "https://waqfeya.net/books/إرشاد-الساري-لشرح-صحيح-البخاري-وبهامشه-صحيح-مسلم-بشرح-النووي-785c8a7dcd904b4f80c13e66153b1496"
     ]
-   }
-  ],
-  "note": null
- },
- {
-  "work": "الشفا بتعريف حقوق المصطفي",
-  "title": "الشفا بتعريف حقوق المصطفى صلى الله",
-  "author": "القاضي عياض",
-  "bytes": 463712665,
-  "editions": [
-   {
-    "folder": "الشفا بتعريف حقوق المصطفى صلى الله - القاضي عياض",
-    "cat": "السيرة النبوية",
-    "edition": "1436",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 327622634,
-    "quality": {
-     "files": 1,
-     "pages": 448,
-     "kbpp": 3948,
-     "px": 2449,
-     "colour": "ملون",
-     "width_used": 0.98,
-     "text": false
-    },
-    "score": 8.6,
-    "waqfeya": [
-     "https://waqfeya.net/books/الشفا-بتعريف-حقوق-المصطفى-صلى-الله-عليه-وسلم--مخطوط-نادر-ملون-1d22d95c2b684bddbee30699c9b751fd"
-    ]
-   },
-   {
-    "folder": "الشفا بتعريف حقوق المصطفى صلى الله - القاضي عياض (ط جائزة دبي الدولية للقرآن الكريم)",
-    "cat": "السيرة النبوية",
-    "edition": "ت عبده علي كوشك - ط جائزة دبي الدولية للقرآن الكريم - 1434 - 2013",
-    "researcher": "عبده علي كوشك",
-    "publisher": "جائزة دبي الدولية للقرآن الكريم",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 20177706,
-    "quality": {
-     "files": 1,
-     "pages": 952,
-     "kbpp": 21,
-     "px": 1879,
-     "colour": "أبيض وأسود",
-     "width_used": 0.79,
-     "text": true
-    },
-    "score": 90.8,
-    "waqfeya": [
-     "https://waqfeya.net/books/الشفا-بتعريف-حقوق-المصطفى-صلى-الله-عليه-وسلم-ط-دبي-dd0635aa6ec24ab2bdcd9a9180f7319f"
-    ],
-    "same_edition": true,
-    "best_scan": true
-   },
-   {
-    "folder": "الشفا بتعريف حقوق المصطفى صلى الله - القاضي عياض (ط دار الحديث)",
-    "cat": "السيرة النبوية",
-    "edition": "ت عامر الجزار - ط دار الحديث - 1425 - 2004",
-    "researcher": "عامر الجزار",
-    "publisher": "دار الحديث",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 9371829,
-    "quality": {
-     "files": 1,
-     "pages": 502,
-     "kbpp": 18,
-     "px": 1837,
-     "colour": "أبيض وأسود",
-     "width_used": 0.83,
-     "text": false
-    },
-    "score": 81.6,
-    "waqfeya": [
-     "https://waqfeya.net/books/الشفا-بتعريف-حقوق-المصطفى-صلى-الله-عليه-وسلم-ط-دار-الحديث-5bc02dd8adfb45e7b52bcc5da8ade4c1"
-    ]
-   },
-   {
-    "folder": "الشفا بتعريف حقوق المصطفى صلى الله عليه وسلم - القاضي عياض (ت علي محمد البجاوي - دار الكتاب العربي)",
-    "cat": "السيرة النبوية",
-    "edition": "ت علي محمد البجاوي - ط دار الكتاب العربي - 1404 - 1984",
-    "researcher": "علي محمد البجاوي",
-    "publisher": "دار الكتاب العربي",
-    "files": 2,
-    "vols_edition": "2",
-    "complete": false,
-    "bytes": 23142735,
-    "quality": {
-     "files": 2,
-     "pages": 1226,
-     "kbpp": 18,
-     "px": 1917,
-     "colour": "أبيض وأسود",
-     "width_used": 0.83,
-     "text": false
-    },
-    "score": 66.6,
-    "waqfeya": [
-     "https://waqfeya.net/books/الشفا-بتعريف-حقوق-المصطفى-صلى-الله-عليه-وسلم-ت-البجاوي-c0393d23bb774fa982528972279e3d32"
-    ],
-    "same_edition": true,
-    "best_scan": false
-   },
-   {
-    "folder": "الشفا بتعريف حقوق المصطفى صلى الله عليه وسلم - القاضي عياض (ط عبد الحميد أحمد حنفي)",
-    "cat": "السيرة النبوية",
-    "edition": "ط عبد الحميد أحمد حنفي",
-    "researcher": "",
-    "publisher": "عبد الحميد أحمد حنفي",
-    "files": 3,
-    "vols_edition": "2",
-    "complete": true,
-    "bytes": 21564441,
-    "quality": {
-     "files": 3,
-     "pages": 654,
-     "kbpp": 32,
-     "px": 2082,
-     "colour": "أبيض وأسود",
-     "width_used": 0.7,
-     "text": false
-    },
-    "score": 79.0,
-    "waqfeya": [
-     "https://waqfeya.net/books/الشفا-بتعريف-حقوق-المصطفى-صلى-الله-عليه-وسلم-ط-حنفي-4206c3d9eea64369b44c2b11d4b76b9c"
-    ],
-    "same_edition": true,
-    "best_scan": false
-   },
-   {
-    "folder": "الشفا بتعريف حقوق المصطفى صلى الله عليه وسلم، ومعه مزيل الخفاء عن ألفاظ الشفاء - القاضي عياض",
-    "cat": "السيرة النبوية",
-    "edition": "ط دار الكتب العلمية (تصوير) - 1399 - 1979",
-    "researcher": "",
-    "publisher": "دار الكتب العلمية (تصوير)",
-    "files": 4,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 16614783,
-    "quality": {
-     "files": 4,
-     "pages": 702,
-     "kbpp": 23,
-     "px": 1882,
-     "colour": "أبيض وأسود",
-     "width_used": 0.85,
-     "text": false
-    },
-    "score": 82.0,
-    "waqfeya": [
-     "https://waqfeya.net/books/الشفا-بتعريف-حقوق-المصطفى-صلى-الله-عليه-وسلم-ومعه-مزيل-الخفاء-عن-ألفاظ-الشفاء-1390d90ca81b41b1bda2ee3592cde993"
-    ]
-   },
-   {
-    "folder": "الشفا بتعريف حقوق المصطفى صلى الله عليه وسلم، ومعه مزيل الخفاء عن ألفاظ الشفاء - ط. العلمية",
-    "cat": "السيرة النبوية",
-    "edition": "ت عبد السلام محمد أمين - ط دار الكتب العلمية - 1422 - 2002",
-    "researcher": "عبد السلام محمد أمين",
-    "publisher": "دار الكتب العلمية",
-    "files": 3,
-    "vols_edition": "2",
-    "complete": true,
-    "bytes": 11770328,
-    "quality": {
-     "files": 3,
-     "pages": 424,
-     "kbpp": 27,
-     "px": 1910,
-     "colour": "أبيض وأسود",
-     "width_used": 0.81,
-     "text": false
-    },
-    "score": 81.2,
-    "waqfeya": [
-     "https://waqfeya.net/books/الشفا-بتعريف-حقوق-المصطفى-صلى-الله-عليه-وسلم-ومعه-مزيل-الخفاء-عن-ألفاظ-الشفاء-ط-العلمية-3da41a62dbe042da90773a38e8f174d1"
-    ],
-    "same_edition": true,
-    "best_scan": true
-   },
-   {
-    "folder": "الشفا بتعريف حقوق المصطفى للقاضي عياض السبتي",
-    "cat": "السيرة النبوية",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 33448209,
-    "quality": {
-     "files": 1,
-     "pages": 620,
-     "kbpp": 54,
-     "px": 1865,
-     "colour": "ملون",
-     "width_used": 0.67,
-     "text": true
-    },
-    "score": 73.4,
-    "waqfeya": []
    }
   ],
   "note": null
@@ -1526,6 +1583,28 @@
     "best_scan": false
    },
    {
+    "folder": "بداية المجتهد ونهاية المقتصد - ابن رشد (ط دار السلام)",
+    "cat": "الفقه المالكي",
+    "edition": "ط دار السلام",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 37323748,
+    "quality": {
+     "files": 1,
+     "pages": 2328,
+     "kbpp": 16,
+     "px": 1932,
+     "colour": "أبيض وأسود",
+     "width_used": 0.71,
+     "text": false
+    },
+    "score": 64.2,
+    "waqfeya": []
+   },
+   {
     "folder": "بداية المجتهد ونهاية المقتصد - ابن رشد الحفيد (ت ماجد حلاق - دار ابن حزم)",
     "cat": "الفقه المالكي",
     "edition": "ت ماجد حلاق - دار ابن حزم",
@@ -1548,28 +1627,6 @@
     "waqfeya": [],
     "same_edition": true,
     "best_scan": true
-   },
-   {
-    "folder": "بداية المجتهد ونهاية المقتصد لابن رشد",
-    "cat": "علوم الفقه والقواعد الفقهية",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 37323748,
-    "quality": {
-     "files": 1,
-     "pages": 2328,
-     "kbpp": 16,
-     "px": 1932,
-     "colour": "أبيض وأسود",
-     "width_used": 0.71,
-     "text": false
-    },
-    "score": 64.2,
-    "waqfeya": []
    }
   ],
   "note": {
@@ -2690,7 +2747,7 @@
     "waqfeya": []
    },
    {
-    "folder": "حلية الأولياء وطبقات الأصفياء - أبو نعيم (ط السعادة)",
+    "folder": "حلية الأولياء وطبقات الأصفياء - أبو نعيم (ط السعادة - تصوير دار الفكر)",
     "cat": "كتب السنة",
     "edition": "ط السعادة - مصر",
     "researcher": "",
@@ -3064,9 +3121,9 @@
     "best_scan": true
    },
    {
-    "folder": "شرح مشكل الآثار - أحمد بن محمد الطحاوي (مؤسسة الرسالة)",
+    "folder": "شرح مشكل الآثار - أحمد بن محمد الطحاوي (ط دار الرسالة العالمية)",
     "cat": "كتب السنة",
-    "edition": "مؤسسة الرسالة",
+    "edition": "ط دار الرسالة العالمية",
     "researcher": "",
     "publisher": "",
     "files": 16,
@@ -3209,6 +3266,61 @@
     ],
     "same_edition": true,
     "best_scan": true
+   }
+  ],
+  "note": null
+ },
+ {
+  "work": "المخصص",
+  "title": "المخصص",
+  "author": "ابن سيده",
+  "bytes": 213853887,
+  "editions": [
+   {
+    "folder": "المخصص - ابن سيده (ط بولاق - تصوير دار الكتب العلمية)",
+    "cat": "الغريب والمعاجم",
+    "edition": "ط دار الطباعة الكبرى الأميرية",
+    "researcher": "",
+    "publisher": "دار الطباعة الكبرى الأميرية",
+    "files": 19,
+    "vols_edition": "6",
+    "complete": true,
+    "bytes": 119722658,
+    "quality": {
+     "files": 19,
+     "pages": 3523,
+     "kbpp": 33,
+     "px": 2313,
+     "colour": "أبيض وأسود",
+     "width_used": 0.61,
+     "text": false
+    },
+    "score": 77.2,
+    "waqfeya": [
+     "https://waqfeya.net/books/المخصص-ط-الأميرية-349975e2818a48c880c551ed0906eff9"
+    ]
+   },
+   {
+    "folder": "المخصص - ابن سيده (ط دار إحياء التراث العربي)",
+    "cat": "كتب اللغة",
+    "edition": "ط دار إحياء التراث العربي",
+    "researcher": "",
+    "publisher": "",
+    "files": 5,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 94131229,
+    "quality": {
+     "files": 5,
+     "pages": 2254,
+     "kbpp": 41,
+     "px": 2297,
+     "colour": "أبيض وأسود",
+     "width_used": 0.9,
+     "text": false
+    },
+    "score": 68.0,
+    "waqfeya": []
    }
   ],
   "note": null
@@ -3492,6 +3604,61 @@
     "waqfeya": [
      "https://waqfeya.net/books/الدر-الفريد-وبيت-القصيد-ت-الجبوري-8f832e2d446f4da6a71237503cf4074b"
     ]
+   }
+  ],
+  "note": null
+ },
+ {
+  "work": "المحكم والمحيط الاعظم",
+  "title": "المحكم والمحيط الأعظم",
+  "author": "ابن سيده",
+  "bytes": 187152119,
+  "editions": [
+   {
+    "folder": "المحكم والمحيط الأعظم - ابن سيده (ت عبد الستار أحمد فراج ومصطفى السقا - معهد المخطوطات بجامعة الدول العربية)",
+    "cat": "الغريب والمعاجم",
+    "edition": "ت عبد الستار أحمد فراج - مصطفى السقا - حسين نصار - ط معهد المخطوطات بجامعة الدول العربية - 1377 - 1958",
+    "researcher": "عبد الستار أحمد فراج - مصطفى السقا - حسين نصار",
+    "publisher": "معهد المخطوطات بجامعة الدول العربية",
+    "files": 9,
+    "vols_edition": "7",
+    "complete": true,
+    "bytes": 82634710,
+    "quality": {
+     "files": 9,
+     "pages": 2953,
+     "kbpp": 27,
+     "px": 2206,
+     "colour": "أبيض وأسود",
+     "width_used": 0.79,
+     "text": false
+    },
+    "score": 80.8,
+    "waqfeya": [
+     "https://waqfeya.net/books/المحكم-والمحيط-الأعظم-ط-معهد-المخطوطات-be81929ba8cd4f48812dd8165f33ab01"
+    ]
+   },
+   {
+    "folder": "المحكم والمحيط الأعظم - ابن سيده (ط دار الكتب العلمية)",
+    "cat": "كتب اللغة",
+    "edition": "ط دار الكتب العلمية",
+    "researcher": "",
+    "publisher": "",
+    "files": 12,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 104517409,
+    "quality": {
+     "files": 12,
+     "pages": 6559,
+     "kbpp": 15,
+     "px": 1936,
+     "colour": "أبيض وأسود",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 65.0,
+    "waqfeya": []
    }
   ],
   "note": null
@@ -4254,9 +4421,9 @@
   "bytes": 154026640,
   "editions": [
    {
-    "folder": "إعراب القرآن - أبو جعفر النحاس (ت عوف - عالم الكتب)",
+    "folder": "إعراب القرآن - أبو جعفر النحاس (ت زهير زاهد - عالم الكتب)",
     "cat": "علوم القرآن وأصول التفسير",
-    "edition": "ت عوف - عالم الكتب",
+    "edition": "ت زهير زاهد - عالم الكتب",
     "researcher": "",
     "publisher": "",
     "files": 6,
@@ -4738,63 +4905,6 @@
   "note": null
  },
  {
-  "work": "فتوح البلدان",
-  "title": "فتوح البلدان",
-  "author": "البلاذري",
-  "bytes": 144646466,
-  "editions": [
-   {
-    "folder": "فتوح البلدان - البلاذري (ت عبد الله أنيس الطباع)",
-    "cat": "التاريخ",
-    "edition": "ت عبد الله أنيس الطباع",
-    "researcher": "عبد الله أنيس الطباع",
-    "publisher": "",
-    "files": 2,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 11546137,
-    "quality": {
-     "files": 2,
-     "pages": 772,
-     "kbpp": 14,
-     "px": 1948,
-     "colour": "أبيض وأسود",
-     "width_used": 0.76,
-     "text": false
-    },
-    "score": 80.2,
-    "waqfeya": [
-     "https://waqfeya.net/books/فتوح-البلدان--ت-الطباع-6be3b5b33c1a423a978ae84e8e9bb824"
-    ]
-   },
-   {
-    "folder": "كتاب فتوح البلدان - البلاذري (ط مطبعة بريل - ليدن)",
-    "cat": "التاريخ",
-    "edition": "ت دي خويه - ط مطبعة بريل - ليدن - 1866",
-    "researcher": "دي خويه",
-    "publisher": "مطبعة بريل - ليدن",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 133100329,
-    "quality": {
-     "files": 1,
-     "pages": 678,
-     "kbpp": 724,
-     "px": 2060,
-     "colour": "ملون",
-     "width_used": 0.42,
-     "text": false
-    },
-    "score": 61.9,
-    "waqfeya": [
-     "https://waqfeya.net/books/كتاب-فتوح-البلدان--ت-دي-خويه--ملون-855a1185981749f7a3c025ffadacdeb5"
-    ]
-   }
-  ],
-  "note": null
- },
- {
   "work": "الكامل في ضعفا الرجال",
   "title": "الكامل في ضعفاء الرجال",
   "author": "ابن عدي",
@@ -5014,9 +5124,9 @@
     ]
    },
    {
-    "folder": "المنتقى شرح موطأ مالك - أبو الوليد الباجي (مطبعة السعادة)",
+    "folder": "المنتقى شرح موطأ مالك - أبو الوليد الباجي (ط دار الكتب العلمية)",
     "cat": "شروح الحديث",
-    "edition": "مطبعة السعادة",
+    "edition": "ط دار الكتب العلمية",
     "researcher": "",
     "publisher": "",
     "files": 8,
@@ -7503,6 +7613,63 @@
   "note": null
  },
  {
+  "work": "اثار الاول في ترتيب",
+  "title": "آثار الأول في ترتيب الدول",
+  "author": "العباسي؛ الحسن بن عبد الله (أبي محمد) ابن عمر بن محاسن، من نسل هارون (الرشيد) بن محمد العباسي",
+  "bytes": 85949386,
+  "editions": [
+   {
+    "folder": "آثار الأول في ترتيب الدول",
+    "cat": "السياسة الشرعية والقضاء",
+    "edition": "ط مطبعة بولاق الأميرية - القاهرة - 1295 - 1878",
+    "researcher": "",
+    "publisher": "مطبعة بولاق الأميرية - القاهرة",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 74921113,
+    "quality": {
+     "files": 1,
+     "pages": 199,
+     "kbpp": 326,
+     "px": 878,
+     "colour": "ملون",
+     "width_used": 0.77,
+     "text": false
+    },
+    "score": 58.2,
+    "waqfeya": [
+     "https://waqfeya.net/books/آثار-الأول-في-ترتيب-الدول-bbb47fc9eb7d454885bf7a39b7868b82"
+    ]
+   },
+   {
+    "folder": "آثار الأول في ترتيب الدول - العباسي (ت عبد الرحمن عميرة - دار الجيل)",
+    "cat": "السياسة الشرعية والقضاء",
+    "edition": "ت عبد الرحمن عميرة - ط دار الجيل - بيروت - 1409 - 1989",
+    "researcher": "عبد الرحمن عميرة",
+    "publisher": "دار الجيل - بيروت",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 11028273,
+    "quality": {
+     "files": 1,
+     "pages": 424,
+     "kbpp": 26,
+     "px": 1874,
+     "colour": "أبيض وأسود",
+     "width_used": 0.73,
+     "text": false
+    },
+    "score": 79.6,
+    "waqfeya": [
+     "https://waqfeya.net/books/آثار-الأول-في-ترتيب-الدول--ت-عميرة-e181799cc8b34f5889794f6640531196"
+    ]
+   }
+  ],
+  "note": null
+ },
+ {
   "work": "صفه الصفوه",
   "title": "صفة الصفوة",
   "author": "ابن الجوزي",
@@ -8635,63 +8802,6 @@
     ],
     "same_edition": true,
     "best_scan": true
-   }
-  ],
-  "note": null
- },
- {
-  "work": "اثار الاول في ترتيب",
-  "title": "آثار الأول في ترتيب الدول",
-  "author": "العباسي؛ الحسن بن عبد الله (أبي محمد) ابن عمر بن محاسن، من نسل هارون (الرشيد) بن محمد العباسي",
-  "bytes": 75942652,
-  "editions": [
-   {
-    "folder": "آثار الأول في ترتيب الدول",
-    "cat": "السياسة الشرعية والقضاء",
-    "edition": "ط مطبعة بولاق الأميرية - القاهرة - 1295 - 1878",
-    "researcher": "",
-    "publisher": "مطبعة بولاق الأميرية - القاهرة",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 64914379,
-    "quality": {
-     "files": 1,
-     "pages": 199,
-     "kbpp": 326,
-     "px": 878,
-     "colour": "ملون",
-     "width_used": 0.77,
-     "text": false
-    },
-    "score": 58.2,
-    "waqfeya": [
-     "https://waqfeya.net/books/آثار-الأول-في-ترتيب-الدول-bbb47fc9eb7d454885bf7a39b7868b82"
-    ]
-   },
-   {
-    "folder": "آثار الأول في ترتيب الدول - العباسي (ت عبد الرحمن عميرة - دار الجيل)",
-    "cat": "السياسة الشرعية والقضاء",
-    "edition": "ت عبد الرحمن عميرة - ط دار الجيل - بيروت - 1409 - 1989",
-    "researcher": "عبد الرحمن عميرة",
-    "publisher": "دار الجيل - بيروت",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 11028273,
-    "quality": {
-     "files": 1,
-     "pages": 424,
-     "kbpp": 26,
-     "px": 1874,
-     "colour": "أبيض وأسود",
-     "width_used": 0.73,
-     "text": false
-    },
-    "score": 79.6,
-    "waqfeya": [
-     "https://waqfeya.net/books/آثار-الأول-في-ترتيب-الدول--ت-عميرة-e181799cc8b34f5889794f6640531196"
-    ]
    }
   ],
   "note": null
@@ -9900,9 +10010,9 @@
   "bytes": 62796233,
   "editions": [
    {
-    "folder": "تدريب الراوي في شرح تقريب النواوي - جلال الدين السيوطي (ت عبد الوهاب عبد اللطيف)",
+    "folder": "تدريب الراوي في شرح تقريب النواوي - جلال الدين السيوطي (ط مكتبة الكوثر)",
     "cat": "علوم الحديث",
-    "edition": "ت عبد الوهاب عبد اللطيف",
+    "edition": "ط مكتبة الكوثر",
     "researcher": "",
     "publisher": "",
     "files": 1,
@@ -10877,7 +10987,7 @@
   "bytes": 56062920,
   "editions": [
    {
-    "folder": "الفهرست في أخبار العلماء المصنفين - ابن النديم",
+    "folder": "الفهرست في أخبار العلماء المصنفين - ابن النديم (ت رضا تجدد)",
     "cat": "فهارس الكتب والأدلة",
     "edition": "ت رضا تجدد المازنداري",
     "researcher": "رضا تجدد المازنداري",
@@ -12866,9 +12976,9 @@
     ]
    },
    {
-    "folder": "قواعد الأحكام في مصالح الأنام - العز بن عبد السلام (دار المعارف)",
+    "folder": "قواعد الأحكام في مصالح الأنام - العز بن عبد السلام (ت نزيه حماد وعثمان ضميرية - دار القلم)",
     "cat": "علوم الفقه والقواعد الفقهية",
-    "edition": "دار المعارف",
+    "edition": "ت نزيه حماد وعثمان ضميرية - دار القلم",
     "researcher": "",
     "publisher": "",
     "files": 3,
@@ -15629,6 +15739,61 @@
     "«دليلك إلى أفضل الطبعات لأمهات الكتب» — محمد عبد الله آل سنه، صيد الفوائد: https://saaid.org/mktarat/alalm/63.htm"
    ]
   }
+ },
+ {
+  "work": "شرح علل الترمذي",
+  "title": "شرح علل الترمذي",
+  "author": "ابن رجب",
+  "bytes": 25610401,
+  "editions": [
+   {
+    "folder": "شرح علل الترمذي - ابن رجب (ت نور الدين عتر - دار الملاح)",
+    "cat": "علوم الحديث",
+    "edition": "ت نور الدين عتر - ط دار الملاح",
+    "researcher": "نور الدين عتر",
+    "publisher": "دار الملاح",
+    "files": 1,
+    "vols_edition": "2",
+    "complete": false,
+    "bytes": 10982959,
+    "quality": {
+     "files": 1,
+     "pages": 986,
+     "kbpp": 10,
+     "px": 1307,
+     "colour": "أبيض وأسود",
+     "width_used": 0.65,
+     "text": false
+    },
+    "score": 59.7,
+    "waqfeya": [
+     "https://waqfeya.net/books/شرح-علل-الترمذي-لابن-رجب-7d2b7294ccd94f4eb9b3e49ec17d0480"
+    ]
+   },
+   {
+    "folder": "شرح علل الترمذي - ابن رجب الحنبلي (ت همام عبد الرحيم سعيد)",
+    "cat": "علوم الحديث",
+    "edition": "ت همام عبد الرحيم سعيد",
+    "researcher": "",
+    "publisher": "",
+    "files": 2,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 14627442,
+    "quality": {
+     "files": 2,
+     "pages": 1027,
+     "kbpp": 14,
+     "px": 1936,
+     "colour": "أبيض وأسود",
+     "width_used": 0.71,
+     "text": false
+    },
+    "score": 64.2,
+    "waqfeya": []
+   }
+  ],
+  "note": null
  },
  {
   "work": "اسباب نزول القران",
@@ -20363,6 +20528,30 @@
   "bytes": 11014838,
   "editions": [
    {
+    "folder": "مكارم الأخلاق - ابن أبي الدنيا (ت مجدي السيد إبراهيم - مكتبة القرآن)",
+    "cat": "كتب السنة",
+    "edition": "ت مجدي السيد إبراهيم - ط مكتبة القرآن",
+    "researcher": "مجدي السيد إبراهيم",
+    "publisher": "مكتبة القرآن",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 3955180,
+    "quality": {
+     "files": 1,
+     "pages": 192,
+     "kbpp": 20,
+     "px": 1954,
+     "colour": "أبيض وأسود",
+     "width_used": 0.73,
+     "text": false
+    },
+    "score": 79.6,
+    "waqfeya": [
+     "https://waqfeya.net/books/مكارم-الأخلاق-647ef9d618fd460bb5f3d02e04502cce"
+    ]
+   },
+   {
     "folder": "مكارم الأخلاق - ابن أبي الدنيا (ط دار الكتب العلمية)",
     "cat": "كتب السنة",
     "edition": "ت محمد عبد القادر أحمد عطا - ط دار الكتب العلمية - 1409 - 1989",
@@ -20384,30 +20573,6 @@
     "score": 79.2,
     "waqfeya": [
      "https://waqfeya.net/books/مكارم-الأخلاق-ابن-أبي-الدنيا-والطبراني-8b7945c795a9494a85d0229bc7eb0a1b"
-    ]
-   },
-   {
-    "folder": "مكارم الأخلاق - ابن أبي الدنيا (ط مكتبة القرآن)",
-    "cat": "كتب السنة",
-    "edition": "ت مجدي السيد إبراهيم - ط مكتبة القرآن",
-    "researcher": "مجدي السيد إبراهيم",
-    "publisher": "مكتبة القرآن",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 3955180,
-    "quality": {
-     "files": 1,
-     "pages": 192,
-     "kbpp": 20,
-     "px": 1954,
-     "colour": "أبيض وأسود",
-     "width_used": 0.73,
-     "text": false
-    },
-    "score": 79.6,
-    "waqfeya": [
-     "https://waqfeya.net/books/مكارم-الأخلاق-647ef9d618fd460bb5f3d02e04502cce"
     ]
    }
   ],
@@ -21221,46 +21386,54 @@
   "note": null
  },
  {
-  "work": "صفه الجنه",
-  "title": "صفة الجنة",
-  "author": "أبو نعيم",
-  "bytes": 8399477,
+  "work": "هدايه المرتاب وغايه الحفاظ",
+  "title": "هداية المرتاب وغاية الحفاظ والطلاب في تبيين متشابه الكتاب",
+  "author": "السخاوي",
+  "bytes": 8256981,
   "editions": [
    {
-    "folder": "صفة الجنة - أبو نعيم",
-    "cat": "كتب السنة",
-    "edition": "ت ناصر بن عبد الكريم العقل - ط مكتبة الرشد",
-    "researcher": "ناصر بن عبد الكريم العقل",
-    "publisher": "مكتبة الرشد",
-    "files": 2,
-    "vols_edition": "2",
-    "complete": true,
-    "bytes": 8386452,
-    "quality": null,
-    "score": -1,
-    "waqfeya": [
-     "https://waqfeya.net/books/اقتضاء-الصراط-المستقيم-لمخالفة-أصحاب-الجحيم-ت-العقل-ط-الرشد-bf3a4ce8603645d3ba55c07253010b47"
-    ],
-    "same_edition": true,
-    "best_scan": true
+    "folder": "هداية المرتاب وغاية الحفاظ والطلاب في تبيين متشابه الكتاب - السخاوي (اعتنى به محمد آل رحاب)",
+    "cat": "علوم القرآن وأصول التفسير",
+    "edition": "اعتنى به محمد آل رحاب",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 5115125,
+    "quality": {
+     "files": 1,
+     "pages": 54,
+     "kbpp": 94,
+     "px": 391,
+     "colour": "ملون",
+     "width_used": 0.84,
+     "text": true
+    },
+    "score": 40.8,
+    "waqfeya": []
    },
    {
-    "folder": "صفة الجنة - أبو نعيم - أبو نعيم؛ أحمد بن عبد الله بن أحمد الأصبهاني، ابو نعيم",
-    "cat": "كتب السنة",
-    "edition": "ت ناصر بن عبد الكريم العقل - ط مكتبة الرشد",
-    "researcher": "ناصر بن عبد الكريم العقل",
-    "publisher": "مكتبة الرشد",
+    "folder": "هداية المرتاب وغاية الحفاظ والطلاب في تبيين متشابه الكتاب - السخاوي (ت عبد القادر الخطيب - دار الفكر)",
+    "cat": "علوم القرآن وأصول التفسير",
+    "edition": "ت عبد القادر الخطيب - دار الفكر",
+    "researcher": "",
+    "publisher": "",
     "files": 1,
-    "vols_edition": "2",
+    "vols_edition": "",
     "complete": false,
-    "bytes": 13025,
-    "quality": null,
-    "score": -1,
-    "waqfeya": [
-     "https://waqfeya.net/books/اقتضاء-الصراط-المستقيم-لمخالفة-أصحاب-الجحيم-ت-العقل-ط-الرشد-bf3a4ce8603645d3ba55c07253010b47"
-    ],
-    "same_edition": true,
-    "best_scan": false
+    "bytes": 3141856,
+    "quality": {
+     "files": 1,
+     "pages": 183,
+     "kbpp": 17,
+     "px": 1769,
+     "colour": "أبيض وأسود",
+     "width_used": 0.83,
+     "text": false
+    },
+    "score": 66.6,
+    "waqfeya": []
    }
   ],
   "note": null
@@ -21907,6 +22080,30 @@
   "bytes": 6873037,
   "editions": [
    {
+    "folder": "عمدة الأحكام - الجماعيلي (ت محمد حامد الفقي - مكتبة الخانجي ودار الفكر)",
+    "cat": "كتب السنة",
+    "edition": "ت محمد حامد الفقي - ط مكتبة الخانجي - دار الفكر",
+    "researcher": "محمد حامد الفقي",
+    "publisher": "مكتبة الخانجي - دار الفكر",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 2402602,
+    "quality": {
+     "files": 1,
+     "pages": 128,
+     "kbpp": 18,
+     "px": 1782,
+     "colour": "أبيض وأسود",
+     "width_used": 0.8,
+     "text": false
+    },
+    "score": 81.0,
+    "waqfeya": [
+     "https://waqfeya.net/books/عمدة-الأحكام-من-كلام-خير-الأنام-ت-الفقي-1a116f896189445fa54c36be97d4ed30"
+    ]
+   },
+   {
     "folder": "عمدة الأحكام - الجماعيلي (ط دار الثقافة العربية - مؤسسة قرطبة)",
     "cat": "كتب السنة",
     "edition": "ت محمود الأرناؤوط - ط دار الثقافة العربية - مؤسسة قرطبة - 1408 - 1988",
@@ -21928,30 +22125,6 @@
     "score": 74.9,
     "waqfeya": [
      "https://waqfeya.net/books/عمدة-الأحكام-من-كلام-خير-الأنام-ت-الأرناؤوط-16da50f37bad4f368afa88f2f029f36a"
-    ]
-   },
-   {
-    "folder": "عمدة الأحكام - الجماعيلي (ط مكتبة الخانجي - دار الفكر)",
-    "cat": "كتب السنة",
-    "edition": "ت محمد حامد الفقي - ط مكتبة الخانجي - دار الفكر",
-    "researcher": "محمد حامد الفقي",
-    "publisher": "مكتبة الخانجي - دار الفكر",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 2402602,
-    "quality": {
-     "files": 1,
-     "pages": 128,
-     "kbpp": 18,
-     "px": 1782,
-     "colour": "أبيض وأسود",
-     "width_used": 0.8,
-     "text": false
-    },
-    "score": 81.0,
-    "waqfeya": [
-     "https://waqfeya.net/books/عمدة-الأحكام-من-كلام-خير-الأنام-ت-الفقي-1a116f896189445fa54c36be97d4ed30"
     ]
    }
   ],
@@ -23229,9 +23402,9 @@
     ]
    },
    {
-    "folder": "مجموع فيه الأحاديث العيدية المسلسلة - السلفي",
+    "folder": "مجموع فيه الأحاديث العيدية المسلسلة - السلفي (ط دار الوطن)",
     "cat": "كتب السنة",
-    "edition": "",
+    "edition": "ط دار الوطن",
     "researcher": "",
     "publisher": "",
     "files": 1,
@@ -23707,6 +23880,55 @@
     "waqfeya": [
      "https://waqfeya.net/books/أخلاق-العلماء-ت-الأنصاري-bf8abf997298478ea60567a3e1a69d27"
     ]
+   }
+  ],
+  "note": null
+ },
+ {
+  "work": "الفتوه",
+  "title": "الفتوة",
+  "author": "أبو عبد الرحمن السلمي",
+  "bytes": 3861769,
+  "editions": [
+   {
+    "folder": "الفتوة - أبو عبد الرحمن السلمي (ت إحسان الثامري ومحمد القدحات - دار الرازي)",
+    "cat": "كتب السنة",
+    "edition": "ت إحسان الثامري ومحمد القدحات - دار الرازي",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 1934017,
+    "quality": {
+     "files": 1,
+     "pages": 157,
+     "kbpp": 12,
+     "px": 1193,
+     "colour": "أبيض وأسود",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 57.6,
+    "waqfeya": [],
+    "same_edition": true,
+    "best_scan": true
+   },
+   {
+    "folder": "الفتوة - أبو عبد الرحمن السلمي (ت إحسان ذنون الثامري ومحمد القيسي - دار الرازي)",
+    "cat": "كتب السنة",
+    "edition": "ت إحسان ذنون الثامري ومحمد القيسي - دار الرازي",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 1927752,
+    "quality": null,
+    "score": -1,
+    "waqfeya": [],
+    "same_edition": true,
+    "best_scan": false
    }
   ],
   "note": null
@@ -24451,7 +24673,7 @@
   "bytes": 2561533,
   "editions": [
    {
-    "folder": "العقل وفضله - ابن أبي الدنيا (ط دار الراية)",
+    "folder": "العقل وفضله - ابن أبي الدنيا (ت لطفي محمد الصغير - دار الراية)",
     "cat": "كتب السنة",
     "edition": "ت لطفي محمد الصغير - ط دار الراية",
     "researcher": "لطفي محمد الصغير",
@@ -24626,9 +24848,9 @@
   "bytes": 2332194,
   "editions": [
    {
-    "folder": "فضائل شهر رمضان - ابن شاهين (ت سعد آل حميد)",
+    "folder": "فضائل شهر رمضان - ابن شاهين (ت سعد آل حميد - مكتبة المنار)",
     "cat": "كتب السنة",
-    "edition": "ت سعد آل حميد",
+    "edition": "ت سعد آل حميد - مكتبة المنار",
     "researcher": "",
     "publisher": "",
     "files": 1,
@@ -24637,7 +24859,9 @@
     "bytes": 949589,
     "quality": null,
     "score": -1,
-    "waqfeya": []
+    "waqfeya": [],
+    "same_edition": true,
+    "best_scan": false
    },
    {
     "folder": "فضائل شهر رمضان - ابن شاهين (ط مكتبة المنار)",
@@ -24661,7 +24885,9 @@
     "score": 79.8,
     "waqfeya": [
      "https://waqfeya.net/books/فضائل-شهر-رمضان-6a295ea3298f4f41877c016472852827"
-    ]
+    ],
+    "same_edition": true,
+    "best_scan": true
    }
   ],
   "note": null
@@ -24780,6 +25006,59 @@
     ],
     "same_edition": true,
     "best_scan": false
+   }
+  ],
+  "note": null
+ },
+ {
+  "work": "اكرام الضيف",
+  "title": "إكرام الضيف",
+  "author": "",
+  "bytes": 1686745,
+  "editions": [
+   {
+    "folder": "إكرام الضيف (ط دار الكتب العلمية)",
+    "cat": "كتب السنة",
+    "edition": "ط دار الكتب العلمية",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 838856,
+    "quality": {
+     "files": 1,
+     "pages": 72,
+     "kbpp": 11,
+     "px": 1202,
+     "colour": "أبيض وأسود",
+     "width_used": 0.72,
+     "text": false
+    },
+    "score": 57.3,
+    "waqfeya": []
+   },
+   {
+    "folder": "إكرام الضيف - إبراهيم الحربي (ط مكتبة التراث الإسلامي)",
+    "cat": "كتب السنة",
+    "edition": "ط مكتبة التراث الإسلامي",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 847889,
+    "quality": {
+     "files": 1,
+     "pages": 68,
+     "kbpp": 12,
+     "px": 1046,
+     "colour": "أبيض وأسود",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 52.4,
+    "waqfeya": []
    }
   ],
   "note": null
