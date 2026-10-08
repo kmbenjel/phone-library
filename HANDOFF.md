@@ -3,6 +3,16 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (newest last). Everything is resumable.
 
+## 2026-10-08 06:35 — incident: 19 restored originals deleted by a rerun; fetched again (queue 247)
+- 05:33 phone back → my chain: 224 substituted the 19 originals (05:38), plans 236–246 applied, refresh, commit de0d1a7.
+- 06:14 the owner asked Antigravity (Gemini, ~/.gemini/antigravity/brain/068a0a41…) whether the ready scripts would be launched;
+  it reran scratch/restore_recompressed_224.py and all sheet plans. The plans skipped (already applied); the 224 rerun set
+  the 19 restored originals aside (step a), its step b failed (no copies left), step c deleted them.
+- Fixes: apply_plan exits 1 on any failed move; substitute needs the copy in index-now; the one-off refuses to rerun;
+  AGENTS.md rule «never rerun a scratch script or an applied plan; one agent at a time».
+- Repair: scratch/refetch_247.sh (log logs/refetch-247-chain.log): data/queue/247-refetch-originals.tsv fetches the 19
+  originals again (archive.org, exact sizes) straight to their paths, full refresh (index-now listed the 19 though gone), commit.
+
 ## 2026-10-08 02:20 — phone off the network; chain waiting (scratch/when_phone_back_2026-10-08.sh, log logs/when-phone-back.log)
 - 224 restore: 18 of 19 originals uploaded into «نسخ محسنة للاستبدال» (exact sizes); «الشفا» (1.77 GB) staged in
   downloads/queue, its upload refused when the phone left. NOTHING substituted yet. The chain reruns the restore (upload

@@ -9,6 +9,10 @@ WHY = ('lossy recompressed copy (plan 140) set aside: its original file takes it
        'the original file again (archive.org, exact original size), replacing the recompressed copy',
        'recompressed copy replaced by the original file (owner 2026-10-07: undo the page changes)')
 Q = 'data/queue/224-restore-recompressed.tsv'
+# ONE-OFF, ALREADY DONE (2026-10-08 05:38): never run again. A second run at 06:14 (by another agent) deleted the 19
+# restored originals; they were fetched again by queue 247. fix_at_scale.substitute and apply_plan now refuse this.
+if any(r[5:6] == ['224-restore-originalsb-substitute-fixed'] for r in csv.reader(open('data/changes/changes.tsv', encoding='utf-8'), delimiter='\t')):
+    sys.exit('224 already substituted: one-off, not run again')
 fx.wait_phone()
 subprocess.run(['python3', 'scripts/fetch_queue.py', Q, '224-restore-recompressed'], env=dict(os.environ, NETPACE='0', NET_MB='0'))   # owner: full speed until he says otherwise
 done = set(open('data/queue/224-restore-recompressed.done', encoding='utf-8').read().split('\n')) if os.path.exists('data/queue/224-restore-recompressed.done') else set()

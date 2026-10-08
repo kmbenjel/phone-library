@@ -73,6 +73,8 @@ def substitute(name, copies, idx, why=WHY):
     a, b, c = [], [], []
     for p in copies:
         if p not in idx: continue
+        if IMP + p not in idx: continue                # the copy must be there (2026-10-08: a rerun with no copies set the
+                                                       # restored originals aside, then deleted them)
         a.append((f'Books/{p}', f'Books/{OUT}{p}', why[0]))
         b.append((f'Books/{IMP}{p}', f'Books/{p}', why[1]))
         c.append((f'Books/{OUT}{p}', why[2]))

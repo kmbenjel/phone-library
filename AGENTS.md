@@ -213,7 +213,13 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `find_on_archive.py` | other archive.org uploads of books whose Waqfeya items went dark (candidates to read before adding) |
 
 Only reusable tools live in `scripts/`. A one-off generator goes in `scratch/`; the plan or queue it writes is the
-record. Nothing goes in the repo root. Removed one-offs (2026-10-05) are in git history at commit `0e64d80`.
+record.
+**Never rerun a `scratch/` script or a plan that already ran** (2026-10-08: another agent relaunched the finished one-off
+`scratch/restore_recompressed_224.py`; its second substitution set the 19 restored originals aside and deleted them —
+fetched again by queue 247). Before launching anything, read `HANDOFF.md` and the tail of `data/changes/changes.tsv`:
+if the plan name is already there, it is done. Only one agent works on the phone at a time. Safeguards since then:
+`apply_plan.py` exits 1 when any move fails (callers stop before the next step) and `fix_at_scale.substitute` skips a
+file whose improved copy is not in `index-now.tsv`. Nothing goes in the repo root. Removed one-offs (2026-10-05) are in git history at commit `0e64d80`.
 
 ## 7. Speed and concurrency (binding rule)
 

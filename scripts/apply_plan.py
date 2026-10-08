@@ -84,7 +84,9 @@ def known_paths():
         _KNOWN = {l.split('\t', 1)[0] for l in open(p, encoding='utf-8')} if os.path.exists(p) else set()
     return _KNOWN
 
+FAILED = 0
 def run(rows, plan, dry):
+    global FAILED
     f = None if dry else connect(); made = set(); ok = skipped = 0
     os.makedirs(os.path.dirname(LOG), exist_ok=True)
     with open(LOG, 'a', newline='') as lf:
@@ -111,7 +113,7 @@ def run(rows, plan, dry):
                 except (ftplib.error_temp, OSError, EOFError) as e:
                     print('retry', a, e); time.sleep(3); f = connect(); CACHE.clear()
                 except ftplib.error_perm as e:
-                    print('FAIL', a, '->', b, e); skipped += 1; break
+                    print('FAIL', a, '->', b, e); skipped += 1; FAILED += 1; break
             lf.flush()
     print(f'{"planned" if dry else "moved"}: {ok}  skipped: {skipped}')
 
@@ -125,3 +127,6 @@ if __name__ == '__main__':
         path = args[0]
         rows = [r[:3] for r in csv.reader(open(path), delimiter='\t') if r and not r[0].startswith('#')]
         run(rows, os.path.basename(path).rsplit('.', 1)[0], '--dry-run' in sys.argv)
+    # any failed move → exit 1, so a caller never runs the next step on a half-applied plan (2026-10-08: a substitution
+    # whose step b failed went on to step c and deleted the files step a had set aside)
+    if FAILED: print(f'{FAILED} moves FAILED'); sys.exit(1)
