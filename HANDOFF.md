@@ -3,6 +3,19 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (newest last). Everything is resumable.
 
+## 2026-10-08 20:55 GMT — session limit; unattended work running
+- Pre-700 missing (owner: download all, after checks): chain 271 ran — 118 ids, but 94 archive.org items are DARK (removed);
+  4 files added (271), غريب الحديث لابن الجوزي added (275: the «title on phone» skip was another author's book — also المعجم
+  لابن المقرئ, دلائل النبوة لأبي نعيم, الناسخ والمنسوخ لعبد القاهر البغدادي, all dark). waq_queue's «TITLE ON PHONE» needs an author check.
+- RUNNING: find_on_archive.py on the 100 dark books (log logs/find-on-archive-274.log) → chain scratch/dark_chain_2026-10-08.sh
+  (log logs/dark-chain-2026-10-08.log): scripts/dark_replace.py verifies candidates from their title pages (title ≥ 60 %
+  + author), queues only those, fetch_queue, refresh, commit. The rest → data/review/274-dark-review.tsv: to read by eye
+  (contact sheets of title pages) — the automatic check is strict (it refused an abridgement of دلائل النبوة: good).
+- Crop: crop_regress → 8/9 page checks PASS; FAIL اللآلئ ج 1 p. 4 streak (box at the page edge) → fixed now (content
+  moves the last points on white paper) — RERUN `python3 scripts/crop_regress.py` (results cached per book_crop.py version).
+  Book-wide: 1 page each still tilted after turning in فهرسة ابن خير (324), المثلث (489), الاتباع (68) — inspect (curved page?).
+  Then rerun the sample (scratchpad v4/drive.py + build.py — or rebuild them) and look at it before showing the owner.
+
 ## 2026-10-08 20:30 GMT — owner paused me until 21:10; unattended chain scratch/pre700_2026-10-08.sh running
 - Owner: «نواقص ما قبل 700 هـ (113 كتابًا مفقودًا) حمّلها كلها بعد التدقيق…». Chain (log logs/pre700-2026-10-08.log): ids from the
   fixed Waqfeya comparison → queue 271 (only linked files, sizes already on the phone skipped) → fetch_queue (full speed,

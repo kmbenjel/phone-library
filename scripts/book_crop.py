@@ -50,7 +50,8 @@ draws the same image turned (and/or shifted). The image streams, the text layer 
    full pages of the same parity, so its lines stay where the neighbours' lines are. If the page's marks do not fit there
    (a stamp page, a plate, a far marginal note), the box is centred on that page's own content instead. If the box would
    leave the page, on white paper (≥ 235) the content is moved instead so it stays centred; otherwise the box stops at the
-   edge. On a page with a stain, the box slides away from it as far as the content allows. A page whose content is wider
+   edge. On a page with a stain, the box slides away from it as far as the content allows; when the page edge stops it, on
+   white paper the content moves the remaining few points (≤ 3 % of the width) so the stain falls outside. A page whose content is wider
    or taller than the box stays whole (uncropped).
 6. SECOND LOOK at 1,000 px, on each page as the reader will see it:
    - LEVEL CHECK: a turned page must read level (whole-page angle ≤ 0.1°); what is left is turned away once more (both
@@ -457,7 +458,15 @@ def decide(pages, wq=0.95):
                 if bl[2] > b[0] and bl[0] < b[2] and bl[3] > b[1] and bl[1] < b[3]:
                     nx = bl[2] + 2 if bl[2] <= bx[0] else (bl[0] - 2 - (b[2] - b[0]) if bl[0] >= bx[2] else None)
                     if nx is not None and lo <= hi:
-                        nx = min(max(nx, lo), hi); b = [round(nx, 1), b[1], round(nx + b[2] - b[0], 1), b[3]]; p['dodged'] = True
+                        want = nx; nx = min(max(nx, lo), hi); b = [round(nx, 1), b[1], round(nx + b[2] - b[0], 1), b[3]]; p['dodged'] = True
+                        short = want - nx                    # the page edge stops the box: on white paper the content moves the
+                        if short and p.get('paper', 0) >= 235 and abs(short) <= 0.03 * p['w']:   # last points the other way
+                            mv = p.get('move') or [0, 0]; p['move'] = [round(mv[0] - short, 1), mv[1]]
+                            sh = -short
+                            p['box'] = bx = [bx[0] + sh, bx[1], bx[2] + sh, bx[3]]
+                            p['blots'] = [[v[0] + sh, v[1], v[2] + sh, v[3]] for v in p.get('blots', [])]
+                            p['specks'] = [[v[0] + sh, v[1], v[2] + sh, v[3]] for v in p.get('specks', [])]
+                            p['edge'] = [[v[0] + sh, v[1], v[2] + sh, v[3]] for v in p.get('edge', [])]
         b = [max(0, b[0]), max(0, b[1]), min(p['w'], b[2]), min(p['h'], b[3])]
         if p['kind'] == 'text' and not inside(bx, b): p['crop'] = None; whole.append(i); continue
         p['crop'] = b
