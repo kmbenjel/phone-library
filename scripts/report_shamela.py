@@ -5,7 +5,10 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from report_lib import Report, pct
 from textnorm import title_key
+import shamela_cards as SC
 J = lambda p: os.path.join(ROOT, p)
+CARDS = SC.load()
+ed = lambda r: SC.ed_line(CARDS.get(int(r['shamela_id'])))
 
 cat = json.load(open(J('data/catalog.json')))
 books = {b['id']: b for b in cat['books']}
@@ -29,10 +32,16 @@ not_in_shamela = [b for b in cat['books'] if b['id'] not in matched_phone]
 
 R = Report('مقارنة المكتبة بالمكتبة الشاملة',
            f'الشاملة المثبتة على الحاسوب ({total:,} كتابًا في {len(order)} قسمًا) مقابل كتب PDF على الهاتف (نحو {cat["stats"]["titles"]:,} عنوانًا في {cat["stats"]["files"]:,} ملفًا)')
+same = {r['shamela_id']: max((SC.same_edition(CARDS.get(int(r['shamela_id'])), books[int(i)]['folder']) for i in r['phone_book_ids'].split()),
+                             key=['', 'other', 'publisher', 'same'].index) for r in present}
 R.kpis([('كتب الشاملة', f'{total:,}'), ('لها نسخة PDF على الهاتف', f'{len(present):,}'), ('نسبة التغطية', pct(len(present), total)),
+        ('منها بطبعة الشاملة نفسها', f"{sum(1 for v in same.values() if v == 'same'):,}"),
         ('كتب الهاتف غير الموجودة في الشاملة', f'{len(not_in_shamela):,}')])
-R.note('المطابقة بالعنوان بعد توحيد الرسم (الهمزات، التاء المربوطة، الألف المقصورة، التشكيل)، مع التحقق من المؤلف في العناوين القصيرة. '
-       '«موجود» يعني أن على الهاتف نسخة مصوّرة بالعنوان نفسه، وقد تكون طبعة أخرى غير طبعة الشاملة. '
+R.note('يُعدّ الكتاب موجودًا إذا كان العمل نفسه على الهاتف، بأي طبعة (2026-10-08). الأدلة، وكلها مع اتفاق المؤلف: العنوان بعد توحيد الرسم، '
+       'أو كلماته المميِّزة كلها؛ أو عنوانه المطبوع واسم مؤلفه الكامل من بطاقة الكتاب في الشاملة المثبتة على الحاسوب؛ '
+       'أو أنه مطبوع داخل مجموع أو مع كتاب آخر على الهاتف («ويليه»، «ضمن آثار المعلمي»). '
+       'ولا يُعدّ موجودًا ما كان مختصرًا لكتاب على الهاتف أو شرحًا له أو منتقًى منه أو جزءًا آخر منه أو رواية أخرى له. '
+       '«طبعة الشاملة» من بطاقة الكتاب فيها، و«الطبعة على الهاتف» تقارن محققها وناشرها باسم الملف على الهاتف. '
        'الشاملة نصوص مدخلة، والهاتف كتب مصوّرة؛ فالمقارنة تبيّن أي نصوص الشاملة لها أصل مصوّر عندك.')
 
 R.h2('التغطية حسب أقسام الشاملة', 'cats')
@@ -57,9 +66,9 @@ early_missing = [r for r in early if not r['phone_book_ids']]
 early_missing.sort(key=lambda r: (int(r['death']) if r['death'].isdigit() and int(r['death']) > 0 else 9999, r['title']))
 R.h2(f'نواقص ما قبل 700 هـ من الشاملة ({len(early_missing):,} كتابًا مفقودًا)', 'missing-pre700')
 R.p('كتب التراث المتقدمة في الشاملة حتى سنة 700 هـ التي ليس لها مقابل مصور على الهاتف حتى الآن، مرتبة بسنة وفاة المؤلف.')
-R.table(['#', 'الكتاب', 'المؤلف', 'الوفاة', 'قسم الشاملة', 'في الوقفية'],
-        [[i, r['title'], r['author'], r['death'] or '', r['category'], 'نعم' if waq_of(r) else ''] for i, r in enumerate(early_missing, 1)],
-        numeric=(0, 3), links={5: [waq_of(r)['url'] if waq_of(r) else None for r in early_missing]},
+R.table(['#', 'الكتاب', 'المؤلف', 'الوفاة', 'قسم الشاملة', 'طبعة الشاملة', 'في الوقفية'],
+        [[i, r['title'], r['author'], r['death'] or '', r['category'], ed(r), 'نعم' if waq_of(r) else ''] for i, r in enumerate(early_missing, 1)],
+        numeric=(0, 3), links={6: [waq_of(r)['url'] if waq_of(r) else None for r in early_missing]},
         fold=f'نواقص الشاملة حتى 700 هـ ({len(early_missing):,} كتابًا)', md_limit=50,
         pick=[(f"s:{r['shamela_id']}", r['title']) for r in early_missing])
 
@@ -74,13 +83,15 @@ for c in order:
     miss = [r for r in rows if r['category'] == c and not r['phone_book_ids']]
     if not miss: continue
     miss.sort(key=lambda r: (int(r['death']) if r['death'].isdigit() and int(r['death']) > 0 else 9999, r['title']))
-    R.table(['#', 'الكتاب', 'المؤلف', 'الوفاة', 'في الوقفية'], [[i, r['title'], r['author'], r['death'] or '', 'نعم' if waq_of(r) else ''] for i, r in enumerate(miss, 1)],
-            numeric=(0, 3), links={4: [waq_of(r)['url'] if waq_of(r) else None for r in miss]},
+    R.table(['#', 'الكتاب', 'المؤلف', 'الوفاة', 'طبعة الشاملة', 'في الوقفية'], [[i, r['title'], r['author'], r['death'] or '', ed(r), 'نعم' if waq_of(r) else ''] for i, r in enumerate(miss, 1)],
+            numeric=(0, 3), links={5: [waq_of(r)['url'] if waq_of(r) else None for r in miss]},
             fold=f'{c} — {len(miss):,} غير موجود من {sum(1 for r in rows if r["category"] == c):,} (منها {sum(1 for r in miss if waq_of(r)):,} في الوقفية)', md_limit=40,
             pick=[(f"s:{r['shamela_id']}", r['title']) for r in miss])
 
 R.h2('تفصيل: كتب الشاملة الموجودة على الهاتف', 'present')
-R.table(['الكتاب', 'المؤلف', 'قسم الشاملة', 'مكانه على الهاتف'],
-        [[r['title'], r['author'], r['category'], ' | '.join(books[int(i)]['cat'] + ' / ' + books[int(i)]['folder'] for i in r['phone_book_ids'].split()[:2])] for r in sorted(present, key=lambda r: (order.index(r['category']), r['title']))],
+R.p('«وجه المطابقة» دليل الحكم بوجوده، و«الطبعة على الهاتف» تقول هل النسخة المصوّرة عندك هي طبعة الشاملة نفسها (بمحققها أو ناشرها).')
+R.table(['الكتاب', 'المؤلف', 'قسم الشاملة', 'طبعة الشاملة', 'مكانه على الهاتف', 'الطبعة على الهاتف', 'وجه المطابقة'],
+        [[r['title'], r['author'], r['category'], ed(r), ' | '.join(books[int(i)]['cat'] + ' / ' + books[int(i)]['folder'] for i in r['phone_book_ids'].split()[:2]),
+          SC.SAME[same[r['shamela_id']]], SC.how_ar(r['match'])] for r in sorted(present, key=lambda r: (order.index(r['category']), r['title']))],
         fold=f'{len(present):,} كتابًا', md_limit=60)
 print(R.write('01 - مقارنة بالشاملة'))

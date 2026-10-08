@@ -3,6 +3,21 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (newest last). Everything is resumable.
 
+## 2026-10-08 01:30 — Shamela comparison made accurate (owner: «الآن تستطيع تماما تمييز ما هو غير موجود؟», «… تعتمد على البطاقات»)
+- scripts/export_shamela_cards.py: the local Shamela's book cards (8,598: printed title, full author, editor, publisher,
+  edition, volumes, نبذة) + author biographies (3,190) → data/shamela/cards.jsonl, authors.jsonl (tools/shamela-dump, Shamela's JRE).
+  books.tsv gained author_id. scripts/shamela_cards.py: edition line, same-edition test, match evidence in Arabic.
+- compare_shamela.py: new tiers cover / part-of («ضمن آثار المعلمي»: 122) / card title; every older tier re-checked by
+  plausible() (author agrees on a non-common name — NAMEFREQ from Shamela authors —, no abridgement/commentary/part/other
+  recension); doubtful Waqfeya links ignored (data/review/waqfeya-link-doubts.tsv, 96 rows: provenance to fix);
+  vetoed matches in data/review/shamela-vetoed.tsv. Result 2,868 → 3,064 present, errors removed both ways.
+  Regression ids kept in my session; samples: present ≈ 96–97 % right; remaining «missing» probe ≈ 25 % present (phone
+  names lacking the author, synonyms) — next: fix those phone names (review list from vetoed «exact (author)»).
+- report_shamela.py: «طبعة الشاملة» column (cards), «الطبعة على الهاتف» (same edition?), «وجه المطابقة». TODO: main index
+  book cards could show the Shamela card + نبذة; refresh.sh should run export_shamela_cards.py when the Shamela store changes.
+- Owner 2026-10-08: specks surely not text may be painted with the background colour (memory speck-cleaning-rule) — part
+  of the improvement method AFTER the revert, samples for his approval first.
+
 ## Owner's request (summary)
 1. Fix errors/organization of the phone library (`phone:Books`, FTP 192.168.11.102:2221 (formerly .100, see AGENTS.md §2), ONE connection).
 2. Grow phone library 128.9 GB → 200 GB. Priority: authors died before 700 AH; all missing books of
