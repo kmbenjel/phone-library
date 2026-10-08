@@ -3,6 +3,18 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (newest last). Everything is resumable.
 
+## 2026-10-08 19:30 GMT — crop sample 3 open for the owner; scope review page published
+- Crop sample «الصيغة الثالثة» (24 books incl. the owner's own examples: اللآلئ ج 1 p. 4 streak now outside the box, the
+  stamp page p. 381 centred by moving its content, وحي القلم's faint chain frame kept, levelled pages in اللآلئ (292/337),
+  شرح أدب القاضي (599), البكاء (83)). book_crop.plan(): narrowest box that passes (95 / 98 / 100 % of the pages' widths),
+  stains dodged, faint printed frames/rules kept (band coverage), border grains / sheet edges / corner marks / dust
+  groups out, lossless deskew guarded (same text block ±5 %). WAITING for the owner's verdict before any batch.
+- Owner's collection scope (memory collection-scope): no popular da'wa tracts, no ordinary theses, few 21st-century books;
+  great 20th-century studies, translations and major scholars welcome. scripts/scope_review.py → 226 candidates
+  (48 theses, 31 tracts, 147 recent; 38 by major scholars, data/mappings/major-modern-scholars.txt) → review page
+  https://claude.ai/artifact/JbuSXTMakRVwEGAWHaPeRe (ticks: ArtifactData get decisions/current → remove[]). Removal =
+  owner's ticks only, through a logged delete plan. Expansion: waiting for the owner's go (phone on the charger).
+
 ## 2026-10-08 17:15 GMT — crop method v4 (owner's review of the second sample)
 - Done: 267 (المقاصد front pages, by the chain) and 268 (the 100 ppi المقاصد copy deleted); refresh committed.
 - Owner's notes on sample 2 and what v4 does (scripts/book_crop.py):
