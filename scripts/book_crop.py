@@ -31,15 +31,19 @@ draws the same image turned (and/or shifted). The image streams, the text layer 
    light ink (paper − 20) running along ≥ 50 % of the text block's height (or width) in a band 1 % wide.
    The text block, used for these tests and for centring, is measured mark by mark (2nd–98th percentile of the marks'
    edges, each mark counted once, border-strip marks left out of the first estimate), so one heavy streak cannot drag it.
-3. LEVEL tilted pages: the tilt is the shear angle that makes the content's row profile sharpest (±4°, to 0.025°). A page is
-   turned when the tilt is ≥ 0.3° and the profile gets ≥ 3 % sharper; both directions are tried and kept only if the turned
-   page measures level (residual ≤ max(0.1°, a third of the tilt)) and shows the same text block (±5 %) and ink (×0.6–1.6).
+3. LEVEL tilted pages: the tilt is the shear angle that makes the content's row profile sharpest (±4°, to 0.025°), measured
+   on the whole text and on its right, middle and left thirds; the thirds must agree within 0.3° (and the whole within 0.2°
+   of their median), else nothing is turned (layouts that only look tilted). A page is turned when the tilt is ≥ 0.3° and the
+   profile gets ≥ 3 % sharper; both directions are tried and kept only if the turned page measures level (residual ≤
+   max(0.1°, a third of the tilt)) and still shows the page's ink (×0.6–1.6).
 4. BOX SIZE, one for the whole file: width = the content width of 95 % of the text pages (else 98 %, else all — see 7)
    + 12 % of it on each side (at least M); height = the tallest page's content + 6 % above and below. Narrowed only as far as
    needed to centre the text on 95 % of the full pages (a scan with one tight margin), never below the content width,
    never beyond the page.
 5. BOX PLACE, page by page: a full page (text block ≥ 90 % of the usual width; content ≥ 90 % of the usual height) is
-   centred on its own text block; a short page (a chapter end with a few lines) takes the median place of its 6 nearest
+   centred on its own text block — the same horizontal centre for odd and even pages by default; a different one per parity
+   only when the book lays out like that (marginal material on a fixed side: on ≥ 70 % of the full pages of a parity the
+   content extends ≥ 1.5 % of the width beyond the text block on the same side), then the box keeps that offset; a short page (a chapter end with a few lines) takes the median place of its 6 nearest
    full pages of the same parity, so its lines stay where the neighbours' lines are. If the page's marks do not fit there
    (a stamp page, a plate, a far marginal note), the box is centred on that page's own content instead. If the box would
    leave the page, on white paper (≥ 235) the content is moved instead so it stays centred; otherwise the box stops at the
@@ -230,19 +234,28 @@ def marks(a, scale, width):
 
 def skew_of(xy):
     """the angle (degrees) that makes the text lines level: shear the ink by tan(a) and keep the angle whose row profile is
-    sharpest. Returns (a, sharpness gain over a = 0); a page with too little ink → (0, 1)"""
+    sharpest. Measured on the whole text and on its right, middle and left thirds: a real tilt is the same everywhere; a
+    layout that merely looks tilted to the profile (verse in columns, tables, a single long line) gives thirds that
+    disagree, and then nothing is turned. Returns (a, sharpness gain over a = 0); (0, 1) when unsure or too little ink"""
     if xy is None or len(xy[0]) < 1500: return 0.0, 1.0
     xs, ys = xy
     if len(xs) > 60000:
         k = np.random.default_rng(0).choice(len(xs), 60000, replace=False); xs, ys = xs[k], ys[k]
+    def best(x, y):
+        def score(a):
+            yy = np.round(y + x * np.tan(np.radians(a))).astype(np.int64); yy -= yy.min()
+            c = np.bincount(yy).astype(float); return float((c * c).sum())
+        base = score(0.0)
+        angs = np.arange(-4, 4.001, 0.25); a0 = float(angs[int(np.argmax([score(v) for v in angs]))])
+        fine = np.arange(a0 - 0.25, a0 + 0.2501, 0.025); sc = [score(v) for v in fine]
+        return float(fine[int(np.argmax(sc))]), max(sc) / base
     x, y = xs.astype(float), ys.astype(float)
-    def score(a):
-        yy = np.round(y + x * np.tan(np.radians(a))).astype(np.int64); yy -= yy.min()
-        c = np.bincount(yy).astype(float); return float((c * c).sum())
-    base = score(0.0)
-    angs = np.arange(-4, 4.001, 0.25); a0 = float(angs[int(np.argmax([score(v) for v in angs]))])
-    fine = np.arange(a0 - 0.25, a0 + 0.2501, 0.025); sc = [score(v) for v in fine]
-    return float(fine[int(np.argmax(sc))]), max(sc) / base
+    a, gain = best(x, y)
+    t1, t2 = np.percentile(x, [33.3, 66.7]); parts = []
+    for m in (x < t1, (x >= t1) & (x < t2), x >= t2):
+        if m.sum() >= 500: parts.append(best(x[m] - x[m].min(), y[m])[0])
+    if len(parts) < 3 or max(parts) - min(parts) > 0.3 or abs(a - float(np.median(parts))) > 0.2: return 0.0, 1.0
+    return float(np.median(parts)), gain
 
 SKEW_MIN = 0.3    # degrees: below it a tilt is hardly seen
 def raw_box(doc, x, key):
@@ -296,9 +309,9 @@ def analyse_pages(path):
             if abs(ang) >= SKEW_MIN and gain >= 1.03:
                 for deg in (-ang, ang):
                     t = turned(doc, i, deg); a2, z2 = gray(t[0], 500); mk2 = marks(a2, z2, r.width); t.close()
-                    c1, c2 = mk['core'], mk2['core']       # the turned page must show the same text block and ink, or it is not used
-                    if mk2['box'] is None or c2 is None or not (0.6 <= len(mk2['xy'][0]) / len(mk['xy'][0]) <= 1.6) \
-                       or abs((c2[2] - c2[0]) - (c1[2] - c1[0])) > 0.05 * (c1[2] - c1[0]) or abs((c2[3] - c2[1]) - (c1[3] - c1[1])) > 0.05 * (c1[3] - c1[1]):
+                    # the turned page must still show the page's ink (a broken drawing would show none); its text block is
+                    # naturally narrower once level, so its size is not compared
+                    if mk2['box'] is None or mk2['xy'] is None or not (0.6 <= len(mk2['xy'][0]) / len(mk['xy'][0]) <= 1.6):
                         continue
                     left, _ = skew_of(mk2['xy'])
                     if abs(left) <= max(0.1, abs(ang) / 3): rec['skew'] = round(deg, 3); mk = mk2; break
@@ -368,6 +381,22 @@ def decide(pages, wq=0.95):
     fitW = [2 * min(cx[i] - lim(i)[0], lim(i)[2] - cx[i]) for i in full_w]
     fitH = [2 * min(cy[i] - lim(i)[1], lim(i)[3] - cy[i]) for i in full_h]
     W = min(W, max(Tw, q(fitW, 0.05)) if fitW else W, pw); H = min(H, max(Th, q(fitH, 0.05)) if fitH else H, ph)
+    # odd and even pages: the same horizontal centre by default; a different one per parity only when the book really
+    # lays out like that — marginal material (folio numbers of the manuscript, side glosses, outer page numbers) on a
+    # fixed side, odd pages one way and even pages the other (owner 2026-10-08: «على حسب المصلحة… والأصل التوسط الواحد»)
+    off = {0: 0.0, 1: 0.0}
+    ext = {i: (pages[i]['box'][0] + pages[i]['box'][2]) / 2 - cx[i] for i in full_w}
+    for par in (0, 1):
+        v = [ext[i] for i in full_w if i % 2 == par]
+        if len(v) >= 10:
+            med = q(v, 0.5)
+            same = sum(1 for x in v if x * med > 0 and abs(x) >= 0.005 * pw) / len(v)
+            if abs(med) >= 0.015 * pw and same >= 0.7: off[par] = med
+    out['parity_offsets'] = {str(k): round(v, 1) for k, v in off.items()}
+    if off[0] or off[1]:
+        cx = {i: v + off[i % 2] for i, v in cx.items()}   # the box follows the page's printed layout, per parity
+        fitW = [2 * min(cx[i] - lim(i)[0], lim(i)[2] - cx[i]) for i in full_w]
+        W = min(Tw + 2 * max(m0, 0.12 * Tw), max(Tw, q(fitW, 0.05)) if fitW else W, pw)
     def near(i, pool, val):                         # a short page takes the place of its full neighbours (same parity)
         same = [j for j in pool if j % 2 == i % 2] or pool
         k = sorted(same, key=lambda j: abs(j - i))[:6]
@@ -412,7 +441,7 @@ def decide(pages, wq=0.95):
         if p['kind'] == 'text' and not inside(bx, b): p['crop'] = None; whole.append(i); continue
         p['crop'] = b
         p['cut_specks'] = [v for v in p['specks'] if not inside(v, b, 0)]
-        if i in fw and bx: offc.append(abs((b[0] + b[2]) / 2 - ((core[i][0] + core[i][2]) / 2 + (p.get('move') or [0, 0])[0])) / p['w'])
+        if i in fw and bx: offc.append(abs((b[0] + b[2]) / 2 - (cx[i] + (p.get('move') or [0, 0])[0])) / p['w'])
     out['whole'] = whole; out['own_centre'] = own; out['content_moved'] = moved
     out['skewed'] = sum(1 for p in pages if p.get('skew'))
     out['blot_pages'] = sum(1 for p in pages if p.get('crop') and p.get('blots'))
@@ -585,7 +614,7 @@ def review_page(cases, skipped, outdir, stats):
         cards.append(f'''<section class="card"><h3>{n}. {title}</h3><p class="where">{where}</p>
 <ul class="facts"><li>يكبر النص على الهاتف <b>{round((rec["gain"] - 1) * 100)}٪</b></li><li>{rec["n"]} صفحة، منها {len(rec.get("whole", []))} تبقى كاملة</li>
 <li>انحراف النص عن وسط الصفحة: {round(rec.get("offcentre_before", 0) * 100, 1)}٪ ← {round(rec.get("offcentre_after", 0) * 100, 1)}٪</li>
-<li>صفحات مائلة قُوِّمت: {rec.get("skewed", 0)}</li><li>صفحات فيها بقع تُركت خارج الإطار: {rec.get("blot_pages", 0)}</li><li>صفحات شاذة وُسِّطت على نصها: {rec.get("own_centre", 0)}</li></ul>{"".join(figs)}</section>''')
+<li>التوسط الأفقي: {"مختلف للفردية والزوجية (في الهامش مادة ثابتة في جهة)" if any(float(v) for v in (rec.get("parity_offsets") or {}).values()) else "واحد للفردية والزوجية"}</li><li>صفحات مائلة قُوِّمت: {rec.get("skewed", 0)}</li><li>صفحات فيها بقع تُركت خارج الإطار: {rec.get("blot_pages", 0)}</li><li>صفحات شاذة وُسِّطت على نصها: {rec.get("own_centre", 0)}</li></ul>{"".join(figs)}</section>''')
     skips = []
     for s in skipped:
         dst = 'skip-' + os.path.basename(s['image']); shutil.copyfile(s['image'], os.path.join(img, dst))

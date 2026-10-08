@@ -249,5 +249,9 @@ file whose improved copy is not in `index-now.tsv`. Nothing goes in the repo roo
    `NET_MB`, default 3 MB/s, 1.5 while anyone is home) and other queues start only after `scripts/wait_calm.py 10`
    (10 calm minutes); `scripts/resume_when_calm.sh` chains the paused queues that way. CPU-heavy jobs run with
    `nice`. Phone-side work (`MD5`, moves, renames, deletes) costs no bandwidth and can run any time.
-10. **Stopping a job:** `kill <pid>` with the PID from `pgrep -f "[n]ame"` in a separate command — a `pkill -f name`
+10. **Never build a phone path from a lookup that can come back empty.** Write `"phone:Books/${P:?empty path}"` (or check in
+   Python), never `"phone:Books/$P"`: on 2026-10-08 a `grep` missed a name (different Unicode order of «لَّ») and
+   `rclone copyto "phone:Books/"` copied the whole library (9.3 GB, 1,020 files) to the laptop before it was stopped. Look up
+   names with Unicode-normalised comparison (`unicodedata.normalize('NFC', …)`).
+11. **Stopping a job:** `kill <pid>` with the PID from `pgrep -f "[n]ame"` in a separate command — a `pkill -f name`
    in the same command line that restarts the job kills the shell itself.
