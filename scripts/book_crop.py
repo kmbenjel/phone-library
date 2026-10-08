@@ -69,7 +69,7 @@ def marks(a, scale, width):
        xy      content ink pixels (x, y in pixels) for the skew estimate.
     scale = pixels per pt, width = the page width in pt (M and SPECK are scaled to it)"""
     unit = scale * width / REF                      # pixels per «reference pt»
-    out = {'box': None, 'core': None, 'specks': [], 'blots': [], 'edge': [], 'allowed': None, 'dark': 1.0, 'xy': None}
+    out = {'box': None, 'core': None, 'specks': [], 'blots': [], 'edge': [], 'rules': [], 'allowed': None, 'dark': 1.0, 'xy': None}
     paper = float(np.percentile(a, 90))
     if paper < 110: return out
     mask = a < paper - 50
@@ -109,8 +109,12 @@ def marks(a, scale, width):
     box_of = lambda i: pt(objs[i - 1][1].start, objs[i - 1][0].start, objs[i - 1][1].stop, objs[i - 1][0].stop)
     out['specks'] = [box_of(i) for i in sorted(isolated)]
     if not pre: return out
-    # the text block: every mark counts once (2nd / 98th percentile of the marks' edges), so one heavy streak cannot drag it
-    big = [i for i in pre if not small[i]] or pre
+    # the text block: every mark counts once (2nd / 98th percentile of the marks' edges), so one heavy streak cannot drag it;
+    # marks lying wholly in the outer 3 % of a side (border grains) are not counted in this first estimate
+    def in_strip(i):
+        s = objs[i - 1]
+        return s[1].stop <= 0.03 * Wd or s[1].start >= 0.97 * Wd or s[0].stop <= 0.03 * H or s[0].start >= 0.97 * H
+    big = [i for i in pre if not small[i] and not in_strip(i)] or [i for i in pre if not small[i]] or pre
     cx0 = np.percentile([objs[i - 1][1].start for i in big], 2); cx1 = np.percentile([objs[i - 1][1].stop for i in big], 98)
     cy0 = np.percentile([objs[i - 1][0].start for i in big], 2); cy1 = np.percentile([objs[i - 1][0].stop for i in big], 98)
     # scanner edge noise: grains and broken border lines lying wholly in the outer 3 % of a side, thin across it, on a
@@ -132,6 +136,9 @@ def marks(a, scale, width):
             ix0, ix1, iy0, iy1 = int(cx0), int(cx1), int(cy0), int(cy1)
             if np.count_nonzero(lab[iy0:iy1, ix0:ix1] == i) < 0.1 * area[i]: edge.add(i)
     out['edge'] = [box_of(i) for i in sorted(edge)]
+    big = [i for i in pre if i not in edge and not small[i]] or [i for i in pre if i not in edge] or pre
+    cx0 = np.percentile([objs[i - 1][1].start for i in big], 2); cx1 = np.percentile([objs[i - 1][1].stop for i in big], 98)
+    cy0 = np.percentile([objs[i - 1][0].start for i in big], 2); cy1 = np.percentile([objs[i - 1][0].stop for i in big], 98)
     # dust: a group made only of grains (each ≤ SPECK), lying wholly outside the text block — scattered dirt, not text
     # (the small letters and dots of a footnote lie inside the text block)
     g1 = 0.01 * Wd; dust = set()
@@ -139,6 +146,8 @@ def marks(a, scale, width):
         if len(ids) > 1 and all(small[j] for j in ids):
             gx0 = min(objs[j - 1][1].start for j in ids); gx1 = max(objs[j - 1][1].stop for j in ids)
             gy0 = min(objs[j - 1][0].start for j in ids); gy1 = max(objs[j - 1][0].stop for j in ids)
+            line = (gy1 - gy0 >= 0.2 * H and gx1 - gx0 <= 0.03 * Wd) or (gx1 - gx0 >= 0.2 * Wd and gy1 - gy0 <= 0.03 * H)
+            if line: continue                         # small marks in a long thin line: a printed rule or frame side (chain border)
             if gx1 <= cx0 - g1 or gx0 >= cx1 + g1 or gy1 <= cy0 - g1 or gy0 >= cy1 + g1: dust.update(ids)
     out['specks'] += [box_of(i) for i in sorted(dust) if i not in isolated]
     pre = [i for i in pre if i not in edge and i not in dust]
@@ -169,9 +178,23 @@ def marks(a, scale, width):
     out['blots'] = [box_of(i) for i in sorted(blots)]
     content = [i for i in pre if i not in blots]
     if not content: return out
+    # printed rules and frames, even faint ones (a chain border can break into specks): beyond the text block, a column
+    # (row) where light ink runs along half the text block's height (width) or more is print — the box takes it in
+    faint = a[r0:r1, c0:c1] < paper - 20
+    iy0, iy1, ix0, ix1 = int(cy0), max(int(cy1), int(cy0) + 1), int(cx0), max(int(cx1), int(cx0) + 1)
+    bw = max(3, int(round(0.01 * Wd)))               # a band ≈ 1 % of the width: chain links alternate across it
+    colcov = ndimage.maximum_filter(faint[iy0:iy1, :], size=(1, bw)).mean(0)
+    rowcov = ndimage.maximum_filter(faint[:, ix0:ix1], size=(bw, 1)).mean(1)
+    rule_x = [x for x in range(Wd) if colcov[x] >= 0.5 and (x <= cx0 - g or x >= cx1 + g) and 0.03 * Wd < x < 0.97 * Wd]
+    rule_y = [y for y in range(H) if rowcov[y] >= 0.5 and (y <= cy0 - g or y >= cy1 + g) and 0.03 * H < y < 0.97 * H]
+    out['rules'] = []
+    if rule_x: out['rules'].append(pt(min(rule_x), iy0, max(rule_x) + 1, iy1))
+    if rule_y: out['rules'].append(pt(ix0, min(rule_y), ix1, max(rule_y) + 1))
     keep = np.zeros(n + 1, bool); keep[content] = True
     ys, xs = np.nonzero(keep[lab])
     out['box'] = pt(xs.min(), ys.min(), xs.max() + 1, ys.max() + 1)
+    for rb in out['rules']:                           # a frame side widens the content to itself
+        b = out['box']; out['box'] = [min(b[0], rb[0]), min(b[1], rb[1]), max(b[2], rb[2]), max(b[3], rb[3])]
     out['parts'] = [box_of(i) for i in content]
     qx, qy = np.percentile(xs, [2, 98]), np.percentile(ys, [2, 98])
     out['core'] = pt(qx[0], qy[0], qx[1] + 1, qy[1] + 1)
@@ -194,7 +217,7 @@ def skew_of(xy):
     fine = np.arange(a0 - 0.25, a0 + 0.2501, 0.025); sc = [score(v) for v in fine]
     return float(fine[int(np.argmax(sc))]), max(sc) / base
 
-SKEW_MIN = 0.2    # degrees: below it a tilt is not seen
+SKEW_MIN = 0.3    # degrees: below it a tilt is hardly seen
 def raw_box(doc, x, key):
     """a page's own or inherited box, as numbers (PDF coordinates)"""
     while x:
@@ -212,7 +235,10 @@ def rotate_contents(doc, page, deg, dx=0.0, dy=0.0):
     t = math.radians(deg); c, s = math.cos(t), math.sin(t)
     e, f = cx - c * cx + s * cy + dx, cy - s * cx - c * cy - dy
     ta, v = doc.xref_get_key(page.xref, 'Contents')
-    if ta == 'xref': old = v
+    if ta == 'xref':
+        x = int(v.split()[0])
+        body = doc.xref_object(x).strip()
+        old = body[1:-1] if body.startswith('[') else v          # an indirect array of streams: its elements
     elif ta == 'array': old = v.strip()[1:-1]
     else: return False
     xa = doc.get_new_xref(); doc.update_object(xa, '<<>>'); doc.update_stream(xa, f'q {c:.6f} {s:.6f} {-s:.6f} {c:.6f} {e:.4f} {f:.4f} cm\n'.encode())
@@ -243,6 +269,8 @@ def analyse(path):
             if abs(ang) >= SKEW_MIN and gain >= 1.03:
                 for deg in (-ang, ang):
                     t = turned(doc, i, deg); a2, z2 = gray(t[0], 500); mk2 = marks(a2, z2, r.width); t.close()
+                    if mk2['box'] is None or abs(len(mk2['xy'][0]) - len(mk['xy'][0])) > 0.1 * len(mk['xy'][0]):
+                        continue                          # the turned page must show the same ink, or it is not used
                     left, _ = skew_of(mk2['xy'])
                     if abs(left) <= max(0.1, abs(ang) / 3): rec['skew'] = round(deg, 3); mk = mk2; break
         mk.pop('xy', None); mk.pop('parts', None)
@@ -271,8 +299,13 @@ def decide(pages):
         out['decision'] = 'skip: few text pages'; return out
     # a «stain» found at the same place on 3 other pages or more is part of the print (ornament, logo): content again
     allb = [(i, bl) for i in text for bl in pages[i].get('blots', [])]
+    def same_place(a, b, w, h):                       # scans shift a little from page to page: centres within 3 %, sizes ×2
+        aw, ah, bw_, bh_ = a[2] - a[0], a[3] - a[1], b[2] - b[0], b[3] - b[1]
+        return abs((a[0] + a[2]) - (b[0] + b[2])) / 2 <= 0.03 * w and abs((a[1] + a[3]) - (b[1] + b[3])) / 2 <= 0.03 * h \
+            and 0.5 <= (aw + 1) / (bw_ + 1) <= 2 and 0.5 <= (ah + 1) / (bh_ + 1) <= 2
     for i, bl in allb:
-        if sum(1 for j, c in allb if j != i and iou(bl, c) >= 0.3) >= 3:
+        w, h = pages[i]['w'], pages[i]['h']
+        if sum(1 for j, c in allb if j != i and same_place(bl, c, w, h)) >= max(3, int(0.03 * len(text))):
             p = pages[i]; p['blots'].remove(bl); bx = p['box']
             p['box'] = [min(bx[0], bl[0]), min(bx[1], bl[1]), max(bx[2], bl[2]), max(bx[3], bl[3])]
     bw = {i: pages[i]['box'][2] - pages[i]['box'][0] for i in text}; bh = {i: pages[i]['box'][3] - pages[i]['box'][1] for i in text}
