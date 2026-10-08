@@ -61,6 +61,11 @@ Each workstream appends its progress below (newest last). Everything is resumabl
 - To check: «كتب اللغة/الصاحبي في فقه اللغة العربية … (ت أحمد حسن بسج - دار الكتب العلمية)» (2 files): file 1 is عمر فاروق
   الطباع's edition (مكتبة المعارف 1414/1993, sheet 303) — read file 2, then name (two editions? two copies?).
 - Missing now: البطليوسي «ذكر الفرق بين الأحرف الخمسة» (the file so named was الحميد's رقية book, moved by plan 246).
+- Duplicate to resolve: «مسائل فقهية/استيفاء الأقوال في تحريم الإسبال على الرجال - الصنعاني (ط مكتبة دار القدس).pdf» (545 KB,
+  archive iatear) and «…/استيفاء الاقوال … للصنعاني/01 - ….pdf» (727 KB, imprint دار القدس 1412, sheet 310): same edition, two scans.
+- To check: «مسائل فقهية/رفع اليدين في الصلاة - ابن قيم الجوزية (ط دار عطاءات العلم)» shows the imprint page (ISBN 978-9959-857-81-1)
+  of «تحفة المودود» (sheet 311): read its title page — wrong file, or a shared imprint?
+- Section moves to consider: «كتب عامة/صيد الخواطر/01 - صيد الخواطر.pdf» (دار الإيمان - الإسكندرية 2007) → الرقائق (Shamela).
 - To check: «شروح الحديث/مفتاح المنهل العذب المورود … (ت ابن بيومي - مطبعة الإستقامة)» (8 files): its file read on sheet 251
   is «المنهل العذب المورود» ج 2 by the father محمود محمد خطاب السبكي (مؤسسة التاريخ العربي) — read every volume, then name.
 - To check: «الدرة الألفية - ابن معط (دار الف)» (cut publisher; German apparatus = Zetterstéen's edition?); «الروضة
@@ -300,7 +305,7 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   files from the منظومات/blog batches: worth one dedicated pass over التاريخ plain files after the sheets.
 - 12:20 PAUSE (owner: 80 % of the session used; renewal ≈ 16:20). Running unattended: scratch/unattended_2026-10-06.sh
   (log logs/unattended-2026-10-06.log): phone MD5s → waits for fix_at_scale 142 + after_139 → remap → refresh (web) → commit.
-  No internet downloads during the pause. RESUME HERE: imprint sheets from s0306 (book 1836); plans 168–174 applied after the pause began (أزهار الرياض case DONE in 168).
+  No internet downloads during the pause. RESUME HERE: imprint sheets DONE (s0001–s0311, books 1–1871); next: duplicate-edition pass and the «To check» items; plans 168–174 applied after the pause began (أزهار الرياض case DONE in 168).
   OPEN CASE «أزهار الرياض» (3 folders in التراجم والطبقات, title pages seen at 25 dpi, read them larger before any plan):
   «- المقري التلمساني» arfaa1–3 = ج 1–3 of the صندوق إحياء التراث الإسلامي (المغرب والإمارات) reprint 1398/1978, arfaa4 =
   ج 4 ت سعيد أعراب ومحمد بن تاويت; «للمقري» 1–3 look like the Cairo لجنة التأليف volumes (same as the third folder «ت السقا
