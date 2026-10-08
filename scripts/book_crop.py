@@ -40,7 +40,7 @@ M = 14            # pt: isolation distance of a speck, and the least margin
 SPECK = 4         # pt: a speck is at most SPECK × SPECK
 GAIN = 1.06       # least width gain for a crop (owner 2026-10-08: ordinary books too, moderately)
 OFFC = 0.02       # or: median off-centre share of the page width worth fixing
-MAX_WHOLE = 0.03  # share of measured pages allowed to stay whole
+MAX_WHOLE = 0.05  # share of measured pages allowed to stay whole
 
 def gray(page, px):
     """the page rendered gray, px pixels wide → (array, pixels per pt)"""
@@ -62,51 +62,169 @@ def bands(mask):
     return r0, r1, c0, c1
 
 def marks(a, scale, width):
-    """ink marks of one page: (content box | None, isolated specks [boxes], allowed area, dark share) in pt;
+    """ink marks of one page, in pt (page.rect coordinates) → dict:
+       box     every content mark;  core  the text block (2–98 % of the content ink: where the page is centred);
+       specks  isolated specks;  blots  stains and edge streaks (neither text nor print: left outside the box);
+       allowed where the box may go (inside scanner bands and edge shadows);  dark  share of dark pixels;
+       xy      content ink pixels (x, y in pixels) for the skew estimate.
     scale = pixels per pt, width = the page width in pt (M and SPECK are scaled to it)"""
     unit = scale * width / REF                      # pixels per «reference pt»
+    out = {'box': None, 'core': None, 'specks': [], 'blots': [], 'edge': [], 'allowed': None, 'dark': 1.0, 'xy': None}
     paper = float(np.percentile(a, 90))
-    if paper < 110: return None, [], None, 1.0
+    if paper < 110: return out
     mask = a < paper - 50
+    out['dark'] = float(mask.mean()); out['paper'] = paper
     r0, r1, c0, c1 = bands(mask)
     m = mask[r0:r1, c0:c1]
-    allowed = [c0 / scale, r0 / scale, c1 / scale, r1 / scale]
-    if m.size == 0: return None, [], allowed, float(mask.mean())
+    allowed = [c0 / scale, r0 / scale, c1 / scale, r1 / scale]; out['allowed'] = allowed
+    if m.size == 0: return out
     lab, n = ndimage.label(m, structure=np.ones((3, 3), bool))
-    if n == 0: return None, [], allowed, float(mask.mean())
+    if n == 0: return out
     objs = ndimage.find_objects(lab)
+    area = np.bincount(lab.ravel(), minlength=n + 1)
+    H, Wd = m.shape
+    hgt = np.array([0] + [s[0].stop - s[0].start for s in objs]); wid = np.array([0] + [s[1].stop - s[1].start for s in objs])
     sp = SPECK * unit
-    small = np.array([False] + [(s[0].stop - s[0].start) <= sp and (s[1].stop - s[1].start) <= sp for s in objs])
+    small = (hgt <= sp) & (wid <= sp); small[0] = False
     # marks closer than M to each other fall in one group (dilation by M/2 on each)
     grp, _ = ndimage.label(ndimage.binary_dilation(m, iterations=max(1, int(M * unit / 2))), structure=np.ones((3, 3), bool))
-    members = {}
+    gid = np.zeros(n + 1, np.int64)
     for i, s in enumerate(objs, 1):
-        y, x = s[0].start, s[1].start
-        sub = lab[s] == i
-        g = grp[s][sub][0]
-        members.setdefault(g, []).append(i)
-    isolated = set()
-    for g, ids in members.items():
-        if len(ids) == 1 and small[ids[0]]: isolated.add(ids[0])
-    H, Wd = m.shape                                   # edge shadows: touching a side, long along it, thin across it
+        gid[i] = grp[s][lab[s] == i][0]
+    members = {}
+    for i in range(1, n + 1): members.setdefault(int(gid[i]), []).append(i)
+    isolated = {ids[0] for ids in members.values() if len(ids) == 1 and small[ids[0]]}
+    # edge shadows: touching a side, long along it, thin across it
     shadow = {i for i, s in enumerate(objs, 1)
-              if ((s[1].start <= 1 or s[1].stop >= Wd - 1) and (s[0].stop - s[0].start) >= 0.4 * H and (s[1].stop - s[1].start) <= 0.06 * Wd)
-              or ((s[0].start <= 1 or s[0].stop >= H - 1) and (s[1].stop - s[1].start) >= 0.4 * Wd and (s[0].stop - s[0].start) <= 0.06 * H)}
-    content = [s for i, s in enumerate(objs, 1) if i not in isolated and i not in shadow]
+              if ((s[1].start <= 1 or s[1].stop >= Wd - 1) and hgt[i] >= 0.4 * H and wid[i] <= 0.06 * Wd)
+              or ((s[0].start <= 1 or s[0].stop >= H - 1) and wid[i] >= 0.4 * Wd and hgt[i] <= 0.06 * H)}
     for i in shadow:                                  # the box keeps out of a shadow, as out of a scanner band
         s = objs[i - 1]
-        if s[1].start <= 1 and (s[0].stop - s[0].start) >= 0.4 * H: allowed[0] = max(allowed[0], (s[1].stop + c0) / scale)
-        elif s[1].stop >= Wd - 1 and (s[0].stop - s[0].start) >= 0.4 * H: allowed[2] = min(allowed[2], (s[1].start + c0) / scale)
+        if s[1].start <= 1 and hgt[i] >= 0.4 * H: allowed[0] = max(allowed[0], (s[1].stop + c0) / scale)
+        elif s[1].stop >= Wd - 1 and hgt[i] >= 0.4 * H: allowed[2] = min(allowed[2], (s[1].start + c0) / scale)
         elif s[0].start <= 1: allowed[1] = max(allowed[1], (s[0].stop + r0) / scale)
         else: allowed[3] = min(allowed[3], (s[0].start + r0) / scale)
-    box = None
-    if content:
-        y0 = min(s[0].start for s in content); y1 = max(s[0].stop for s in content)
-        x0 = min(s[1].start for s in content); x1 = max(s[1].stop for s in content)
-        box = [(x0 + c0) / scale, (y0 + r0) / scale, (x1 + c0) / scale, (y1 + r0) / scale]
-    specks = [[(objs[i - 1][1].start + c0) / scale, (objs[i - 1][0].start + r0) / scale,
-               (objs[i - 1][1].stop + c0) / scale, (objs[i - 1][0].stop + r0) / scale] for i in sorted(isolated)]
-    return box, specks, allowed, float(mask.mean())
+    pre = [i for i in range(1, n + 1) if i not in isolated and i not in shadow]
+    pt = lambda x0, y0, x1, y1: [(x0 + c0) / scale, (y0 + r0) / scale, (x1 + c0) / scale, (y1 + r0) / scale]
+    box_of = lambda i: pt(objs[i - 1][1].start, objs[i - 1][0].start, objs[i - 1][1].stop, objs[i - 1][0].stop)
+    out['specks'] = [box_of(i) for i in sorted(isolated)]
+    if not pre: return out
+    # the text block: every mark counts once (2nd / 98th percentile of the marks' edges), so one heavy streak cannot drag it
+    big = [i for i in pre if not small[i]] or pre
+    cx0 = np.percentile([objs[i - 1][1].start for i in big], 2); cx1 = np.percentile([objs[i - 1][1].stop for i in big], 98)
+    cy0 = np.percentile([objs[i - 1][0].start for i in big], 2); cy1 = np.percentile([objs[i - 1][0].stop for i in big], 98)
+    # scanner edge noise: grains and broken border lines lying wholly in the outer 3 % of a side, thin across it, on a
+    # side where the text block is at least 5 % away (a tight scan whose text reaches the edge keeps everything)
+    edge = set()
+    for i in pre:
+        s = objs[i - 1]; x0, x1, y0, y1 = s[1].start, s[1].stop, s[0].start, s[0].stop
+        if (x1 <= 0.03 * Wd and wid[i] <= 0.02 * Wd and cx0 >= 0.05 * Wd) or (x0 >= 0.97 * Wd and wid[i] <= 0.02 * Wd and Wd - cx1 >= 0.05 * Wd) \
+           or (y1 <= 0.03 * H and hgt[i] <= 0.02 * H and cy0 >= 0.05 * H) or (y0 >= 0.97 * H and hgt[i] <= 0.02 * H and H - cy1 >= 0.05 * H):
+            edge.add(i)
+        # the edge of the sheet showing in the scan: a thin sparse line touching the page border, its ink (almost) all
+        # outside the text block (letters cut by the edge of a tight scan are dense, not thin lines)
+        # a scanner mark in a corner of the sheet (touching the edge there, small): text never sits in the corner itself
+        elif (x0 <= 0.01 * Wd or x1 >= 0.99 * Wd or y0 <= 0.01 * H or y1 >= 0.99 * H) and wid[i] <= 0.05 * Wd and hgt[i] <= 0.05 * H \
+             and (x0 <= 0.04 * Wd or x1 >= 0.96 * Wd) and (y0 <= 0.04 * H or y1 >= 0.96 * H) \
+             and (x1 <= cx0 or x0 >= cx1 or y1 <= cy0 or y0 >= cy1):
+            edge.add(i)
+        elif (x0 <= 0.01 * Wd or x1 >= 0.99 * Wd or y0 <= 0.01 * H or y1 >= 0.99 * H) and area[i] / max(1, hgt[i] * wid[i]) < 0.08:
+            ix0, ix1, iy0, iy1 = int(cx0), int(cx1), int(cy0), int(cy1)
+            if np.count_nonzero(lab[iy0:iy1, ix0:ix1] == i) < 0.1 * area[i]: edge.add(i)
+    out['edge'] = [box_of(i) for i in sorted(edge)]
+    # dust: a group made only of grains (each ≤ SPECK), lying wholly outside the text block — scattered dirt, not text
+    # (the small letters and dots of a footnote lie inside the text block)
+    g1 = 0.01 * Wd; dust = set()
+    for ids in members.values():
+        if len(ids) > 1 and all(small[j] for j in ids):
+            gx0 = min(objs[j - 1][1].start for j in ids); gx1 = max(objs[j - 1][1].stop for j in ids)
+            gy0 = min(objs[j - 1][0].start for j in ids); gy1 = max(objs[j - 1][0].stop for j in ids)
+            if gx1 <= cx0 - g1 or gx0 >= cx1 + g1 or gy1 <= cy0 - g1 or gy0 >= cy1 + g1: dust.update(ids)
+    out['specks'] += [box_of(i) for i in sorted(dust) if i not in isolated]
+    pre = [i for i in pre if i not in edge and i not in dust]
+    if not pre: return out
+    g, gap = 0.01 * Wd, M * unit
+    blots = set()
+    for i in pre:
+        s = objs[i - 1]; x0, x1, y0, y1 = s[1].start, s[1].stop, s[0].start, s[0].stop
+        fill = area[i] / max(1, hgt[i] * wid[i])
+        side = x1 <= cx0 - g or x0 >= cx1 + g
+        # (a) a streak along a side (torn edge, binding shadow): tall, ragged, beyond the text block, near the page edge;
+        #     a printed rule is straight and thin (fill ≥ 0.85 or narrower than 0.6 % of the width) and stays
+        if side and hgt[i] >= 0.25 * H and 0.006 * Wd <= wid[i] <= 0.06 * Wd and fill < 0.85 and (x0 < 0.15 * Wd or x1 > 0.85 * Wd):
+            blots.add(i); continue
+        # (b) a stain: solid but irregular (a printed tab or box is a near-perfect rectangle), at least M across, alone,
+        #     in a margin at least M from the text block, not large (a picture is) — repeated places are checked per book
+        far = x1 <= cx0 - gap or x0 >= cx1 + gap or y1 <= cy0 - gap or y0 >= cy1 + gap
+        if far and max(hgt[i], wid[i]) >= gap and 0.45 <= fill < 0.85 and hgt[i] * wid[i] <= 0.03 * H * Wd \
+           and all(j == i or j in isolated or j in shadow for j in members[int(gid[i])]):
+            blots.add(i)
+    for i in list(blots):                             # the detached pieces of a stain: marks of its group on the same side
+        s = objs[i - 1]; lft = s[1].stop <= cx0 - g; rgt = s[1].start >= cx1 + g
+        for j in members[int(gid[i])]:
+            if j in pre and j not in blots:
+                t = objs[j - 1]
+                if (lft and t[1].stop <= cx0 - g) or (rgt and t[1].start >= cx1 + g) or (not lft and not rgt and (t[0].stop <= cy0 - g or t[0].start >= cy1 + g)):
+                    blots.add(j)
+    out['blots'] = [box_of(i) for i in sorted(blots)]
+    content = [i for i in pre if i not in blots]
+    if not content: return out
+    keep = np.zeros(n + 1, bool); keep[content] = True
+    ys, xs = np.nonzero(keep[lab])
+    out['box'] = pt(xs.min(), ys.min(), xs.max() + 1, ys.max() + 1)
+    out['parts'] = [box_of(i) for i in content]
+    qx, qy = np.percentile(xs, [2, 98]), np.percentile(ys, [2, 98])
+    out['core'] = pt(qx[0], qy[0], qx[1] + 1, qy[1] + 1)
+    out['xy'] = (xs, ys)
+    return out
+
+def skew_of(xy):
+    """the angle (degrees) that makes the text lines level: shear the ink by tan(a) and keep the angle whose row profile is
+    sharpest. Returns (a, sharpness gain over a = 0); a page with too little ink → (0, 1)"""
+    if xy is None or len(xy[0]) < 1500: return 0.0, 1.0
+    xs, ys = xy
+    if len(xs) > 60000:
+        k = np.random.default_rng(0).choice(len(xs), 60000, replace=False); xs, ys = xs[k], ys[k]
+    x, y = xs.astype(float), ys.astype(float)
+    def score(a):
+        yy = np.round(y + x * np.tan(np.radians(a))).astype(np.int64); yy -= yy.min()
+        c = np.bincount(yy).astype(float); return float((c * c).sum())
+    base = score(0.0)
+    angs = np.arange(-4, 4.001, 0.25); a0 = float(angs[int(np.argmax([score(v) for v in angs]))])
+    fine = np.arange(a0 - 0.25, a0 + 0.2501, 0.025); sc = [score(v) for v in fine]
+    return float(fine[int(np.argmax(sc))]), max(sc) / base
+
+SKEW_MIN = 0.2    # degrees: below it a tilt is not seen
+def raw_box(doc, x, key):
+    """a page's own or inherited box, as numbers (PDF coordinates)"""
+    while x:
+        t, v = doc.xref_get_key(x, key)
+        if t == 'array': return [float(z) for z in v.strip('[] ').split()]
+        t, par = doc.xref_get_key(x, 'Parent'); x = int(par.split()[0]) if t == 'xref' else 0
+    return None
+
+def rotate_contents(doc, page, deg, dx=0.0, dy=0.0):
+    """LOSSLESS deskew / move: the page's content is drawn turned by deg degrees about the page centre, then moved by
+    (dx, dy) pt (page coordinates: dy > 0 = down) — one «q … cm» stream before the existing content and one «Q» after it;
+    images and text layer are untouched (they turn and move together)"""
+    import math
+    mb = raw_box(doc, page.xref, 'MediaBox'); cx, cy = (mb[0] + mb[2]) / 2, (mb[1] + mb[3]) / 2
+    t = math.radians(deg); c, s = math.cos(t), math.sin(t)
+    e, f = cx - c * cx + s * cy + dx, cy - s * cx - c * cy - dy
+    ta, v = doc.xref_get_key(page.xref, 'Contents')
+    if ta == 'xref': old = v
+    elif ta == 'array': old = v.strip()[1:-1]
+    else: return False
+    xa = doc.get_new_xref(); doc.update_object(xa, '<<>>'); doc.update_stream(xa, f'q {c:.6f} {s:.6f} {-s:.6f} {c:.6f} {e:.4f} {f:.4f} cm\n'.encode())
+    xb = doc.get_new_xref(); doc.update_object(xb, '<<>>'); doc.update_stream(xb, b'\nQ\n')
+    doc.xref_set_key(page.xref, 'Contents', f'[{xa} 0 R {old} {xb} 0 R]')
+    return True
+
+def turned(doc, i, deg, dx=0.0, dy=0.0):
+    """one page of doc in a new document, its content turned by deg and moved by (dx, dy) (to measure or draw it)"""
+    t = pymupdf.open(); t.insert_pdf(doc, from_page=i, to_page=i)
+    if deg or dx or dy: rotate_contents(t, t[0], deg, dx, dy)
+    return t
 
 def inside(b, box, tol=0.5):
     return b[0] >= box[0] - tol and b[1] >= box[1] - tol and b[2] <= box[2] + tol and b[3] <= box[3] + tol
@@ -114,17 +232,25 @@ def inside(b, box, tol=0.5):
 def analyse(path):
     doc = pymupdf.open(path)
     pages = []
-    for page in doc:
+    for i, page in enumerate(doc):
         r = page.rect
         rec = {'w': round(r.width, 1), 'h': round(r.height, 1)}
         if page.rotation: rec['kind'] = 'rotated'; pages.append(rec); continue
         a, z = gray(page, 500)
-        box, specks, allowed, dark = marks(a, z, r.width)
-        rec.update(allowed=allowed, specks=specks)
-        if box is None: rec['kind'] = 'blank' if dark < 0.5 else 'picture'
-        elif dark > 0.35: rec['kind'] = 'picture'        # dark pages only: a tight light scan is text (stays whole if it cannot fit)
+        mk = marks(a, z, r.width)
+        if mk['box'] is not None and mk['dark'] <= 0.35:     # a tilted text page: turn it level (the sign is checked)
+            ang, gain = skew_of(mk['xy'])
+            if abs(ang) >= SKEW_MIN and gain >= 1.03:
+                for deg in (-ang, ang):
+                    t = turned(doc, i, deg); a2, z2 = gray(t[0], 500); mk2 = marks(a2, z2, r.width); t.close()
+                    left, _ = skew_of(mk2['xy'])
+                    if abs(left) <= max(0.1, abs(ang) / 3): rec['skew'] = round(deg, 3); mk = mk2; break
+        mk.pop('xy', None); mk.pop('parts', None)
+        rec.update(allowed=mk['allowed'], specks=mk['specks'], blots=mk['blots'], edge=mk['edge'], core=mk['core'], paper=round(mk.get('paper', 0)))
+        if mk['box'] is None: rec['kind'] = 'blank' if mk['dark'] < 0.5 else 'picture'
+        elif mk['dark'] > 0.35: rec['kind'] = 'picture'   # dark pages only: a tight light scan is text (stays whole if it cannot fit)
         else: rec['kind'] = 'text'
-        rec['box'] = box
+        rec['box'] = mk['box']
         pages.append(rec)
     doc.close()
     return decide(pages)
@@ -132,25 +258,35 @@ def analyse(path):
 def q(vals, f):
     s = sorted(vals); return s[min(len(s) - 1, max(0, int(round(f * (len(s) - 1)))))]
 
+def iou(a, b):
+    x0, y0, x1, y1 = max(a[0], b[0]), max(a[1], b[1]), min(a[2], b[2]), min(a[3], b[3])
+    if x1 <= x0 or y1 <= y0: return 0.0
+    i = (x1 - x0) * (y1 - y0); return i / ((a[2] - a[0]) * (a[3] - a[1]) + (b[2] - b[0]) * (b[3] - b[1]) - i)
+
 def decide(pages):
     out = {'pages': pages, 'n': len(pages)}
     text = [i for i, p in enumerate(pages) if p['kind'] == 'text']
     out['measured'] = len(text)
     if len(text) < 5 or len(text) < 0.5 * len(pages):
         out['decision'] = 'skip: few text pages'; return out
+    # a «stain» found at the same place on 3 other pages or more is part of the print (ornament, logo): content again
+    allb = [(i, bl) for i in text for bl in pages[i].get('blots', [])]
+    for i, bl in allb:
+        if sum(1 for j, c in allb if j != i and iou(bl, c) >= 0.3) >= 3:
+            p = pages[i]; p['blots'].remove(bl); bx = p['box']
+            p['box'] = [min(bx[0], bl[0]), min(bx[1], bl[1]), max(bx[2], bl[2]), max(bx[3], bl[3])]
     bw = {i: pages[i]['box'][2] - pages[i]['box'][0] for i in text}; bh = {i: pages[i]['box'][3] - pages[i]['box'][1] for i in text}
+    core = {i: pages[i].get('core') or pages[i]['box'] for i in text}
+    cw = {i: core[i][2] - core[i][0] for i in text}
     pw = q([pages[i]['w'] for i in text], 0.5); ph = q([pages[i]['h'] for i in text], 0.5)
-    Tw, Th = q(bw.values(), 0.98), q(bh.values(), 0.98)
-    full_w = [i for i in text if bw[i] >= 0.9 * q(bw.values(), 0.5)]
+    Tw, Th = q(bw.values(), 0.98), q(bh.values(), 1.0)          # height: the tallest page (on a phone the gain is in the width)
+    full_w = [i for i in text if cw[i] >= 0.9 * q(cw.values(), 0.5)]
     full_h = [i for i in text if bh[i] >= 0.9 * q(bh.values(), 0.5)]
     m0 = M * pw / REF
     W, H = Tw + 2 * max(m0, 0.12 * Tw), Th + 2 * max(m0, 0.06 * Th)
-    cx = {i: (pages[i]['box'][0] + pages[i]['box'][2]) / 2 for i in text}
+    cx = {i: (core[i][0] + core[i][2]) / 2 for i in text}            # centred on the text block, not on a stray mark
     cy = {i: (pages[i]['box'][1] + pages[i]['box'][3]) / 2 for i in text}
-    def lim(i):                                     # where a box may go: the page, inside its usual scanner bands
-        a = pages[i].get('allowed') or [0, 0, pages[i]['w'], pages[i]['h']]
-        return a
-    # as wide as the text can be centred on (nearly) every full page; never narrower than the text itself
+    lim = lambda i: pages[i].get('allowed') or [0, 0, pages[i]['w'], pages[i]['h']]
     fitW = [2 * min(cx[i] - lim(i)[0], lim(i)[2] - cx[i]) for i in full_w]
     fitH = [2 * min(cy[i] - lim(i)[1], lim(i)[3] - cy[i]) for i in full_h]
     W = min(W, max(Tw, q(fitW, 0.05)) if fitW else W, pw); H = min(H, max(Th, q(fitH, 0.05)) if fitH else H, ph)
@@ -159,59 +295,83 @@ def decide(pages):
         k = sorted(same, key=lambda j: abs(j - i))[:6]
         return q([val[j] for j in k], 0.5)
     fw, fh = set(full_w), set(full_h)
-    whole, offc, moved = [], [], 0
+    whole, offc, own, moved = [], [], 0, 0
     for i, p in enumerate(pages):
         if p['kind'] in ('rotated', 'picture'): p['crop'] = None; continue
-        x = cx[i] if i in fw else near(i, full_w, cx)
-        y = cy[i] if i in fh else near(i, full_h, cy)
-        b = [x - W / 2, y - H / 2, x + W / 2, y + H / 2]
         bx = p.get('box')
-        if bx:                                      # move the least needed to hold every mark of the page
+        x = cx[i] if i in fw else (near(i, full_w, cx) if full_w else pw / 2)
+        y = cy[i] if i in fh else (near(i, full_h, cy) if full_h else ph / 2)
+        if bx:
+            b = [x - W / 2, y - H / 2, x + W / 2, y + H / 2]
             dx = bx[0] - b[0] if bx[0] < b[0] else (bx[2] - b[2] if bx[2] > b[2] else 0)
             dy = bx[1] - b[1] if bx[1] < b[1] else (bx[3] - b[3] if bx[3] > b[3] else 0)
-            if dx or dy: moved += 1
-            b = [b[0] + dx, b[1] + dy, b[2] + dx, b[3] + dy]
-        sx = -b[0] if b[0] < 0 else (p['w'] - b[2] if b[2] > p['w'] else 0)     # stay on the page
-        sy = -b[1] if b[1] < 0 else (p['h'] - b[3] if b[3] > p['h'] else 0)
+            if abs(dx) > 0.02 * p['w'] or abs(dy) > 0.02 * p['h']:
+                # the usual place does not suit this page (a stamp, a plate, a chapter start): centre it on its own text
+                x, y = (bx[0] + bx[2]) / 2, (bx[1] + bx[3]) / 2; p['own_centre'] = True; own += 1
+            else: x, y = x + dx, y + dy
+        b = [x - W / 2, y - H / 2, x + W / 2, y + H / 2]
+        sx = -b[0] if b[0] < 0 else (p['w'] - b[2] if b[2] > p['w'] else 0)     # the box must stay on the page:
+        sy = -b[1] if b[1] < 0 else (p['h'] - b[3] if b[3] > p['h'] else 0)     # on white paper the CONTENT moves
+        if (sx or sy) and bx and p.get('paper', 0) >= 235:                       # with it, so the text stays centred
+            nb = [bx[0] + sx, bx[1] + sy, bx[2] + sx, bx[3] + sy]
+            if nb[0] >= 0 and nb[1] >= 0 and nb[2] <= p['w'] and nb[3] <= p['h']:
+                p['move'] = [round(sx, 1), round(sy, 1)]; moved += 1
+                p['box'] = bx = [round(v, 1) for v in nb]
+                p['blots'] = [[v[0] + sx, v[1] + sy, v[2] + sx, v[3] + sy] for v in p.get('blots', [])]
+                p['specks'] = [[v[0] + sx, v[1] + sy, v[2] + sx, v[3] + sy] for v in p.get('specks', [])]
+                p['edge'] = [[v[0] + sx, v[1] + sy, v[2] + sx, v[3] + sy] for v in p.get('edge', [])]
         b = [round(b[0] + sx, 1), round(b[1] + sy, 1), round(b[2] + sx, 1), round(b[3] + sy, 1)]
         b = [max(0, b[0]), max(0, b[1]), min(p['w'], b[2]), min(p['h'], b[3])]
         if p['kind'] == 'text' and not inside(bx, b): p['crop'] = None; whole.append(i); continue
         p['crop'] = b
-        p['cut_specks'] = [s for s in p['specks'] if not inside(s, b, 0)]
-        if i in fw: offc.append(abs((b[0] + b[2]) / 2 - cx[i]) / p['w'])
-    out['whole'] = whole; out['moved'] = moved
+        p['cut_specks'] = [v for v in p['specks'] if not inside(v, b, 0)]
+        if i in fw and bx: offc.append(abs((b[0] + b[2]) / 2 - ((core[i][0] + core[i][2]) / 2 + (p.get('move') or [0, 0])[0])) / p['w'])
+    out['whole'] = whole; out['own_centre'] = own; out['content_moved'] = moved
+    out['skewed'] = sum(1 for p in pages if p.get('skew'))
+    out['blot_pages'] = sum(1 for p in pages if p.get('crop') and p.get('blots'))
     out['size'] = [round(W, 1), round(H, 1)]
     out['gain'] = round(pw / W, 3); out['gain_h'] = round(ph / H, 3)
     out['offcentre_before'] = round(q([abs(cx[i] - pages[i]['w'] / 2) / pages[i]['w'] for i in full_w], 0.5), 3) if full_w else 0
     out['offcentre_after'] = round(q(offc, 0.5), 3) if offc else 0
     banded = sum(1 for i in text if pages[i]['allowed'][0] > 0.02 * pw or pages[i]['allowed'][2] < 0.98 * pages[i]['w']) > 0.5 * len(text)
     out['banded'] = banded
-    if out['gain'] < GAIN and out['offcentre_before'] < OFFC and not banded:
+    if out['gain'] < GAIN and out['offcentre_before'] < OFFC and not banded and out['skewed'] < 0.05 * len(text):
         out['decision'] = f'skip: already fine (gain {out["gain"]}, off-centre {out["offcentre_before"]})'
     elif len(whole) > MAX_WHOLE * len(text): out['decision'] = f'skip: {len(whole)} pages do not fit one box'
     else: out['decision'] = 'crop'
     return out
 
+def transformed(doc, i, p):
+    """page i as the reader will see it (turned level, content moved) — in a one-page document"""
+    mv = p.get('move') or [0, 0]
+    return turned(doc, i, p.get('skew') or 0, mv[0], mv[1])
+
 def verify(path, rec, px=1000):
-    """second look at twice the resolution: outside each page's box only isolated specks may remain; else the page stays whole"""
+    """second look at twice the resolution: every mark found outside a page's box must be one the first look left out on
+    purpose (a stain, edge noise — the same place, give or take 3 pt) or an isolated speck; anything else is content:
+    the box may move up to 2 % to take it in, else the page stays whole"""
     doc = pymupdf.open(path); moved = []
+    near = lambda b, regions: any(b[0] < r[2] + 3 and b[2] > r[0] - 3 and b[1] < r[3] + 3 and b[3] > r[1] - 3 for r in regions)
     for i, p in enumerate(rec['pages']):
         if not p.get('crop'): continue
-        page = doc[i]; a, z = gray(page, px)
-        box, specks, allowed, dark = marks(a, z, page.rect.width)
-        if box is None: continue
-        c = p['crop']
-        if not inside(box, c, 1.0):                 # try the same box moved over what sticks out; else the page stays whole
-            dx = box[0] - c[0] if box[0] < c[0] else (box[2] - c[2] if box[2] > c[2] else 0)
-            dy = box[1] - c[1] if box[1] < c[1] else (box[3] - c[3] if box[3] > c[3] else 0)
+        t = transformed(doc, i, p); page = t[0]; a, z = gray(page, px)
+        mk = marks(a, z, page.rect.width); t.close()
+        c = p['crop']; known = (p.get('blots') or []) + (p.get('edge') or [])
+        out = [b for b in mk.get('parts', []) if not inside(b, c, 1.0) and not near(b, known)]
+        if out:
+            ob = [min(b[0] for b in out), min(b[1] for b in out), max(b[2] for b in out), max(b[3] for b in out)]
+            dx = ob[0] - c[0] if ob[0] < c[0] else (ob[2] - c[2] if ob[2] > c[2] else 0)
+            dy = ob[1] - c[1] if ob[1] < c[1] else (ob[3] - c[3] if ob[3] > c[3] else 0)
             n = [c[0] + dx, c[1] + dy, c[2] + dx, c[3] + dy]
-            if n[0] >= 0 and n[1] >= 0 and n[2] <= p['w'] and n[3] <= p['h'] and inside(box, n, 1.0):
+            if abs(dx) <= 0.02 * p['w'] and abs(dy) <= 0.02 * p['h'] and n[0] >= 0 and n[1] >= 0 and n[2] <= p['w'] and n[3] <= p['h'] \
+               and inside(p['box'], n, 1.0) and all(inside(b, n, 1.0) for b in out):
                 p['crop'] = [round(v, 1) for v in n]; p['verify_moved'] = True
             else:
-                p['crop'] = None; p['verify'] = box; moved.append(i); continue
-        p['cut_specks'] = [x for x in specks if not inside(x, p['crop'], 0)]
+                p['crop'] = None; p['verify'] = ob; moved.append(i); continue
+        p['cut_specks'] = [x for x in mk['specks'] if not inside(x, p['crop'], 0)]
     doc.close()
     rec['whole'] = sorted(set(rec.get('whole', [])) | set(moved)); rec['verify_whole'] = moved
+    rec['blot_pages'] = sum(1 for p in rec['pages'] if p.get('crop') and p.get('blots'))
     if rec.get('decision') == 'crop' and len(rec['whole']) > MAX_WHOLE * max(1, rec['measured']):
         rec['decision'] = f'skip: {len(rec["whole"])} pages do not fit one box (second check, 1,000 px)'
     return rec
@@ -220,15 +380,20 @@ def images_of(doc):
     return [[(x[0], x[2], x[3], len(doc.xref_stream_raw(x[0]) or b'')) for x in p.get_images(full=True)] for p in doc]
 
 def apply(src, rec, dst):
-    """CropBox only, incremental save; checked: same pages, same images byte for byte, each box as planned"""
+    """LOSSLESS: per page the CropBox, and for tilted or moved pages one «q … cm» / «Q» pair around the content;
+    incremental save; checked: same pages, same images byte for byte"""
     import shutil
     shutil.copyfile(src, dst)
     before = pymupdf.open(src); imgs = images_of(before); n = len(before); before.close()
-    doc = pymupdf.open(dst); done = 0
+    doc = pymupdf.open(dst); done = turned_n = 0
     for i, p in enumerate(rec['pages']):
+        page = doc[i]
+        mv = p.get('move') if p.get('crop') else None
+        if p.get('skew') or mv:
+            rotate_contents(doc, page, p.get('skew') or 0, *(mv or [0, 0])); turned_n += 1
         b = p.get('crop')
         if not b: continue
-        page = doc[i]; cb = page.cropbox
+        cb = page.cropbox
         r = pymupdf.Rect(b[0] + cb.x0, b[1] + cb.y0, b[2] + cb.x0, b[3] + cb.y0) & page.mediabox
         if not r.is_empty: page.set_cropbox(r); done += 1
     doc.save(dst, incremental=True, encryption=pymupdf.PDF_ENCRYPT_KEEP); doc.close()
@@ -236,71 +401,77 @@ def apply(src, rec, dst):
     assert len(chk) == n, 'page count changed'
     assert images_of(chk) == imgs, 'images changed'
     chk.close()
-    return {'pages': n, 'cropped': done, 'bytes_out': os.path.getsize(dst)}
+    return {'pages': n, 'cropped': done, 'turned_or_moved': turned_n, 'bytes_out': os.path.getsize(dst)}
 
 def sample_pages(rec):
-    """pages worth showing for approval: two facing text pages from the middle, the page with the most hidden specks,
-    the page whose content comes nearest its box (the tightest margin), the first page left whole"""
+    """pages worth showing for approval, with the reason: two facing text pages from the middle, the most tilted page,
+    the page with the most stains left out, a page centred on its own text, the tightest margin, a page left whole"""
     P = rec['pages']; text = [i for i, p in enumerate(P) if p.get('crop') and p['kind'] == 'text']
     if not text: return []
-    mid = text[len(text) // 2]; out = [mid, mid + 1 if mid + 1 < len(P) and P[mid + 1].get('crop') else mid - 1]
+    mid = text[len(text) // 2]
+    out = [(mid, 'mid'), (mid + 1 if mid + 1 < len(P) and P[mid + 1].get('crop') else mid - 1, 'mid')]
+    sk = [i for i in text if P[i].get('skew')]
+    if sk: out.append((max(sk, key=lambda i: abs(P[i]['skew'])), 'skew'))
+    bl = [i for i in text if P[i].get('blots')]
+    if bl: out.append((max(bl, key=lambda i: sum((b[2] - b[0]) * (b[3] - b[1]) for b in P[i]['blots'])), 'blot'))
+    ow = [i for i in text if P[i].get('own_centre') or P[i].get('move')]
+    if ow: out.append((ow[0], 'own'))
     sp = max(text, key=lambda i: len(P[i].get('cut_specks', [])))
-    if P[sp].get('cut_specks'): out.append(sp)
-    out.append(max(text, key=lambda i: abs((P[i]['box'][0] + P[i]['box'][2]) / 2 - P[i]['w'] / 2)))   # most off-centre in the scan
+    if P[sp].get('cut_specks'): out.append((sp, 'speck'))
     def slack(i):
         b, c = P[i]['box'], P[i]['crop']; return min(b[0] - c[0], c[2] - b[2], b[1] - c[1], c[3] - b[3]) / P[i]['w']
-    out.append(min(text, key=slack))
-    out += rec.get('whole', [])[:1]
-    seen = []
-    for i in out:
-        if i not in seen: seen.append(i)
-    return seen[:6]
+    out.append((min(text, key=slack), 'tight'))
+    out += [(i, 'whole') for i in rec.get('whole', [])[:1]]
+    seen, res = set(), []
+    for i, r in out:
+        if i not in seen: seen.add(i); res.append((i, r))
+    return res[:7]
+
+def back_to_original(page, p):
+    """maps points of the reader's frame (turned level, moved) back onto the original page, to draw on it"""
+    mv = p.get('move') or [0, 0]; deg = p.get('skew') or 0
+    tm = page.transformation_matrix
+    doc = page.parent; mb = raw_box(doc, page.xref, 'MediaBox'); cx, cy = (mb[0] + mb[2]) / 2, (mb[1] + mb[3]) / 2
+    fwd = pymupdf.Matrix(1, 0, 0, 1, -cx, -cy) * pymupdf.Matrix(deg) * pymupdf.Matrix(1, 0, 0, 1, cx, cy) * pymupdf.Matrix(1, 0, 0, 1, mv[0], -mv[1])
+    m = ~tm * ~fwd * tm
+    return lambda x, y: pymupdf.Point(x, y) * m
 
 def sheet(src, rec, outdir, pages=None, px=480):
-    """before: whole page, the box in red, cut specks circled in blue; after: the box alone, drawn at the same width
-    (as a phone shows it, fit to width) — so the gain in text size is what one sees"""
+    """before: the page as scanned — the box in red, stains left out in orange, hidden specks circled in blue (all drawn
+    back onto the original, so a tilted page shows its box tilted); after: what the reader shows, fit to the same width.
+    pages: [(index, reason)] — written to reasons.json for the review page"""
     os.makedirs(outdir, exist_ok=True)
-    doc = pymupdf.open(src); made = []
-    for i in pages or []:
-        p = rec['pages'][i]; page = doc[i]
+    doc = pymupdf.open(src); made = []; reasons = {}
+    for i, why in pages or []:
+        p = rec['pages'][i]; reasons[str(i)] = why
         tmp = pymupdf.open(); tmp.insert_pdf(doc, from_page=i, to_page=i); tp = tmp[0]
         z0 = px / tp.rect.width
-        before = tp.get_pixmap(matrix=pymupdf.Matrix(z0, z0), alpha=False)
+        bk = back_to_original(tp, p)
         sh = tp.new_shape()
-        if p.get('crop'): sh.draw_rect(pymupdf.Rect(p['crop']) + (tp.rect.x0, tp.rect.y0, tp.rect.x0, tp.rect.y0)); sh.finish(color=(0.85, 0, 0), width=2.5)
+        poly = lambda r: [bk(r[0], r[1]), bk(r[2], r[1]), bk(r[2], r[3]), bk(r[0], r[3]), bk(r[0], r[1])]
+        if p.get('crop'): sh.draw_polyline(poly(p['crop'])); sh.finish(color=(0.85, 0, 0), width=2.5)
+        for b in p.get('blots', []): sh.draw_polyline(poly([b[0] - 3, b[1] - 3, b[2] + 3, b[3] + 3])); sh.finish(color=(1, 0.55, 0), width=2.5)
+        for b in p.get('edge', []):
+            if p.get('crop') and not inside(b, p['crop'], 0): sh.draw_polyline(poly([b[0] - 2, b[1] - 2, b[2] + 2, b[3] + 2])); sh.finish(color=(0.6, 0, 0.8), width=1.5)
         for s in p.get('cut_specks', []):
-            c = pymupdf.Point((s[0] + s[2]) / 2, (s[1] + s[3]) / 2); sh.draw_circle(c, 9); sh.finish(color=(0, 0.3, 0.9), width=2)
+            sh.draw_circle(bk((s[0] + s[2]) / 2, (s[1] + s[3]) / 2), 9); sh.finish(color=(0, 0.3, 0.9), width=2)
         sh.commit()
         bpix = tp.get_pixmap(matrix=pymupdf.Matrix(z0, z0), alpha=False)
         fb = os.path.join(outdir, f'p{i + 1:04d}-before.jpg'); bpix.save(fb, jpg_quality=72)
-        fa = None
-        if p.get('crop'):
-            b = p['crop']; z = px / (b[2] - b[0])
-            apix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), clip=pymupdf.Rect(b) + (page.rect.x0, page.rect.y0, page.rect.x0, page.rect.y0), alpha=False)
-            fa = os.path.join(outdir, f'p{i + 1:04d}-after.jpg'); apix.save(fa, jpg_quality=72)
-        made.append({'page': i + 1, 'before': fb, 'after': fa, 'cut_specks': len(p.get('cut_specks', [])), 'kind': p['kind']})
+        t = transformed(doc, i, p); page = t[0]
+        b = p.get('crop') or [0, 0, page.rect.width, page.rect.height]; z = px / (b[2] - b[0])
+        apix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), clip=pymupdf.Rect(b), alpha=False)
+        fa = os.path.join(outdir, f'p{i + 1:04d}-after.jpg'); apix.save(fa, jpg_quality=72); t.close()
+        made.append({'page': i + 1, 'why': why, 'before': fb, 'after': fa})
         tmp.close()
     doc.close()
+    json.dump(reasons, open(os.path.join(outdir, 'reasons.json'), 'w'))
     return made
 
 WHY_AR = {'mid': 'صفحة من وسط الكتاب', 'speck': 'أكثر صفحة فيها نقط معزولة (الدوائر الزرقاء)',
-          'tight': 'الصفحة التي يقترب نصها من الإطار أكثر من غيرها', 'centre': 'الصفحة التي كان نصها أبعد عن وسطها في الأصل', 'whole': 'صفحة تبقى كاملة (لا تدخل في الإطار)'}
-
-def page_reasons(rec, pages):
-    """why each page of sample_pages() was chosen (the same rules, recomputed)"""
-    P = rec['pages']; out = {}
-    text = [i for i, p in enumerate(P) if p.get('crop') and p['kind'] == 'text']
-    if not text: return {i: 'whole' for i in pages}
-    mid = text[len(text) // 2]; mids = {mid, mid + 1 if mid + 1 < len(P) and P[mid + 1].get('crop') else mid - 1}
-    sp = max(text, key=lambda i: len(P[i].get('cut_specks', [])))
-    oc = max(text, key=lambda i: abs((P[i]['box'][0] + P[i]['box'][2]) / 2 - P[i]['w'] / 2))
-    for i in pages:
-        if not P[i].get('crop'): out[i] = 'whole'
-        elif i in mids: out[i] = 'mid'
-        elif i == sp and P[i].get('cut_specks'): out[i] = 'speck'
-        elif i == oc: out[i] = 'centre'
-        else: out[i] = 'tight'
-    return out
+          'tight': 'الصفحة التي يقترب نصها من الإطار أكثر من غيرها', 'skew': 'أشد الصفحات ميلا: قُوِّمت',
+          'blot': 'صفحة فيها بقعة أو خط داكن ليس من الكتاب (بالبرتقالي): يبقى خارج الإطار',
+          'own': 'صفحة شاذة (ختم، لوحة، أول فصل): وُسِّطت على نصها هي', 'whole': 'صفحة تبقى كاملة (نصها أعرض من الإطار)'}
 
 def review_page(cases, skipped, outdir, stats):
     """one self-contained Arabic page (+ images/) for the owner's approval: per book the gain, the pages left whole, the
@@ -311,13 +482,13 @@ def review_page(cases, skipped, outdir, stats):
     cards = []
     for n, c in enumerate(cases, 1):
         rec = c['rec']; P = rec['pages']
-        pages = sorted(int(f[1:5]) - 1 for f in os.listdir(c['sheet_dir']) if f.endswith('-before.jpg'))
-        why = page_reasons(rec, pages)
+        why = {int(k): v for k, v in json.load(open(os.path.join(c['sheet_dir'], 'reasons.json'))).items()}
+        pages = list(why)
         specks = sum(len(p.get('cut_specks', [])) for p in P if p.get('crop'))
         figs = []
         for i in pages:
             pair = []
-            for s, cap in (('before', 'قبل — الإطار الأحمر هو ما سيظهر'), ('after', 'بعد — بعرض الشاشة نفسه')):
+            for s, cap in (('before', 'قبل — الإطار الأحمر هو ما سيظهر، والبرتقالي بقعة تبقى خارجه'), ('after', 'بعد — بعرض الشاشة نفسه')):
                 f = os.path.join(c['sheet_dir'], f'p{i + 1:04d}-{s}.jpg')
                 if not os.path.exists(f): continue
                 dst = f'{n:02d}-p{i + 1:04d}-{s}.jpg'; shutil.copyfile(f, os.path.join(img, dst))
@@ -326,7 +497,8 @@ def review_page(cases, skipped, outdir, stats):
         title = esc(c['path'].rsplit('/', 1)[-1].rsplit('.', 1)[0]); where = esc(c['path'].rsplit('/', 1)[0])
         cards.append(f'''<section class="card"><h3>{n}. {title}</h3><p class="where">{where}</p>
 <ul class="facts"><li>يكبر النص على الهاتف <b>{round((rec["gain"] - 1) * 100)}٪</b></li><li>{rec["n"]} صفحة، منها {len(rec.get("whole", []))} تبقى كاملة</li>
-<li>نقط معزولة خارج الإطار: {specks}</li><li>انحراف النص عن وسط الصفحة: {round(rec.get("offcentre_before", 0) * 100, 1)}٪ ← {round(rec.get("offcentre_after", 0) * 100, 1)}٪</li></ul>{"".join(figs)}</section>''')
+<li>انحراف النص عن وسط الصفحة: {round(rec.get("offcentre_before", 0) * 100, 1)}٪ ← {round(rec.get("offcentre_after", 0) * 100, 1)}٪</li>
+<li>صفحات مائلة قُوِّمت: {rec.get("skewed", 0)}</li><li>صفحات فيها بقع تُركت خارج الإطار: {rec.get("blot_pages", 0)}</li><li>صفحات شاذة وُسِّطت على نصها: {rec.get("own_centre", 0)}</li></ul>{"".join(figs)}</section>''')
     skips = []
     for s in skipped:
         dst = 'skip-' + os.path.basename(s['image']); shutil.copyfile(s['image'], os.path.join(img, dst))
@@ -344,16 +516,15 @@ main{{max-width:1100px;margin:auto;padding:16px}}h1{{color:var(--accent);margin:
 figure{{margin:0}}img{{width:100%;height:auto;border:1px solid var(--line);background:#fff}}figcaption{{font-size:.8em;color:var(--mute);text-align:center}}
 .skips{{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}}
 @media (max-width:640px){{.imgs{{grid-template-columns:1fr}}}}</style></head><body><main>
-<h1>عينة القص الجديد — للموافقة (الصيغة الثانية)</h1>
-<div class="intro"><p>بعد ملاحظاتك على العينة الأولى: توسيط النص في كل الصفحات باتساق، وتكبير معتدل للكتب ذات الهوامش العادية. <b>لم يتغير شيء على الهاتف</b>: هذه صور فقط.</p><ul>
-<li>القص لا يمس الصورة ولا النص: يتغير الإطار الظاهر من الصفحة فقط، ويمكن الرجوع عنه في أي وقت.</li>
-<li>إطار بمقاس واحد للكتاب كله، يوضع في كل صفحة بحيث يتوسط نصُّها أفقيا (ورأسيا)، والصفحة القصيرة (آخر فصل، عنوان) تأخذ موضع جاراتها؛ فلا تتمايل الصفحات، ويبقى النص في الوسط باتساق مهما انحرف الماسح.</li>
-<li>الإطار يحيط بكل أثر كتابة في الصفحة: الحواشي، أرقام الصفحات، العناوين الجارية، التعليقات وأرقام المخطوط في الهامش، والأطر والزخارف المطبوعة؛ ثم يُترك هامش سخي حوله.</li>
-<li>الكتب ذات الهوامش العادية تكبَّر أيضا تكبيرا معتدلا على حساب شيء من الهامش، ما دام الإطار نفسه يصلح لكل صفحات الكتاب. وما لا يكسب فيه النص 6٪ على الأقل ولا كان منحرفا عن الوسط يبقى كما هو.</li>
-<li>ظل حافة الكتاب وأشرطة الماسح السوداء ليست من النص: لا يمتد إليها الإطار.</li>
-<li>كل صفحة تُفحص مرة ثانية بدقة مضاعفة: إن بقي خارج الإطار شيء غير نقطة معزولة زُحزح الإطار ليشمله، وإلا بقيت تلك الصفحة كاملة.</li>
-<li>لا يقع خارج الإطار إلا النقط المعزولة (أصغر من 1.4 مم، وبعيدة عن أي كتابة 5 مم فأكثر)، وهي معلَّمة بدائرة زرقاء.</li>
-<li>تنظيف النقط بلون الخلفية خطوة مستقلة لاحقة، ليست في هذه العينة.</li></ul>
+<h1>عينة القص الجديد — للموافقة (الصيغة الثالثة)</h1>
+<div class="intro"><p>بعد ملاحظاتك على العينة الثانية: البقع والخطوط الداكنة، تقويم الصفحات المائلة، التوسط الرأسي، توسيط الصفحات الشاذة، وترك التنظيف. <b>لم يتغير شيء على الهاتف</b>: هذه صور فقط.</p><ul>
+<li>لا يُمسّ شيء من الصورة ولا من النص: يتغير الإطار الظاهر من الصفحة، وتُقوَّم الصفحة المائلة بتدوير رسمها لا بإعادة ترميز صورتها؛ ويمكن الرجوع عن الكل في أي وقت.</li>
+<li>إطار بمقاس واحد للكتاب كله، يوضع في كل صفحة بحيث تتوسط كتلةُ نصها أفقيا ورأسيا (ولو أخلّ التصوير بموضعها)؛ والصفحة القصيرة تأخذ موضع جاراتها، والشاذة (ختم، لوحة، أول فصل) توسَّط على نصها هي، فإن لم يتسع لها الإطار في حدود الصفحة أزيح محتواها نفسه (على الورق الأبيض فقط).</li>
+<li>الإطار يحيط بكل أثر كتابة في الصفحة: الحواشي، أرقام الصفحات، العناوين الجارية، التعليقات وأرقام المخطوط في الهامش، والأطر والزخارف المطبوعة؛ ثم هامش سخي.</li>
+<li>يبقى خارج الإطار ما ليس كتابة ولا طباعة، بقواعد حذرة: البقع والخطوط الداكنة الممزقة عند الحافة (بالبرتقالي)، وحبيبات الماسح وحافة الورقة وعلامات الزوايا (بالبنفسجي)، والغبار المعزول (بالأزرق). ما تكرر في موضع واحد من صفحات كثيرة يُعدّ من الطباعة فيبقى.</li>
+<li>كل صفحة تُفحص مرة ثانية بدقة مضاعفة: كل ما يُرى خارج الإطار يجب أن يكون مما تُرك عمدا، وإلا زُحزح الإطار قليلا ليشمله أو بقيت الصفحة كاملة.</li>
+<li>لا تنظيف ولا تلوين (كما اتفقنا): ما لا يدخل الإطار يُترك كما هو.</li>
+</ul>
 <p>{esc(stats)}</p></div>
 {"".join(cards)}
 <h2>أمثلة لكتب تبقى كما هي</h2><div class="skips">{"".join(skips)}</div>
