@@ -14,6 +14,9 @@ Each workstream appends its progress below (newest last). Everything is resumabl
   (48 theses, 31 tracts, 147 recent; 38 by major scholars, data/mappings/major-modern-scholars.txt) → review page
   https://claude.ai/artifact/JbuSXTMakRVwEGAWHaPeRe (ticks: ArtifactData get decisions/current → remove[]). Removal =
   owner's ticks only, through a logged delete plan. Expansion: waiting for the owner's go (phone on the charger).
+- 269 (19:20): التمهيد is three editions, not duplicates — names from their title pages: مؤسسة الفرقان (ت بشار عواد معروف
+  وآخرين; was labelled «وزارة الأوقاف المغربية»; ج 1 MISSING, the 1-page file is ج 5's cover), وزارة الأوقاف المغربية (ت العلوي
+  والبكري; 26 vols), مرتبا على الأبواب الفقهية (ت أسامة بن إبراهيم, الفاروق الحديثة; was «ت ياسر بن إبرهيم»).
 
 ## 2026-10-08 17:15 GMT — crop method v4 (owner's review of the second sample)
 - Done: 267 (المقاصد front pages, by the chain) and 268 (the 100 ppi المقاصد copy deleted); refresh committed.
