@@ -315,8 +315,8 @@
     "complete": true,
     "bytes": 342318861,
     "quality": {
-     "files": 26,
-     "pages": 15315,
+     "files": 28,
+     "pages": 16621,
      "kbpp": 20,
      "px": 1935,
      "colour": "أبيض وأسود",
@@ -3836,10 +3836,10 @@
     "complete": true,
     "bytes": 60731538,
     "quality": {
-     "files": 6,
-     "pages": 1978,
-     "kbpp": 30,
-     "px": 2099,
+     "files": 7,
+     "pages": 2042,
+     "kbpp": 29,
+     "px": 2098,
      "colour": "أبيض وأسود",
      "width_used": 0.75,
      "text": false
@@ -4534,15 +4534,15 @@
     "complete": false,
     "bytes": 36899206,
     "quality": {
-     "files": 2,
-     "pages": 2059,
+     "files": 3,
+     "pages": 2201,
      "kbpp": 17,
-     "px": 1913,
+     "px": 1893,
      "colour": "أبيض وأسود",
-     "width_used": 0.76,
+     "width_used": 0.75,
      "text": false
     },
-    "score": 65.2,
+    "score": 65.0,
     "waqfeya": [
      "https://waqfeya.net/books/شرح-أصول-اعتقاد-أهل-السنة-والجماعة-من-الكتاب-والسنة-وإجماع-الصحابة-والتابعين-ومن-بعدهم-ويليه-كرامات-أولياء-الله-عز-وجل-ط-الأوقاف-السعودية-97da2d7bd5cf4d3a80c0b1a5057cfb32"
     ],
@@ -5911,8 +5911,8 @@
     "quality": {
      "files": 4,
      "pages": 2156,
-     "kbpp": 13,
-     "px": 1968,
+     "kbpp": 14,
+     "px": 1969,
      "colour": "أبيض وأسود",
      "width_used": 0.72,
      "text": false
@@ -7482,10 +7482,10 @@
     "complete": true,
     "bytes": 32324909,
     "quality": {
-     "files": 6,
-     "pages": 1749,
+     "files": 7,
+     "pages": 1775,
      "kbpp": 18,
-     "px": 1931,
+     "px": 1934,
      "colour": "أبيض وأسود",
      "width_used": 0.71,
      "text": false
@@ -8938,8 +8938,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 14525677,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 4,
+     "pages": 947,
+     "kbpp": 15,
+     "px": 1908,
+     "colour": "أبيض وأسود",
+     "width_used": 0.72,
+     "text": false
+    },
+    "score": 64.4,
     "waqfeya": []
    },
    {
@@ -9244,8 +9252,8 @@
     "quality": {
      "files": 6,
      "pages": 2641,
-     "kbpp": 14,
-     "px": 1952,
+     "kbpp": 15,
+     "px": 1958,
      "colour": "أبيض وأسود",
      "width_used": 0.68,
      "text": false
@@ -9271,12 +9279,12 @@
      "files": 1,
      "pages": 2650,
      "kbpp": 11,
-     "px": 1291,
+     "px": 1305,
      "colour": "أبيض وأسود",
      "width_used": 0.69,
      "text": false
     },
-    "score": 59.9,
+    "score": 60.4,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -11077,8 +11085,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 25623172,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 2,
+     "pages": 816,
+     "kbpp": 31,
+     "px": 1726,
+     "colour": "أبيض وأسود",
+     "width_used": 0.68,
+     "text": false
+    },
+    "score": 63.6,
     "waqfeya": []
    }
   ],
@@ -13638,8 +13654,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 14389591,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 1156,
+     "kbpp": 12,
+     "px": 1328,
+     "colour": "أبيض وأسود",
+     "width_used": 0.57,
+     "text": false
+    },
+    "score": 58.8,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -14106,11 +14130,19 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 15576944,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 1412,
+     "kbpp": 11,
+     "px": 1292,
+     "colour": "أبيض وأسود",
+     "width_used": 0.72,
+     "text": false
+    },
+    "score": 60.5,
     "waqfeya": [],
     "same_edition": true,
-    "best_scan": false
+    "best_scan": true
    },
    {
     "folder": "كتاب المعجم - ابن الأعرابي (ط دار ابن الجوزي)",
@@ -14136,7 +14168,7 @@
      "https://waqfeya.net/books/كتاب-المعجم-معجم-ابن-الأعرابي-a2c644927d77494e8db9033fb4187e58"
     ],
     "same_edition": true,
-    "best_scan": true
+    "best_scan": false
    }
   ],
   "note": null
@@ -15000,8 +15032,16 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 4410297,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 400,
+     "kbpp": 11,
+     "px": 1307,
+     "colour": "أبيض وأسود",
+     "width_used": 0.63,
+     "text": false
+    },
+    "score": 74.3,
     "waqfeya": [
      "https://waqfeya.net/books/الغريب-المصنف-ت-عبد-التواب-6a536dd29335456ba88661cf10971027"
     ]
@@ -15336,15 +15376,15 @@
     "complete": true,
     "bytes": 15818200,
     "quality": {
-     "files": 2,
-     "pages": 640,
-     "kbpp": 15,
-     "px": 1622,
+     "files": 3,
+     "pages": 1087,
+     "kbpp": 14,
+     "px": 1927,
      "colour": "أبيض وأسود",
-     "width_used": 0.73,
+     "width_used": 0.69,
      "text": false
     },
-    "score": 79.6,
+    "score": 78.8,
     "waqfeya": [
      "https://waqfeya.net/books/كتاب-العرش-ت-التميمي-ط-2-542d893072e341e18f178a74ffca3729"
     ],
@@ -15921,7 +15961,7 @@
      "files": 2,
      "pages": 788,
      "kbpp": 19,
-     "px": 1866,
+     "px": 1869,
      "colour": "أبيض وأسود",
      "width_used": 0.69,
      "text": false
@@ -16151,15 +16191,15 @@
     "complete": true,
     "bytes": 16555552,
     "quality": {
-     "files": 2,
-     "pages": 435,
-     "kbpp": 19,
-     "px": 1811,
+     "files": 3,
+     "pages": 899,
+     "kbpp": 18,
+     "px": 1830,
      "colour": "أبيض وأسود",
-     "width_used": 0.78,
+     "width_used": 0.79,
      "text": false
     },
-    "score": 80.6,
+    "score": 80.8,
     "waqfeya": [
      "https://waqfeya.net/books/قادة-فتح-الأندلس-f74719bfdb094bfbb6b5614d5ad09f9c"
     ],
@@ -16732,8 +16772,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 3858132,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 313,
+     "kbpp": 12,
+     "px": 1300,
+     "colour": "أبيض وأسود",
+     "width_used": 0.72,
+     "text": false
+    },
+    "score": 60.8,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -18401,15 +18449,15 @@
     "complete": true,
     "bytes": 7219484,
     "quality": {
-     "files": 1,
-     "pages": 464,
+     "files": 2,
+     "pages": 478,
      "kbpp": 14,
-     "px": 2206,
+     "px": 2220,
      "colour": "أبيض وأسود",
-     "width_used": 0.59,
+     "width_used": 0.6,
      "text": false
     },
-    "score": 76.8,
+    "score": 77.0,
     "waqfeya": [
      "https://waqfeya.net/books/إيضاح-المسالك-إلى-قواعد-الإمام-مالك-2f421eec5a1c473b8b9acb1ef2018252"
     ]
@@ -18516,8 +18564,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 10581754,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 538,
+     "kbpp": 19,
+     "px": 2237,
+     "colour": "أبيض وأسود",
+     "width_used": 0.58,
+     "text": false
+    },
+    "score": 61.6,
     "waqfeya": []
    },
    {
@@ -18530,8 +18586,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 1785295,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 76,
+     "kbpp": 23,
+     "px": 2146,
+     "colour": "أبيض وأسود",
+     "width_used": 0.59,
+     "text": false
+    },
+    "score": 61.8,
     "waqfeya": []
    },
    {
@@ -18544,8 +18608,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 4783599,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 190,
+     "kbpp": 25,
+     "px": 1337,
+     "colour": "أبيض وأسود",
+     "width_used": 0.78,
+     "text": false
+    },
+    "score": 63.4,
     "waqfeya": []
    }
   ],
@@ -19755,8 +19827,16 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 4286600,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 299,
+     "kbpp": 14,
+     "px": 1942,
+     "colour": "أبيض وأسود",
+     "width_used": 0.68,
+     "text": false
+    },
+    "score": 78.6,
     "waqfeya": [
      "https://waqfeya.net/books/الكبائر-ت-نجيب-والنوري-fc4006140f3a409690d9c265e7e44221"
     ],
@@ -20037,8 +20117,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 3614436,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 800,
+     "kbpp": 4,
+     "px": 445,
+     "colour": "ملون",
+     "width_used": 0.55,
+     "text": true
+    },
+    "score": 36.9,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -20826,8 +20914,16 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 3850950,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 248,
+     "kbpp": 15,
+     "px": 1933,
+     "colour": "أبيض وأسود",
+     "width_used": 0.7,
+     "text": false
+    },
+    "score": 79.0,
     "waqfeya": [
      "https://waqfeya.net/books/الفرقان-بين-الحق-والباطل-ت-غزال-517ea9e61bd0472691fe6aad574aa362"
     ]
@@ -21855,8 +21951,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 3879624,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 232,
+     "kbpp": 16,
+     "px": 1344,
+     "colour": "أبيض وأسود",
+     "width_used": 0.68,
+     "text": false
+    },
+    "score": 61.6,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -23916,8 +24020,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 1927752,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 157,
+     "kbpp": 12,
+     "px": 1193,
+     "colour": "أبيض وأسود",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 57.6,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -24849,8 +24961,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 949589,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 64,
+     "kbpp": 14,
+     "px": 1646,
+     "colour": "أبيض وأسود",
+     "width_used": 0.74,
+     "text": false
+    },
+    "score": 64.8,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
