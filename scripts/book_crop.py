@@ -55,7 +55,8 @@ draws the same image turned (and/or shifted). The image streams, the text layer 
    or taller than the box stays whole (uncropped).
 6. SECOND LOOK at 1,000 px, on each page as the reader will see it:
    - LEVEL CHECK: a turned page must read level (whole-page angle ≤ 0.1°); what is left is turned away once more (both
-     signs tried), else the smaller remaining tilt is kept and the page is listed (`residual_tilt`). An untouched page that
+     signs tried); a page still not level (> 0.15°) is NOT turned at all and is listed (`unsure_tilt`) — a tilt the method
+     made is never kept. Tilt is only read on pages with real text: at least 8 lines and enough ink. An untouched page that
      shows a consistent tilt the first look did not treat is turned here if that makes it level, else listed
      (`untreated_tilt`). An untouched page cannot gain a tilt.
    - every content mark found outside a page's box must lie (± 3 pt) on something the first look left out on purpose (a
@@ -262,6 +263,11 @@ def skew_of(xy, raw=False):
     x, y = xs.astype(float), ys.astype(float)
     a, gain = best(x, y)
     if raw: return a, gain
+    if len(xs) < 6000: return 0.0, 1.0               # too little text to read a tilt (a heading, a few words)
+    yy = np.round(y + x * np.tan(np.radians(a))).astype(np.int64); yy -= yy.min()
+    prof = np.bincount(yy).astype(float); thr = 0.3 * prof.max()
+    lines = sum(1 for i in range(1, len(prof) - 1) if prof[i] >= thr and prof[i] >= prof[i - 1] and prof[i] > prof[i + 1])
+    if lines < 8: return 0.0, 1.0                     # fewer than 8 text lines: not measured
     h = np.percentile(x, 50); parts = []
     for m in (x < h, x >= h):
         if m.sum() >= 500: parts.append(best(x[m] - x[m].min(), y[m])[0])
@@ -518,7 +524,9 @@ def verify(path, rec, px=1000):
                     r2, _ = skew_of(mk2['xy'], raw=True)
                     if abs(r2) < best[0]: best = (abs(r2), round(d2, 3), mk2)
                 p['skew'], mk, res = best[1], best[2], best[0]
-            p['after_tilt'] = round(abs(res), 3)
+            if abs(res) > 0.15:                      # still not level: the turn is undone — never keep a tilt we made
+                p.pop('skew', None); p['unsure_tilt'] = True; mk = look(i, p)
+            else: p['after_tilt'] = round(abs(res), 3)
         elif mk['xy'] is not None:
             u, g = skew_of(mk['xy'])
             if abs(u) >= SKEW_MIN and g >= 1.02:
@@ -548,6 +556,7 @@ def verify(path, rec, px=1000):
     rec['skewed'] = sum(1 for p in rec['pages'] if p.get('skew'))
     rec['residual_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('skew') and p.get('after_tilt', 0) > 0.15]
     rec['untreated_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('untreated_tilt')]
+    rec['unsure_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('unsure_tilt')]
     if rec.get('decision') == 'crop' and len(rec['whole']) > MAX_WHOLE * max(1, rec['measured']):
         rec['decision'] = f'skip: {len(rec["whole"])} pages do not fit one box (second check, 1,000 px)'
     return rec
