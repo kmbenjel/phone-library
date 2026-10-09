@@ -35,7 +35,7 @@ PAGES = os.path.expanduser('~/.cache/phone-library/dark-pages'); os.makedirs(PAG
 STOP = {'كتاب', 'رساله', 'جزء', 'شرح', 'مختصر', 'في', 'علي', 'من', 'الي', 'عن', 'ومعه', 'ويليه', 'ط', 'ت', 'المسمي'}
 NAME_STOP = {'محمد', 'احمد', 'عبد', 'الله', 'بن', 'ابن', 'ابو', 'ابي', 'علي', 'الدكتور', 'دكتور', 'الشيخ', 'د', 'الرحمن', 'العزيز'}
 THESIS = re.compile(r'رساله (ماجستير|دكتوراه|علميه)|درجه (الماجستير|الدكتوراه|العالميه)|بحث مقدم|اطروحه|لنيل درجه|اعداد الطالب|اشراف الدكتور|اشراف الاستاذ')
-TYPED = re.compile(r'al-?mostafa|المصطفي|shamela|الشامله|مصفوف', re.I)
+TYPED = re.compile(r'shamela|الشامله|مصفوف', re.I)   # al-mostafa.com copies are fine (owner 2026-10-09: only its signature/URL, to be ignored)
 FIRST_PART = re.compile(r'(الجزء|المجلد) (الاول|1)\b|\bج ?1\b')
 UA = {'User-Agent': 'personal-library/1.0'}
 

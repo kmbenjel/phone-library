@@ -38,6 +38,16 @@ draws the same image turned (and/or shifted). The image streams, the text layer 
    measured again at 1,000 px. A page is turned when the tilt is ≥ 0.2° and the profile gets ≥ 2 % sharper; both directions
    are tried and kept only if the turned page's whole-page angle reads level (≤ max(0.1°, a third of the tilt)) and the
    page still shows its ink (×0.6–1.6).
+4a. A BOOK WITHOUT PRINT IN ITS SIDE MARGINS (owner 2026-10-09, اللآلئ): the text block is measured by gaps — from the
+   core's columns, every mark less than 1.5 % of the width away joins it and widens it (a longer line, a heading, a verse
+   stays whole); everything above and below inside those columns is text (running head, page number, footnotes); marks
+   further out are in a side margin. When ≤ 10 % of the full pages show margin marks bigger than dust, the box is the
+   text block + 2 % each side (the screen used as far as possible), centred on each page's text block; whatever is in
+   the side margins (dots, pen strokes, scan edges, stains) is cut; no page stays whole for a stray mark — a page whose
+   text block is larger takes a box of the same proportions, just large enough (`enlarged`). The second look checks
+   that the text block seen at 1,000 px is inside the box and that no mark straddles its edge (a cut letter): if one
+   does, the box slides (≤ 2 %) or grows with the same proportions. Framed books and books printing in their margins
+   (folio numbers, glosses) follow 4 and 5 below.
 4. BOX SIZE, one for the whole file: width = the content width of 95 % of the text pages (else 98 %, else all — see 7)
    + 8 % of it on each side (at least M); height = the tallest page's content + 5 % above and below. A book whose text is
    framed by a printed border (a rule on both sides on half its full pages or more) keeps only a hairline outside the
@@ -245,6 +255,31 @@ def marks(a, scale, width):
     out['parts'] = [box_of(i) for i in content]
     qx, qy = np.percentile(xs, [2, 98]), np.percentile(ys, [2, 98])
     out['core'] = pt(qx[0], qy[0], qx[1] + 1, qy[1] + 1)
+    # THE TEXT BLOCK BY GAPS (2026-10-09, owner on اللآلئ: «ليس فيه كتابة على الهوامش الأفقية… تتسق جميع الصفحات»): starting
+    # from the core's columns, every mark less than 1.5 % of the width away joins the text and widens it (so a line longer
+    # than the others, a heading, a verse, is whole); everything above and below inside those columns is text too (running
+    # head, page number, footnotes). Marks further out sit in a side margin (`margin`): a reader's pen stroke, a dot, a
+    # folio number, a gloss — whether the book prints in its margins is decided per book (decide)
+    cid = np.array(content); X0 = np.array([objs[i - 1][1].start for i in content]); X1 = np.array([objs[i - 1][1].stop for i in content])
+    Y0 = np.array([objs[i - 1][0].start for i in content]); Y1 = np.array([objs[i - 1][0].stop for i in content])
+    # only letter-like marks carry the text block outward (2026-10-09: specks along an edge chained up to the scan's dark
+    # edge and the «text» reached the page border): not wholly in the outer 3 % of the sheet, not taller than 15 % of the
+    # page (a streak, a rule), not a speck
+    gx = 0.015 * Wd; tx0, tx1 = float(qx[0]), float(qx[1] + 1)
+    strip = (X1 <= 0.03 * Wd) | (X0 >= 0.97 * Wd) | (Y1 <= 0.03 * H) | (Y0 >= 0.97 * H)
+    hh, ww = Y1 - Y0, X1 - X0
+    letter = ~strip & (hh <= 0.15 * H) & ((hh >= 0.004 * H) | (ww >= 0.008 * Wd))
+    if not letter.any(): letter = ~strip if (~strip).any() else np.ones(len(cid), bool)
+    tx0, tx1 = float(np.percentile(X0[letter], 2)), float(np.percentile(X1[letter], 98))   # the seed: letters only (a heavy
+    while True:                                                                           # edge streak pulls the ink core)
+        inn = letter & (X1 >= tx0 - gx) & (X0 <= tx1 + gx)
+        if not inn.any(): inn = letter; break
+        nx0, nx1 = float(X0[inn].min()), float(X1[inn].max())
+        if nx0 >= tx0 and nx1 <= tx1: break
+        tx0, tx1 = min(tx0, nx0), max(tx1, nx1)
+    out['text'] = pt(float(X0[inn].min()), float(Y0[inn].min()), float(X1[inn].max()), float(Y1[inn].max()))
+    tb_ = out['text']; inside_ = lambda b: b[0] >= tb_[0] - 0.5 and b[2] <= tb_[2] + 0.5 and b[1] >= tb_[1] - 0.5 and b[3] <= tb_[3] + 0.5
+    out['margin'] = [b for b in (box_of(int(i)) for i in cid) if not inside_(b)]
     out['xy'] = (xs, ys)
     return out
 
@@ -368,7 +403,7 @@ def analyse_pages(path):
                     if abs(left) <= max(0.1, abs(ang) / 3): rec['skew'] = round(deg, 3); mk = mk2; break
         mk.pop('xy', None); mk.pop('parts', None)
         rec.update(allowed=mk['allowed'], specks=mk['specks'], blots=mk['blots'], edge=mk['edge'], core=mk['core'], paper=round(mk.get('paper', 0)),
-                   rules=mk.get('rules', []))
+                   rules=mk.get('rules', []), text=mk.get('text'), margin=mk.get('margin', []))
         if mk['box'] is None: rec['kind'] = 'blank' if mk['dark'] < 0.5 else 'picture'
         elif mk['dark'] > 0.35: rec['kind'] = 'picture'   # dark pages only: a tight light scan is text (stays whole if it cannot fit)
         else: rec['kind'] = 'text'
@@ -457,6 +492,34 @@ def decide(pages, wq=0.95):
         cx = {i: v + off[i % 2] for i, v in cx.items()}   # the box follows the page's printed layout, per parity
         fitW = [2 * min(cx[i] - lim(i)[0], lim(i)[2] - cx[i]) for i in full_w]
         W = min((Tw + 2 * 0.02 * Tw) if out['framed'] else (Tw + 2 * max(m0, 0.08 * Tw)), max(Tw, q(fitW, 0.05)) if fitW else W, pw)
+    # A BOOK WITHOUT PRINT IN ITS SIDE MARGINS (owner 2026-10-09 on اللآلئ: «ليس فيه كتابة على الهوامش الأفقية، فلم لا يستفاد
+    # من الشاشة ما أمكن وتزال الأضرار وتتسق جميع الصفحات في التوسط؟ حتى رقم الصفحة موجود في مكان مناسب»): when ≤ 10 % of
+    # the full pages show marks bigger than dust in a side margin, the box is the text block itself (running head, page
+    # number and footnotes inside — marks.text) + 2 % each side; whatever lies in the side margins (dots, pen strokes, scan
+    # edges, stains) is cut; no page stays whole for a stray mark: a page whose text block is larger gets a box of the
+    # same proportions, just large enough (`enlarged`). Framed books keep their frame rule; books printing in their
+    # margins (folio numbers, glosses) keep the careful rule above.
+    tb = {i: pages[i].get('text') for i in text}
+    def marg_print(i):                               # letter-sized marks inside the sheet beside the text: print (folio
+        w, h = pages[i]['w'], pages[i]['h']          # numbers, glosses); marks at the sheet's edge (scanner corner marks)
+        def printish(b):                             # and long streaks are not
+            bw, bh = b[2] - b[0], b[3] - b[1]
+            edge = b[2] <= 0.03 * w or b[0] >= 0.97 * w or b[3] <= 0.03 * h or b[1] >= 0.97 * h
+            return not edge and bh < 0.15 * h and (bh >= 0.008 * h or bw >= 0.015 * w)
+        return sum(1 for b in pages[i].get('margin') or [] if printish(b)) >= 2
+    clean = (not out['framed']) and len(full_w) >= 5 and all(tb.get(i) for i in full_w) \
+            and sum(1 for i in full_w if marg_print(i)) <= 0.10 * len(full_w)
+    out['clean_margins'] = clean
+    if clean:
+        off = {0: 0.0, 1: 0.0}; out['parity_offsets'] = {'0': 0.0, '1': 0.0}
+        tw = {i: tb[i][2] - tb[i][0] for i in text if tb.get(i)}; th = {i: tb[i][3] - tb[i][1] for i in text if tb.get(i)}
+        full_t = [i for i in full_w if i in tw]
+        W = min(q([tw[i] for i in full_t], wq) * 1.04, pw)
+        H = min(q([th[i] for i in full_h if i in th] or list(th.values()), 0.98) * 1.04, ph)
+        cx = {i: ((tb[i][0] + tb[i][2]) / 2 if tb.get(i) else cx[i]) for i in text}
+        cy = {i: ((tb[i][1] + tb[i][3]) / 2 if tb.get(i) else cy[i]) for i in text}
+        for i in text:                                # the text block is what must fit; the rest of the content may be cut
+            if tb.get(i): pages[i]['content_box'] = pages[i]['box']; pages[i]['box'] = list(tb[i])
     def near(i, pool, val):                         # a short page takes the place of its full neighbours (same parity)
         same = [j for j in pool if j % 2 == i % 2] or pool
         k = sorted(same, key=lambda j: abs(j - i))[:6]
@@ -506,11 +569,19 @@ def decide(pages, wq=0.95):
                             p['specks'] = [[v[0] + sh, v[1], v[2] + sh, v[3]] for v in p.get('specks', [])]
                             p['edge'] = [[v[0] + sh, v[1], v[2] + sh, v[3]] for v in p.get('edge', [])]
         b = [max(0, b[0]), max(0, b[1]), min(p['w'], b[2]), min(p['h'], b[3])]
+        if clean and p['kind'] == 'text' and bx and not inside(bx, b):   # the same shape, just large enough for this text
+            sc = max(1.0, (bx[2] - bx[0]) * 1.04 / W, (bx[3] - bx[1]) * 1.04 / H); W2, H2 = W * sc, H * sc
+            x2, y2 = (bx[0] + bx[2]) / 2, (bx[1] + bx[3]) / 2
+            b = [x2 - W2 / 2, y2 - H2 / 2, x2 + W2 / 2, y2 + H2 / 2]
+            sx = -b[0] if b[0] < 0 else (p['w'] - b[2] if b[2] > p['w'] else 0); sy = -b[1] if b[1] < 0 else (p['h'] - b[3] if b[3] > p['h'] else 0)
+            b = [round(max(0, b[0] + sx), 1), round(max(0, b[1] + sy), 1), round(min(p['w'], b[2] + sx), 1), round(min(p['h'], b[3] + sy), 1)]
+            if sc > 1.0001: p['enlarged'] = round(sc, 3)
         if p['kind'] == 'text' and not inside(bx, b): p['crop'] = None; whole.append(i); continue
         p['crop'] = b
         p['cut_specks'] = [v for v in p['specks'] if not inside(v, b, 0)]
         if i in fw and bx: offc.append(abs((b[0] + b[2]) / 2 - (cx[i] + (p.get('move') or [0, 0])[0])) / p['w'])
     out['whole'] = whole; out['own_centre'] = own; out['content_moved'] = moved
+    out['enlarged'] = [i + 1 for i, p in enumerate(pages) if p.get('enlarged')]
     out['skewed'] = sum(1 for p in pages if p.get('skew'))
     out['blot_pages'] = sum(1 for p in pages if p.get('crop') and p.get('blots'))
     out['size'] = [round(W, 1), round(H, 1)]
@@ -592,6 +663,37 @@ def verify(path, rec, px=1000):
                     if not done: p['untreated_tilt'] = round(u, 3)
         if not p.get('crop'): continue
         c = p['crop']; known = (p.get('blots') or []) + (p.get('edge') or [])
+        if rec.get('clean_margins') and mk.get('text'):
+            # a book without print in its side margins: the text block seen at 1,000 px must be inside the box, and no mark
+            # may straddle the box edge (half in, half out = a cut letter); marks wholly outside the text columns are the
+            # margin's dots, pen strokes and scan edges, cut on purpose. If not: the box slides up to 2 %, else takes the
+            # same shape just large enough (never a cut line, never a page left whole for a stray mark)
+            t = mk['text']
+            cross = [b for b in mk.get('parts', []) if not inside(b, c, 1.0) and b[0] < c[2] and b[2] > c[0] and b[1] < c[3] and b[3] > c[1]
+                     and not near(b, known)]
+            need = ([t] if not inside(t, c, 1.0) else []) + cross
+            if need:
+                u = [min(b[0] for b in need + [t]), min(b[1] for b in need + [t]), max(b[2] for b in need + [t]), max(b[3] for b in need + [t])]
+                dx = u[0] - c[0] if u[0] < c[0] else (u[2] - c[2] if u[2] > c[2] else 0)
+                dy = u[1] - c[1] if u[1] < c[1] else (u[3] - c[3] if u[3] > c[3] else 0)
+                n = [c[0] + dx, c[1] + dy, c[2] + dx, c[3] + dy]
+                if not (abs(dx) <= 0.02 * p['w'] and abs(dy) <= 0.02 * p['h'] and inside(u, n, 1.0)
+                        and n[0] >= 0 and n[1] >= 0 and n[2] <= p['w'] and n[3] <= p['h']):
+                    cw, ch = c[2] - c[0], c[3] - c[1]
+                    sc = max(1.0, (u[2] - u[0]) * 1.02 / cw, (u[3] - u[1]) * 1.02 / ch)
+                    x2, y2 = (u[0] + u[2]) / 2, (u[1] + u[3]) / 2
+                    n = [x2 - cw * sc / 2, y2 - ch * sc / 2, x2 + cw * sc / 2, y2 + ch * sc / 2]
+                    sx = -n[0] if n[0] < 0 else (p['w'] - n[2] if n[2] > p['w'] else 0); sy = -n[1] if n[1] < 0 else (p['h'] - n[3] if n[3] > p['h'] else 0)
+                    n = [n[0] + sx, n[1] + sy, n[2] + sx, n[3] + sy]
+                    p['enlarged'] = round(max(sc, p.get('enlarged', 1.0)), 3)
+                if n[0] >= -0.5 and n[1] >= -0.5 and n[2] <= p['w'] + 0.5 and n[3] <= p['h'] + 0.5 and inside(u, n, 1.0):
+                    p['crop'] = [round(max(0, n[0]), 1), round(max(0, n[1]), 1), round(min(p['w'], n[2]), 1), round(min(p['h'], n[3]), 1)]
+                    p['verify_moved'] = True
+                else:
+                    p['crop'] = None; p['verify'] = u; moved.append(i); continue
+            p['cut_specks'] = [x for x in mk['specks'] if not inside(x, p['crop'], 0)]
+            p['cut_margin'] = [b for b in mk.get('margin') or [] if not inside(b, p['crop'], 1.0)]
+            continue
         out = [b for b in mk.get('parts', []) if not inside(b, c, 1.0) and not near(b, known)]
         if out:
             ob = [min(b[0] for b in out), min(b[1] for b in out), max(b[2] for b in out), max(b[3] for b in out)]
@@ -611,6 +713,7 @@ def verify(path, rec, px=1000):
     rec['residual_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('skew') and not (p.get('after_tilt', 9) <= LEVEL and p.get('after_tilt_image', 9) <= IMG_LEVEL)
                             and not (p.get('curved') and p.get('after_tilt', 9) <= CURVED and p.get('after_tilt_image', 9) <= CURVED)]
     rec['curved'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('curved')]
+    rec['enlarged'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('enlarged')]
     rec['tilt_disputed'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('tilt_disputed')]
     rec['untreated_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('untreated_tilt')]
     rec['unsure_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('unsure_tilt')]
@@ -656,6 +759,8 @@ def sample_pages(rec):
     if sk: out.append((max(sk, key=lambda i: abs(P[i]['skew'])), 'skew'))
     cv = [i for i in text if P[i].get('curved')]
     if cv: out.append((cv[0], 'curved'))
+    en = [i for i in text if P[i].get('enlarged')]
+    if en: out.append((max(en, key=lambda i: P[i]['enlarged']), 'enlarged'))
     bl = [i for i in text if P[i].get('blots')]
     if bl: out.append((max(bl, key=lambda i: sum((b[2] - b[0]) * (b[3] - b[1]) for b in P[i]['blots'])), 'blot'))
     ow = [i for i in text if P[i].get('own_centre') or P[i].get('move')]
@@ -716,7 +821,8 @@ WHY_AR = {'mid': 'صفحة من وسط الكتاب', 'speck': 'أكثر صفح�
           'tight': 'الصفحة التي يقترب نصها من الإطار أكثر من غيرها', 'skew': 'أشد الصفحات ميلا: قُوِّمت',
           'blot': 'صفحة فيها بقعة أو خط داكن ليس من الكتاب (بالبرتقالي): يبقى خارج الإطار',
           'own': 'صفحة شاذة (ختم، لوحة، تعليقة بعيدة): وُسِّط الإطار على ما فيها هي', 'whole': 'صفحة تبقى كاملة (نصها أعرض من الإطار)',
-          'owner': 'صفحة أشرتَ إليها في العينة السابقة', 'curved': 'صفحة مقوسة قليلا: قُوِّمت قدر ما يستطيع تدوير واحد'}
+          'owner': 'صفحة أشرتَ إليها في العينة السابقة', 'curved': 'صفحة مقوسة قليلا: قُوِّمت قدر ما يستطيع تدوير واحد',
+          'enlarged': 'صفحة نصها أكبر من المعتاد: أخذت إطارا بالنسبة نفسها أكبر قليلا (لا يُقص من نصها شيء)'}
 
 def review_page(cases, skipped, outdir, stats):
     """one self-contained Arabic page (+ images/) for the owner's approval: per book the gain, the pages left whole, the
@@ -743,7 +849,7 @@ def review_page(cases, skipped, outdir, stats):
         cards.append(f'''<section class="card"><h3>{n}. {title}</h3><p class="where">{where}</p>
 <ul class="facts"><li>يكبر النص على الهاتف <b>{round((rec["gain"] - 1) * 100)}٪</b></li><li>{rec["n"]} صفحة، منها {len(rec.get("whole", []))} تبقى كاملة</li>
 <li>انحراف النص عن وسط الصفحة: {round(rec.get("offcentre_before", 0) * 100, 1)}٪ ← {round(rec.get("offcentre_after", 0) * 100, 1)}٪</li>
-<li>التوسط الأفقي: {"مختلف للفردية والزوجية (في الهامش مادة ثابتة في جهة)" if any(float(v) for v in (rec.get("parity_offsets") or {}).values()) else "واحد للفردية والزوجية"}</li><li>صفحات مائلة قُوِّمت: {rec.get("skewed", 0)}</li><li>بقي فيها ميل بعد التقويم: {len(rec.get("residual_tilt") or [])}{(" (ص " + "، ".join(map(str, rec["residual_tilt"][:8])) + ")") if rec.get("residual_tilt") else ""}</li><li>مقوسة قليلا قُوِّمت قدر ما يستطيع تدوير واحد: {len(rec.get("curved") or [])}{(" (ص " + "، ".join(map(str, rec["curved"][:8])) + ")") if rec.get("curved") else ""}</li><li>مائلة لم تُقوَّم: {len(rec.get("untreated_tilt") or [])}{(" (ص " + "، ".join(map(str, rec["untreated_tilt"][:8])) + ")") if rec.get("untreated_tilt") else ""}</li><li>صفحات فيها بقع تُركت خارج الإطار: {rec.get("blot_pages", 0)}</li><li>صفحات شاذة وُسِّطت على نصها: {rec.get("own_centre", 0)}</li></ul>{"".join(figs)}</section>''')
+<li>التوسط الأفقي: {"مختلف للفردية والزوجية (في الهامش مادة ثابتة في جهة)" if any(float(v) for v in (rec.get("parity_offsets") or {}).values()) else "واحد للفردية والزوجية"}</li><li>صفحات مائلة قُوِّمت: {rec.get("skewed", 0)}</li><li>بقي فيها ميل بعد التقويم: {len(rec.get("residual_tilt") or [])}{(" (ص " + "، ".join(map(str, rec["residual_tilt"][:8])) + ")") if rec.get("residual_tilt") else ""}</li><li>مقوسة قليلا قُوِّمت قدر ما يستطيع تدوير واحد: {len(rec.get("curved") or [])}{(" (ص " + "، ".join(map(str, rec["curved"][:8])) + ")") if rec.get("curved") else ""}</li><li>{"لا كتابة في هامشيه: الإطار كتلة النص" if rec.get("clean_margins") else "في هامشيه كتابة: إطار بهامش أوسع"}</li><li>صفحات بإطار أكبر قليلا (نصها أعرض): {len(rec.get("enlarged") or [])}</li><li>مائلة لم تُقوَّم: {len(rec.get("untreated_tilt") or [])}{(" (ص " + "، ".join(map(str, rec["untreated_tilt"][:8])) + ")") if rec.get("untreated_tilt") else ""}</li><li>صفحات فيها بقع تُركت خارج الإطار: {rec.get("blot_pages", 0)}</li><li>صفحات شاذة وُسِّطت على نصها: {rec.get("own_centre", 0)}</li></ul>{"".join(figs)}</section>''')
     skips = []
     for s in skipped:
         dst = 'skip-' + os.path.basename(s['image']); shutil.copyfile(s['image'], os.path.join(img, dst))
@@ -767,6 +873,7 @@ figure{{margin:0}}img{{width:100%;height:auto;border:1px solid var(--line);backg
 <li>إطار بمقاس واحد للكتاب كله، يوضع في كل صفحة بحيث تتوسط كتلةُ نصها أفقيا ورأسيا، ولو أخلّ التصوير بموضعها.</li>
 <li>الصفحة القصيرة (كآخر صفحة في فصل ليس فيها إلا أسطر قليلة في أعلاها): لا يوسَّط الإطار على أسطرها وإلا قفزت إلى وسط الشاشة، بل يوضع في الموضع نفسه الذي هو فيه في الصفحات المجاورة الكاملة، فتبقى الأسطر في أعلى الصفحة كما في الكتاب المطبوع.</li>
 <li>الصفحة الشاذة (صفحة لا يتسع الموضع المعتاد لما فيها، كصفحة ختم الرافع وسطرها في أقصى الطرف، أو لوحة، أو تعليقة بعيدة في الهامش): يوسَّط الإطار على ما فيها هي، فيظهر في وسطه بهوامش متساوية؛ فإن لم يتسع له في حدود الصفحة أزيح المحتوى نفسه إلى الوسط (على الورق الأبيض فقط).</li>
+<li>الكتاب الذي لا كتابة في هامشيه الجانبيين (كاللآلئ): يُعرف بأن أقل من عُشر صفحاته فيها علامات في الهامش الجانبي. فيكون الإطار كتلةَ النص نفسها — ومعها العنوان الجاري ورقم الصفحة والحواشي — وهامشا رقيقا (2٪)، فيُستفاد من الشاشة ما أمكن؛ وكل ما في الهامشين الجانبيين من نقط وخطوط قلم وحواف تصوير وبقع يُقص؛ ولا تبقى صفحة كاملة لعلامة شاردة، والصفحة التي نصها أعرض من المعتاد تأخذ إطارا بالنسبة نفسها أكبر قليلا فلا يُقص من نصها شيء. وتقاس كتلة النص بالفراغ بين العلامات، فالسطر الأطول من غيره والعنوان والبيت يبقى كاملا، ويُتحقق في النظرة الثانية من ألا يقطع حدُّ الإطار حرفا.</li>
 <li>الإطار يحيط بكل أثر كتابة في الصفحة: الحواشي، أرقام الصفحات، العناوين الجارية، التعليقات وأرقام المخطوط في الهامش، والأطر والزخارف المطبوعة ولو كانت باهتة؛ ثم هامش معتدل: 8٪ من عرض النص في كل جانب. وإن كان النص داخل إطار مطبوع صار الإطار هو الحد، بهامش رقيق خارجه.</li>
 <li>التوسط الأفقي واحد للصفحات الفردية والزوجية، إلا في كتاب يجعل في هامش جهة بعينها مادة ثابتة (كأرقام أوراق المخطوط في الهامش الخارجي): حينئذ يأخذ كلٌّ من الفردية والزوجية موضعه.</li>
 <li>الميل يُقاس بطريقتين مستقلتين: (1) ميل أسطر الحبر نفسها، في الصفحة كلها وفي نصفيها، ولا يُقرأ إلا في صفحة فيها ثمانية أسطر فأكثر؛ (2) صورة الصفحة كاملة تُدار بخطوات صغيرة ويُنظر عند أي زاوية تستقيم صفوفها. لا تُدار صفحة إلا إذا رأت الطريقتان كلتاهما أنها مائلة، ولا يُبقى التدوير إلا إذا استوت بالطريقة الأولى (0.15 درجة فأقل، وهي حدود دقة القياس، والعين لا ترى الميل إلا من نحو ربع درجة) ولم ترَ الثانية فيها ميلا ظاهرا (خُمس درجة فأقل، وهي الأخشن)؛ فإن لم يستوِ التدوير الأول جُرِّبت الزوايا القريبة منه وأُخذت أفضلها. والصفحة المقوسة قليلا التي لا يسوّيها تدوير واحد تُقبل إذا نزل ميلها إلى ربع درجة فأقل وإلى ثلث ما كان، وتُذكر في البطاقة؛ وما سوى ذلك لا يُدار ويُذكر. وكل تغيير في الطريقة يُختبر أولا على كل صفحة أخطأت فيها من قبل أو أشرتَ إليها، ولا تُعرض عينة إلا إذا نجحت كلها.</li>
