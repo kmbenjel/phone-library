@@ -1,6 +1,7 @@
 """Regression check for scripts/book_crop.py: every page the method once got wrong, or the owner pointed at, must come out
 right before a new sample is shown (owner, 2026-10-08: «أن تعرف المنهج العام الذي ستتوقع به الخطأ»).
-Cases: data/improve/crop-regression.tsv (phone path, page, check, expected, note). The books are fetched once from the phone
+Cases: data/improve/crop-regression.tsv (phone path, page, check, expected, note). Whole books: no page keeps a tilt after
+turning, and no page that both tilt measures see as tilted is left unturned (owner 2026-10-08: «ولم نبق شيئا من الميل»). The books are fetched once from the phone
 (Unicode-normalised lookup, guarded path) into ~/.cache/phone-library/crop-regress/ and analysed with book_crop.plan();
 results are cached per (book bytes, book_crop.py) so an unchanged method is not re-run.
 Usage: python3 scripts/crop_regress.py        → one line per case (PASS/FAIL) and a summary; exit 1 on any FAIL"""
@@ -43,9 +44,10 @@ def check(row, rec, pdf):
     p = rec['pages'][page - 1]; crop = p.get('crop')
     if what == 'turn':                               # turned or not as expected — and a turned page reads level
         got = 'yes' if p.get('skew') else 'no'
-        lvl = p.get('after_tilt')
-        ok = got == expect and (got == 'no' or (lvl is not None and lvl <= 0.15)) and not p.get('untreated_tilt')
-        return ok, f'turned {p.get("skew")}, left after turning {lvl}, untreated {p.get("untreated_tilt")}'
+        lvl, img = p.get('after_tilt'), p.get('after_tilt_image')     # both measures must read the turned page level
+        ok = got == expect and (got == 'no' or (lvl is not None and img is not None and lvl <= bc.LEVEL and img <= bc.LEVEL)) \
+             and not p.get('untreated_tilt')
+        return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}), untreated {p.get("untreated_tilt")}'
     if what == 'parity':
         got = 'yes' if any(float(v) for v in (rec.get('parity_offsets') or {}).values()) else 'no'
         return got == expect, f'offsets {rec.get("parity_offsets")}'
@@ -75,11 +77,11 @@ def main():
         ok, why = check(r, recs[pdf], pdf)
         fails += not ok
         print(('PASS' if ok else 'FAIL'), r[0].rsplit('/', 1)[-1][:45], 'p.', r[1], r[2], r[3], '—', why, '|', r[4] if len(r) > 4 else '', flush=True)
-    for pdf, rec in recs.items():                    # whole books: no page may keep a tilt after turning
-        rt = rec.get('residual_tilt') or []
-        if rt: fails += 1
-        print(('PASS' if not rt else 'FAIL'), os.path.basename(pdf), 'pages still tilted after turning:', rt[:12],
-              '| tilted but not turned:', (rec.get('untreated_tilt') or [])[:12])
+    for pdf, rec in recs.items():                    # whole books: no tilt kept after turning, none left that both measures see
+        rt = rec.get('residual_tilt') or []; ut = rec.get('untreated_tilt') or []
+        if rt or ut: fails += 1
+        print(('PASS' if not (rt or ut) else 'FAIL'), os.path.basename(pdf), 'pages still tilted after turning:', rt[:12],
+              '| tilted (both measures) but not turned:', ut[:12], '| disputed (the image shows no tilt):', (rec.get('tilt_disputed') or [])[:12])
     print(f'{fails} failures')
     sys.exit(1 if fails else 0)
 

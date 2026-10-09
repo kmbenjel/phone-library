@@ -3,6 +3,30 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (newest last). Everything is resumable.
 
+## 2026-10-09 06:00 GMT — owner back; last night's additions checked by eye; partial sets completed
+- Owner (2026-10-09): title + author is not enough to accept another upload. The 8 books of 274 read by eye (title page,
+  imprint, end): 5 right (named now with their real editions: plan 276), 3 wrong, set aside in «نسخ مستبعدة» for the owner
+  (الإنصاف = typed al-mostafa copy; اعتلال القلوب = a master's thesis about it; نوادر الأصول = ج 1 only of the السايح edition).
+  BEFORE touching the 92 dark books again (data/review/274-dark-review.tsv), scripts/dark_replace.py must: prefer a file
+  of the original's exact size (e.g. «النسخة المسندة» of نوادر الأصول: items 01081 / alfirdwsiy2018_gmail_1639, 27,072,504 B ≈
+  the record's 26 MB), else match editor / publisher / pages / volumes from the record (details.jsonl AND details2.jsonl)
+  against the imprint page; refuse theses, typed copies (al-mostafa, shamela), single parts of a multi-part set.
+- «TITLE ON PHONE» skips (waq_queue): of 11, 4 were other authors (handled 2026-10-08), 5 are the same books (أخبار المدينة،
+  ديوان كشاجم، مقاصد الصوم، فوائد الصوم، الغرباء — the phone copies were checked from their title pages; their provenance points
+  at wrong Waqfeya records, so the catalog shows wrong authors), 2 really missing: الأموال لأبي عبيد (its record links
+  إمتاع الأسماع) and الأمثال والحكم للماوردي (item dark) → to the dark list.
+- Owner: «Complete them» (editions on the phone with volumes missing); «Leave them» (the 7 wrong-link, mostly modern books).
+  277 (6 moves + 40 files): النحو الوافي 4 vols, التفسير البياني 2, الزركشي ت ابن جبرين 7 + cover, مسند أحمد ط بيت الأفكار + its
+  فهارس, المغني ط المنار 12 + preface, البحر المحيط ت المهدي 8 + cover, صحيح البخاري ط بيت السنة 7 + المدخل etc., شرح علل الترمذي
+  ت عتر + مقدمة التحقيق. التنبيه والإيقاظ was already complete (same page images + a front page). 278/279: الروض الأنف ت الوكيل —
+  two PRINTINGS (دار الكتب الحديثة 1387 complete; مكتبة ابن تيمية 1410, folder misnamed) → names fixed, ابن تيمية's ج 4–7 added.
+  TODO: publisher of the ابن جبرين الزركشي (title page) → folder name; labels of the new volumes vs embedded titles
+  (inspect run: logs/inspect-277-278.log).
+- Crop: regression 0 failures, but «tilted, not turned» pages were real tilts (8 of 10 checked by a second measure) —
+  0.1 read as 0.1000000001, no refinement. Now: LEVEL tolerance, refinement (3 rounds), a second independent measure
+  (proj_tilt: the page image rotated) that must agree; crop_regress counts untreated tilts as failures; 9 new cases.
+  RUNNING crop_regress (logs/crop-regress.log). Then rebuild the sample and look at it before showing the owner.
+
 ## 2026-10-08 20:55 GMT — session limit; unattended work running
 - Pre-700 missing (owner: download all, after checks): chain 271 ran — 118 ids, but 94 archive.org items are DARK (removed);
   4 files added (271), غريب الحديث لابن الجوزي added (275: the «title on phone» skip was another author's book — also المعجم
