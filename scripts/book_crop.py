@@ -32,8 +32,9 @@ draws the same image turned (and/or shifted). The image streams, the text layer 
    The text block, used for these tests and for centring, is measured mark by mark (2nd–98th percentile of the marks'
    edges, each mark counted once, border-strip marks left out of the first estimate), so one heavy streak cannot drag it.
 3. LEVEL tilted pages: the tilt is the shear angle that makes the content's row profile sharpest (±4°, to 0.025°), measured
-   on the whole text and on its right and left halves; the halves must agree within 0.4° and the whole lie within 0.3° of
-   them, else nothing is turned (index pages, verse, tables only look tilted to the profile). A small tilt (0.1–0.35°) is
+   on the whole text and on its right and left halves; the whole page's angle must lie within the range of the halves'
+   angles (±0.1°) and the halves differ by ≤ 0.6°, else nothing is turned (index pages, two columns, verse and tables only
+   look tilted to the whole-page profile: their whole-page angle falls outside their halves'). A small tilt (0.1–0.35°) is
    measured again at 1,000 px. A page is turned when the tilt is ≥ 0.2° and the profile gets ≥ 2 % sharper; both directions
    are tried and kept only if the turned page's whole-page angle reads level (≤ max(0.1°, a third of the tilt)) and the
    page still shows its ink (×0.6–1.6).
@@ -55,12 +56,13 @@ draws the same image turned (and/or shifted). The image streams, the text layer 
    or taller than the box stays whole (uncropped).
 6. SECOND LOOK at 1,000 px, on each page as the reader will see it:
    - LEVEL CHECK, by two independent measures: (a) the shear profile of the turned page's ink (whole page), (b) the turned
-     page image itself, rotated in steps and its central rows counted (proj_tilt). A turned page is kept only when both
-     read level (≤ 0.1°); what (a) still shows is turned away again, both signs tried, up to three rounds. A page that
+     page image itself (700 px), rotated in steps and its central rows counted (proj_tilt). A turned page is kept only
+     when (a) reads level (≤ 0.1°) and (b) sees no visible tilt (≤ 0.2°; the coarser measure, a guard against a turn gone
+     wrong); what (a) still shows is turned away again, both signs tried, up to three rounds. A page that
      does not get level is NOT turned at all and is listed (`unsure_tilt`) — a tilt the method made is never kept. Tilt
      is only read on pages with real text: at least 8 lines and enough ink. An untouched page that shows a consistent
-     tilt the first look did not treat is turned here when (b) sees the tilt too (≥ 0.15°) and both read the turned page
-     level; if (b) sees no tilt it is listed as disputed (`tilt_disputed`), otherwise as `untreated_tilt`. An untouched
+     tilt the first look did not treat is turned here when (b) sees the tilt too (≥ 0.15°) and the turned page passes the
+     same two tests; if (b) sees no tilt it is listed as disputed (`tilt_disputed`), otherwise as `untreated_tilt`. An untouched
      page cannot gain a tilt.
    - every content mark found outside a page's box must lie (± 3 pt) on something the first look left out on purpose (a
      stain, edge noise); otherwise the box moves up to 2 % to take it in, or the page stays whole.
@@ -249,7 +251,7 @@ def skew_of(xy, raw=False):
     """the angle (degrees) that makes the text lines level: shear the ink by tan(a) and keep the angle whose row profile is
     sharpest. Measured on the whole text and on its right and left halves: a real tilt is the same everywhere (owner,
     2026-10-08: index pages and verse turned by mistake — their whole-page angle disagreed with their halves'). Accepted when
-    the halves agree within 0.4° and the whole lies within 0.3° of them; else (0, 1). raw=True: the whole-page angle alone.
+    the whole lies within the halves' range (±0.1°) and the halves differ by ≤ 0.6°; else (0, 1). raw=True: the whole-page angle alone.
     Returns (a, sharpness gain over a = 0); (0, 1) with too little ink"""
     if xy is None or len(xy[0]) < 1500: return 0.0, 1.0
     xs, ys = xy
@@ -274,18 +276,26 @@ def skew_of(xy, raw=False):
     h = np.percentile(x, 50); parts = []
     for m in (x < h, x >= h):
         if m.sum() >= 500: parts.append(best(x[m] - x[m].min(), y[m])[0])
-    if len(parts) < 2 or abs(parts[0] - parts[1]) > 0.4 or abs(a - sum(parts) / 2) > 0.3: return 0.0, 1.0
+    # a real tilt: the whole page's angle lies within the range of its halves' angles (±0.1°) and the halves differ by
+    # ≤ 0.6° (a slightly curved page: halves −0.375 / +0.075, whole −0.25 — the owner's p. 387). Index pages, two columns
+    # and verse fool the whole-page profile: there the whole lies outside its halves (p. 98: +0.9 vs −1.0 / −0.4)
+    if len(parts) < 2 or abs(parts[0] - parts[1]) > 0.6 or not (min(parts) - 0.1 <= a <= max(parts) + 0.1): return 0.0, 1.0
     return a, gain
 
 SKEW_MIN = 0.2    # degrees: the owner sees a 0.25° tilt on a full line
 LEVEL = 0.1 + 1e-6  # degrees: a page reads level (the 0.025° steps land on 0.1000000001; 2026-10-09 such pages were refused)
+IMG_LEVEL = 0.2 + 1e-6  # the image measure is coarser (700 px: level pages read 0.1–0.15°): it guards against a visible tilt
 
-def proj_tilt(a, paper, lo=-1.0, hi=1.0, step=0.1):
-    """the SECOND, independent tilt measure (2026-10-09): the page image itself is turned by each angle and the ink rows of
-    its central part (8–92 % of the width, 5–95 % of the height) counted; the sharpest row profile wins (coarse steps, then
-    0.025° around the best). Sign-free use only: |angle| ≥ SKEW_MIN = tilted, ≤ LEVEL = level. Returns |angle|"""
+def proj_tilt(a, paper, lo=-0.5, hi=0.5, step=0.05, width=700):
+    """the SECOND tilt measure (2026-10-09): the page image itself, scaled to 700 px wide, is turned by each angle and the
+    ink rows of its central part (8–92 % of the width, 5–95 % of the height) counted; the sharpest row profile wins
+    (coarse steps, then 0.025° around the best). Coarser than the shear measure; sign-free use only: |angle| ≥ 0.15° =
+    tilted, ≤ IMG_LEVEL (0.2°) = no visible tilt.
+    Returns |angle|"""
     from PIL import Image
-    im = Image.fromarray(a); h, w = a.shape; box = (int(w * .08), int(h * .05), int(w * .92), int(h * .95))
+    im = Image.fromarray(a)
+    if im.width > width: im = im.resize((width, max(1, round(im.height * width / im.width))), Image.BILINEAR)
+    w, h = im.size; box = (int(w * .08), int(h * .05), int(w * .92), int(h * .95))
     thr = max(60, min(200, paper - 50))
     def score(t):
         b = np.asarray(im.rotate(float(t), resample=Image.BILINEAR, fillcolor=255).crop(box))
@@ -524,7 +534,7 @@ def verify(path, rec, px=1000):
     near = lambda b, regions: any(b[0] < r[2] + 3 and b[2] > r[0] - 3 and b[1] < r[3] + 3 and b[3] > r[1] - 3 for r in regions)
     def look(i, q):                                   # the page as the reader will see it, measured at px
         t = transformed(doc, i, q); page = t[0]; a, z = gray(page, px); mk = marks(a, z, page.rect.width); t.close()
-        mk['proj'] = lambda lo=-1.0, hi=1.0, step=0.1: proj_tilt(a, mk['paper'], lo, hi, step)
+        mk['proj'] = lambda lo=-0.5, hi=0.5, step=0.05: proj_tilt(a, mk['paper'], lo, hi, step)
         return mk
     def refine(i, p, d, mk):                          # what is left after a turn is turned away, both signs tried, ≤ 3 rounds
         r, _ = skew_of(mk['xy'], raw=True); best = (abs(r), d, mk, r)
@@ -543,19 +553,19 @@ def verify(path, rec, px=1000):
         mk = look(i, p)
         # LEVEL CHECK (owner: «اختبار يضمن أننا أزلنا الميل تماما ولم نصطنع ميلا جديدا أو نبق شيئا من الميل»):
         # a turned page must read level by BOTH measures — the shear profile of its ink (≤ 0.1°, what is left turned away
-        # up to three times) and the turned page image (≤ 0.1°) — else the turn is undone (a tilt the method made is never
+        # up to three times) and the turned page image (no visible tilt, ≤ 0.2°: it is coarser) — else the turn is undone (a tilt the method made is never
         # kept). An untouched page showing a tilt the first look did not treat is turned here when both measures see the
         # tilt (≥ 0.2°) and both read the turned page level; else it is reported. An untouched page cannot gain a tilt.
         if p.get('skew'):
             left, d, m2 = refine(i, p, p['skew'], mk)
             pr = m2['proj']() if left <= LEVEL else None
-            if left <= LEVEL and pr <= LEVEL: p['skew'], mk = d, m2; p['after_tilt'] = round(left, 3); p['after_tilt_image'] = pr
+            if left <= LEVEL and pr <= IMG_LEVEL: p['skew'], mk = d, m2; p['after_tilt'] = round(left, 3); p['after_tilt_image'] = pr
             else:
                 p.pop('skew', None); p['unsure_tilt'] = True; mk = look(i, p)
         elif mk['xy'] is not None:
             u, g = skew_of(mk['xy'])
             if abs(u) >= SKEW_MIN and g >= 1.02:
-                if mk['proj'](-3.0, 3.0) < SKEW_MIN - 0.05: p['tilt_disputed'] = round(u, 3)   # the image shows no tilt
+                if mk['proj'](-3.0, 3.0, 0.25) < SKEW_MIN - 0.05: p['tilt_disputed'] = round(u, 3)   # the image shows no tilt
                 else:
                     tries = []
                     for d0 in (-u, u):
@@ -566,7 +576,7 @@ def verify(path, rec, px=1000):
                     if tries:
                         _, d0, m2 = min(tries, key=lambda x: x[0]); left, d, m2 = refine(i, p, d0, m2)
                     pr = m2['proj']() if left is not None and left <= LEVEL else None
-                    if pr is not None and pr <= LEVEL:
+                    if pr is not None and pr <= IMG_LEVEL:
                         p['skew'] = d; p['after_tilt'] = round(left, 3); p['after_tilt_image'] = pr; p['turned_in_check'] = True; mk = m2
                     else: p['untreated_tilt'] = round(u, 3)
         if not p.get('crop'): continue
@@ -587,7 +597,7 @@ def verify(path, rec, px=1000):
     rec['whole'] = sorted(set(rec.get('whole', [])) | set(moved)); rec['verify_whole'] = moved
     rec['blot_pages'] = sum(1 for p in rec['pages'] if p.get('crop') and p.get('blots'))
     rec['skewed'] = sum(1 for p in rec['pages'] if p.get('skew'))
-    rec['residual_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('skew') and not (p.get('after_tilt', 9) <= LEVEL and p.get('after_tilt_image', 9) <= LEVEL)]
+    rec['residual_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('skew') and not (p.get('after_tilt', 9) <= LEVEL and p.get('after_tilt_image', 9) <= IMG_LEVEL)]
     rec['tilt_disputed'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('tilt_disputed')]
     rec['untreated_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('untreated_tilt')]
     rec['unsure_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('unsure_tilt')]
@@ -735,13 +745,15 @@ main{{max-width:1100px;margin:auto;padding:16px}}h1{{color:var(--accent);margin:
 figure{{margin:0}}img{{width:100%;height:auto;border:1px solid var(--line);background:#fff}}figcaption{{font-size:.8em;color:var(--mute);text-align:center}}
 .skips{{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}}
 @media (max-width:640px){{.imgs{{grid-template-columns:1fr}}}}</style></head><body><main>
-<h1>عينة القص الجديد — للموافقة (الصيغة الثالثة)</h1>
-<div class="intro"><p>بعد ملاحظاتك على العينة الثانية: البقع والخطوط السوداء الممزقة عند حافة الورقة (كالتي في اللآلئ ج 1 ص 4)، تقويم الصفحات المائلة، التوسط الرأسي، توسيط الصفحات الشاذة، وترك التنظيف. <b>لم يتغير شيء على الهاتف</b>: هذه صور فقط.</p><ul>
+<h1>عينة القص الجديد — للموافقة (الصيغة الرابعة)</h1>
+<div class="intro"><p>بعد ملاحظاتك على العينة الثالثة: صفحات دُوِّرت وهي غير مائلة (المثلث ص 499، الاتباع ص 98، سؤالات أبي داود ص 177)، وصفحات مائلة لم تُقوَّم (الفتن ص 387، اللآلئ ص 466)، والإطار الخفيف في وحي القلم، والهوامش الكبيرة، وموضع الصفحات الفردية والزوجية. <b>لم يتغير شيء على الهاتف</b>: هذه صور فقط.</p><ul>
 <li>ما الذي يتغير في الملف؟ في كل صفحة شيئان: صورة الصفحة الممسوحة، وتعليمات تقول للقارئ أين يرسمها وأي جزء منها يُظهر. الصورة المخزنة تبقى كما هي حرفا بحرف: لا تُعاد معالجتها ولا ضغطها، فلا تنقص جودتها شيئا. الذي يتغير التعليمات وحدها: (1) الإطار الذي يحدد الجزء الظاهر، وما خارجه مخفي باقٍ في الملف لا محذوف؛ (2) في الصفحة المائلة أمرٌ بأن تُرسم مدوَّرة قليلا (أو مزاحة)، فيرسمها القارئ كما يرسمها حين تكبّرها. ولذلك يعود أي كتاب إلى حاله الأول تماما بحذف هذه التعليمات.</li>
 <li>إطار بمقاس واحد للكتاب كله، يوضع في كل صفحة بحيث تتوسط كتلةُ نصها أفقيا ورأسيا، ولو أخلّ التصوير بموضعها.</li>
 <li>الصفحة القصيرة (كآخر صفحة في فصل ليس فيها إلا أسطر قليلة في أعلاها): لا يوسَّط الإطار على أسطرها وإلا قفزت إلى وسط الشاشة، بل يوضع في الموضع نفسه الذي هو فيه في الصفحات المجاورة الكاملة، فتبقى الأسطر في أعلى الصفحة كما في الكتاب المطبوع.</li>
 <li>الصفحة الشاذة (صفحة لا يتسع الموضع المعتاد لما فيها، كصفحة ختم الرافع وسطرها في أقصى الطرف، أو لوحة، أو تعليقة بعيدة في الهامش): يوسَّط الإطار على ما فيها هي، فيظهر في وسطه بهوامش متساوية؛ فإن لم يتسع له في حدود الصفحة أزيح المحتوى نفسه إلى الوسط (على الورق الأبيض فقط).</li>
-<li>الإطار يحيط بكل أثر كتابة في الصفحة: الحواشي، أرقام الصفحات، العناوين الجارية، التعليقات وأرقام المخطوط في الهامش، والأطر والزخارف المطبوعة؛ ثم هامش سخي.</li>
+<li>الإطار يحيط بكل أثر كتابة في الصفحة: الحواشي، أرقام الصفحات، العناوين الجارية، التعليقات وأرقام المخطوط في الهامش، والأطر والزخارف المطبوعة ولو كانت باهتة؛ ثم هامش معتدل: 8٪ من عرض النص في كل جانب. وإن كان النص داخل إطار مطبوع صار الإطار هو الحد، بهامش رقيق خارجه.</li>
+<li>التوسط الأفقي واحد للصفحات الفردية والزوجية، إلا في كتاب يجعل في هامش جهة بعينها مادة ثابتة (كأرقام أوراق المخطوط في الهامش الخارجي): حينئذ يأخذ كلٌّ من الفردية والزوجية موضعه.</li>
+<li>الميل يُقاس بطريقتين مستقلتين: (1) ميل أسطر الحبر نفسها، في الصفحة كلها وفي نصفيها، ولا يُقرأ إلا في صفحة فيها ثمانية أسطر فأكثر؛ (2) صورة الصفحة كاملة تُدار بخطوات صغيرة ويُنظر عند أي زاوية تستقيم صفوفها. لا تُدار صفحة إلا إذا رأت الطريقتان كلتاهما أنها مائلة، ولا يُبقى التدوير إلا إذا استوت بالطريقة الأولى (في حدود عُشر درجة) ولم ترَ الثانية فيها ميلا ظاهرا (خُمس درجة فأقل، وهي الأخشن)، ويُصحَّح ما بقي حتى ثلاث مرات؛ فإن لم تستوِ أُعيدت كما كانت وذُكرت في البطاقة. وكل تغيير في الطريقة يُختبر أولا على كل صفحة أخطأت فيها من قبل أو أشرتَ إليها، ولا تُعرض عينة إلا إذا نجحت كلها.</li>
 <li>يبقى خارج الإطار ما ليس كتابة ولا طباعة، بقواعد حذرة: البقع والخطوط الداكنة الممزقة عند الحافة (بالبرتقالي)، وحبيبات الماسح وحافة الورقة وعلامات الزوايا (بالبنفسجي)، والغبار المعزول (بالأزرق). ما تكرر في موضع واحد من صفحات كثيرة يُعدّ من الطباعة فيبقى.</li>
 <li>كل صفحة تُفحص مرة ثانية بدقة مضاعفة: كل ما يُرى خارج الإطار يجب أن يكون مما تُرك عمدا، وإلا زُحزح الإطار قليلا ليشمله أو بقيت الصفحة كاملة.</li>
 <li>لا تنظيف ولا تلوين (كما اتفقنا): ما لا يدخل الإطار يُترك كما هو.</li>

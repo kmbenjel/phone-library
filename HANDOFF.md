@@ -3,6 +3,27 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (newest last). Everything is resumable.
 
+## 2026-10-09 09:30 GMT — pre-700 missing books: verified by edition; duplicates found and removed; crop test rerunning
+- dark_replace v2 (page images read, edition from the first 4 pages only) → 280: 9 uploaded after reading each title page;
+  4 of all the uploads from other sources (274 + 280) were ALREADY on the phone under other names (same scans proved,
+  better copy kept: plans 284–289). New guard: scripts/samework.py (same opening words in order + author's surname),
+  used by dark_replace.py and waq_queue.py; compare_waqfeya Rule B does the same, so the Waqfeya comparison no longer
+  lists such books as missing.
+- Review list data/review/280-dark-review.tsv (87): 14 on the phone under other names; 13 read by eye and accepted →
+  queue 290 (9 = the record's edition, 4 = another edition named from its title page: فضائل شهر رجب ت الأثري، الشرح والإبانة
+  ت آل حمدان، دلائل النبوة ط حيدر آباد 1320، فضائل الأعمال ط جمعية البر). Rejected by eye: المبعث والمغازي (أبان بن عثمان, another
+  book), قبول الأخبار k-509 and الأباطيل k-506 (modern refutations/compilations), عمدة ذوي الهمم (a commentary), السنن الأربعة
+  (only سنن أبي داود), الاعتقاد 524Pdf (a manuscript), and nnn10181 — an ISIS publication («الدولة الإسلامية»): never to be added.
+  About 60 books remain with no proved copy (no candidate, or none showing title + author): a wider search (other titles of
+  the work, the author's name in archive.org metadata) is the next step; nothing uploaded without the title page read.
+- Set aside in «نسخ مستبعدة» for the owner (274's wrong uploads): الإنصاف (typed al-mostafa), اعتلال القلوب (a thesis about it),
+  نوادر الأصول ج 1 ط السايح — the right editions of all three are now on the phone.
+- Crop: book_crop second tilt measure on a 700 px image (guard ≤ 0.2°: it is coarser), the shear measure must read
+  ≤ 0.1° after up to 3 refinements; halves rule = whole angle within the halves' range ±0.1° and halves ≤ 0.6° apart
+  (the owner's p. 387, a slightly curved page); crop_regress counts tilted-but-unturned pages as failures; 19 page cases.
+  RUNNING (logs/crop-regress.log). Then rebuild the sample: scratchpad v4/drive.py + build.py (move v4/*.json and sheets to
+  old5 first), look at every image, then open it for the owner.
+
 ## 2026-10-09 06:00 GMT — owner back; last night's additions checked by eye; partial sets completed
 - Owner (2026-10-09): title + author is not enough to accept another upload. The 8 books of 274 read by eye (title page,
   imprint, end): 5 right (named now with their real editions: plan 276), 3 wrong, set aside in «نسخ مستبعدة» for the owner

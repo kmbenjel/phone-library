@@ -45,7 +45,7 @@ def check(row, rec, pdf):
     if what == 'turn':                               # turned or not as expected — and a turned page reads level
         got = 'yes' if p.get('skew') else 'no'
         lvl, img = p.get('after_tilt'), p.get('after_tilt_image')     # both measures must read the turned page level
-        ok = got == expect and (got == 'no' or (lvl is not None and img is not None and lvl <= bc.LEVEL and img <= bc.LEVEL)) \
+        ok = got == expect and (got == 'no' or (lvl is not None and img is not None and lvl <= bc.LEVEL and img <= bc.IMG_LEVEL)) \
              and not p.get('untreated_tilt')
         return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}), untreated {p.get("untreated_tilt")}'
     if what == 'parity':
@@ -71,9 +71,11 @@ def main():
     rows = [r for r in csv.reader(open(os.path.join(ROOT, 'data/improve/crop-regression.tsv'), encoding='utf-8'), delimiter='\t')
             if r and not r[0].startswith('#')]
     fails = 0; recs = {}
+    import time
     for r in rows:
         pdf = local_copy(r[0])
-        if pdf not in recs: recs[pdf] = recipe(pdf)
+        if pdf not in recs:
+            t0 = time.time(); recs[pdf] = recipe(pdf); print(f'   (analysed {os.path.basename(pdf)} in {time.time() - t0:.0f} s)', flush=True)
         ok, why = check(r, recs[pdf], pdf)
         fails += not ok
         print(('PASS' if ok else 'FAIL'), r[0].rsplit('/', 1)[-1][:45], 'p.', r[1], r[2], r[3], '—', why, '|', r[4] if len(r) > 4 else '', flush=True)
