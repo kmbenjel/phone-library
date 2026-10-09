@@ -76,6 +76,8 @@ def main(index, out_rm, out_mv):
         elif linked and near(fname, linked): lab, how = None, 'pattern'
         else:
             rm.append((p, f'not part of «{rec}»: another book of the bundled item {item}')); stats['foreign'] += 1; continue
+        if folder.count('/') < 2:                 # a single book uploaded as a plain file in its section (Books/<section>): named already
+            seen_src[key] = p; stats[how] += 1; continue
         t, a, _ = split_folder(folder.split('/', 2)[2])
         kr, kt = title_key(rec).split(), title_key(t).split()
         own = ' '.join(kr[:2]) in ' '.join(kt) or ' '.join(kt[:2]) in ' '.join(kr)   # the folder is this book or series
