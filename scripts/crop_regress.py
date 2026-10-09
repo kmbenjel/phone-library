@@ -48,6 +48,9 @@ def check(row, rec, pdf):
         ok = got == expect and (got == 'no' or (lvl is not None and img is not None and ((lvl <= bc.LEVEL and img <= bc.IMG_LEVEL)
              or (p.get('curved') and lvl <= bc.CURVED and img <= bc.CURVED)))) and not p.get('untreated_tilt')
         return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}){" curved" if p.get("curved") else ""}, untreated {p.get("untreated_tilt")}'
+    if what == 'cropped':                              # cropped, not left whole (a book without print in its margins)
+        got = 'yes' if p.get('crop') else 'no'
+        return got == expect, f'crop {p.get("crop")}, enlarged {p.get("enlarged")}, book clean margins {rec.get("clean_margins")}'
     if what == 'parity':
         got = 'yes' if any(float(v) for v in (rec.get('parity_offsets') or {}).values()) else 'no'
         return got == expect, f'offsets {rec.get("parity_offsets")}'

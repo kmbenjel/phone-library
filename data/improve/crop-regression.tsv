@@ -1,6 +1,6 @@
 # Pages the crop method once got wrong, or the owner pointed at (2026-10-08). Every change to scripts/book_crop.py is
 # checked against all of them (scripts/crop_regress.py) before a sample is shown. Columns: phone path, page (1-based),
-# check, expected, note. Checks: turn = the page is levelled (expected: yes/no); out = a mark region (x0,y0,x1,y1 in pt) must
+# check, expected, note. Checks: cropped = the page is cropped, not left whole (yes/no); turn = the page is levelled (expected: yes/no); out = a mark region (x0,y0,x1,y1 in pt) must
 # lie outside the box; in = a region that must lie inside the box; centred = the page's content centred in its box (±2 %);
 # parity = the book's odd/even pages get different horizontal places (yes/no).
 العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/01 - اللآلئ المصنوعة في الأحاديث الموضوعة (التوحيد - مناقب البلدان والأيام).pdf	4	out	11,265,33,459	the black torn-edge streak on the left
@@ -22,3 +22,10 @@
 كتب اللغة/المثلث - ابن السيد البطليوسي (ت صلاح مهدي الفرطوسي)/1 - المثلَّث للبطليوسي.pdf	60	turn	yes	single column, tilted ≈ 0.5° by three measures (shear, page image, left/right line ends: 3 px over 360 at 1,000 px); once wrongly entered here as not tilted
 الغريب والمعاجم/الاتباع والمزاوجة - ابن فارس.pdf	68	turn	yes	single column, tilted ≈ 0.5° by three measures (left/right line ends: 3 px over 360); a turn here once left a residual tilt
 العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/02 - اللآلئ المصنوعة في الأحاديث الموضوعة (الطهارة - فوائد متفرقة).pdf	387	turn	yes	the owner: «ما لم تحل فيه مشكلة الميل … صفحة 387»; whole page 0.25° (shear), 0.275° (image); its halves disagree
+العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/01 - اللآلئ المصنوعة في الأحاديث الموضوعة (التوحيد - مناقب البلدان والأيام).pdf	196	cropped	yes	a half-point dot in the margin once left the page whole (owner 2026-10-09: no print in the side margins → crop)
+العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/01 - اللآلئ المصنوعة في الأحاديث الموضوعة (التوحيد - مناقب البلدان والأيام).pdf	8	cropped	yes	a pen stroke in the right margin once left the page whole
+العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/01 - اللآلئ المصنوعة في الأحاديث الموضوعة (التوحيد - مناقب البلدان والأيام).pdf	7	cropped	yes	a dark streak at the edge once made the «text» reach the page border
+العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/02 - اللآلئ المصنوعة في الأحاديث الموضوعة (الطهارة - فوائد متفرقة).pdf	191	cropped	yes	a reader's pen bracket in the left margin once left the page whole
+العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/02 - اللآلئ المصنوعة في الأحاديث الموضوعة (الطهارة - فوائد متفرقة).pdf	211	cropped	yes	text near the scan edge + corner marks once left the page whole
+العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/02 - اللآلئ المصنوعة في الأحاديث الموضوعة (الطهارة - فوائد متفرقة).pdf	394	cropped	yes	a line along the right edge once left the page whole
+العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/02 - اللآلئ المصنوعة في الأحاديث الموضوعة (الطهارة - فوائد متفرقة).pdf	465	cropped	yes	a digit at the page corner once left the page whole
