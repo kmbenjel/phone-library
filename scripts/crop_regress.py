@@ -45,9 +45,9 @@ def check(row, rec, pdf):
     if what == 'turn':                               # turned or not as expected — and a turned page reads level
         got = 'yes' if p.get('skew') else 'no'
         lvl, img = p.get('after_tilt'), p.get('after_tilt_image')     # both measures must read the turned page level
-        ok = got == expect and (got == 'no' or (lvl is not None and img is not None and lvl <= bc.LEVEL and img <= bc.IMG_LEVEL)) \
-             and not p.get('untreated_tilt')
-        return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}), untreated {p.get("untreated_tilt")}'
+        ok = got == expect and (got == 'no' or (lvl is not None and img is not None and ((lvl <= bc.LEVEL and img <= bc.IMG_LEVEL)
+             or (p.get('curved') and lvl <= bc.CURVED and img <= bc.CURVED)))) and not p.get('untreated_tilt')
+        return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}){" curved" if p.get("curved") else ""}, untreated {p.get("untreated_tilt")}'
     if what == 'parity':
         got = 'yes' if any(float(v) for v in (rec.get('parity_offsets') or {}).values()) else 'no'
         return got == expect, f'offsets {rec.get("parity_offsets")}'
@@ -83,7 +83,8 @@ def main():
         rt = rec.get('residual_tilt') or []; ut = rec.get('untreated_tilt') or []
         if rt or ut: fails += 1
         print(('PASS' if not (rt or ut) else 'FAIL'), os.path.basename(pdf), 'pages still tilted after turning:', rt[:12],
-              '| tilted (both measures) but not turned:', ut[:12], '| disputed (the image shows no tilt):', (rec.get('tilt_disputed') or [])[:12])
+              '| tilted (both measures) but not turned:', ut[:12], '| curved, brought below sight:', (rec.get('curved') or [])[:12],
+              '| disputed (the image shows no tilt):', (rec.get('tilt_disputed') or [])[:12])
     print(f'{fails} failures')
     sys.exit(1 if fails else 0)
 

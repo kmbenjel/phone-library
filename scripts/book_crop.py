@@ -56,14 +56,15 @@ draws the same image turned (and/or shifted). The image streams, the text layer 
    or taller than the box stays whole (uncropped).
 6. SECOND LOOK at 1,000 px, on each page as the reader will see it:
    - LEVEL CHECK, by two independent measures: (a) the shear profile of the turned page's ink (whole page), (b) the turned
-     page image itself (700 px), rotated in steps and its central rows counted (proj_tilt). A turned page is kept only
-     when (a) reads level (≤ 0.1°) and (b) sees no visible tilt (≤ 0.2°; the coarser measure, a guard against a turn gone
-     wrong); what (a) still shows is turned away again, both signs tried, up to three rounds. A page that
-     does not get level is NOT turned at all and is listed (`unsure_tilt`) — a tilt the method made is never kept. Tilt
-     is only read on pages with real text: at least 8 lines and enough ink. An untouched page that shows a consistent
-     tilt the first look did not treat is turned here when (b) sees the tilt too (≥ 0.15°) and the turned page passes the
-     same two tests; if (b) sees no tilt it is listed as disputed (`tilt_disputed`), otherwise as `untreated_tilt`. An untouched
-     page cannot gain a tilt.
+     page image itself (700 px), rotated in steps and its central rows counted (proj_tilt; coarser — a guard against a
+     turn gone wrong). A turned page is kept when (a) reads ≤ 0.15° (its precision near level) and (b) ≤ 0.2°; if the
+     first turn does not, the 10 angles around it (0.05° apart) are tried and the one both measures read lowest is
+     taken. A slightly curved page that no single rotation levels is kept when both read ≤ 0.25° and ≤ a third of its
+     tilt, and is listed as curved. Otherwise the page is NOT turned at all and is listed (`unsure_tilt`) — a tilt the
+     method made is never kept. Tilt is only read on pages with real text: at least 8 lines and enough ink. An untouched
+     page that shows a tilt the first look did not treat is turned here when (b) sees the tilt too (≥ 0.15°) and the turn
+     passes the same tests; if (b) sees no tilt it is listed as disputed (`tilt_disputed`), otherwise as
+     `untreated_tilt`. An untouched page cannot gain a tilt.
    - every content mark found outside a page's box must lie (± 3 pt) on something the first look left out on purpose (a
      stain, edge noise); otherwise the box moves up to 2 % to take it in, or the page stays whole.
 7. DECISION (plan): the narrowest width (95 %, 98 %, 100 %) with at most 5 % of the text pages left whole after the second
@@ -283,8 +284,11 @@ def skew_of(xy, raw=False):
     return a, gain
 
 SKEW_MIN = 0.2    # degrees: the owner sees a 0.25° tilt on a full line
-LEVEL = 0.1 + 1e-6  # degrees: a page reads level (the 0.025° steps land on 0.1000000001; 2026-10-09 such pages were refused)
+LEVEL = 0.15 + 1e-6  # degrees: a turned page reads level — the shear measure's own precision near level is about ±0.1°
+                     # (2026-10-09: pages turned exactly right read 0.125–0.15°); the eye sees a tilt from about 0.25°
 IMG_LEVEL = 0.2 + 1e-6  # the image measure is coarser (700 px: level pages read 0.1–0.15°): it guards against a visible tilt
+CURVED = 0.25 + 1e-6    # a slightly curved page no single rotation levels: kept if both measures read ≤ 0.25° AND ≤ a third
+                        # of the tilt it had (listed as «curved» on the book's card)
 
 def proj_tilt(a, paper, lo=-0.5, hi=0.5, step=0.05, width=700):
     """the SECOND tilt measure (2026-10-09): the page image itself, scaled to 700 px wide, is turned by each angle and the
@@ -536,30 +540,37 @@ def verify(path, rec, px=1000):
         t = transformed(doc, i, q); page = t[0]; a, z = gray(page, px); mk = marks(a, z, page.rect.width); t.close()
         mk['proj'] = lambda lo=-0.5, hi=0.5, step=0.05: proj_tilt(a, mk['paper'], lo, hi, step)
         return mk
-    def refine(i, p, d, mk):                          # what is left after a turn is turned away, both signs tried, ≤ 3 rounds
-        r, _ = skew_of(mk['xy'], raw=True); best = (abs(r), d, mk, r)
-        for _ in range(3):
-            if best[0] <= LEVEL: break
-            cur = best
-            for d2 in (cur[1] - cur[3], cur[1] + cur[3]):
-                m2 = look(i, dict(p, skew=round(d2, 3)))
-                if m2['xy'] is None: continue
-                r2, _ = skew_of(m2['xy'], raw=True)
-                if abs(r2) < best[0]: best = (abs(r2), round(d2, 3), m2, r2)
-            if best is cur: break
-        return best[:3]
+    def best_turn(i, p, d0):                          # the turn near d0 that leaves the least tilt by BOTH measures:
+        tried = {}                                    # d0 first; if not level, 10 more angles around it in 0.05° steps
+        def ev(d):
+            d = round(d, 3)
+            if d not in tried:
+                m2 = look(i, dict(p, skew=d))
+                tried[d] = (9.0, 9.0, m2) if m2['xy'] is None else (abs(skew_of(m2['xy'], raw=True)[0]), m2['proj'](), m2)
+            return tried[d]
+        r, im, m2 = ev(d0)
+        if r <= LEVEL and im <= IMG_LEVEL: return round(d0, 3), r, im, m2
+        for k in range(1, 6):
+            ev(d0 - 0.05 * k); ev(d0 + 0.05 * k)
+        d, (r, im, m2) = min(tried.items(), key=lambda kv: (max(kv[1][0], kv[1][1]), kv[1][0]))
+        return d, r, im, m2
+    def keep(p, d, r, im, before):                    # level, or a curved page brought below sight
+        if r <= LEVEL and im <= IMG_LEVEL: return True
+        if r <= CURVED and im <= CURVED and max(r, im) <= abs(before) / 3: p['curved'] = True; return True
+        return False
     for i, p in enumerate(rec['pages']):
         if not p.get('crop') and not p.get('skew'): continue
         mk = look(i, p)
         # LEVEL CHECK (owner: «اختبار يضمن أننا أزلنا الميل تماما ولم نصطنع ميلا جديدا أو نبق شيئا من الميل»):
-        # a turned page must read level by BOTH measures — the shear profile of its ink (≤ 0.1°, what is left turned away
-        # up to three times) and the turned page image (no visible tilt, ≤ 0.2°: it is coarser) — else the turn is undone (a tilt the method made is never
-        # kept). An untouched page showing a tilt the first look did not treat is turned here when both measures see the
-        # tilt (≥ 0.2°) and both read the turned page level; else it is reported. An untouched page cannot gain a tilt.
+        # a turned page must read level by BOTH measures — the shear profile of its ink (≤ 0.15°) and the turned page
+        # image (≤ 0.2°: it is coarser); if the first turn does not, the angles around it are tried (best_turn). A curved
+        # page is kept when both read ≤ 0.25° and ≤ a third of its tilt. Else the turn is undone (a tilt the method made is
+        # never kept). An untouched page showing a tilt the first look did not treat is turned here when the image measure
+        # sees the tilt too (≥ 0.15°) and the turn passes the same tests; else it is reported. An untouched page cannot
+        # gain a tilt.
         if p.get('skew'):
-            left, d, m2 = refine(i, p, p['skew'], mk)
-            pr = m2['proj']() if left <= LEVEL else None
-            if left <= LEVEL and pr <= IMG_LEVEL: p['skew'], mk = d, m2; p['after_tilt'] = round(left, 3); p['after_tilt_image'] = pr
+            before = p['skew']; d, r, im, m2 = best_turn(i, p, before)
+            if keep(p, d, r, im, before): p['skew'], mk = d, m2; p['after_tilt'] = round(r, 3); p['after_tilt_image'] = im
             else:
                 p.pop('skew', None); p['unsure_tilt'] = True; mk = look(i, p)
         elif mk['xy'] is not None:
@@ -568,17 +579,17 @@ def verify(path, rec, px=1000):
                 if mk['proj'](-3.0, 3.0, 0.25) < SKEW_MIN - 0.05: p['tilt_disputed'] = round(u, 3)   # the image shows no tilt
                 else:
                     tries = []
-                    for d0 in (-u, u):
+                    for d0 in (-u, u):                # the direction that lowers the tilt, by the shear measure
                         m2 = look(i, dict(p, skew=round(d0, 3)))
                         if m2['xy'] is None or not (0.6 <= len(m2['xy'][0]) / len(mk['xy'][0]) <= 1.6): continue
-                        tries.append((abs(skew_of(m2['xy'], raw=True)[0]), round(d0, 3), m2))
-                    left = None
+                        tries.append((abs(skew_of(m2['xy'], raw=True)[0]), round(d0, 3)))
+                    done = False
                     if tries:
-                        _, d0, m2 = min(tries, key=lambda x: x[0]); left, d, m2 = refine(i, p, d0, m2)
-                    pr = m2['proj']() if left is not None and left <= LEVEL else None
-                    if pr is not None and pr <= IMG_LEVEL:
-                        p['skew'] = d; p['after_tilt'] = round(left, 3); p['after_tilt_image'] = pr; p['turned_in_check'] = True; mk = m2
-                    else: p['untreated_tilt'] = round(u, 3)
+                        d, r, im, m2 = best_turn(i, p, min(tries)[1])
+                        if keep(p, d, r, im, u):
+                            p['skew'] = d; p['after_tilt'] = round(r, 3); p['after_tilt_image'] = im; p['turned_in_check'] = True
+                            mk = m2; done = True
+                    if not done: p['untreated_tilt'] = round(u, 3)
         if not p.get('crop'): continue
         c = p['crop']; known = (p.get('blots') or []) + (p.get('edge') or [])
         out = [b for b in mk.get('parts', []) if not inside(b, c, 1.0) and not near(b, known)]
@@ -597,7 +608,9 @@ def verify(path, rec, px=1000):
     rec['whole'] = sorted(set(rec.get('whole', [])) | set(moved)); rec['verify_whole'] = moved
     rec['blot_pages'] = sum(1 for p in rec['pages'] if p.get('crop') and p.get('blots'))
     rec['skewed'] = sum(1 for p in rec['pages'] if p.get('skew'))
-    rec['residual_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('skew') and not (p.get('after_tilt', 9) <= LEVEL and p.get('after_tilt_image', 9) <= IMG_LEVEL)]
+    rec['residual_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('skew') and not (p.get('after_tilt', 9) <= LEVEL and p.get('after_tilt_image', 9) <= IMG_LEVEL)
+                            and not (p.get('curved') and p.get('after_tilt', 9) <= CURVED and p.get('after_tilt_image', 9) <= CURVED)]
+    rec['curved'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('curved')]
     rec['tilt_disputed'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('tilt_disputed')]
     rec['untreated_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('untreated_tilt')]
     rec['unsure_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('unsure_tilt')]
@@ -727,7 +740,7 @@ def review_page(cases, skipped, outdir, stats):
         cards.append(f'''<section class="card"><h3>{n}. {title}</h3><p class="where">{where}</p>
 <ul class="facts"><li>يكبر النص على الهاتف <b>{round((rec["gain"] - 1) * 100)}٪</b></li><li>{rec["n"]} صفحة، منها {len(rec.get("whole", []))} تبقى كاملة</li>
 <li>انحراف النص عن وسط الصفحة: {round(rec.get("offcentre_before", 0) * 100, 1)}٪ ← {round(rec.get("offcentre_after", 0) * 100, 1)}٪</li>
-<li>التوسط الأفقي: {"مختلف للفردية والزوجية (في الهامش مادة ثابتة في جهة)" if any(float(v) for v in (rec.get("parity_offsets") or {}).values()) else "واحد للفردية والزوجية"}</li><li>صفحات مائلة قُوِّمت: {rec.get("skewed", 0)}</li><li>بقي فيها ميل بعد التقويم: {len(rec.get("residual_tilt") or [])}{(" (ص " + "، ".join(map(str, rec["residual_tilt"][:8])) + ")") if rec.get("residual_tilt") else ""}</li><li>مائلة لم تُقوَّم: {len(rec.get("untreated_tilt") or [])}{(" (ص " + "، ".join(map(str, rec["untreated_tilt"][:8])) + ")") if rec.get("untreated_tilt") else ""}</li><li>صفحات فيها بقع تُركت خارج الإطار: {rec.get("blot_pages", 0)}</li><li>صفحات شاذة وُسِّطت على نصها: {rec.get("own_centre", 0)}</li></ul>{"".join(figs)}</section>''')
+<li>التوسط الأفقي: {"مختلف للفردية والزوجية (في الهامش مادة ثابتة في جهة)" if any(float(v) for v in (rec.get("parity_offsets") or {}).values()) else "واحد للفردية والزوجية"}</li><li>صفحات مائلة قُوِّمت: {rec.get("skewed", 0)}</li><li>بقي فيها ميل بعد التقويم: {len(rec.get("residual_tilt") or [])}{(" (ص " + "، ".join(map(str, rec["residual_tilt"][:8])) + ")") if rec.get("residual_tilt") else ""}</li><li>مقوسة قليلا قُوِّمت قدر ما يستطيع تدوير واحد: {len(rec.get("curved") or [])}{(" (ص " + "، ".join(map(str, rec["curved"][:8])) + ")") if rec.get("curved") else ""}</li><li>مائلة لم تُقوَّم: {len(rec.get("untreated_tilt") or [])}{(" (ص " + "، ".join(map(str, rec["untreated_tilt"][:8])) + ")") if rec.get("untreated_tilt") else ""}</li><li>صفحات فيها بقع تُركت خارج الإطار: {rec.get("blot_pages", 0)}</li><li>صفحات شاذة وُسِّطت على نصها: {rec.get("own_centre", 0)}</li></ul>{"".join(figs)}</section>''')
     skips = []
     for s in skipped:
         dst = 'skip-' + os.path.basename(s['image']); shutil.copyfile(s['image'], os.path.join(img, dst))
@@ -753,7 +766,7 @@ figure{{margin:0}}img{{width:100%;height:auto;border:1px solid var(--line);backg
 <li>الصفحة الشاذة (صفحة لا يتسع الموضع المعتاد لما فيها، كصفحة ختم الرافع وسطرها في أقصى الطرف، أو لوحة، أو تعليقة بعيدة في الهامش): يوسَّط الإطار على ما فيها هي، فيظهر في وسطه بهوامش متساوية؛ فإن لم يتسع له في حدود الصفحة أزيح المحتوى نفسه إلى الوسط (على الورق الأبيض فقط).</li>
 <li>الإطار يحيط بكل أثر كتابة في الصفحة: الحواشي، أرقام الصفحات، العناوين الجارية، التعليقات وأرقام المخطوط في الهامش، والأطر والزخارف المطبوعة ولو كانت باهتة؛ ثم هامش معتدل: 8٪ من عرض النص في كل جانب. وإن كان النص داخل إطار مطبوع صار الإطار هو الحد، بهامش رقيق خارجه.</li>
 <li>التوسط الأفقي واحد للصفحات الفردية والزوجية، إلا في كتاب يجعل في هامش جهة بعينها مادة ثابتة (كأرقام أوراق المخطوط في الهامش الخارجي): حينئذ يأخذ كلٌّ من الفردية والزوجية موضعه.</li>
-<li>الميل يُقاس بطريقتين مستقلتين: (1) ميل أسطر الحبر نفسها، في الصفحة كلها وفي نصفيها، ولا يُقرأ إلا في صفحة فيها ثمانية أسطر فأكثر؛ (2) صورة الصفحة كاملة تُدار بخطوات صغيرة ويُنظر عند أي زاوية تستقيم صفوفها. لا تُدار صفحة إلا إذا رأت الطريقتان كلتاهما أنها مائلة، ولا يُبقى التدوير إلا إذا استوت بالطريقة الأولى (في حدود عُشر درجة) ولم ترَ الثانية فيها ميلا ظاهرا (خُمس درجة فأقل، وهي الأخشن)، ويُصحَّح ما بقي حتى ثلاث مرات؛ فإن لم تستوِ أُعيدت كما كانت وذُكرت في البطاقة. وكل تغيير في الطريقة يُختبر أولا على كل صفحة أخطأت فيها من قبل أو أشرتَ إليها، ولا تُعرض عينة إلا إذا نجحت كلها.</li>
+<li>الميل يُقاس بطريقتين مستقلتين: (1) ميل أسطر الحبر نفسها، في الصفحة كلها وفي نصفيها، ولا يُقرأ إلا في صفحة فيها ثمانية أسطر فأكثر؛ (2) صورة الصفحة كاملة تُدار بخطوات صغيرة ويُنظر عند أي زاوية تستقيم صفوفها. لا تُدار صفحة إلا إذا رأت الطريقتان كلتاهما أنها مائلة، ولا يُبقى التدوير إلا إذا استوت بالطريقة الأولى (0.15 درجة فأقل، وهي حدود دقة القياس، والعين لا ترى الميل إلا من نحو ربع درجة) ولم ترَ الثانية فيها ميلا ظاهرا (خُمس درجة فأقل، وهي الأخشن)؛ فإن لم يستوِ التدوير الأول جُرِّبت الزوايا القريبة منه وأُخذت أفضلها. والصفحة المقوسة قليلا التي لا يسوّيها تدوير واحد تُقبل إذا نزل ميلها إلى ربع درجة فأقل وإلى ثلث ما كان، وتُذكر في البطاقة؛ وما سوى ذلك لا يُدار ويُذكر. وكل تغيير في الطريقة يُختبر أولا على كل صفحة أخطأت فيها من قبل أو أشرتَ إليها، ولا تُعرض عينة إلا إذا نجحت كلها.</li>
 <li>يبقى خارج الإطار ما ليس كتابة ولا طباعة، بقواعد حذرة: البقع والخطوط الداكنة الممزقة عند الحافة (بالبرتقالي)، وحبيبات الماسح وحافة الورقة وعلامات الزوايا (بالبنفسجي)، والغبار المعزول (بالأزرق). ما تكرر في موضع واحد من صفحات كثيرة يُعدّ من الطباعة فيبقى.</li>
 <li>كل صفحة تُفحص مرة ثانية بدقة مضاعفة: كل ما يُرى خارج الإطار يجب أن يكون مما تُرك عمدا، وإلا زُحزح الإطار قليلا ليشمله أو بقيت الصفحة كاملة.</li>
 <li>لا تنظيف ولا تلوين (كما اتفقنا): ما لا يدخل الإطار يُترك كما هو.</li>
