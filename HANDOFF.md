@@ -3,6 +3,16 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (newest last). Everything is resumable.
 
+## 2026-10-09 07:05 GMT — owner pauses me until 09:50 GMT (one-shot resume scheduled); unattended jobs running
+- RUNNING (CPU only, read-only on the phone): crop_regress (logs/crop-regress.log) after book_crop's joint search for the
+  turn (10 angles, 0.05° apart), level = ≤ 0.15° shear and ≤ 0.2° image, curved pages kept at ≤ 0.25° and ≤ 1/3 of their
+  tilt; and the sample-4 build (scratchpad v5/drive.py → v5/drive.log; then v5/build.py → site/samples/crop-2026-10-09/).
+  On resume: read both; if crop_regress = 0 failures and the sample is built, look at every image, then open it for the
+  owner. Re-create the hourly check-in cron (:23) after resuming (deleted for the pause).
+- Done this morning: 290 (13 books), 291–293 (owner: two wrong uploads deleted, نوادر الأصول ط السايح completed),
+  294–296 (منتخب الأحكام duplicate scan; الإحكام للقرافي folder split into its two editions). Owner kept all 226 books of the
+  scope page.
+
 ## 2026-10-09 09:30 GMT — pre-700 missing books: verified by edition; duplicates found and removed; crop test rerunning
 - dark_replace v2 (page images read, edition from the first 4 pages only) → 280: 9 uploaded after reading each title page;
   4 of all the uploads from other sources (274 + 280) were ALREADY on the phone under other names (same scans proved,
