@@ -1,7 +1,7 @@
 """Find other archive.org copies of books whose Waqfeya items went dark (FPnnnn items withdrawn in 2025).
 For each Waqfeya id: search archive.org by title (and author), keep items that hold real PDFs (not «Htm/Bok/Word/zip»
-bundles of whole libraries), score them (title words, author, an edition named in the title, number of PDFs close to
-the record's volumes) and write the best candidates with their PDF files and exact sizes for review.
+bundles of whole libraries), score them (title words, author, an edition named in the title; +3 when the item's PDFs weigh what the
+record says, within 10 %) and write the best candidates with their PDF files and exact sizes for review.
 Usage: python3 scripts/find_on_archive.py ids.txt out.json [N=3]"""
 import json, os, re, sys, time, urllib.parse, urllib.request
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -45,13 +45,16 @@ def main():
             cands.append((s, x['identifier'], t))
         cands.sort(reverse=True)
         best = []
-        for s, ident, t in cands[:6]:
+        mb = float(re.sub(r'[^\d.]', '', str(d.get('sizeInMB') or '')) or 0)
+        for s, ident, t in cands[:10]:
             m = get(f'https://archive.org/metadata/{ident}')
             if m.get('is_dark') or not m.get('files'): continue
             pdfs = [(f['name'], int(f.get('size') or 0)) for f in m['files'] if f['name'].lower().endswith('.pdf') and not f['name'].lower().endswith('_text.pdf')]
             if not pdfs: continue
+            tot = sum(z for _, z in pdfs) / 2**20             # the record's size (MiB): the same file is the best evidence
+            if mb and abs(tot - mb) <= max(1.0, 0.10 * mb): s += 3
             best.append({'id': ident, 'title': t, 'score': round(s, 1), 'pdfs': pdfs[:40], 'mb': round(sum(z for _, z in pdfs) / 1e6, 1)})
-            if len(best) >= N: break
+        best = sorted(best, key=lambda c: -c['score'])[:N]
         out[i] = {'waqfeya': d['name'], 'author': au, 'volumes': d.get('numberOfVolumes'), 'candidates': best}
         print(f'{n + 1}/{len(ids)} {d["name"][:60]} → {len(best)} candidates', flush=True)
     json.dump(out, open(sys.argv[2], 'w', encoding='utf-8'), ensure_ascii=False, indent=1)

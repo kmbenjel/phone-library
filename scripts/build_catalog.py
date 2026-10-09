@@ -8,6 +8,14 @@ sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from special_dirs import NOT_BOOKS
 INDEX_DIR = 'فهارس الويب'
 
+from textnorm import title_key, norm
+# generic words never make two titles alike (normalised like title_key's output: «رسالة» → «رساله»; 2026-10-09 «ديوان
+# عنترة» gave its author to «ديوان كشاجم» through the one word «ديوان»)
+STOP0 = {norm(w) for w in ('كتاب', 'رسالة', 'جزء', 'شرح', 'مختصر', 'في', 'على', 'من', 'الى', 'إلى', 'عن', 'ومعه', 'ويليه', 'ط', 'ت',
+                           'ديوان', 'مجموعة', 'مجموع', 'مؤلفات', 'رسائل', 'أعمال', 'الشيخ', 'الإمام', 'تحقيق', 'ودراسة', 'دراسة')}
+def _w(t):
+    return {w for w in title_key(t).split() if len(w) > 2 and w not in STOP0}
+
 def split_folder(name):
     """'Title - Author (edition)' -> (title, author, edition). Separators inside brackets are ignored."""
     if '/' in name:
@@ -73,8 +81,13 @@ def main(index):
                'files': b['files'], 'bytes': b['bytes'], 'archive': sorted(b['archive'])}
         ws = [wq[i] for i in sorted(b['waqfeya']) if i in wq]
         if ws:
-            w = ws[0]
             rec['waqfeya'] = [{'id': x['_id'], 'name': x.get('name'), 'url': 'https://waqfeya.net/books/' + x.get('permalink', '')} for x in ws]
+        # author, century and edition only from a record whose title resembles the book: a Waqfeya record may link another
+        # book's file (صيام الصالحين → «مقاصد الصوم»; 2026-10-09 the catalog showed its author for the wrong book)
+        own = _w(t + ' ' + b['folder'])
+        ws = [x for x in ws if len(_w(x.get('name', '')) & own) >= max(1, 0.5 * min(len(_w(x.get('name', ''))), len(own) or 1))]
+        if ws:
+            w = ws[0]
             rec['century'] = (w.get('century') or {}).get('name', '')
             if not rec['author']: rec['author'] = (w.get('author') or {}).get('name', '')
             for k in ('researcher', 'publisher', 'numberOfVolumes', 'yearOfPublish'):

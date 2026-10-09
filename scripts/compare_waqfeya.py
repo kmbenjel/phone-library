@@ -9,7 +9,7 @@ import csv, json, os, re, sys
 from collections import defaultdict
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
-from textnorm import title_key, author_tokens
+from textnorm import title_key, author_tokens, norm
 from rename_plan import vol_from_orig
 J = lambda p: os.path.join(ROOT, p)
 def is_volume(f):
@@ -42,7 +42,8 @@ keys = defaultdict(set); pauth = {}
 word_to_books = defaultdict(set)
 phone_full_tks = {}
 phone_folder_words = {}
-STOP0 = {'كتاب', 'رسالة', 'جزء', 'شرح', 'مختصر', 'في', 'على', 'من', 'الى', 'إلى', 'عن', 'ومعه', 'ويليه', 'ط', 'ت'}
+STOP0 = {norm(w) for w in ('كتاب', 'رسالة', 'جزء', 'شرح', 'مختصر', 'في', 'على', 'من', 'الى', 'إلى', 'عن', 'ومعه', 'ويليه', 'ط', 'ت',
+                           'ديوان', 'مجموعة', 'مجموع', 'مؤلفات', 'رسائل', 'أعمال', 'الشيخ', 'الإمام', 'تحقيق', 'ودراسة', 'دراسة')}   # normalised (title_key's form)
 def _w(t): return {w for w in title_key(t).split() if len(w) > 2 and w not in STOP0}
 for b in cat['books']:
     pk = b['cat'] + '/' + b['folder']
