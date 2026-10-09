@@ -599,7 +599,7 @@ def verify(path, rec, px=1000):
             dy = ob[1] - c[1] if ob[1] < c[1] else (ob[3] - c[3] if ob[3] > c[3] else 0)
             n = [c[0] + dx, c[1] + dy, c[2] + dx, c[3] + dy]
             if abs(dx) <= 0.02 * p['w'] and abs(dy) <= 0.02 * p['h'] and n[0] >= 0 and n[1] >= 0 and n[2] <= p['w'] and n[3] <= p['h'] \
-               and inside(p['box'], n, 1.0) and all(inside(b, n, 1.0) for b in out):
+               and (p.get('box') is None or inside(p['box'], n, 1.0)) and all(inside(b, n, 1.0) for b in out):   # a blank page has no box
                 p['crop'] = [round(v, 1) for v in n]; p['verify_moved'] = True
             else:
                 p['crop'] = None; p['verify'] = ob; moved.append(i); continue
