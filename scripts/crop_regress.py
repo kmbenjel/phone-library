@@ -26,7 +26,7 @@ def recipe(pdf):
     me = hashlib.md5(open(os.path.join(ROOT, 'scripts/book_crop.py'), 'rb').read()).hexdigest()[:10]
     key = os.path.join(CACHE, os.path.basename(pdf)[:-4] + f'.{me}.json')
     if os.path.exists(key): return json.load(open(key))
-    rec = bc.plan(pdf); json.dump(rec, open(key, 'w'), ensure_ascii=False); return rec
+    rec = bc.plan(pdf, 8); json.dump(rec, open(key, 'w'), ensure_ascii=False); return rec
 
 def forward(page, p):
     """maps original-page points to the reader's frame (turned, moved), like the content transform"""
@@ -46,7 +46,8 @@ def check(row, rec, pdf):
         got = 'yes' if p.get('skew') else 'no'
         lvl, img = p.get('after_tilt'), p.get('after_tilt_image')     # both measures must read the turned page level
         ok = got == expect and (got == 'no' or (lvl is not None and img is not None and ((lvl <= bc.LEVEL and img <= bc.IMG_LEVEL)
-             or (p.get('curved') and lvl <= bc.CURVED and img <= bc.CURVED)))) and not p.get('untreated_tilt')
+             or (p.get('curved') and lvl <= bc.CURVED and img <= bc.CURVED) or (p.get('level_by_lines') is not None and max(lvl, img) <= 0.35)))) \
+             and (expect == 'no' or not p.get('untreated_tilt'))
         return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}){" curved" if p.get("curved") else ""}, untreated {p.get("untreated_tilt")}'
     if what == 'cropped':                              # cropped, not left whole (a book without print in its margins)
         got = 'yes' if p.get('crop') else 'no'
@@ -55,11 +56,16 @@ def check(row, rec, pdf):
         got = 'yes' if any(float(v) for v in (rec.get('parity_offsets') or {}).values()) else 'no'
         return got == expect, f'offsets {rec.get("parity_offsets")}'
     if rec.get('decision') != 'crop': return False, rec.get('decision')
+    if what == 'xcentre':                              # the shown part's centre lies at X ± T pt (a measured anchor: the page
+        if not p.get('show'): return False, 'no frame'   # number, a centred heading)
+        x, t = (float(v) for v in expect.split('±')); s = p['show']; c = (s[0] + s[2]) / 2
+        return abs(c - x) <= t, f'centre {c:.1f} (expected {x}±{t}), anchored {p.get("anchored_x")}'
     if what == 'centred':
         if not crop: return False, 'page left whole'
         b = p['box']; cxb, cxc = (b[0] + b[2]) / 2, (crop[0] + crop[2]) / 2
         return abs(cxb - cxc) <= 0.02 * (crop[2] - crop[0]), f'content centre {cxb:.0f}, box centre {cxc:.0f}'
     if what in ('out', 'in'):
+        crop = p.get('show') or crop                    # what the reader sees (a page shrunk to the book's box included)
         if not crop: return what == 'out', 'page left whole'
         r = [float(v) for v in expect.split(',')]
         doc = pymupdf.open(pdf); f = forward(doc[page - 1], p)
@@ -82,8 +88,23 @@ def main():
         ok, why = check(r, recs[pdf], pdf)
         fails += not ok
         print(('PASS' if ok else 'FAIL'), r[0].rsplit('/', 1)[-1][:45], 'p.', r[1], r[2], r[3], '—', why, '|', r[4] if len(r) > 4 else '', flush=True)
+    keep_flat = {(local_copy(r[0]), int(r[1])) for r in rows if r[2] == 'turn' and r[3] == 'no'}   # pages the owner/test says stay as they are
+    for pdf, rec in recs.items():                    # whole books: ONE page size (owner 2026-10-09: «فيجب اطّراده في جميع الكتب»)
+        if rec.get('decision') not in ('crop', 'level'): continue   # — applied for real, every page's size read back — and no note cut
+        out = pdf[:-4] + '.regress-out.pdf'
+        try:
+            info = bc.apply(pdf, rec, out)
+            ok, why = True, (f'{info["pages"]} pages, all {rec["size"]}; shrunk to fit {len(rec.get("scaled") or [])}, on blank paper {len(rec.get("bands") or [])}'
+                             if rec['decision'] == 'crop' else f'level only: {info["turned_or_moved"]} pages turned, every page its own size')
+        except AssertionError as e: ok, why = False, str(e)
+        finally:
+            if os.path.exists(out): os.remove(out)
+        cut = [i + 1 for i, p in enumerate(rec['pages']) if p.get('notes_cut')]
+        if cut: ok = False; why += f' | marginal notes cut on pages {cut[:12]}'
+        fails += not ok
+        print(('PASS' if ok else 'FAIL'), os.path.basename(pdf), 'one page size:', why, flush=True)
     for pdf, rec in recs.items():                    # whole books: no tilt kept after turning, none left that both measures see
-        rt = rec.get('residual_tilt') or []; ut = rec.get('untreated_tilt') or []
+        rt = rec.get('residual_tilt') or []; ut = [x for x in rec.get('untreated_tilt') or [] if (pdf, x) not in keep_flat]
         if rt or ut: fails += 1
         print(('PASS' if not (rt or ut) else 'FAIL'), os.path.basename(pdf), 'pages still tilted after turning:', rt[:12],
               '| tilted (both measures) but not turned:', ut[:12], '| curved, brought below sight:', (rec.get('curved') or [])[:12],

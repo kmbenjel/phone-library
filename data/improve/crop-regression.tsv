@@ -1,7 +1,8 @@
 # Pages the crop method once got wrong, or the owner pointed at (2026-10-08). Every change to scripts/book_crop.py is
 # checked against all of them (scripts/crop_regress.py) before a sample is shown. Columns: phone path, page (1-based),
 # check, expected, note. Checks: cropped = the page is cropped, not left whole (yes/no); turn = the page is levelled (expected: yes/no); out = a mark region (x0,y0,x1,y1 in pt) must
-# lie outside the box; in = a region that must lie inside the box; centred = the page's content centred in its box (±2 %);
+# lie outside the box; in = a region that must lie inside what the reader sees (the box, or the part shrunk to it); centred = the
+# page's content centred in its box (±2 %); xcentre = the shown part's centre at X±T pt (a measured anchor: page number, heading);
 # parity = the book's odd/even pages get different horizontal places (yes/no).
 العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/01 - اللآلئ المصنوعة في الأحاديث الموضوعة (التوحيد - مناقب البلدان والأيام).pdf	4	out	11,265,33,459	the black torn-edge streak on the left
 العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/02 - اللآلئ المصنوعة في الأحاديث الموضوعة (الطهارة - فوائد متفرقة).pdf	236	turn	yes	tilted ≈ 0.95°
@@ -30,3 +31,11 @@
 العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/02 - اللآلئ المصنوعة في الأحاديث الموضوعة (الطهارة - فوائد متفرقة).pdf	394	cropped	yes	a line along the right edge once left the page whole
 العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/02 - اللآلئ المصنوعة في الأحاديث الموضوعة (الطهارة - فوائد متفرقة).pdf	465	cropped	yes	a digit at the page corner once left the page whole
 فهارس الكتب والأدلة/فهرسة ابن خير الإشبيلي/1 - فهرسة ابن خير الإشبيلي.pdf	355	turn	no	a list of short right-aligned entries («٦٦٢ - كتاب مناسك الحج… له»): ragged lines fool the tilt measures (≈ 0.25° if any); the two disagree after turning — left as it is
+كتب اللغة/المثلث - ابن السيد البطليوسي (ت صلاح مهدي الفرطوسي)/1 - المثلَّث للبطليوسي.pdf	569	xcentre	292±5	owner 2026-10-09 «ضعف توسيط»: index page of short entries; its page number (285–302) and the right edge of its names (459.5) put its type area at 290–294; the neighbours' place alone gave 301
+العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/02 - اللآلئ المصنوعة في الأحاديث الموضوعة (الطهارة - فوائد متفرقة).pdf	39	in	19,202,55,232	a reader's handwritten note in the left margin: kept (owner on p. 40: «أبق مثل هذه الهوامش»)
+العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/02 - اللآلئ المصنوعة في الأحاديث الموضوعة (الطهارة - فوائد متفرقة).pdf	40	in	91,59,450,634	the note «لعله الدارقطني» beside the text, kept (owner: «جميل، أبق مثل هذه الهوامش»)
+فهارس الكتب والأدلة/فهرسة ابن خير الإشبيلي/1 - فهرسة ابن خير الإشبيلي.pdf	380	in	29,95,485,766	a cover image page: fitted whole into the book's box (owner: «كان يمكن ضبط الصفحة بوضوح ودون قصّ صورة الغلاف»)
+الأدب/الفوائد المحصورة في شرح المقصورة لابن هشام اللخمي/الفوائد المحصورة في شرح المقصورة لابن هشام اللخمي.pdf	432	turn	no	«فهرس اللغة», columns of short entries: turned 3.45° by mistake on 2026-10-09 (the halves-disagree path, removed)
+الأدب/الفوائد المحصورة في شرح المقصورة لابن هشام اللخمي/الفوائد المحصورة في شرح المقصورة لابن هشام اللخمي.pdf	446	turn	no	an index page: turned 2.975° by mistake on 2026-10-09
+الأدب/الفوائد المحصورة في شرح المقصورة لابن هشام اللخمي/الفوائد المحصورة في شرح المقصورة لابن هشام اللخمي.pdf	16	turn	yes	verse in centred, voweled lines, tilted ≈ 1.1° (owner: «وبقي ميلان… وهذا عجيب»); the line-by-line measure certifies the turn
+الأدب/الفوائد المحصورة في شرح المقصورة لابن هشام اللخمي/الفوائد المحصورة في شرح المقصورة لابن هشام اللخمي.pdf	200	xcentre	306.5±4	the uploader's «المساهم» stamp in the bottom-left corner once widened the left margin (owner), and a scan bar once slid the box 22 pt: centred on its page number (297.6–315.5)
