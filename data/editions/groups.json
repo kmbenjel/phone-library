@@ -18770,6 +18770,51 @@
   "note": null
  },
  {
+  "work": "قاده الفتح الاسلامي في",
+  "title": "قادة الفتح الإسلامي في أرمينية",
+  "author": "محمود شيت خطاب",
+  "bytes": 16887365,
+  "editions": [
+   {
+    "folder": "قادة الفتح الإسلامي في أرمينية - محمود شيت خطاب (ط دار ابن حزم)",
+    "cat": "التراجم والطبقات",
+    "edition": "ط دار ابن حزم - دار الأندلس الخضراء - 1419 - 1998",
+    "researcher": "",
+    "publisher": "دار ابن حزم - دار الأندلس الخضراء",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 7971271,
+    "quality": null,
+    "score": -1,
+    "waqfeya": [
+     "https://waqfeya.net/books/قادة-الفتح-الإسلامي-في-أرمينية-fbd397434f94410d985ddd8860721f8d"
+    ],
+    "same_edition": true,
+    "best_scan": true
+   },
+   {
+    "folder": "قادة الفتح الإسلامي في بلاد ما وراء النهر - محمود شيت خطاب (ط دار ابن حزم)",
+    "cat": "التراجم والطبقات",
+    "edition": "ط دار ابن حزم - دار الأندلس الخضراء - 1418 - 1998",
+    "researcher": "",
+    "publisher": "دار ابن حزم - دار الأندلس الخضراء",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 8916094,
+    "quality": null,
+    "score": -1,
+    "waqfeya": [
+     "https://waqfeya.net/books/قادة-الفتح-الإسلامي-في-بلاد-ما-وراء-النهر-bf9358ad73844d878f3f8501a9add709"
+    ],
+    "same_edition": true,
+    "best_scan": false
+   }
+  ],
+  "note": null
+ },
+ {
   "work": "الاحكام السلطانيه",
   "title": "الأحكام السلطانية",
   "author": "الماوردي",
