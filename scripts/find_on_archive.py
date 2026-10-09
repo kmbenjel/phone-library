@@ -2,12 +2,15 @@
 For each Waqfeya id: search archive.org by title (and author), keep items that hold real PDFs (not «Htm/Bok/Word/zip»
 bundles of whole libraries), score them (title words, author, an edition named in the title; +3 when the item's PDFs weigh what the
 record says, within 10 %) and write the best candidates with their PDF files and exact sizes for review.
-Usage: python3 scripts/find_on_archive.py ids.txt out.json [N=3]"""
+Usage: [WIDE=1] python3 scripts/find_on_archive.py ids.txt out.json [N=3]   (WIDE=1: the short title, the title words in any
+field, and the author's surname with them, besides the title search)"""
 import json, os, re, sys, time, urllib.parse, urllib.request
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from textnorm import norm, title_key, author_tokens
 J = lambda p: os.path.join(ROOT, p)
+WIDE = os.environ.get('WIDE') == '1'              # more query forms (see main)
+PART_RAW = {'في', 'من', 'على', 'عن', 'إلى', 'الى', 'مع', 'ومعه', 'ويليه', 'أو', 'او'}
 BUNDLE = re.compile(r'htm|bok|word|وورد|zip|مضغوط|صيغة|islamic\s*\d|كتب إسلامية|shamela', re.I)
 
 def get(url):
@@ -34,9 +37,19 @@ def main():
         au = (d.get('author') or {}).get('name', '') if isinstance(d.get('author'), dict) else ''
         aw = author_tokens(re.split(r'[؛;]', au)[0])
         q = ' '.join(raw)
-        res = get('https://archive.org/advancedsearch.php?' + urllib.parse.urlencode({'q': f'title:({q}) AND mediatype:texts', 'fl[]': ['identifier', 'title', 'item_size'], 'rows': 25, 'output': 'json'}, doseq=True))
+        queries = [f'title:({q}) AND mediatype:texts']
+        if WIDE:                                      # 2026-10-09: books the first search missed — the short title, the
+            short = [w for w in raw if w not in PART_RAW][:3]   # title words in any field, the author's surname with them
+            sur = [w for w in re.sub(r'[^\u0600-\u06FF\s]', ' ', re.split(r'[؛;،,]', au)[0]).split() if w not in ('ابن', 'أبو', 'أبي', 'بن')][:1]
+            if len(short) >= 2: queries.append(f'title:({" ".join(short)}) AND mediatype:texts')
+            queries.append(f'({" AND ".join(raw[:3])}) AND mediatype:texts')
+            if sur: queries.append(f'({" AND ".join((short or raw)[:2])}) AND ({sur[0]}) AND mediatype:texts')
+        docs = {}
+        for qq in queries:
+            res = get('https://archive.org/advancedsearch.php?' + urllib.parse.urlencode({'q': qq, 'fl[]': ['identifier', 'title', 'item_size'], 'rows': 25, 'output': 'json'}, doseq=True))
+            for x in (res.get('response') or {}).get('docs', []): docs.setdefault(x['identifier'], x)
         cands = []
-        for x in (res.get('response') or {}).get('docs', []):
+        for x in docs.values():
             t = str(x.get('title', ''))
             if BUNDLE.search(t) or BUNDLE.search(x['identifier']) or (x.get('item_size') or 0) > 3e9: continue
             nt = set(norm(t).split())

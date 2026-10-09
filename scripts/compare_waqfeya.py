@@ -80,6 +80,12 @@ def authorish(at):                                    # the author's words as a 
     return set(at) | {'ل' + t for t in at} | {'لابي', 'لابن', 'للامام', 'للحافظ', 'للشيخ', 'ابي', 'ابن'}
 phone_open = {b['cat'] + '/' + b['folder']: open_words(b['title']) for b in cat['books']}
 name_words = {b['cat'] + '/' + b['folder']: set(norm(b['folder']).split()) | set(norm(b['title']).split()) for b in cat['books']}
+# links checked by eye or by an exact size (data/mappings/waqfeya-on-phone.tsv, 2026-10-09): a record whose book is on the
+# phone under a name no rule recognises — uploads from other archive.org copies, same-size files, another edition read
+verified = defaultdict(set)
+if os.path.exists(J('data/mappings/waqfeya-on-phone.tsv')):
+    for r in csv.DictReader(open(J('data/mappings/waqfeya-on-phone.tsv'), encoding='utf-8'), delimiter='\t'):
+        verified[r['waqfeya_id']].add(r['phone_book (section/folder or file without .pdf)'])
 prov_paths = defaultdict(set)
 for r in csv.DictReader(open(J('data/phone/provenance.tsv')), delimiter='\t'):
     if r['waqfeya_id']: prov_paths[r['waqfeya_id']].add(r['path'])
@@ -172,6 +178,8 @@ for wid, b in books.items():
                     # the author agrees on the surname or nisba, not on a first name (حرب بن إسماعيل الكرماني ≠ إسماعيل الشالنجي)
                     if (pauth[cid] & am) or (not pauth[cid] and any(t in name_words[cid] or ('ل' + t) in name_words[cid] for t in am)):
                         cand.add(cid)
+        if not cand and verified.get(wid):
+            cand = {k for k in verified[wid] if k in cat_books_files}
         status, where = ('other-copy', sorted(cand)) if cand else ('missing', [])
     vols_on_phone = len(have) if have else (max([cat_books_files.get(pf, 0) for pf in where] if where else [0]))
     size_mb = sum(f['size'] for i in ids for f in items.get(i, []) if is_volume(f)) / 2**20
