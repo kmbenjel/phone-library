@@ -504,7 +504,7 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
         if page.rotation: rec['kind'] = 'rotated'; pages.append(rec); done[i] = rec; continue
         st = stamps.get(i) or stamps.get(str(i))
         if st: rec['stamp'] = st
-        ex0 = [pad_box(st, r.width)] if st else None
+        ex0 = [pad_box(b, r.width) for b in st] if st else None
         a, z = gray(page, 500)
         mk = marks(a, z, r.width, ex0)
         if mk['box'] is not None and mk['dark'] <= 0.35:     # a tilted text page: turn it level (the sign is checked)
@@ -514,7 +514,7 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
             if abs(ang) >= SKEW_MIN and gain >= 1.02:
                 for deg in (-ang, ang):
                     t = turned(doc, i, deg); a2, z2 = gray(t[0], 500)
-                    mk2 = marks(a2, z2, r.width, [fwd_box(doc, i, {'skew': deg}, ex0[0])] if ex0 else None); t.close()
+                    mk2 = marks(a2, z2, r.width, [fwd_box(doc, i, {'skew': deg}, b) for b in ex0] if ex0 else None); t.close()
                     # the turned page must still show the page's ink (a broken drawing would show none); its text block is
                     # naturally narrower once level, so its size is not compared
                     if mk2['box'] is None or mk2['xy'] is None or not (0.6 <= len(mk2['xy'][0]) / len(mk['xy'][0]) <= 1.6):
@@ -551,25 +551,29 @@ def fwd_box(doc, i, p, b):
 
 def stamps_of(path, jobs=1, px=400):
     """UPLOADERS' STAMPS (owner 2026-10-09, الفوائد المحصورة: «neglect that رفع المساهم stamp in every page's footer, don't
-    consider it text. or even: erase it»): the same small picture at the same place of many pages — a forum's or a
-    library's mark, not the book. A quick look at every page: groups of ink (marks less than 0.6 % of the width apart) in
-    the top 12 % or the bottom 18 % of the page, 3–35 % of its width wide and 0.8–8 % of its height tall, centred at least
-    12 % of the width off the page's middle (page numbers and running heads stay centred); a group is a stamp when one at
-    the same place (± 2.5 %), of the same size (± 10 %) and of the same shape (ink overlap ≥ 70 % once scaled alike: page
-    numbers differ from page to page) is on ≥ 25 % of the pages, odd and even alike (a page number in the outer corner
-    alternates sides). Returns {page index: box (pt)}"""
+    consider it text. or even: erase it»; «generalize this for when we have such a stamp across the book»): the same small
+    picture at the same place of many pages — a forum's or a library's mark, not the book. A quick look at every page:
+    groups of ink (marks less than 0.3 % of the width apart). A stamp: in the top 12 % or the bottom 18 % of the page,
+    3–35 % of its width wide and 0.8–8 % of its height tall, centred at least 12 % of the width off the page's middle (page
+    numbers and running heads stay centred), found at the same place (± 2.5 %), of the same size (± 10 %) and shape (ink
+    overlap ≥ 70 % once scaled alike — page numbers differ from page to page) on ≥ 25 % of the pages, odd and even alike (a
+    page number in the outer corner alternates sides). Then THE SAME STAMP ELSEWHERE (owner, ص 2: «you could have removed
+    the stamp in p2 and centered the text»): on any page, a group of the stamp's proportions (± 15 %), at least 0.8 of its
+    size, whose grey image matches the stamp's (correlation ≥ 0.7) — with the small line set right under it (a date).
+    Returns {page index: [boxes (pt)]}"""
     doc = pymupdf.open(path); n = doc.page_count; doc.close()
     idx = list(range(n)); found = []
     if jobs > 1:
         with ProcessPoolExecutor(jobs) as ex:
             for part in ex.map(_stamp_chunk, [(path, idx[k::jobs], px) for k in range(jobs)]): found += part
     else: found = _stamp_chunk((path, idx, px))
-    if not found: return {}
-    C = np.array([[f[1][0], f[1][1], f[1][2], f[1][3], f[2], f[3]] for f in found], float)
+    band = [f for f in found if f[6]]
+    if not band: return {}
+    C = np.array([[f[1][0], f[1][1], f[1][2], f[1][3], f[2], f[3]] for f in band], float)
     cxs, cys = (C[:, 0] + C[:, 2]) / 2, (C[:, 1] + C[:, 3]) / 2; bw, bh = C[:, 2] - C[:, 0], C[:, 3] - C[:, 1]
-    T = np.array([f[4] for f in found], float); pg = np.array([f[0] for f in found])
-    out, used = {}, np.zeros(len(found), bool)
-    for k in range(len(found)):
+    T = np.array([f[4] for f in band], float); pg = np.array([f[0] for f in band])
+    out, used, refs = {}, np.zeros(len(band), bool), []
+    for k in range(len(band)):
         if used[k]: continue
         g = (~used) & (np.abs(cxs - cxs[k]) <= 0.025 * C[:, 4]) & (np.abs(cys - cys[k]) <= 0.025 * C[:, 5]) & \
             (np.abs(bw / bw[k] - 1) <= 0.1) & (np.abs(bh / bh[k] - 1) <= 0.1)
@@ -579,12 +583,26 @@ def stamps_of(path, jobs=1, px=400):
         same = np.nonzero(g)[0][ov >= 0.7]
         P = set(pg[same])
         if len(P) < max(5, 0.25 * n) or min(sum(1 for q in P if q % 2 == 0), sum(1 for q in P if q % 2)) < 0.3 * len(P): continue
-        for j in same: out[int(pg[j])] = [round(float(v), 1) for v in C[j, :4]]
+        for j in same: out.setdefault(int(pg[j]), []).append([round(float(v), 1) for v in C[j, :4]])
+        G = np.mean([band[j][5] for j in same], axis=0); G = (G - G.mean()) / (G.std() + 1e-6)
+        refs.append((G, float(np.median(bw[same] / bh[same])), float(np.median(bw[same]))))
         used[g] = True
+    for f in found:                                   # the same stamp at another size or place (a title page)
+        b = f[1]; w_, h_ = b[2] - b[0], b[3] - b[1]
+        if any(inside(b, q, 2.0) for q in out.get(f[0], [])): continue
+        for G, asp, sw in refs:
+            if abs((w_ / max(h_, 1e-6)) / asp - 1) <= 0.15 and w_ >= 0.8 * sw and float((f[5] * G).mean()) >= 0.7:
+                box = list(b)
+                for f2 in found:                      # a small line right under it (the stamp's date) belongs to it
+                    c = f2[1]
+                    if f2[0] == f[0] and c[1] >= b[3] - 1 and c[1] <= b[3] + 0.6 * h_ and c[3] - c[1] <= 0.4 * h_ \
+                       and c[0] >= b[0] - 0.2 * w_ and c[2] <= b[2] + 0.2 * w_:
+                        box = union([box, list(c)])
+                out.setdefault(f[0], []).append([round(float(v), 1) for v in box]); break
     return out
 
 def _stamp_chunk(args):
-    from PIL import Image
+    from PIL import Image, ImageFilter
     path, idx, px = args
     doc = pymupdf.open(path); out = []
     for i in idx:
@@ -596,14 +614,15 @@ def _stamp_chunk(args):
         lab, k = ndimage.label(ndimage.binary_dilation(m, iterations=max(1, int(0.003 * W))))
         for j, s in enumerate(ndimage.find_objects(lab), 1):
             y0, y1, x0, x1 = s[0].start, s[0].stop, s[1].start, s[1].stop
-            if not (y1 <= 0.12 * H or y0 >= 0.82 * H): continue
-            if not (0.03 * W <= x1 - x0 <= 0.35 * W and 0.008 * H <= y1 - y0 <= 0.08 * H): continue
-            if abs((x0 + x1) / 2 - W / 2) < 0.12 * W: continue
+            if not (0.03 * W <= x1 - x0 <= 0.45 * W and 0.008 * H <= y1 - y0 <= 0.2 * H): continue
             ink = (m[y0:y1, x0:x1] & (lab[y0:y1, x0:x1] == j)).astype(np.uint8) * 255
-            t = np.asarray(Image.fromarray(ink).resize((48, 16), Image.BILINEAR), float) / 255
-            out.append((i, (x0 / z, y0 / z, x1 / z, y1 / z), t, page.rect.width, page.rect.height))
+            t = np.asarray(Image.fromarray(ink).resize((48, 16), Image.BILINEAR), np.float32) / 255
+            g = np.asarray(Image.fromarray(ink).resize((64, 36), Image.BOX).filter(ImageFilter.GaussianBlur(1.2)), np.float32)
+            g = (g - g.mean()) / (g.std() + 1e-6)
+            band = (y1 <= 0.12 * H or y0 >= 0.82 * H) and x1 - x0 <= 0.35 * W and y1 - y0 <= 0.08 * H and abs((x0 + x1) / 2 - W / 2) >= 0.12 * W
+            out.append((i, (x0 / z, y0 / z, x1 / z, y1 / z), page.rect.width, page.rect.height, t, g, band))
     doc.close()
-    return [(i, b, w, h, t) for (i, b, t, w, h) in out]
+    return out
 
 def analyse(path):
     """kept for the old callers: the measured pages and the decision at the narrowest box"""
@@ -764,7 +783,7 @@ def decide(pages, wq=0.95):
     ET = {i: edges[i][1] for i in edges}; EB = {i: edges[i][3] for i in edges}
     def shift(d0, d1, tol):
         c = [d for d in (d0, d1) if abs(d) <= tol]
-        return min(c, key=abs) if c else 0.0
+        return min(c, key=abs) if c else None
     fwe, fhe = [j for j in full_w if j in edges], [j for j in full_h if j in edges]
     # Better still, THE PAGE NUMBER where the book prints it on its own line: on the full pages it lies at a fixed offset
     # from the text's centre (per parity — outer corners alternate); when that offset is steady (half the pages within
@@ -809,7 +828,9 @@ def decide(pages, wq=0.95):
         if i not in fw and (xf := by_folio(i, 0)) is not None: x = xf; p['anchored_x'] = 'folio'
         elif e and i not in fw and fwe:
             dx_ = shift(e[0] - near(i, fwe, EL), e[2] - near(i, fwe, ER), 0.03 * p['w'])
-            if dx_: x += dx_; p['anchored_x'] = round(dx_, 1)
+            if dx_ is not None: x += dx_; p['anchored_x'] = round(dx_, 1)
+            else: x = cx[i]; p['anchored_x'] = 'own'  # centred lines (a title page, a poem), no page number: on themselves
+                                                      # (owner 2026-10-09, الفوائد المحصورة ص 2: «and centered the text»)
         if i not in fh and (yf := by_folio(i, 1)) is not None: y = yf; p['anchored_y'] = 'folio'
         elif e and i not in fh and fhe:
             dy_ = shift(e[1] - near(i, fhe, ET), e[3] - near(i, fhe, EB), 0.03 * p['h'])
@@ -924,7 +945,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
     near = lambda b, regions: any(b[0] < r[2] + 3 and b[2] > r[0] - 3 and b[1] < r[3] + 3 and b[3] > r[1] - 3 for r in regions)
     def look(i, q):                                   # the page as the reader will see it, measured at px
         t = transformed(doc, i, q); page = t[0]; a, z = gray(page, px); st = rec['pages'][i].get('stamp')
-        mk = marks(a, z, page.rect.width, [fwd_box(doc, i, q, pad_box(st, page.rect.width))] if st else None); t.close()
+        mk = marks(a, z, page.rect.width, [fwd_box(doc, i, q, pad_box(b, page.rect.width)) for b in st] if st else None); t.close()
         mk['proj'] = lambda lo=-0.5, hi=0.5, step=0.05: proj_tilt(a, mk['paper'], lo, hi, step)
         mk['lines'] = lambda: baseline_tilt(a, mk['paper']) if mk.get('paper') else None
         return mk
@@ -1127,10 +1148,13 @@ def erase_stamp(doc, page, inv, p):
     """an uploader's stamp on white paper (owner 2026-10-09: «or even: erase it»): a white patch drawn over it after the
     page's own content — inside the page's turn, so it follows the page; the scan itself stays byte for byte"""
     if not p.get('stamp') or p.get('paper', 0) < 245: return False
-    b = pad_box(p['stamp'], p['w'])
-    a_, b_ = pymupdf.Point(b[0], b[1]) * inv, pymupdf.Point(b[2], b[3]) * inv
-    x0, y0, x1, y1 = min(a_.x, b_.x), min(a_.y, b_.y), max(a_.x, b_.x), max(a_.y, b_.y)
-    return append_contents(doc, page, f'q 1 g {x0:.2f} {y0:.2f} {x1 - x0:.2f} {y1 - y0:.2f} re f Q\n'.encode())
+    cmd = ''
+    for st in p['stamp']:
+        b = pad_box(st, p['w'])
+        a_, b_ = pymupdf.Point(b[0], b[1]) * inv, pymupdf.Point(b[2], b[3]) * inv
+        x0, y0, x1, y1 = min(a_.x, b_.x), min(a_.y, b_.y), max(a_.x, b_.x), max(a_.y, b_.y)
+        cmd += f'{x0:.2f} {y0:.2f} {x1 - x0:.2f} {y1 - y0:.2f} re '
+    return append_contents(doc, page, f'q 1 g {cmd}f Q\n'.encode())
 
 def images_of(doc):
     return [[(x[0], x[2], x[3], len(doc.xref_stream_raw(x[0]) or b'')) for x in p.get_images(full=True)] for p in doc]
