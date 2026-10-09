@@ -37,10 +37,10 @@ def main():
     cropped = {}
     for r in log:
         act, a, b, plan = r[1], strip(r[2]), strip(r[3]), r[5]
-        if act == 'crop' and 'original ' in r[4]:
-            cropped[a] = (int(r[4].split('original ')[1].split(' B')[0]), plan)
-        elif act == 'crop' and 'crop undone' in r[4]:
+        if act == 'crop' and 'crop undone' in r[4]:          # (checked first: its text also says «original»)
             cropped.pop(a, None)
+        elif act == 'crop' and 'original ' in r[4]:
+            cropped[a] = (int(r[4].split('original ')[1].split(' B')[0]), plan)
         elif act == 'move':
             if a in cropped: cropped[b] = cropped.pop(a)
             elif not a.lower().endswith('.pdf'):
