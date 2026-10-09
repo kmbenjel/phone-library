@@ -2,8 +2,8 @@
 
 Usage: python3 scripts/waq_queue.py IDS.tsv OUT_QUEUE.tsv [--force | --complete]
   IDS.tsv: waqfeya_id[<TAB>category][<TAB>folder]   (blank = automatic: Shamela category of the title, else Waqfeya map)
-Skips: records already complete on the phone (data/compare/waqfeya-matches.tsv), a phone folder with the same title and
-the same publisher, files whose exact size is already in the phone index. Sizes come from archive.org <id>_files.xml
+Skips: records already complete on the phone (data/compare/waqfeya-matches.tsv), the same work by the same author already on
+the phone under another name (scripts/samework.py; a same title by ANOTHER author no longer skips — 2026-10-08), files whose exact size is already in the phone index. Sizes come from archive.org <id>_files.xml
 (cached in data/archive/files*.jsonl; new ones appended to data/archive/files6.jsonl).
 Queue reason = «record name»: url  (the format scripts/additions_audit.py reads; run it with AUDIT_PLANS=<plan>)."""
 import csv, glob, json, os, re, sys, urllib.parse, urllib.request, xml.etree.ElementTree as ET
@@ -12,6 +12,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from rename_plan import clean, fit, short_title
 from textnorm import title_key, norm
+from samework import on_phone
 J = lambda p: os.path.join(ROOT, p)
 
 WMAP = {'كتب المجاميع': 'الجوامع', 'السلاسل': 'الجوامع', 'كتب علم النفس': 'علوم أخرى', 'كتب المنطق': 'المنطق',
@@ -109,8 +110,12 @@ def main():
         if status.get(r[0]) == 'complete' and not (force or complete): print('ON PHONE', name[:70]); continue
         pub = clean(re.split(r'\s+-\s+', d.get('publisher') or '')[0])
         inv = clean(d.get('investigator') or '')
-        if not (force or complete) and tk in cat_titles:
-            print('TITLE ON PHONE', name[:60], '→', cat_titles[tk][0][:80]); continue
+        auth_full = (d.get('author') or {}).get('name', '')
+        here = [] if (force or complete) else on_phone(t, auth_full)   # same work, same author's surname (scripts/samework.py)
+        if here:
+            print('ON PHONE AS', name[:60], '→', here[0][:80]); continue
+        if not (force or complete) and tk in cat_titles and not on_phone(t, auth_full) and auth_full:
+            print('SAME TITLE, OTHER AUTHOR (queued)', name[:50], '≠', cat_titles[tk][0][:70])   # 2026-10-08: الناسخ والمنسوخ
         cat = (r[1] if len(r) > 1 and r[1] else '') or sham.get(tk) or wcat(d.get('category', {}).get('name'))
         if not cat: print('NO CATEGORY', name[:70], d.get('category', {}).get('name')); continue
         auth = person(d.get('author', {}).get('name'))

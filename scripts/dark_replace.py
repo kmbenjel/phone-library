@@ -5,8 +5,10 @@ v2 (2026-10-09). The owner asked «تقارن بالعنوان والمؤلف ف
 uploads were wrong (a typed al-mostafa copy, a master's thesis about the book, part 1 of another edition). Now each
 candidate item is READ, not downloaded: its first 8 page images (archive.org /page/nK_w1000.jpg) go through tesseract
 (ara), and the record (details.jsonl + details2.jsonl: editor, publisher, year, volumes, pages, size) is compared with
-what the pages say:
+what the pages say (the editor and publisher only on the first 4 pages — cover, title page, imprint):
   - the work: ≥ 60 % of the record title's distinctive words and, when the record names one, the author;
+  - SKIPPED when the work is already on the phone under another name (scripts/samework.py: same opening words, same
+    author's surname; 2026-10-09 four duplicates came in that way);
   - REFUSED: a thesis (رسالة ماجستير/دكتوراه، بحث مقدم لنيل، إشراف…) unless the record is one; a typed copy (al-mostafa,
     the Shamela, «مصفوف»); more PDFs than the record's volumes allow (a bundle: > 2 × volumes + 2); > 2 GB;
     the same sizes already on the phone;
@@ -26,6 +28,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from textnorm import title_key, author_tokens, norm
 from rename_plan import clean, fit, short_title
+from samework import on_phone
 J = lambda p: os.path.join(ROOT, p)
 SHEETS = os.path.expanduser('~/.cache/phone-library/dark-sheets'); os.makedirs(SHEETS, exist_ok=True)
 PAGES = os.path.expanduser('~/.cache/phone-library/dark-pages'); os.makedirs(PAGES, exist_ok=True)
@@ -111,6 +114,8 @@ def judge(wid, rec, d, have):
     rec_thesis = bool(re.search(r'رسال|أطروح|ماجستير|دكتوراه', rec['waqfeya']))
     tw = words(title); aw = author_tokens(au)
     notes = []
+    here = on_phone(title, rec.get('author') or '')           # the same work already on the phone under another name
+    if here: return None, [f'already on the phone: {here[0]}' + (f' (+{len(here) - 1})' if len(here) > 1 else '')]
     for c in rec.get('candidates') or []:
         ident = c['id']; pdfs = sorted(c['pdfs'], key=lambda x: nat(x[0])); tot = sum(z for _, z in pdfs)
         if len(pdfs) > 2 * vols + 2: notes.append(f'{ident}: {len(pdfs)} PDFs for {vols} volumes (a bundle)'); continue
@@ -118,7 +123,8 @@ def judge(wid, rec, d, have):
         if all(z in have for _, z in pdfs): notes.append(f'{ident}: already on the phone (same sizes)'); continue
         imgs = page_images(ident)
         if not imgs: notes.append(f'{ident}: no page images'); continue
-        text = norm(ocr(imgs) + ' ' + c.get('title', ''))
+        front = norm(ocr(imgs[:4]))                       # cover, title page, imprint: the edition is read HERE only —
+        text = norm(front + ' ' + ocr(imgs[4:]) + ' ' + c.get('title', ''))   # an introduction may name an earlier editor
         sheet(imgs, os.path.join(SHEETS, f'{wid}__{ident}.jpg'))
         got = [w for w in tw if w in text]; score = len(got) / max(1, len(tw))
         a_ok = not aw or any(t in text for t in aw)
@@ -126,8 +132,8 @@ def judge(wid, rec, d, have):
         if THESIS.search(text) and not rec_thesis: notes.append(f'{ident}: a thesis'); continue
         if TYPED.search(text): notes.append(f'{ident}: a typed copy'); continue
         size_ok = mb > 0 and abs(tot / 2**20 - mb) <= max(1.0, 0.10 * mb)
-        ed_ok = found(editor, text) if editor else False
-        pub_ok = found(publisher, text) if publisher else False
+        ed_ok = found(editor, front) if editor else False      # 2026-10-09: «الرسالة الوافية» passed on its editor's name
+        pub_ok = found(publisher, front) if publisher else False  # quoted in another editor's introduction
         same = ed_ok or (not editor and (pub_ok or size_ok))
         complete = len(pdfs) >= vols or (len(pdfs) == 1 and size_ok)
         if len(pdfs) == 1 and vols > 1 and FIRST_PART.search(text) and not size_ok: complete = False

@@ -71,6 +71,15 @@ def book_key(path):                                   # a phone file → its cat
 def same_book(wname, path):
     a, b = words(wname), words(own_title.get(book_key(path), path))
     return bool(a) and len(a & b) >= max(1, 0.5 * min(len(a), len(b) or 1))
+PART = {norm(w) for w in ('في', 'من', 'على', 'عن', 'الى', 'إلى', 'مع', 'ومعه', 'ويليه', 'وبهامشه', 'كتاب', 'أو', 'او', 'بين', 'المسمى',
+                           'ابن', 'أبي', 'أبو', 'بن')}   # «أمالي المحاملي رواية ابن …»: name words do not tell works apart
+def open_words(name):                                 # a title's words in order: normalised, particles and short words out
+    t = re.split(r'\s+-\s+(?:ط|ت)[\s.:]|\s+-\s+|\s+=\s+|،|:|\(', name)[0]
+    return [w for w in norm(t).split() if len(w) > 2 and w not in PART]
+def authorish(at):                                    # the author's words as a title may carry them («المحن لأبي العرب»)
+    return set(at) | {'ل' + t for t in at} | {'لابي', 'لابن', 'للامام', 'للحافظ', 'للشيخ', 'ابي', 'ابن'}
+phone_open = {b['cat'] + '/' + b['folder']: open_words(b['title']) for b in cat['books']}
+name_words = {b['cat'] + '/' + b['folder']: set(norm(b['folder']).split()) | set(norm(b['title']).split()) for b in cat['books']}
 prov_paths = defaultdict(set)
 for r in csv.DictReader(open(J('data/phone/provenance.tsv')), delimiter='\t'):
     if r['waqfeya_id']: prov_paths[r['waqfeya_id']].add(r['path'])
@@ -149,6 +158,20 @@ for wid, b in books.items():
             if valid:
                 cand = valid
                 
+        if not cand and at:
+            # Rule B (2026-10-09, «conceptually present»): the same opening words, in order — the first min(4, both) words
+            # of the record's title and of a phone book's title (particles skipped) — by the same author. Long Waqfeya
+            # titles vs shorter phone names (الرسالة الوافية للداني، أخبار الراضي، مجرد أسماء الرواة عن مالك…). A different
+            # work sharing a short opening fails at its third or fourth word (المعجم المفصل في العروض / في شواهد العربية;
+            # تلخيص المتشابه / تالي تلخيص المتشابه); «مختصر» and «شرح» stay distinctive.
+            R = open_words(b['name'])
+            am = author_tokens(re.split(r'[؛;،,]', (b.get('author') or {}).get('name', ''))[0])   # the author's surname/nisba
+            for cid, P in phone_open.items():
+                n = min(4, len(R), len(P))
+                if n >= 2 and R[:n] == P[:n] or (len(R) == 1 and P and P[0] == R[0] and all(w in authorish(am) for w in P[1:])):
+                    # the author agrees on the surname or nisba, not on a first name (حرب بن إسماعيل الكرماني ≠ إسماعيل الشالنجي)
+                    if (pauth[cid] & am) or (not pauth[cid] and any(t in name_words[cid] or ('ل' + t) in name_words[cid] for t in am)):
+                        cand.add(cid)
         status, where = ('other-copy', sorted(cand)) if cand else ('missing', [])
     vols_on_phone = len(have) if have else (max([cat_books_files.get(pf, 0) for pf in where] if where else [0]))
     size_mb = sum(f['size'] for i in ids for f in items.get(i, []) if is_volume(f)) / 2**20
