@@ -534,7 +534,7 @@ def verify(path, rec, px=1000):
                     mk2 = look(i, dict(p, skew=round(d2, 3)))
                     if mk2['xy'] is None or not (0.6 <= len(mk2['xy'][0]) / len(mk['xy'][0]) <= 1.6): continue
                     r2, _ = skew_of(mk2['xy'], raw=True)
-                    if abs(r2) <= max(0.1, abs(u) / 3): p['skew'] = round(d2, 3); p['after_tilt'] = round(abs(r2), 3); p['turned_in_check'] = True; mk = mk2; break
+                    if abs(r2) <= 0.1: p['skew'] = round(d2, 3); p['after_tilt'] = round(abs(r2), 3); p['turned_in_check'] = True; mk = mk2; break
                 else: p['untreated_tilt'] = round(u, 3)
         if not p.get('crop'): continue
         c = p['crop']; known = (p.get('blots') or []) + (p.get('edge') or [])
