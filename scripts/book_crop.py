@@ -654,6 +654,8 @@ def sample_pages(rec):
     out = [(mid, 'mid'), (mid + 1 if mid + 1 < len(P) and P[mid + 1].get('crop') else mid - 1, 'mid')]
     sk = [i for i in text if P[i].get('skew')]
     if sk: out.append((max(sk, key=lambda i: abs(P[i]['skew'])), 'skew'))
+    cv = [i for i in text if P[i].get('curved')]
+    if cv: out.append((cv[0], 'curved'))
     bl = [i for i in text if P[i].get('blots')]
     if bl: out.append((max(bl, key=lambda i: sum((b[2] - b[0]) * (b[3] - b[1]) for b in P[i]['blots'])), 'blot'))
     ow = [i for i in text if P[i].get('own_centre') or P[i].get('move')]
@@ -667,7 +669,7 @@ def sample_pages(rec):
     seen, res = set(), []
     for i, r in out:
         if i not in seen: seen.add(i); res.append((i, r))
-    return res[:7]
+    return res[:8]
 
 def back_to_original(page, p):
     """maps points of the reader's frame (turned level, moved) back onto the original page, to draw on it"""
@@ -713,7 +715,8 @@ def sheet(src, rec, outdir, pages=None, px=480):
 WHY_AR = {'mid': 'صفحة من وسط الكتاب', 'speck': 'أكثر صفحة فيها نقط معزولة (الدوائر الزرقاء)',
           'tight': 'الصفحة التي يقترب نصها من الإطار أكثر من غيرها', 'skew': 'أشد الصفحات ميلا: قُوِّمت',
           'blot': 'صفحة فيها بقعة أو خط داكن ليس من الكتاب (بالبرتقالي): يبقى خارج الإطار',
-          'own': 'صفحة شاذة (ختم، لوحة، تعليقة بعيدة): وُسِّط الإطار على ما فيها هي', 'whole': 'صفحة تبقى كاملة (نصها أعرض من الإطار)'}
+          'own': 'صفحة شاذة (ختم، لوحة، تعليقة بعيدة): وُسِّط الإطار على ما فيها هي', 'whole': 'صفحة تبقى كاملة (نصها أعرض من الإطار)',
+          'owner': 'صفحة أشرتَ إليها في العينة السابقة', 'curved': 'صفحة مقوسة قليلا: قُوِّمت قدر ما يستطيع تدوير واحد'}
 
 def review_page(cases, skipped, outdir, stats):
     """one self-contained Arabic page (+ images/) for the owner's approval: per book the gain, the pages left whole, the
