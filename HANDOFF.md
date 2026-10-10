@@ -76,6 +76,9 @@ auto-check (dry-run, sample to the owner, then apply); (4) the same for folders 
 and apply only after «أوافق». Held: data/names/plan-held.tsv. OCR sample 001 (10 books, scripts/ocr_clean.py →
 data/improve/ocr/, log logs/ocr-sample-001.log) → review page scripts/ocr_review_page.py 001 when done; unpaper + jbig2
 are now installed (~/.local/bin): next variant = ocrmypdf --clean + -O1 (lossless JBIG2).
+### CROP RUNNING (2026-10-10 18:05): regression 0 failures (logs/crop-regress-2026-10-10e.log; crop_regress judges column-levelled
+pages by their columns); scripts/crop_library.sh started batch-002 (300 books, 4 workers) and continues by itself. Batch 001's
+books with two-column index pages still need a redo. Stop: kill the PID of crop_library.sh, then its crop_batch.py.
 ### CROP (2026-10-10 evening): the two-column fix is in book_crop.py (columns_tilt); regression run logs/crop-regress-2026-10-10d.log;
 scratch/crop_after_regress_2026-10-10.sh starts scripts/crop_library.sh by itself if it ends with 0 failures (owner: the crop
 must run while the agent's quota is paused). Check logs/crop-library.log. Batch 001's books with two-column index pages
