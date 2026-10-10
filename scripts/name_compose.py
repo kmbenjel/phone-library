@@ -142,11 +142,12 @@ def wscore(text, seg):
     n = len(text.split())
     return 10 * min(n, 2) + 2 * max(0, min(n, hn) - 2) + 0.6 * max(0, n - max(hn, 2))
 
-def compose(title, author='', edition='', limit=LIMIT, year=''):
+def compose(title, author='', edition='', limit=LIMIT, year='', kinds_extra=()):
     """the name that carries the most information within `limit` bytes: every combination of the title's cut, its joined
     titles («ويليه، ومعه، =»), its subtitle, the editors and the publisher is weighed; nothing is cut when all fits"""
     import itertools
     t, kinds, sub = split_title(tidy(title))
+    kinds = kinds + [k for k in kinds_extra if k]                  # «رسالة ماجستير», «مخطوط» given apart from the title
     names, pub, city, other = parse_edition(edition)
     author = TASHKEEL.sub('', one_name(author))
     for x in re.findall(r'\(([^()]*)\)', author):        # «اليوسي (مخطوط)», «David Werner (Hesperian 2025)»: edition words

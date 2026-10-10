@@ -17,16 +17,16 @@ def year_of(y):
     return f'{h.group(1)} هـ' if h else ''
 
 def name_of(r):
+    """publisher, city and year stay separate fields until name_compose renders them (no commas, no repeated city)"""
     t, au, ed, pub, city = r['title'], r['author'], r['editor'], r['publisher'], r['city']
     kind = r.get('kind', '')
-    tail = ' '.join(x for x in (pub, city.replace('، ', ' و') if city else '', year_of(r['year'])) if x)
-    if ed and kind == 'ترجمة': edition = f'ترجمة {ed}' + (f' - {tail}' if tail else '')
-    elif ed: edition = f'ت {ed}' + (f' - {tail}' if tail else '')
-    else: edition = f'ط {tail}' if tail else ''
-    if kind and kind not in ('نظم', 'متن', 'ترجمة'):
-        edition = (edition + ' - ' if edition else '') + kind
-    if au in ('مؤلف مجهول',): au = 'مؤلف مجهول'
-    return compose(t, '' if (au and redundant(au, t)) else au, edition)
+    place = '، '.join(x for x in (pub, city.replace('، ', ' و') if city and pub else '') if x)
+    if ed and kind == 'ترجمة': edition = f'ت {ed}' + (f' - {place}' if place else '')
+    elif ed: edition = f'ت {ed}' + (f' - {place}' if place else '')
+    else: edition = f'ط {place}' if place else ''
+    extra = [kind] if kind and kind not in ('نظم', 'متن', 'ترجمة') else []
+    n = compose(t, '' if (au and redundant(au, t)) else au, edition, year=year_of(r['year']), kinds_extra=extra)
+    return n.replace(' - ت ', ' - ترجمة ', 1) if kind == 'ترجمة' and ed else n
 
 if __name__ == '__main__':
     want = set(sys.argv[1:])
