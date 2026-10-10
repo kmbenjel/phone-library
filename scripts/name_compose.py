@@ -4,12 +4,12 @@
   * no parentheses inside the title: the one group at the end holds the edition «(ت المحقق - الناشر)» / «(ط الناشر)», or a
     volume's label; a title's own «(مخطوط)», «(رسالة ماجستير)» join that group, a one- or two-word «(الجد)» is written
     inline, a longer one («(شاعر الطبيعة والأندلس)») becomes a «، …» subtitle;
-  * only when the name is too long, step by step, each step only as far as needed: subtitles («، …», «المسمى …») go;
-    then each joined title («X ويليه Y», «X ومعه Y», «X = Y», «X وبهامشه Y») keeps its own head — «جمع الجوامع في … ويليه
-    همع الهوامع في …» → «جمع الجوامع ويليه همع الهوامع» — the longest part first; then the editors' names are cut to two;
-    then the later joined titles; then the publisher; then the editor; a title is never cut inside a word or a name;
-  * a volume file is named like its folder: «NN - <title> (<label>).pdf» with the folder's full title, shortened by the
-    same steps only when needed.
+  * only when the name is too long, the combination that keeps the most information is chosen; what gives way, first to
+    last: a subtitle that came from parentheses, the publisher (owner: «publisher first»), editors after the second, the
+    words after the title's head («جمع الجوامع في كذا كذا ويليه همع الهوامع في كذا كذا» → «جمع الجوامع ويليه همع
+    الهوامع»), the later joined titles («ويليه، ومعه، =»), the first editor; a title is never cut inside a word or a name;
+  * a volume file is named like its folder: «NN - <title> - <label>.pdf» with the folder's full title, shortened the same
+    way only when needed; no parentheses around the label.
 compose(title, author, edition) → the name without «.pdf»; volume(nn, title, label) → the same for a volume."""
 import re, sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -150,7 +150,9 @@ def compose(title, author='', edition='', limit=LIMIT):
     for k in sorted({len(names), min(2, len(names)), min(1, len(names)), 0}, reverse=True):
         for pp, cc in ((pub, city), (pub, ''), ('', '')):
             generic = re.match(r'^(وزارة|المجلس|الهيئة|جامعة|مجمع|مركز|الأمانة|دار المعارف|المكتب)', pp or '')
-            sc = (8 if k >= 1 else 0) + (3 if k >= 2 else 0) + max(0, k - 2) + (6 if pp else 0) + ((4 if generic else 1) if cc else 0)
+            # owner 2026-10-10: when the whole title and the publisher cannot both fit, the publisher goes first; the
+            # (first) editor stays — so a publisher weighs less than any word of the title, an editor more
+            sc = (8 if k >= 1 else 0) + (2.5 if k >= 2 else 0) + 0.3 * max(0, k - 2) + (0.5 if pp else 0) + ((0.2 if generic else 0.1) if cc else 0)
             e = edition_text(names[:k], pp, cc, other)
             ed_opts.append((sc + (6 if other else 0), e))
     ed_opts = list(dict.fromkeys(ed_opts))
@@ -158,7 +160,7 @@ def compose(title, author='', edition='', limit=LIMIT):
     for n in range(len(segs), 0, -1):                       # the first n joined titles
         for combo in itertools.product(*seg_opts[:n]):
             ts = wscore(combo[0], segs[0]) + sum(4 + wscore(c, sg) for c, sg in zip(combo[1:], segs[1:]))
-            for ss in ((sub, 0.5 * len(' '.join(sub).split())), ([], 0)):
+            for ss in ((sub, 0.3 * len(' '.join(sub).split())), ([], 0)):
                 if ss[0] and not sub: continue
                 for esc, e in ed_opts:
                     nm = build(list(combo), joins[:n - 1], ss[0], author, e, kinds)
@@ -173,8 +175,10 @@ def compose(title, author='', edition='', limit=LIMIT):
     return n if B(n) <= limit else build([' '.join(w)], [], [], '', '', kinds)
 
 def volume(nn, title, label='', limit=LIMIT):
-    """«NN - <title> (<label>)»: the folder's title, shortened by the same steps only when needed"""
-    pre, post = f'{nn} - ', f' ({label})' if label else ''
+    """«NN - <title> - <label>»: the folder's title (shortened by the same steps only when needed), the label without
+    parentheses (owner 2026-10-10: «avoid ()» — both inside titles and around volume labels)"""
+    label = tidy(re.sub(r'^\((.*)\)$', r'\1', label or ''))
+    pre, post = f'{nn} - ', f' - {label}' if label else ''
     return pre + compose(title, '', '', limit - B(pre) - B(post)) + post
 
 if __name__ == '__main__':

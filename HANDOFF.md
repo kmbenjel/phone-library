@@ -17,10 +17,15 @@ Each workstream appends its progress below (the newest state first, then the his
 - Held by v2 for reading (data/review/singles-review.tsv): 91 «01 -» without evidence, 51 file name ≠ folder name
   (e.g. «الوسيط في تراجم أدباء شنقيط» holds «نجم الحيران»), 49 cut names, 11 names taken (8 OpenStax books both as folder
   and plain file: check as duplicates).
-- RUNNING (02:45): scripts/crop_library.sh (log logs/crop-library.log, per batch logs/crop-batch-NNN.log) waits for batch
-  001, then the library 300 books at a time (crop_queue.py: books ≥ 40 pages first, widest margins first; ≈ 15 books/hour →
-  ~6 weeks for 15,630 scans), refresh + WORKLOG + commit after each batch. Stop: kill its PID, then its crop_batch.py.
-  Still to do for the morning: a review page of telling samples from ~/.cache/phone-library/crop-sheets/.
+- Crop of the whole library STOPPED by the owner (03:40, before it started): the rules let almost everything through
+  (median text gain +13 % < 15 %, so most books qualify by small tilts ≥ 0.2°: 56/60 sample, 13/13 batch 001), the
+  two-column index tilt is still open (most classical books end with such an index → would be redone), ~6 weeks of
+  laptop + 174 GB over Wi-Fi. Next: batch 001 ends (~04:30) → review page of telling samples for the morning → fix the
+  two-column index tilt → the owner chooses the scope (e.g. gain ≥ 15 % or visible tilt ≥ 0.5°, the books the owner reads first).
+  scripts/crop_queue.py + crop_library.sh stay ready (no batch-002 was made).
+- Names: AGENTS.md §4 rewritten with the owner's rules (03:45): nothing shortened when it fits, all info (editor,
+  publisher) from evidence, no () inside titles nor around volume labels («NN - <folder title> - <label>.pdf»), publisher
+  first to go, then title tails («جمع الجوامع ويليه همع الهوامع»); scripts/name_compose.py builds them (dry samples shown).
 - Crop and renames at the same time: DONE (8a45a79) — crop_batch follows logged moves before staging and before the
   append; crop_queue skips a book cropped under any earlier name.
 
