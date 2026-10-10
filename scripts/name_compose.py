@@ -2,7 +2,7 @@
   * nothing is shortened when the whole name fits in 200 bytes: the full title, the author, the editor, the publisher —
     every piece of information we have («All the possible info should be present»);
   * no parentheses and no commas anywhere (owner: «avoid ()», «تبقي على الأقواس», «استغن عن الفواصل»):
-    «<title> - <author> - ت <editor> - <publisher> <city> <year>»,
+    «<title> - <author> - ت <editor> - <publisher> <city> <year>» (no «ط», no «=»: «X أو Y»),
     «… - ط <publisher>»; a title's own «(مخطوط)», «(رسالة ماجستير)» go after the edition («… - مخطوط»), a one- or two-word
     «(الجد)» is written inline, a longer one («(شاعر الطبيعة والأندلس)») becomes a «، …» subtitle;
   * only when the name is too long, the combination that keeps the most information is chosen; what gives way, first to
@@ -78,7 +78,7 @@ def without_publisher(ed):
 
 def build(title_parts, joins, sub, author, ed, kinds=()):
     t = title_parts[0]
-    for j, p in zip(joins, title_parts[1:]): t += f' {j} {p}'
+    for j, p in zip(joins, title_parts[1:]): t += f" {'أو' if j == '=' else j} {p}"     # owner: no «=» — «X أو Y»
     if sub: t += '، ' + '، '.join(sub)
     s = t
     if author: s += f' - {author}'
@@ -124,7 +124,7 @@ def edition_text(names, pub, city, other, year=''):
     if city and norm(city) in norm(pub): city = ''               # «الجامعة الأميركية في بيروت» already says where
     p = ' '.join(x for x in (pub, city if pub else '', year) if x)
     if names: return 'ت ' + ' و'.join(names) + (f' - {p}' if p else '')
-    return f'ط {p}' if p else ''
+    return p                                                          # owner: no «ط» — the publisher speaks for itself
 
 def title_options(seg):
     """(text, words kept) of a joined title's part: whole, without its subtitle, then cut at each natural break"""
@@ -188,12 +188,20 @@ def compose(title, author='', edition='', limit=LIMIT, year='', kinds_extra=()):
     n = build([' '.join(w)], [], [], author, '', kinds)
     return n if B(n) <= limit else build([' '.join(w)], [], [], '', '', kinds)
 
-def volume(nn, title, label='', limit=LIMIT):
-    """«NN - <title> - <label>»: the folder's title (shortened by the same steps only when needed), the label without
-    parentheses (owner 2026-10-10: «avoid ()» — both inside titles and around volume labels)"""
+def volume(nn, title, label='', limit=LIMIT, author='', edition='', year=''):
+    """«NN - <title> - <author> - ت <editor> - <publisher> <city> <year> - <label>»: everything the folder says, then the
+    volume's label (owner 2026-10-10: the volume files carry all the information too), shortened only when needed"""
     label = tidy(re.sub(r'^\((.*)\)$', r'\1', label or ''))
     pre, post = f'{nn} - ', f' - {label}' if label else ''
-    return pre + compose(title, '', '', limit - B(pre) - B(post)) + post
+    return pre + compose(title, author, edition, limit - B(pre) - B(post), year=year) + post
+
+def volumes(title, items, author='', edition='', year='', limit=LIMIT):
+    """the files of one set: ONE shared part (title, author, editor, publisher…) for every volume, sized for the longest
+    «NN - … - <label>», so that no volume says less than another; items = [(nn, label)] → names (without «.pdf»)"""
+    clean = [(nn, tidy(re.sub(r'^\((.*)\)$', r'\1', lb or ''))) for nn, lb in items]
+    room = min(limit - B(f'{nn} - ') - (B(f' - {lb}') if lb else 0) for nn, lb in clean)
+    core = compose(title, author, edition, room, year=year)
+    return [f'{nn} - {core}' + (f' - {lb}' if lb else '') for nn, lb in clean]
 
 if __name__ == '__main__':
     for t in ('جمع الجوامع في أصول الفقه وقواعده الكلية ويليه همع الهوامع في شرح جمع الجوامع في علم العربية وفنونها كلها',

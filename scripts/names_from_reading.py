@@ -23,7 +23,7 @@ def name_of(r):
     place = '، '.join(x for x in (pub, city.replace('، ', ' و') if city and pub else '') if x)
     if ed and kind == 'ترجمة': edition = f'ت {ed}' + (f' - {place}' if place else '')
     elif ed: edition = f'ت {ed}' + (f' - {place}' if place else '')
-    else: edition = f'ط {place}' if place else ''
+    else: edition = f'ط {place}' if place else ''          # «ط» only marks the field for name_compose; not rendered
     extra = [kind] if kind and kind not in ('نظم', 'متن', 'ترجمة') else []
     n = compose(t, '' if (au and redundant(au, t)) else au, edition, year=year_of(r['year']), kinds_extra=extra)
     return n.replace(' - ت ', ' - ترجمة ', 1) if kind == 'ترجمة' and ed else n

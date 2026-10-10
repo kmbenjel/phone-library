@@ -87,9 +87,10 @@ Single-volume books are stored as plain files in the category folder without the
   full title, the author, the editor(s), the publisher — taken from evidence (the name itself, the exact-size Waqfeya
   record when its title is the same book, the title page).
 - **No parentheses and no commas anywhere** (owner: «avoid ()», «تبقي على الأقواس», «استغن عن الفواصل في كل العناوين»):
-  the parts follow one another with « - », the edition marked by «ت» (editor), «ترجمة» (translator) or «ط» (publisher
-  only); publisher, city and year separated by single spaces:
-  `<title> - <author> - ت <editor> - <publisher> <city> <year>` («… - ت محمد حجي - دار الغرب الإسلامي بيروت 1997»). A title's
+  the parts follow one another with « - »; the editor marked by «ت», a translator by «ترجمة», the publisher by nothing
+  (owner: no «ط»); publisher, city and year separated by single spaces; no «=» — an alternative title joins with «أو»:
+  `<title> - <author> - ت <editor> - <publisher> <city> <year>` («… - ت محمد حجي - دار الغرب الإسلامي بيروت 1997»,
+  «الجمع والفرق أو كتاب الفروق - الجويني - …»). A title's
   own «(مخطوط)», «(رسالة ماجستير)» go after the edition («… - مخطوط»); a one- or two-word aside is written inline
   («ابن رشد (الجد)» → «ابن رشد الجد»); a longer aside becomes a «، …» subtitle.
 - **Only when the name is too long**, the combination that keeps the most information is chosen. What gives way, first
@@ -113,8 +114,9 @@ Single-volume books are stored as plain files in the category folder without the
   number (e.g. «عالم المعرفة»: `003 - التفكير العلمي.pdf`). Never "01 -" in front of every item.
 - Indexes (الفهارس) take the number after the last volume, never 99. For a periodical they take `00`.
 - A companion that is not a volume (نسخة أخرى، صور المخطوطات، ملحق، the whole book in one file) has no number.
-- Multi-volume: `NN - <title> - <volume label>.pdf` — `<title>` = the folder's title (shortened by the rule above only
-  when needed), `NN` = the volume number, zero-padded to two digits (`01, 02`) or more for large collections. Volume
+- Multi-volume: `NN - <title> - <author> - ت <editor> - <publisher> - <volume label>.pdf` — every volume carries all
+  the folder's information (owner 2026-10-10), the same shared part in every volume of the set (name_compose.volumes:
+  sized for the longest label, shortened by the rule above only when needed), `NN` = the volume number, zero-padded to two digits (`01, 02`) or more for large collections. Volume
   numbers are never repeated. `00` is reserved for front matter and may appear more than once:
   `00 - <title> - الواجهة.pdf` (cover/title pages), `00 - <title> - المقدمة.pdf`. A preface belonging to one volume keeps
   that volume's number with `- المقدمة`. The label describes the contents (`- الطهارة - الصلاة`, `- الفهارس`); a volume
