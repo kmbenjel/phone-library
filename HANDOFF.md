@@ -67,6 +67,13 @@ auto-check (dry-run, sample to the owner, then apply); (4) the same for folders 
   7 workers swapped the laptop (15 GB): keep ≤ 4 (one large book took 3.2 GB). When it ends: build a review page from
   the sheets for the owner (he asked for interesting samples, not whole books), then batch the library under the same rules.
 
+### CROP GATE (owner 2026-10-10, «are you solving this for what's coming»): NO crop batch may start before
+(1) the two-column index tilt fix (design below: gutter + per-column edge_tilt, both columns agree) is in book_crop.py with
+الفوائد 456/457 as «turn yes» and المثلث 499 / الاتباع 98 / الفوائد 446 / فهرسة 355 as «leave» in crop-regression.tsv, and
+crop_regress passes; (2) the «cut at the source» check exists (ink touching the image's own edge on text rows → listed,
+never cropped tighter). Then re-measure batch 001's 50 books and redo (crop_batch --undo + crop) only those with two-column
+index pages; show the owner a sample before any further batch.
+
 ### Crop method (scripts/book_crop.py, commit 9463719 + bda4ec5): regression 0 failures (data/improve/crop-regression.tsv)
 - Rules the owner set on 2026-10-09 (all in the docstring): one page size per book, exact (frames: a larger part is shrunk
   to fit, never a wider page); margins 6 % of the text width; marginal notes kept (notes_of); uploaders' stamps found by
