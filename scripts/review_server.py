@@ -3,6 +3,7 @@
   GET  /                      → the report of unreadable names (site/names-unreadable.html)
   GET  /<page>.html           → any page of site/
   GET  /copies/<file>         → the local copy of a book (data/names/copies/), opened in the browser's PDF viewer
+  GET  /ocr/<book>/<file>     → the original and the cleaned copy of an OCR sample book (data/improve/ocr/)
   GET  /api/comments?r=REPORT → the latest check/comment per item of that report
   POST /api/comment           → {report, n, checked, comment} appended to data/names/review-comments.jsonl (with the time)
 Comments are read back by the agent from data/names/review-comments.jsonl. Nothing else is served or written.
@@ -11,6 +12,7 @@ import json, os, sys, time, urllib.parse
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE, COPIES = os.path.join(ROOT, 'site'), os.path.join(ROOT, 'data', 'names', 'copies')
+OCR = os.path.join(ROOT, 'data', 'improve', 'ocr')            # /ocr/<book>/orig.pdf|final.pdf (ocr_clean.py)
 LOG = os.path.join(ROOT, 'data', 'names', 'review-comments.jsonl')
 
 def latest(report):
@@ -30,7 +32,8 @@ class H(SimpleHTTPRequestHandler):
         self.send_header('Content-Length', str(len(b))); self.end_headers(); self.wfile.write(b)
     def translate_path(self, path):
         p = urllib.parse.unquote(urllib.parse.urlsplit(path).path)
-        base, rel = (COPIES, p[len('/copies/'):]) if p.startswith('/copies/') else (SITE, p.lstrip('/') or 'names-unreadable.html')
+        base, rel = (COPIES, p[len('/copies/'):]) if p.startswith('/copies/') else \
+                    (OCR, p[len('/ocr/'):]) if p.startswith('/ocr/') else (SITE, p.lstrip('/') or 'names-unreadable.html')
         full = os.path.realpath(os.path.join(base, rel))
         return full if full.startswith(os.path.realpath(base) + os.sep) else os.path.join(SITE, '__nope__')
     def do_GET(self):
