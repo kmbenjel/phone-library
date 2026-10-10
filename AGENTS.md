@@ -83,13 +83,14 @@ Single-volume books are stored as plain files in the category folder without the
 **Category** — All Shamela categories must be present and contain books. It is strictly forbidden to create any category that can fit into one of Shamela's categories.
 
 **Names: one rule for folders, single files and volumes** (owner, 2026-10-10; built by `scripts/name_compose.py`)
-- **Nothing is shortened when the whole name fits (≤ 200 bytes).** Every piece of information we have is in it: the
+- **Nothing is shortened when the whole name fits (≤ 240 bytes).** Every piece of information we have is in it: the
   full title, the author, the editor(s), the publisher — taken from evidence (the name itself, the exact-size Waqfeya
   record when its title is the same book, the title page).
 - **No parentheses and no commas anywhere** (owner: «avoid ()», «تبقي على الأقواس», «استغن عن الفواصل في كل العناوين»):
   the parts follow one another with « - »; the editor marked by «ت», a translator by «ترجمة», the publisher by nothing
   (owner: no «ط»); publisher, city and year separated by single spaces; no «=» — an alternative title joins with «أو»:
-  `<title> - <author> - ت <editor> - <publisher> <city> <year>` («… - ت محمد حجي - دار الغرب الإسلامي بيروت 1997»,
+  `<title> - <author> - ت <editor> - <publisher> <city>` — no year (owner: the date is not needed in names)
+  («… - ت محمد حجي - دار الغرب الإسلامي بيروت»,
   «الجمع والفرق أو كتاب الفروق - الجويني - …»). A title's
   own «(مخطوط)», «(رسالة ماجستير)» go after the edition («… - مخطوط»); a one- or two-word aside is written inline
   («ابن رشد (الجد)» → «ابن رشد الجد»); a longer aside becomes a «، …» subtitle.
@@ -102,7 +103,7 @@ Single-volume books are stored as plain files in the category folder without the
 **Book folder** (for multi-file works): `<title> - <author> - <edition>`
 - `<author>`: the commonly used name (e.g. `ابن قدامة`, `الإمام الغزالي`); not repeated when the title already holds it
   («تفسير ابن أبي حاتم الرازي»). Omit for periodicals/series.
-- `<edition>`: `ت <editor> و<editor> - <publisher> <city> <year>` or `ط <publisher> <city> <year>`; omit what is unknown.
+- `<edition>`: `ت <editor> و<editor> - <publisher> <city>` or `<publisher> <city>`; omit what is unknown.
 - Collections: `مؤلفات <author> - <publisher>`; periodicals: `مجلة <name> - <publisher>`; series: `سلسلة <name> - <publisher>`.
 - Different editions of the same book are separate folders that differ only in their edition part.
 
@@ -131,7 +132,10 @@ Single-volume books are stored as plain files in the category folder without the
 **Characters** (the files are also copied to FAT/Windows sometimes):
 - no `\ / : * ? " < > |`: `ت: فلان` → `ت فلان`, `?` → `؟`, `"` → `«»`
 - no `_` used as a stand-in for `:` or `/`, no `_alt`, no `(نسخة ثانية)` (that is a duplicate → quarantine)
-- single spaces, no leading/trailing spaces or dots; ≤ 200 bytes per name (≈ 95 Arabic letters)
+- single spaces, no leading/trailing spaces or dots; ≤ 240 bytes per name (≈ 118 Arabic letters). Why: the phone's file
+  system allows 255 bytes per name (UTF-8; an Arabic letter takes 2); ~15 bytes are kept for temporary upload suffixes.
+  Any length within that is fine when it is useful (owner 2026-10-10). Copies to Windows: Explorer limits the whole path to
+  ~260 characters unless long paths are enabled.
 
 ## 4b. Sections (categories)
 

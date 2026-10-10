@@ -1,5 +1,5 @@
 """Book and volume names under the owner's rules of 2026-10-10 (AGENTS.md §4):
-  * nothing is shortened when the whole name fits in 200 bytes: the full title, the author, the editor, the publisher —
+  * nothing is shortened when the whole name fits in 240 bytes: the full title, the author, the editor, the publisher —
     every piece of information we have («All the possible info should be present»);
   * no parentheses and no commas anywhere (owner: «avoid ()», «تبقي على الأقواس», «استغن عن الفواصل»):
     «<title> - <author> - ت <editor> - <publisher> <city> <year>» (no «ط», no «=»: «X أو Y»),
@@ -16,7 +16,9 @@ import re, sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from textnorm import norm
 
-LIMIT = 196                                   # + «.pdf» = 200 bytes
+LIMIT = 236                                   # + «.pdf» = 240 bytes: the phone's file system allows 255 bytes per
+                                              # name (UTF-8, ≈ 125 Arabic letters); ~15 kept for temporary upload suffixes (owner
+                                              # 2026-10-10: «whatever length, once useful and technically acceptable»)
 JOIN = re.compile(r'\s+(ويليه|ويليها|ومعه|ومعها|وبهامشه|وبهامشها|وبذيله|وذيله|وفي آخره|=)\s+')
 SUB = re.compile(r'\s*،\s*|\s+-\s+|\s+(?:المسمى|المسماة|الموسوم|الموسومة|وهو|وهي)\s+')
 PARTICLES = {norm(w) for w in 'في من على عن إلى الى بين مع لما لمن لأهل لمعرفة لبيان لشرح بشرح شرح وهو أو'.split()}

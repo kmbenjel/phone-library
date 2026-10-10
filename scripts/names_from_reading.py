@@ -25,7 +25,7 @@ def name_of(r):
     elif ed: edition = f'ت {ed}' + (f' - {place}' if place else '')
     else: edition = f'ط {place}' if place else ''          # «ط» only marks the field for name_compose; not rendered
     extra = [kind] if kind and kind not in ('نظم', 'متن', 'ترجمة') else []
-    n = compose(t, '' if (au and redundant(au, t)) else au, edition, year=year_of(r['year']), kinds_extra=extra)
+    n = compose(t, '' if (au and redundant(au, t)) else au, edition, kinds_extra=extra)   # no year in names (owner)
     return n.replace(' - ت ', ' - ترجمة ', 1) if kind == 'ترجمة' and ed else n
 
 if __name__ == '__main__':

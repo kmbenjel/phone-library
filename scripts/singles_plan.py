@@ -1,5 +1,5 @@
 """Single-volume books: a folder holding one PDF becomes a plain file in its section (AGENTS.md §4 «Single file»):
-`<title> - <author> (<edition>).pdf` (the title is shortened only when the name would pass 200 bytes).
+`<title> - <author> (<edition>).pdf` (the title is shortened only when the name would pass 240 bytes).
 
 v2 (2026-10-10, owner: «single books in folders» first). v1 held back 1,055 of 1,178 folders, 946 of them only because
 the folder name had no « - » before its author (Waqfeya's «<title> لفلان» form). Now:
@@ -128,6 +128,17 @@ def file_info(fn, folder_title, known=frozenset()):
     expl = {w for w in norm(au).split()} | {'ط', 'ت', 'تحقيق'}
     return au, {w for w in extra if w not in expl and w.removeprefix('ال') not in {x.removeprefix('ال') for x in expl}}
 
+def drop_attribution(title, author):
+    """«… للباقلاني» when the author is «الباقلاني»: the closing «لفلان» names him and goes (as name_fix_plan)"""
+    w, a_ = title.split(), norm(author)
+    forms = {'ل' + a_, 'لل' + a_[2:] if a_.startswith('ال') else 'ل' + a_}
+    for k in range(min(4, len(w) - 1), 0, -1):
+        if norm(' '.join(w[-k:])) in forms: return ' '.join(w[:-k])
+    last = norm(author).split()[-1].removeprefix('ال')
+    m = re.search(r'\s+(?:ل|لل|لابن\s+|لأبي\s+)(\S+)$', title)
+    if m and norm(m.group(1)).removeprefix('ال').removeprefix('ل') == last: return title[:m.start()].strip()
+    return title
+
 def same_book(t, b):
     """a Waqfeya record lends its author/editor only when its title is this book (a bundle's record names another)"""
     rt = {w for w in title_key(b.get('name', '')).split() if len(w) > 2}; tt = {w for w in norm(t).split() if len(w) > 2}
@@ -182,6 +193,15 @@ def main(index, out, review_out=None, skip=()):
         try: meta[N(d['path'])] = (eval(d['meta']) if isinstance(d.get('meta'), str) else (d.get('meta') or {})).get('title', '') or ''
         except Exception: pass
     known, back = known_authors(), moved_from()
+    # more evidence (owner 2026-10-10: «هناك عناوين كثيرة لم تسمّ من المعلومات المتعلقة بها … تتمم»):
+    # the edition cards (data/editions/edition-info.json: Waqfeya record, imprint page read by eye, Shamela card of the
+    # same edition) and the Shamela matches (one author's works → his common name; as in name_fix_plan, plan 308)
+    cards = json.load(open(J('data/editions/edition-info.json'), encoding='utf-8'))
+    catalog = {f"{b['cat']}/{b['folder']}": str(b['id']) for b in json.load(open(J('data/catalog.json'), encoding='utf-8'))['books']}
+    shm = collections.defaultdict(set)
+    for r in csv.DictReader(open(J('data/compare/shamela-matches.tsv'), encoding='utf-8'), delimiter='\t'):
+        for i in (r['phone_book_ids'] or '').split():
+            if r['author']: shm[i].add(re.sub(r'\s*\([^)]*\)', '', r['author']).split('،')[0].strip())
     cutrev = {N(r['book']) for r in csv.DictReader(open(J('data/review/name-fix-review.tsv'), encoding='utf-8'), delimiter='\t')
               if 'cut' in r['defect']}
     under = collections.defaultdict(list); deep = set(); plain = collections.defaultdict(set)
@@ -238,12 +258,24 @@ def main(index, out, review_out=None, skip=()):
             elif doubt: stats['note: «ل» name not used — ' + doubt] += 1
         if gift: how += '; ' + why1
         elif one: how += '; ' + why1
+        sa = shm.get(catalog.get(folder, ''), set())
+        if not au and len(sa) == 1 and len(norm(t).split()) > 2:
+            au = next(iter(sa)); t = drop_attribution(t, au); how += '; author: Shamela match'
         if b and same_book(t, b):
             au, ed, got = enrich(au, ed, b)
             if got: how += '; from the exact-size Waqfeya record: ' + ', '.join(got)
+        card = cards.get(folder) or {}
+        cv = lambda k: str((card.get(k) or {}).get('v') or '').strip()
+        if cv('editor') and not ed.startswith('ت ') and norm(cv('editor')) not in norm(ed):
+            pub0 = ed[2:].strip() if ed.startswith('ط ') else cv('publisher').replace(' - ', '، ')
+            ed = f"ت {researcher_short(cv('editor'))}" + (f' - {pub0}' if pub0 else ''); how += f"; editor: card ({card['editor'].get('s')})"
+        elif cv('publisher') and not ed:
+            ed = 'ط ' + cv('publisher').replace(' - ', '، '); how += f"; publisher: card ({card['publisher'].get('s')})"
+        year = cv('gregorian') or (cv('hijri') + ' هـ' if cv('hijri') else '')
+        if year and year in ed: year = ''
         t, au, ed = clean(t), clean(au), clean(ed)
         if not t: hold('skip: no title', folder, fn); continue
-        new = name_compose.compose(t, au if au and not redundant(au, t) else '', ed) + '.pdf'
+        new = name_compose.compose(t, au if au and not redundant(au, t) else '', ed, year=year) + '.pdf'
         if norm(new.removesuffix('.pdf')) in plain[cat]:
             hold('wait: the plain name is taken in the section', folder, new); continue
         plain[cat].add(norm(new.removesuffix('.pdf')))
