@@ -17,6 +17,10 @@ Each workstream appends its progress below (the newest state first, then the his
 - Held by v2 for reading (data/review/singles-review.tsv): 91 «01 -» without evidence, 51 file name ≠ folder name
   (e.g. «الوسيط في تراجم أدباء شنقيط» holds «نجم الحيران»), 49 cut names, 11 names taken (8 OpenStax books both as folder
   and plain file: check as duplicates).
+- RUNNING (02:45): scripts/crop_library.sh (log logs/crop-library.log, per batch logs/crop-batch-NNN.log) waits for batch
+  001, then the library 300 books at a time (crop_queue.py: books ≥ 40 pages first, widest margins first; ≈ 15 books/hour →
+  ~6 weeks for 15,630 scans), refresh + WORKLOG + commit after each batch. Stop: kill its PID, then its crop_batch.py.
+  Still to do for the morning: a review page of telling samples from ~/.cache/phone-library/crop-sheets/.
 - Crop and renames at the same time: crop_batch keys done.tsv by path and checks XMD5 before appending, so a rename during a
   crop fails it safely but a renamed cropped book could be queued again — teach crop_batch to follow logged moves before the
   library-wide batches start.
