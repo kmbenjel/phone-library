@@ -61,6 +61,7 @@ def cuts(seg):
         if n in PARTICLES or n in {'فيما', 'مما', 'عما', 'بما', 'لما', 'وما', 'ومن', 'وفي'} or (len(n) > 3 and (n.startswith('و') or n.startswith('لل')
                 or n.startswith('لم') or n.startswith('لا'))):
             k = w[:i]
+            if len(k) > 2 and norm(k[-2]) in {'ما', 'مما', 'فيما', 'عما', 'بما', 'لما', 'وما'}: continue   # never «… وبيان ما ورد»
             # a «و…» word is not left hanging without its complement («وتفسير | لمسلم بن خالد»)
             if len(k) > 1 and n.startswith('ل') and norm(k[-1]).startswith('و') and len(norm(k[-1])) > 3: k.pop()
             while len(k) > 1 and norm(k[-1]) in WEAK_END: k.pop()
