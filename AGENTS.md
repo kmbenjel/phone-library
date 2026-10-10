@@ -86,23 +86,24 @@ Single-volume books are stored as plain files in the category folder without the
 - **Nothing is shortened when the whole name fits (≤ 200 bytes).** Every piece of information we have is in it: the
   full title, the author, the editor(s), the publisher — taken from evidence (the name itself, the exact-size Waqfeya
   record when its title is the same book, the title page).
-- **No parentheses inside a title, none around a volume's label.** The only parentheses are the edition group at the end
-  of a folder or single-file name. A title's own «(مخطوط)», «(رسالة ماجستير)» move into that group; a one- or two-word
-  aside is written inline («ابن رشد (الجد)» → «ابن رشد الجد»); a longer aside becomes a «، …» subtitle.
+- **No parentheses anywhere** (owner: «avoid ()», then «تبقي على الأقواس»): the parts follow one another with « - »,
+  the edition marked by «ت» (editor) or «ط» (publisher only): `<title> - <author> - ت <editor> - <publisher>`. A title's
+  own «(مخطوط)», «(رسالة ماجستير)» go after the edition («… - مخطوط»); a one- or two-word aside is written inline
+  («ابن رشد (الجد)» → «ابن رشد الجد»); a longer aside becomes a «، …» subtitle.
 - **Only when the name is too long**, the combination that keeps the most information is chosen. What gives way, first
   to last: a subtitle that came from parentheses; the publisher (owner: when the whole title and the publisher cannot
   both fit, the publisher goes); editors after the second; the words after the title's head — joined titles keep their
   heads: «جمع الجوامع في كذا كذا ويليه همع الهوامع في كذا كذا» → «جمع الجوامع ويليه همع الهوامع»; the later joined titles
   («ويليه، ومعه، وبهامشه، =»); the first editor. A title is never cut inside a word or a name; no `...`.
 
-**Book folder** (for multi-file works): `<title> - <author> (<edition>)`
+**Book folder** (for multi-file works): `<title> - <author> - <edition>`
 - `<author>`: the commonly used name (e.g. `ابن قدامة`, `الإمام الغزالي`); not repeated when the title already holds it
   («تفسير ابن أبي حاتم الرازي»). Omit for periodicals/series.
 - `<edition>`: `ت <editor> و<editor> - <publisher>، <city>` or `ط <publisher>`; omit when unknown.
-- Collections: `مؤلفات <author> (<publisher>)`; periodicals: `مجلة <name> (<publisher>)`; series: `سلسلة <name> (<publisher>)`.
-- Different editions of the same book are separate folders that differ only in `(<edition>)`.
+- Collections: `مؤلفات <author> - <publisher>`; periodicals: `مجلة <name> - <publisher>`; series: `سلسلة <name> - <publisher>`.
+- Different editions of the same book are separate folders that differ only in their edition part.
 
-**Single file** (no folder): `<title> - <author> (<edition>).pdf` — the same rule as a folder.
+**Single file** (no folder): `<title> - <author> - <edition>.pdf` — the same rule as a folder.
 
 **Files**
 - Independent books collected in one folder (a series such as «سلسلة أعلام المسلمين», «مؤلفات فلان») carry **no

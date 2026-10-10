@@ -99,6 +99,9 @@ def parse_folder(name):
     base = m.group(1) if m else name
     if ed and not re.match(r'^(ت|ط|رسالة|دار|مكتبة|مؤسسة|المكتب|مطبعة)', ed): base, ed = name, ''   # «(رسالة علمية)», «(الجد)» belong to the title
     parts = [x.strip() for x in base.split(' - ')]
+    k = next((i for i in range(1, len(parts)) if re.match(r'^(ت|ط)\s|^(مخطوط|رسالة)', parts[i])), None)
+    if k is not None and not ed:                     # the form without parentheses: «title - author - ت editor - publisher»
+        ed, parts = ' - '.join(parts[k:]), parts[:k]
     title, author = (' - '.join(parts[:-1]), parts[-1]) if len(parts) > 1 else (parts[0], '')
     author = re.split(r'\s*؛', author)[0].strip()
     if re.match(r'^(من\s|ج\s*\d|الجزء|المجلد|قطعة|السفر|القسم|سورة\s)', author):    # a part described, not an author

@@ -1,9 +1,9 @@
 """Book and volume names under the owner's rules of 2026-10-10 (AGENTS.md §4):
   * nothing is shortened when the whole name fits in 200 bytes: the full title, the author, the editor, the publisher —
     every piece of information we have («All the possible info should be present»);
-  * no parentheses inside the title: the one group at the end holds the edition «(ت المحقق - الناشر)» / «(ط الناشر)», or a
-    volume's label; a title's own «(مخطوط)», «(رسالة ماجستير)» join that group, a one- or two-word «(الجد)» is written
-    inline, a longer one («(شاعر الطبيعة والأندلس)») becomes a «، …» subtitle;
+  * no parentheses anywhere (owner: «avoid ()», then «تبقي على الأقواس»): «<title> - <author> - ت <editor> - <publisher>»,
+    «… - ط <publisher>»; a title's own «(مخطوط)», «(رسالة ماجستير)» go after the edition («… - مخطوط»), a one- or two-word
+    «(الجد)» is written inline, a longer one («(شاعر الطبيعة والأندلس)») becomes a «، …» subtitle;
   * only when the name is too long, the combination that keeps the most information is chosen; what gives way, first to
     last: a subtitle that came from parentheses, the publisher (owner: «publisher first»), editors after the second, the
     words after the title's head («جمع الجوامع في كذا كذا ويليه همع الهوامع في كذا كذا» → «جمع الجوامع ويليه همع
@@ -81,8 +81,8 @@ def build(title_parts, joins, sub, author, ed, kinds=()):
     if sub: t += '، ' + '، '.join(sub)
     s = t
     if author: s += f' - {author}'
-    ed = ' - '.join([e for e in [ed] + list(kinds) if e])          # «(مخطوط)», «(رسالة ماجستير)» stay to the end
-    if ed: s += f' ({ed})'
+    ed = ' - '.join([e for e in [ed] + list(kinds) if e])          # «مخطوط», «رسالة ماجستير» stay to the end
+    if ed: s += f' - {ed}'                                         # owner 2026-10-10: no parentheses at all
     return tidy(s)
 
 def one_name(x):
@@ -145,6 +145,10 @@ def compose(title, author='', edition='', limit=LIMIT):
     t, kinds, sub = split_title(tidy(title))
     names, pub, city, other = parse_edition(edition)
     author = TASHKEEL.sub('', one_name(author))
+    for x in re.findall(r'\(([^()]*)\)', author):        # «اليوسي (مخطوط)», «David Werner (Hesperian 2025)»: edition words
+        x = tidy(x)
+        if x and norm(x) not in norm(edition): kinds.append(x)
+    author = tidy(re.sub(r'\([^()]*\)', ' ', author))
     parts = JOIN.split(t)
     segs, joins = parts[0::2], parts[1::2]
     full = build(segs, joins, sub, author, edition_text(names, pub, city, other), kinds)
