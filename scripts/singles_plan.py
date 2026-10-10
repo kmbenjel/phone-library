@@ -45,11 +45,13 @@ def known_authors():
             k.add(norm(author_short(a)))
             last = norm(re.split(r'[،(]', a)[0]).split()[-1:]       # the nisba alone («الإفراني»), as the titles write it
             if last and last[0].startswith('ال') and len(last[0]) >= 5: k.add(last[0])
+    seen = collections.defaultdict(set)                 # phone names: an author part counts only when it signs two titles
     for p, _ in csv.reader(open(J('data/phone/index-now.tsv'), encoding='utf-8'), delimiter='\t'):
         for part in p.split('/')[1:]:
             base = re.sub(r'\([^()]*\)', '', part.removesuffix('.pdf'))
             bits = [x.strip() for x in base.split(' - ')]
-            if len(bits) >= 2 and not re.match(r'^\d+$', bits[0]): k.add(norm(bits[-1]))
+            if len(bits) >= 2 and not re.match(r'^\d+$', bits[0]): seen[norm(bits[-1])].add(norm(bits[0]))
+    k |= {a for a, titles in seen.items() if len(titles) >= 2}
     return {a for a in k if a and len(a) > 3 and a not in COMMON_GIVEN}
 
 def lam_author(title, known, record_author=''):
@@ -63,6 +65,8 @@ def lam_author(title, known, record_author=''):
         elif x.startswith('لابن') or x.startswith('لإ') or x.startswith('لأ') or x.startswith('لعبد'): first = x[1:]
         else: first = x[1:]
         cand = ' '.join([first] + w[i + 1:])
+        if norm(first) in {norm(x) for x in ('الإمام', 'الشيخ', 'الحافظ', 'العلامة', 'القاضي')} and len(w) > i + 1:
+            cand = ' '.join(w[i + 1:])                 # «للإمام ابن حجر العسقلاني» → «ابن حجر العسقلاني»
         if len(norm(cand)) < 4: continue
         nc = norm(cand); ok = nc in known
         if not ok:                                   # «ابن عرفة الورغمي»: a known name followed by its nisba
@@ -106,7 +110,7 @@ def parse_folder(name):
 
 JUNK = re.compile(r'كتاب اقرا اونلاين|اقرا اونلاين|نسخة مفهرسة وقابلة للبحث|مفهرس[ةه]?|كاملا|ألوان|\bpdf\b|\b\d+\b|book\d*|[A-Za-z_]+')
 
-def file_info(fn, folder_title):
+def file_info(fn, folder_title, known=frozenset()):
     """what the file name adds to the folder name: (author, extra words not explained)"""
     stem = re.sub(r'^0*1\s*-\s*', '', fn.removesuffix('.pdf'))
     stem = re.sub(r'الهدية\s*\(\s*\d+\s*\)', '', stem)
@@ -115,6 +119,8 @@ def file_info(fn, folder_title):
     parts = [x.strip() for x in base.split(' - ') if x.strip()]
     au = parts[-1] if len(parts) > 1 and not re.match(r'^(ط|ت)\.?\s', parts[-1]) else ''
     au = re.split(r'\s*[؛،]', au)[0].strip()
+    if au and norm(au) not in known and not any(norm(' '.join(au.split()[:j])) in known for j in range(2, len(au.split()))):
+        au = ''                                        # «العصر الجاهلي لشوقي ضيف» is not an author: its words stay «extra»
     extra = {w for w in norm(stem).split() if len(w) > 2} - set(norm(folder_title).split())
     expl = {w for w in norm(au).split()} | {'ط', 'ت', 'تحقيق'}
     return au, {w for w in extra if w not in expl and w.removeprefix('ال') not in {x.removeprefix('ال') for x in expl}}
@@ -218,7 +224,7 @@ def main(index, out, review_out=None, skip=()):
         t, au, ed = parse_folder(name)
         au = re.sub(r'\s+ط\s+\S+$', '', au)
         how = 'folder name'
-        fau, extra = file_info(fn, name)
+        fau, extra = file_info(fn, name, known)
         if extra:
             hold('wait: the file name says more than the folder name (read it)', folder, fn); continue
         if fau and not au and norm(fau) not in norm(t):
