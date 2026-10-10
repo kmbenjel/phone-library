@@ -46,7 +46,8 @@ def check(row, rec, pdf):
         got = 'yes' if p.get('skew') else 'no'
         lvl, img = p.get('after_tilt'), p.get('after_tilt_image')     # both measures must read the turned page level
         ok = got == expect and (got == 'no' or (lvl is not None and img is not None and ((lvl <= bc.LEVEL and img <= bc.IMG_LEVEL)
-             or (p.get('curved') and lvl <= bc.CURVED and img <= bc.CURVED) or (p.get('level_by_lines') is not None and max(lvl, img) <= 0.35)))) \
+             or (p.get('curved') and lvl <= bc.CURVED and img <= bc.CURVED) or (p.get('level_by_lines') is not None and max(lvl, img) <= 0.35)
+             or (p.get('level_by_edge') is not None and lvl <= 0.2)))) \
              and (expect == 'no' or not p.get('untreated_tilt'))
         return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}){" curved" if p.get("curved") else ""}, untreated {p.get("untreated_tilt")}'
     if what == 'cropped':                              # cropped, not left whole (a book without print in its margins)

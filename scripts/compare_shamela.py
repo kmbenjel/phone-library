@@ -174,10 +174,36 @@ for b in cat['books']:
     pauth[b['id']] = author_tokens(_an(ba)) | author_tokens(_an(tail))
     praw[b['id']] = ' ' + norm(_an(ba).split('؛')[0]) + ' | ' + norm(_an(tail)) + ' | ' + norm(_an(b['folder'])) + ' '
     plast[b['id']] = last_name(_an(ba).split('؛')[0] or tail)
-full_at, cur_author, card_toks = set(), '', set()
+def nasab(s):
+    """«عبد الله بن محمد بن جعفر بن حبان الأصبهاني» → ('عبد الله', 'محمد', 'جعفر'): the man, his father and grandfather —
+    with all three equal, two full names are the same man (a nisba alone is not: ابن منده and أبو الشيخ are both الأصبهاني)"""
+    for part in re.split(r'[؛;]', s or ''):
+        ps = [p.split() for p in re.split(r'\s+(?:بن|ابن)\s+', re.sub(r'[،,().\[\]«»]', ' ', norm(part)))]
+        if len(ps) < 3 or not all(ps[:3]): continue
+        first = ' '.join(ps[0][-2:]) if len(ps[0]) >= 2 and ps[0][-2] in ('عبد', 'ابو', 'ابي') else ps[0][-1]
+        el = lambda w: ' '.join(w[:2]) if len(w) >= 2 and w[0] in ('عبد', 'ابو', 'ابي') else w[0]
+        return (first, el(ps[1]), el(ps[2]))
+    return None
+WAUTH = {}                                   # Waqfeya record id → its full author field
+for _l in open(J('data/waqfeya/details.jsonl'), encoding='utf-8'):
+    try: _d = json.loads(_l)
+    except ValueError: continue
+    _a = _d.get('author'); WAUTH[_d.get('_id')] = (_a.get('name') if isinstance(_a, dict) else _a) or ''
+def _wn(b):                                  # the record must be this book's: its author agrees with the book's own (a
+    out = set()                              # generic title — «شرح سنن أبي داود» — links another man's commentary)
+    for w in b.get('waqfeya', []):
+        if w['name'] not in b.get('waqfeya_names', []): continue
+        full = WAUTH.get(w.get('id'), ''); n = nasab(full)
+        if n and (not pauth[b['id']] or {tok(x) for x in author_tokens(_an(full.replace('؛', ' ')))} & {tok(x) for x in pauth[b['id']] - COMMON}):
+            out.add(n)
+    return out
+pnasab = {b['id']: _wn(b) for b in cat['books']}
+full_at, cur_author, card_toks, cur_nasab = set(), '', set(), set()
 def agree(at, bid):
     """the Shamela author and the phone book's author are the same person: a shared name that is not a common one, or
-    the phone's author name read inside the full name on the Shamela card («الجماعيلي» in «عبد الغني … المقدسي الجماعيلي»)"""
+    the phone's author name read inside the full name on the Shamela card («الجماعيلي» in «عبد الغني … المقدسي الجماعيلي»);
+    or the same man by his own name, father and grandfather in the full names (owner 2026-10-09: «الحباني» = أبو الشيخ)"""
+    if any(TRIPLEFREQ.get(n, 0) <= 1 for n in cur_nasab & pnasab.get(bid, set())): return True   # a chain one man carries
     A = {tok(a) for a in at - COMMON}; PA = {tok(a) for a in pauth[bid] - COMMON}
     shared = A & PA
     if shared and (shared & {last_name(cur_author), plast[bid]} or len(shared) >= 2 or
@@ -365,10 +391,15 @@ AUTHFULL = {}                                          # author id → the name 
 if os.path.exists(J('data/shamela/authors.jsonl')):
     for _l in open(J('data/shamela/authors.jsonl'), encoding='utf-8'):
         _a = json.loads(_l); AUTHFULL[str(_a['id'])] = _a['name'] + ' ' + _a.get('full', '')
-full_at, cur_author, card_toks = set(), '', set()
+TRIPLEFREQ = defaultdict(int)                          # how many Shamela authors carry each «X بن Y بن Z» («محمد بن محمد بن
+for _v in AUTHFULL.values():                           # محمد»: النويري, ابن الجزري and many more — tells no one apart)
+    _n = nasab(_v)
+    if _n: TRIPLEFREQ[_n] += 1
+full_at, cur_author, card_toks, cur_nasab = set(), '', set(), set()
 for r in csv.DictReader(open(J('data/shamela/books.tsv')), delimiter='\t'):
     sid = int(r['book_id']); at = author_tokens(r['author']); card = CARDS.get(sid, {})
     cur_author = norm(r['author'])
+    cur_nasab = {n for n in (nasab(card.get('author', '')), nasab(AUTHFULL.get(r.get('author_id', ''), ''))) if n}
     full_at = {tok(x) for x in author_tokens(re.sub(r'\([^)]*\)|\[[^\]]*\]', ' ', card.get('author', '')) + ' ' +
                                              AUTHFULL.get(r.get('author_id', ''), ''))} - {tok(x) for x in COMMON}
     card_toks = {tok(x) for x in author_tokens(' '.join(                 # the people the card names for the text itself

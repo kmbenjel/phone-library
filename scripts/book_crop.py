@@ -399,6 +399,33 @@ def baseline_tilt(a, paper, min_lines=6):
     if len(sl) < min_lines: return None
     return float(np.median(sl))
 
+def edge_tilt(a, paper):
+    """THE LINES' EDGE AS A RULER (owner 2026-10-09: «you can just use a ruler against any line!», الفوائد المحصورة ص 526 — a
+    list of short right-aligned lines no other measure reads): right-aligned lines all start at one edge (left-aligned ones
+    at the other); on a level page those starts stand on a vertical line. Line by line (bands of ink rows), the outermost ink
+    on each side; the lines within 1.5 % of the width of the median edge are the aligned ones; the slope is the median of
+    the slopes between pairs of them at least 10 % of the page apart. Returns [right, left] (degrees, the sign of
+    skew_of's angle; None when fewer than 6 lines are aligned on that side)"""
+    m = a < max(60, min(200, paper - 50)); H, W = m.shape
+    prof = ndimage.uniform_filter1d(m.sum(1).astype(float), 3); rows = prof >= 0.15 * prof.max()
+    pts, y = [], 0
+    while y < H:
+        if rows[y]:
+            y0 = y
+            while y < H and rows[y]: y += 1
+            if y - y0 >= 0.004 * H:
+                cols = np.nonzero(m[y0:y].sum(0) >= 2)[0]
+                if len(cols) >= 5: pts.append(((y0 + y) / 2, cols[-1], cols[0]))
+        y += 1
+    out = []
+    for k in (1, 2):
+        if len(pts) < 6: out.append(None); continue
+        P = np.array(pts); xs = P[:, k]; keep = P[np.abs(xs - np.median(xs)) <= 0.015 * W]
+        sl = [(keep[j, k] - keep[i, k]) / (keep[j, 0] - keep[i, 0]) for i in range(len(keep)) for j in range(i + 1, len(keep))
+              if keep[j, 0] - keep[i, 0] > 0.1 * H] if len(keep) >= 6 else []
+        out.append(float(np.degrees(np.arctan(np.median(sl)))) if sl else None)
+    return out
+
 def proj_tilt(a, paper, lo=-0.5, hi=0.5, step=0.05, width=700):
     """the SECOND tilt measure (2026-10-09): the page image itself, scaled to 700 px wide, is turned by each angle and the
     ink rows of its central part (8–92 % of the width, 5–95 % of the height) counted; the sharpest row profile wins
@@ -948,6 +975,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         mk = marks(a, z, page.rect.width, [fwd_box(doc, i, q, pad_box(b, page.rect.width)) for b in st] if st else None); t.close()
         mk['proj'] = lambda lo=-0.5, hi=0.5, step=0.05: proj_tilt(a, mk['paper'], lo, hi, step)
         mk['lines'] = lambda: baseline_tilt(a, mk['paper']) if mk.get('paper') else None
+        mk['edges'] = lambda: edge_tilt(a, mk['paper']) if mk.get('paper') else [None, None]
         return mk
     def best_turn(i, p, d0):                          # the turn near d0 that leaves the least tilt by BOTH measures:
         tried = {}                                    # d0 first; if not level, 10 more angles around it in 0.05° steps
@@ -970,6 +998,11 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
             if cl and min(cl)[0] <= 0.15: _, d, (r, im, m2) = min(cl)
         return d, r, im, m2
     def keep(p, d, r, im, before, m2=None):           # level, or a curved page brought below sight, or (a clear tilt,
+        if p.get('tilt_by_edge') is not None:            # a page found by its lines' edge: level by the two usual measures,
+            if r <= LEVEL and im <= IMG_LEVEL: p['level_by_edge'] = 0.0; return True   # or its edge standing straight with
+            es = [e for e in (m2['edges']() if m2 is not None else []) if e is not None]   # the whole page level
+            if es and min(abs(e) for e in es) <= 0.15 and r <= 0.2: p['level_by_edge'] = round(min(es, key=abs), 3); return True
+            return False
         if r <= LEVEL and im <= IMG_LEVEL: return True   # ≥ 0.4°) its lines level line by line while the other two
         if r <= CURVED and im <= CURVED and max(r, im) <= abs(before) / 3: p['curved'] = True; return True   # fell to a third
         if m2 is not None and abs(before) >= 0.4 and max(r, im) <= min(0.35, abs(before) - 0.15):   # (index pages keep the
@@ -996,7 +1029,14 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         elif mk['xy'] is not None:
             u, g = skew_of(mk['xy'])
             # (no turn when the halves disagree, even if the whole page and its image agree on a tilt: index pages fool
-            # all of them alike — 2026-10-09, الفوائد المحصورة ص 432 and 446, «فهرس اللغة», turned 3° by mistake)
+            # all of them alike — 2026-10-09, الفوائد المحصورة ص 432 and 446, «فهرس اللغة», turned 3° by mistake) — unless
+            # the lines' edge, a ruler of its own, reads the same clear tilt as the whole page (≥ 0.4°, within 0.2°):
+            # a list of short right-aligned lines (ص 526). Such a turn is kept only if the edge then stands straight
+            if not (abs(u) >= SKEW_MIN and g >= 1.02):
+                r_, g_ = skew_of(mk['xy'], raw=True)
+                if abs(r_) >= 0.4 and g_ >= 1.02:
+                    es = [e for e in mk['edges']() if e is not None and abs(e - r_) <= 0.2]
+                    if es: u, g = r_, g_; p['tilt_by_edge'] = round(min(es, key=lambda e: abs(e - r_)), 3)
             if abs(u) >= SKEW_MIN and g >= 1.02:
                 if mk['proj'](-3.0, 3.0, 0.25) < SKEW_MIN - 0.05: p['tilt_disputed'] = round(u, 3)   # the image shows no tilt
                 else:
@@ -1011,7 +1051,9 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                         if keep(p, d, r, im, u, m2):
                             p['skew'] = d; p['after_tilt'] = round(r, 3); p['after_tilt_image'] = im; p['turned_in_check'] = True
                             mk = m2; done = True
-                    if not done: p['untreated_tilt'] = round(u, 3)
+                    if not done:                      # (a page found by its edge alone whose turn is not certified: the
+                        if p.get('tilt_by_edge') is not None: p['tilt_disputed'] = round(u, 3)   # measures disagree)
+                        else: p['untreated_tilt'] = round(u, 3)
         if tilt_only or not p.get('crop'): continue
         c = p['crop']; known = (p.get('blots') or []) + (p.get('edge') or [])
         if rec.get('clean_margins') and mk.get('text'):
@@ -1075,7 +1117,8 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
     rec['skewed'] = sum(1 for p in rec['pages'] if p.get('skew'))
     rec['residual_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('skew') and not (p.get('after_tilt', 9) <= LEVEL and p.get('after_tilt_image', 9) <= IMG_LEVEL)
                             and not (p.get('curved') and p.get('after_tilt', 9) <= CURVED and p.get('after_tilt_image', 9) <= CURVED)
-                            and not (p.get('level_by_lines') is not None and max(p.get('after_tilt', 9), p.get('after_tilt_image', 9)) <= 0.35)]
+                            and not (p.get('level_by_lines') is not None and max(p.get('after_tilt', 9), p.get('after_tilt_image', 9)) <= 0.35)
+                            and not (p.get('level_by_edge') is not None and p.get('after_tilt', 9) <= 0.2)]
     rec['level_by_lines'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('level_by_lines') is not None and p.get('skew')]
     rec['curved'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('curved')]
     rec['enlarged'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('enlarged')]
