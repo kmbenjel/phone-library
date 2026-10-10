@@ -65,7 +65,7 @@ Read this file first. Keep it current when you change a convention.
    scripts saved web pages (shamela.ws, archive.org error pages, «الرق المنشور»), MP3s and Word files as `.pdf`
    (392 removed on 2026-09-30 by the owner's decision). Check with `scripts/check_magic.py` (first bytes) and
    `scripts/check_pdf_tail.py` (end marker). When downloading, verify exact size + `%PDF` before uploading
-   (`scripts/fetch_replacements.py` does). Missing books are replaced only from Waqfeya; otherwise left out.
+   (`scripts/fetch_replacements.py` does). Waqfeya and Shamela are references among others, not the only sources (owner 2026-10-10: «not a rule — I only started with Waqfeya at the very beginning»): a missing or incomplete book may come from any trustworthy upload (archive.org and others), its title and imprint pages read before it is named and added.
    **Never download a whole archive.org item for one book:** items often bundle dozens of books. Take only the
    files the Waqfeya record links (its `links`), then run `scripts/additions_audit.py` — it keeps a file only if
    the record links it (or it follows the record's own pattern: link typos, `NN_IDp` prefaces), drops other books

@@ -197,11 +197,44 @@ def marks(a, scale, width, exclude=None):
     box_of = lambda i: pt(objs[i - 1][1].start, objs[i - 1][0].start, objs[i - 1][1].stop, objs[i - 1][0].stop)
     out['specks'] = [box_of(i) for i in sorted(isolated)]
     if not pre: return out
+    # THE SHEET'S BORDER ZONE (owner 2026-10-10, القوافي للتنوخي pp. 77, 87, 89, 95: the photographed edges of the other
+    # pages — a band of thin lines —, copier bars, broken border lines kept the frame wide and off-centre): from each side
+    # inward, ink at the sheet's edge (in its outer 4 %) followed, within 12 % of the side, by a clear gap (2 % of
+    # the width with almost no ink) before anything else: everything wholly inside that zone is the sheet, not the page.
+    # A printed frame never touches the sheet's edge; a text that runs to the edge leaves no gap — neither is touched.
+    def zone(cov, n, limit, gap):
+        if cov[:max(1, int(0.04 * n))].max() < 0.05: return 0       # the sheet may sit a little inside the scan
+        last, run = -1, 0
+        for k in range(min(n, int(limit * n))):
+            if cov[k] >= 0.02: last, run = k, 0
+            else:
+                run += 1
+                if run >= gap and last >= 0: return last + 1
+        return 0
+    gpx = max(2, int(0.02 * Wd)); zl = zr = zt = zb = 0
+    for _ in range(2):                               # a bar along one side puts ink in every row: the top and bottom are
+        colcov = m[zt:H - zb].mean(0)                # measured without the side zones, the sides without the top and bottom
+        zl, zr = zone(colcov, Wd, 0.12, gpx), zone(colcov[::-1], Wd, 0.12, gpx)
+        rowcov = m[:, zl:Wd - zr].mean(1)            # (PDF p. 27: bar + top line + bottom line, one mark round the sheet)
+        zt, zb = zone(rowcov, H, 0.10, gpx), zone(rowcov[::-1], H, 0.10, gpx)
+    if zl or zr or zt or zb:
+        Z = np.zeros((H, Wd), bool)                  # the zones; a mark whose ink lies ≥ 90 % inside them is the sheet —
+        if zl: Z[:, :zl] = True                      # also an L where the page-edge lines meet the bottom line (p. 89)
+        if zr: Z[:, Wd - zr:] = True
+        if zt: Z[:zt, :] = True
+        if zb: Z[H - zb:, :] = True
+        zoned = set()
+        for i in pre:
+            sl = objs[i - 1]
+            if Z[sl].any() and np.count_nonzero((lab[sl] == i) & Z[sl]) >= 0.9 * area[i]: zoned.add(i)
+        if zoned and len(zoned) < len(pre):
+            out['edge'] += [box_of(i) for i in sorted(zoned)]
+            pre = [i for i in pre if i not in zoned]
     # a blank page showing only the edges of the photocopied sheet (owner 2026-10-10, القوافي للتنوخي pp. 54–60: blank
     # versos whose border lines became «text» as wide as the page): every mark lies in the outer 8 % of a side → no content
     if all(small[i] or objs[i - 1][1].stop <= 0.08 * Wd or objs[i - 1][1].start >= 0.92 * Wd or objs[i - 1][0].stop <= 0.08 * H
            or objs[i - 1][0].start >= 0.92 * H for i in pre):          # dust in the middle does not make it a page of text
-        out['edge'] = [box_of(i) for i in pre]; return out
+        out['edge'] += [box_of(i) for i in pre]; return out
     # the text block: every mark counts once (2nd / 98th percentile of the marks' edges), so one heavy streak cannot drag it;
     # marks lying wholly in the outer 3 % of a side (border grains) are not counted in this first estimate
     def in_strip(i):
@@ -258,7 +291,7 @@ def marks(a, scale, width, exclude=None):
         elif (x0 <= 0.01 * Wd or x1 >= 0.99 * Wd or y0 <= 0.01 * H or y1 >= 0.99 * H) and area[i] / max(1, hgt[i] * wid[i]) < 0.08:
             ix0, ix1, iy0, iy1 = int(cx0), int(cx1), int(cy0), int(cy1)
             if np.count_nonzero(lab[iy0:iy1, ix0:ix1] == i) < 0.1 * area[i]: edge.add(i)
-    out['edge'] = [box_of(i) for i in sorted(edge)]
+    out['edge'] += [box_of(i) for i in sorted(edge)]
     big = [i for i in pre if i not in edge and not small[i]] or [i for i in pre if i not in edge] or pre
     cx0 = np.percentile([objs[i - 1][1].start for i in big], 2); cx1 = np.percentile([objs[i - 1][1].stop for i in big], 98)
     cy0 = np.percentile([objs[i - 1][0].start for i in big], 2); cy1 = np.percentile([objs[i - 1][0].stop for i in big], 98)
@@ -828,7 +861,8 @@ def decide(pages, wq=0.95):
         _mt = q([tw[i] for i in full_t], 0.5)                       # typical pages only (see Tw above)
         Tq = q([tw[i] for i in full_t if tw[i] <= 1.25 * _mt] or [tw[i] for i in full_t], wq); mc = CLEAN_MARGIN * Tq; out['margin_pt'] = round(mc, 2)
         W = min(Tq + 2 * mc, pw)
-        H = min(q([th[i] for i in full_h if i in th] or list(th.values()), 0.98) + 2 * mc, ph)
+        _th = [th[i] for i in full_h if i in th] or list(th.values()); _mh = q(_th, 0.5)   # typical pages decide the height
+        H = min(q([v for v in _th if v <= 1.15 * _mh] or _th, 0.98) + 2 * mc, ph)             # too (taller ones shrink to fit)
         cx = {i: ((tb[i][0] + tb[i][2]) / 2 if tb.get(i) else cx[i]) for i in text}
         cy = {i: ((tb[i][1] + tb[i][3]) / 2 if tb.get(i) else cy[i]) for i in text}
         edges = {i: tb[i] for i in text if tb.get(i)}
@@ -1103,6 +1137,10 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
             # margin's dots, pen strokes and scan edges, cut on purpose. If not: the box slides up to 2 %, else takes the
             # same shape just large enough (never a cut line, never a page left whole for a stray mark)
             t = mk['text']; gx_, gy_ = 0.015 * p['w'], 0.015 * p['h']
+            t0 = p.get('text')                       # at 1,000 px a photocopy's border breaks into letter-sized dashes that
+            if t0 and t:                             # chain onto the text (owner 2026-10-10, القوافي ص 25 و44): the text may
+                t = [max(t[0], t0[0] - 0.03 * p['w']), max(t[1], t0[1] - 0.03 * p['h']),   # grow by a cut letter (3 %),
+                     min(t[2], t0[2] + 0.03 * p['w']), min(t[3], t0[3] + 0.03 * p['h'])]   # not to the sheet's edge
             nts = notes_of(mk.get('margin') or [], p['w'], p['h'])   # marginal notes seen at 1,000 px: kept, like the text
             if nts: p['notes'] = [[round(v, 1) for v in b] for b in nts]
             tn = union([t] + nts)

@@ -5,6 +5,10 @@ Each workstream appends its progress below (the newest state first, then the his
 
 ## 2026-10-10 01:30 GMT — STATE FOR A FRESH SESSION (owner: «I want to start a fresh discussion, then complete the work overnight. I'm unhappy with some old work not being successful, like the reorganizing and number/naming fixing»)
 
+### RETRY LATER (owner 2026-10-10): the complete «كتاب القوافي» ت عوني عبد الرؤوف (مكتبة الخانجي): the phone copy stops at
+p. 105 of ~264; Waqfeya FP1529 / FP145297 and archive.org 4730pdf are dark or the same truncated scan. The complete 1970
+edition (ت عمر الأسعد ومحيي الدين رمضان، دار الإرشاد) was added (queue 312). Phone IP now 192.168.11.100. Laptop disk 7 GB free.
+
 ### 2026-10-10 ~06:00 — STATE: names from the books themselves (owner's priority); crop postponed
 Owner's decisions this session (all in AGENTS.md §4 and memory naming-rules-2026-10-10):
 - NO parentheses anywhere: «<title> - <author> - ت <editor> - <publisher>، <city>، <year>» («ط …» when no editor,
