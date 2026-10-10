@@ -23,7 +23,9 @@ refine by checking the imprint page separately), no-text 1,071).
 Progress: singles sheets s0000–s0402 (806 books; 141 without page images: data/names/sheets/no-pages.tsv). READ 0–183
 (data/names/title-read.tsv). Next: sheet s0092 (book 184). Findings so far: many «other-book» (the file is a commentary,
 a collection, or another work than the name), «part» (one volume of a set: stays a folder), typos (بئر العزب، القصص المية).
-RUNNING: scratch/after_ocr_2026-10-10.sh (OCR of 5,334 queued front pages → auto_check → commit; log logs/ocr-2026-10-10.log);
+RUNNING also: scratch/inspect_after_crop001_2026-10-10.sh (waits for crop 001, inspects the 1,333 never-inspected files —
+the 141 page-less singles first — OCR, auto_check, commit; log logs/inspect-2026-10-10.log). Name limit stays 200 B
+(owner did not choose 250). RUNNING: scratch/after_ocr_2026-10-10.sh (OCR of 5,334 queued front pages → auto_check → commit; log logs/ocr-2026-10-10.log);
 crop batch 001 (ends ~06:30; library chain stopped by the owner).
 Next steps: (1) refine auto_check (imprint page vs title page, Shamela/Waqfeya fields matched in the OCR text) so «confirmed»
 books are named without eye reading; (2) read by eye only CONFLICT/no-text/incomplete; (3) a names plan from readings +
