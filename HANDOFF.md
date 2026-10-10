@@ -49,6 +49,11 @@ Each workstream appends its progress below (the newest state first, then the his
     (1,130 «no evidence») → title pages must be read (pdftotext for typeset ones, low-res renders read by eye otherwise).
   * HANDOFF 2026-10-06 list still open: death year for every author (2: done for Shamela-matched books only), category
     audit (4), header numbers (5).
+  * Owner 2026-10-10: «ذكر المحقق ليس مشكلا، بل ينبغي» — the editor belongs in every name where it is known: when the
+    exact-size record or the title page gives the editor and the name lacks it, add it («(ت المحقق - الناشر)»), e.g.
+    «أخلاق النبي وآدابه … (ط دار الكتاب العربي)» → «(ت السيد الجميلي - دار الكتاب العربي)»; «تاريخ بغداد (ت بشار عواد)» lacks
+    its publisher (دار الغرب الإسلامي, 2001 — confirm on the title page). A cut in the source scan is flagged only after the
+    original is checked (owner: «When sure it's not because of the cropping, it's fine»).
   Ask the owner first which of these hurts most; propose a single, tested pass per defect with a sample read by eye before
   any plan is applied (the earlier passes failed exactly where no one read the result).
 
