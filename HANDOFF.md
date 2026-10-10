@@ -13,7 +13,7 @@ Each workstream appends its progress below (the newest state first, then the his
   --dry-run before approval): 659 moves, then undone at the owner's word (undo-310-singles, verified on the phone).
   plans/310-singles.tsv is a record only — never rerun it; the next singles plan gets a new number after the owner's OK.
 - Open question to the owner: §4 asks for the SHORT title in a single file's name; plans 306/308/310 kept the full title
-  (shortened only past 200 bytes). Wait for his choice before the next singles plan.
+  (shortened only past 200 bytes). Wait for the owner's choice before the next singles plan.
 - Held by v2 for reading (data/review/singles-review.tsv): 91 «01 -» without evidence, 51 file name ≠ folder name
   (e.g. «الوسيط في تراجم أدباء شنقيط» holds «نجم الحيران»), 49 cut names, 11 names taken (8 OpenStax books both as folder
   and plain file: check as duplicates).

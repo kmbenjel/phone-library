@@ -29,6 +29,27 @@ LOCAL_MAP = os.path.expanduser('~/.cache/phone-library/local-map.tsv')
 LOCK = '/tmp/phone-ftp.lock'
 SHEETS = os.path.expanduser('~/.cache/phone-library/crop-sheets')
 
+def moves():
+    """(forward, back): logged moves from → to and to → from (paths under Books/), read fresh — the names change while a
+    batch runs (rename passes on the same night, owner 2026-10-10)"""
+    fwd, back = {}, {}
+    for r in csv.reader(open(LOG, encoding='utf-8'), delimiter='\t'):
+        if len(r) > 3 and r[1] == 'move' and r[2] and r[3]:
+            a, b = r[2].removeprefix('Books/'), r[3].removeprefix('Books/'); fwd[a] = b; back[b] = a
+    return fwd, back
+
+def follow(path):
+    """where a file that is no longer at `path` went: the chain of logged moves from it"""
+    fwd, _ = moves(); seen = set()
+    while path in fwd and path not in seen: seen.add(path); path = fwd[path]
+    return path
+
+def names_of(path, back):
+    """the file's earlier names (its logged moves, followed backwards)"""
+    out, seen = [path], set()
+    while path in back and path not in seen: seen.add(path); path = back[path]; out.append(path)
+    return out
+
 def md5_file(p):
     h = hashlib.md5()
     with open(p, 'rb') as f:
@@ -133,11 +154,13 @@ class Inline:
 def main(list_tsv, batch, workers=4, jobs=1):
     paths = [l.strip().removeprefix('Books/') for l in open(list_tsv, encoding='utf-8') if l.strip() and not l.startswith('#')]
     done = {l.split('\t')[0] for l in open(DONE, encoding='utf-8')} if os.path.exists(DONE) else set()
-    todo = [p for p in paths if p not in done]
+    crop_rows = {r[2].removeprefix('Books/') for r in csv.reader(open(LOG, encoding='utf-8'), delimiter='\t') if len(r) > 2 and r[1] == 'crop'}
+    _, back = moves()
+    todo = [p for p in paths if not any(n in done or n in crop_rows for n in names_of(p, back))]
     local = dict(l.rstrip('\n').split('\t')[:2] for l in open(LOCAL_MAP, encoding='utf-8')) if os.path.exists(LOCAL_MAP) else {}
     print(f'{len(todo)} files to do ({len(paths) - len(todo)} done before)', flush=True)
     def stage(path):                                  # the original bytes, checked against the phone's own MD5
-        with Phone() as ph: want = ph.md5(path)
+        with Phone() as ph: want = ph.md5(path)       # (path: where the file is now — see the loop below)
         lp = local.get(path)
         if lp and os.path.exists(lp) and md5_file(lp) == want: return lp, want, False
         dst = os.path.join(STAGE, hashlib.md5(path.encode()).hexdigest()[:12] + '.pdf')
@@ -148,6 +171,12 @@ def main(list_tsv, batch, workers=4, jobs=1):
         futs = {}
         for path in todo:
             try:
+                with Phone() as ph:
+                    try: ph.size(path)
+                    except ftplib.error_perm:         # renamed since the list was made: follow its logged moves
+                        new = follow(path)
+                        if new == path: raise RuntimeError('not on the phone')
+                        print('MOVED', path[:60], '→', new[:60], flush=True); path = new
                 src, m0, staged = stage(path)
             except Exception as e:
                 print('STAGE FAIL', path, e, flush=True); continue
@@ -174,7 +203,12 @@ def finish(fu, meta, batch):
         dst = r['dst']; n0 = os.path.getsize(src); n1 = os.path.getsize(dst); m1 = md5_file(dst)
         tail = open(dst, 'rb').read()[n0:]
         with Phone() as ph:
-            if ph.md5(path) != m0: raise RuntimeError('the phone file changed meanwhile')
+            try: now = ph.md5(path)
+            except ftplib.error_perm:                 # renamed during the analysis: its new name, same bytes
+                new = follow(path)
+                if new == path: raise
+                now = ph.md5(new); print('MOVED', path[:60], '→', new[:60], flush=True); path = new
+            if now != m0: raise RuntimeError('the phone file changed meanwhile')
             try:
                 ph.append(path, tail)
                 ok = ph.size(path) == n1 and ph.md5(path) == m1
