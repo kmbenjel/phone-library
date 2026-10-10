@@ -51,8 +51,8 @@ def main(batch):
 body{{background:var(--bg);color:var(--fg);font:16px/1.7 "Noto Naskh Arabic","Amiri",serif;margin:0;padding:16px}}
 main{{max-width:1200px;margin:auto}} h1{{font-size:1.5rem}} h2{{font-size:1.05rem;margin:.2em 0}} .meta,.lead,figcaption,.st{{color:var(--mut)}}
 article{{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:16px 0}}
-figure{{margin:10px 0}} .pair{{display:flex;gap:14px;align-items:flex-start;overflow-x:auto}} .pair>div{{display:flex;flex-direction:column;align-items:center}}
-.pair img{{height:520px;border:1px solid var(--line)}} .pair span{{font-weight:bold}} .sep{{width:3px;align-self:stretch;background:var(--sep)}}
+figure{{margin:10px 0}} .pair{{display:flex;gap:0;align-items:flex-end;overflow-x:auto}} .pair>div{{display:flex;flex-direction:column;align-items:center}}
+.pair img{{height:520px;display:block}} .pair span{{font-weight:bold;padding:0 6px}} .sep{{width:2px;align-self:stretch;background:var(--sep);margin-top:1.7em}}
 .review{{display:flex;gap:10px;align-items:flex-start;margin-top:8px;flex-wrap:wrap}}
 .review textarea{{flex:1;min-width:240px;font:inherit;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:6px}}
 .warn{{background:#fff3cd;color:#5c4400;padding:8px 12px;border-radius:8px}}
