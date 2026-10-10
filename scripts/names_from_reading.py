@@ -20,7 +20,7 @@ def name_of(r):
     """publisher, city and year stay separate fields until name_compose renders them (no commas, no repeated city)"""
     t, au, ed, pub, city = r['title'], r['author'], r['editor'], r['publisher'], r['city']
     kind = r.get('kind', '')
-    place = '، '.join(x for x in (pub, city.replace('، ', ' و') if city and pub else '') if x)
+    place = pub                                                    # no city in names (owner)
     if ed and kind == 'ترجمة': edition = f'ت {ed}' + (f' - {place}' if place else '')
     elif ed: edition = f'ت {ed}' + (f' - {place}' if place else '')
     else: edition = f'ط {place}' if place else ''          # «ط» only marks the field for name_compose; not rendered

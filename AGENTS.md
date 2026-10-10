@@ -88,9 +88,8 @@ Single-volume books are stored as plain files in the category folder without the
   record when its title is the same book, the title page).
 - **No parentheses and no commas anywhere** (owner: «avoid ()», «تبقي على الأقواس», «استغن عن الفواصل في كل العناوين»):
   the parts follow one another with « - »; the editor marked by «ت», a translator by «ترجمة», the publisher by nothing
-  (owner: no «ط»); publisher, city and year separated by single spaces; no «=» — an alternative title joins with «أو»:
-  `<title> - <author> - ت <editor> - <publisher> <city>` — no year (owner: the date is not needed in names)
-  («… - ت محمد حجي - دار الغرب الإسلامي بيروت»,
+  (owner: no «ط»); no city, no year (owner); no «=» — an alternative title joins with «أو»:
+  `<title> - <author> - ت <editor> - <publisher>` («… - ت محمد حجي - دار الغرب الإسلامي»,
   «الجمع والفرق أو كتاب الفروق - الجويني - …»). A title's
   own «(مخطوط)», «(رسالة ماجستير)» go after the edition («… - مخطوط»); a one- or two-word aside is written inline
   («ابن رشد (الجد)» → «ابن رشد الجد»); a longer aside becomes a «، …» subtitle.
@@ -103,7 +102,7 @@ Single-volume books are stored as plain files in the category folder without the
 **Book folder** (for multi-file works): `<title> - <author> - <edition>`
 - `<author>`: the commonly used name (e.g. `ابن قدامة`, `الإمام الغزالي`); not repeated when the title already holds it
   («تفسير ابن أبي حاتم الرازي»). Omit for periodicals/series.
-- `<edition>`: `ت <editor> و<editor> - <publisher> <city>` or `<publisher> <city>`; omit what is unknown.
+- `<edition>`: `ت <editor> و<editor> - <publisher>` or `<publisher>`; omit what is unknown.
 - Collections: `مؤلفات <author> - <publisher>`; periodicals: `مجلة <name> - <publisher>`; series: `سلسلة <name> - <publisher>`.
 - Different editions of the same book are separate folders that differ only in their edition part.
 
@@ -115,7 +114,10 @@ Single-volume books are stored as plain files in the category folder without the
   number (e.g. «عالم المعرفة»: `003 - التفكير العلمي.pdf`). Never "01 -" in front of every item.
 - Indexes (الفهارس) take the number after the last volume, never 99. For a periodical they take `00`.
 - A companion that is not a volume (نسخة أخرى، صور المخطوطات، ملحق، the whole book in one file) has no number.
-- Multi-volume: `NN - <title> - <author> - ت <editor> - <publisher> - <volume label>.pdf` — every volume carries all
+- Multi-volume: `NN - <title> - <author> - ت <editor> - <publisher>.pdf` — no label for the range of contents (owner:
+  «إحياء الموات - أمهات الأولاد» not kept); a label only when it says what the file IS: `- الواجهة`, `- المقدمة`,
+  `- الفهارس`, `- ملحق`, `- صور المخطوطات` (name_compose.keep_label); a part with its own printed title keeps it as
+  part of its title («أعمال الأعلام - القسم الثالث تاريخ المغرب العربي»). Every volume carries all
   the folder's information (owner 2026-10-10), the same shared part in every volume of the set (name_compose.volumes:
   sized for the longest label, shortened by the rule above only when needed), `NN` = the volume number, zero-padded to two digits (`01, 02`) or more for large collections. Volume
   numbers are never repeated. `00` is reserved for front matter and may appear more than once:

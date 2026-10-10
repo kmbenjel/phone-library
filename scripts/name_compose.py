@@ -123,8 +123,8 @@ def parse_edition(ed):
 def edition_text(names, pub, city, other, year=''):
     """«ت أ وب - الناشر، المدينة، السنة» / «ط الناشر، السنة» / «ت أ - السنة»"""
     if other: return other + (f'، {year}' if year else '')
-    if city and norm(city) in norm(pub): city = ''               # «الجامعة الأميركية في بيروت» already says where
-    p = ' '.join(x for x in (pub, city if pub else '', year) if x)
+    city = ''                                                     # owner 2026-10-10: no city in names
+    p = ' '.join(x for x in (pub, year) if x)
     if names: return 'ت ' + ' و'.join(names) + (f' - {p}' if p else '')
     return p                                                          # owner: no «ط» — the publisher speaks for itself
 
@@ -197,10 +197,21 @@ def volume(nn, title, label='', limit=LIMIT, author='', edition='', year=''):
     pre, post = f'{nn} - ', f' - {label}' if label else ''
     return pre + compose(title, author, edition, limit - B(pre) - B(post), year=year) + post
 
+FUNCTION = re.compile(r'^(الواجهة|الغلاف|المقدمة|مقدمة التحقيق|مقدمة المحقق|الدراسة|قسم الدراسة|الفهارس|فهارس|الفهرس|الفهارس العامة|'
+                      r'الفهارس العلمية|ملحق|ملاحق|الملحق|صور المخطوطات?|المستدرك|الاستدراك|التكملة|الذيل)\b')
+
+def keep_label(label):
+    """a volume's label is kept only when it says what the file IS (cover, introduction, indexes, appendix, manuscript
+    images) — not a range of its contents («إحياء الموات - أمهات الأولاد»: owner 2026-10-10 «I don't feel like to keep
+    these»); a part with its own printed title is passed by the caller as part of the title"""
+    lb = tidy(re.sub(r'^\((.*)\)$', r'\1', label or ''))
+    m = FUNCTION.match(lb)
+    return re.sub(r'\s*\d+$', lambda x: x.group(0) if 'فهارس' in lb or 'ملحق' in lb else '', lb) if m else ''
+
 def volumes(title, items, author='', edition='', year='', limit=LIMIT):
     """the files of one set: ONE shared part (title, author, editor, publisher…) for every volume, sized for the longest
     «NN - … - <label>», so that no volume says less than another; items = [(nn, label)] → names (without «.pdf»)"""
-    clean = [(nn, tidy(re.sub(r'^\((.*)\)$', r'\1', lb or ''))) for nn, lb in items]
+    clean = [(nn, keep_label(lb)) for nn, lb in items]
     room = min(limit - B(f'{nn} - ') - (B(f' - {lb}') if lb else 0) for nn, lb in clean)
     core = compose(title, author, edition, room, year=year)
     return [f'{nn} - {core}' + (f' - {lb}' if lb else '') for nn, lb in clean]
