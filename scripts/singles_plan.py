@@ -1,82 +1,222 @@
 """Single-volume books: a folder holding one PDF becomes a plain file in its section (AGENTS.md §4 «Single file»):
-`<short title> - <author> (<edition>).pdf`. Title/author/edition come from the folder name (already evidence-checked)
-or, when the folder name is deficient, from the Waqfeya record the file matches byte-for-byte.
-Kept as a folder: one volume of a multi-volume work (the record lists more volumes, or the file is «NN - …» /
-«(جزء N)» / «المجلد» with N > 1), collections/series, sub-sections (الأدب/أدب عالمي/…), and anything that would
-collide with an existing name.
-Usage: python3 scripts/singles_plan.py index.tsv plans/NNN-singles.tsv"""
-import collections, csv, json, os, re, sys
+`<title> - <author> (<edition>).pdf` (the title is shortened only when the name would pass 200 bytes).
+
+v2 (2026-10-10, owner: «single books in folders» first). v1 held back 1,055 of 1,178 folders, 946 of them only because
+the folder name had no « - » before its author (Waqfeya's «<title> لفلان» form). Now:
+  * the name comes from the folder name; old edition forms are normalised (« - ط. X» → «(ط X)», « - ت- X» → «(ت X)»);
+  * an author written as «لفلان» at the end of the title is moved after « - » ONLY when the words after «ل» are a known
+    author name (Shamela's common names, Waqfeya authors, the authors already in phone names) — and, when the file has an
+    exact-size Waqfeya record, only when the record's author agrees. «شرح/حاشية/نظم … لفلان» (the «ل» may name the
+    original's author) needs that record; else the title is kept whole (no guessing);
+  * «01 - X» alone becomes a plain file only on evidence that it is the whole book: it was made by plan 066 from an
+    uploader's gift number («الهدية (N)»), or its exact-size Waqfeya record has one volume and links one file; it stays a
+    folder when the record or the PDF's embedded title names more volumes; otherwise it goes to the review list;
+  * kept as folders: one volume of a larger set (file «NN - …» with NN > 1, «(جزء N)», the record's volumes), collections
+    and series («مؤلفات/سلسلة/مجلة …»), folders with sub-folders; cut names («… - ال», «- ابن قي») wait for the title-page
+    pass (data/review/name-fix-review.tsv); a name already taken by another file is listed, never overwritten.
+Usage: python3 scripts/singles_plan.py index.tsv plans/NNN-singles.tsv [review.tsv] [--skip LIST]
+       (--skip: phone paths not to touch now, e.g. a crop batch still running on them)"""
+import collections, csv, json, os, re, sys, unicodedata
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
-from textnorm import norm, title_key
+from textnorm import norm
 from special_dirs import NOT_BOOKS
-from rename_plan import clean, fit, deficient, canonical_folder, split_wname, author_short, redundant
-from names_plan import short, compose, BAD_FOLDER
+from rename_plan import clean, deficient, redundant, author_short
+from names_plan import compose
 J = lambda p: os.path.join(ROOT, p)
+N = lambda s: unicodedata.normalize('NFC', s)
+
+COLLECTION = re.compile(r'^(مؤلفات|سلسلة|مجلة)\s')
+DERIVED = re.compile(r'^(شرح|حاشية|تعليق|تعليقات|التعليق|نظم|منظومة|مختصر|اختصار|تهذيب|تخريج|تقريرات|فتح|الشرح|الحاشية|المختصر|تحقيق|دراسة)\b')
+CUT = re.compile(r'\s-\s*\S{1,2}$|\s-\s*(اب|ابن \S{1,2}|أبو \S{0,2}|عبد|محمد بن)$|\s(لل|ال|اب)$|\(\s*-\s*\S+\s*\)|\(\s*$')
+COMMON_GIVEN = {norm(w) for w in 'محمد أحمد علي عبد الله عبد الرحمن عمر عثمان إبراهيم الإمام الشيخ الحافظ العلامة القاضي'.split()}
+
+def known_authors():
+    """normalised author names: Shamela common names, Waqfeya authors, the authors of phone names"""
+    k = set()
+    for l in open(J('data/shamela/authors.jsonl'), encoding='utf-8'):
+        a = json.loads(l); k.add(norm(re.split(r'\s*\(', a['name'])[0]))
+        for w in norm(a.get('full', '')).split():               # its nisbas («المعسكري»), as titles write «للمعسكري»
+            if w.startswith('ال') and w.endswith('ي') and len(w) >= 6: k.add(w)
+    for l in open(J('data/waqfeya/books.jsonl'), encoding='utf-8'):
+        a = (json.loads(l).get('author') or {}).get('name') or ''
+        if a and a != 'كتاب سماوي':
+            k.add(norm(author_short(a)))
+            last = norm(re.split(r'[،(]', a)[0]).split()[-1:]       # the nisba alone («الإفراني»), as the titles write it
+            if last and last[0].startswith('ال') and len(last[0]) >= 5: k.add(last[0])
+    for p, _ in csv.reader(open(J('data/phone/index-now.tsv'), encoding='utf-8'), delimiter='\t'):
+        for part in p.split('/')[1:]:
+            base = re.sub(r'\([^()]*\)', '', part.removesuffix('.pdf'))
+            bits = [x.strip() for x in base.split(' - ')]
+            if len(bits) >= 2 and not re.match(r'^\d+$', bits[0]): k.add(norm(bits[-1]))
+    return {a for a in k if a and len(a) > 3 and a not in COMMON_GIVEN}
+
+def lam_author(title, known, record_author=''):
+    """«<title> لفلان» → (title, author) when the words after «ل» are a known author name; else (title, '')"""
+    w = title.split()
+    for i in range(len(w) - 1, 0, -1):
+        x = w[i]
+        if not x.startswith('ل') or len(x) < 3: continue
+        if x.startswith('لل'): first = 'ال' + x[2:]
+        elif x.startswith('لأبي'): first = 'أبو' + x[4:]
+        elif x.startswith('لابن') or x.startswith('لإ') or x.startswith('لأ') or x.startswith('لعبد'): first = x[1:]
+        else: first = x[1:]
+        cand = ' '.join([first] + w[i + 1:])
+        if len(norm(cand)) < 4: continue
+        nc = norm(cand); ok = nc in known
+        if not ok:                                   # «ابن عرفة الورغمي»: a known name followed by its nisba
+            for j in range(len(cand.split()) - 1, 0, -1):
+                pre = norm(' '.join(cand.split()[:j]))
+                if pre in known and pre not in COMMON_GIVEN and len(pre.split()) + (pre.startswith('ابن') or pre.startswith('ابو')) >= 2: ok = True; break
+                if pre in known and len(pre.split()) == 1 and len(pre) >= 6: ok = True; break
+        if not ok: continue
+        t = ' '.join(w[:i])
+        if record_author:
+            ra = {v.removeprefix('ال') for v in norm(record_author).split() if len(v) > 2} - {'ابن', 'ابو', 'ابي', 'عبد', 'الله'}
+            ca = {v.removeprefix('ال') for v in nc.split() if len(v) > 2} - {'ابن', 'ابو', 'ابي', 'عبد', 'الله'}
+            if not (ra & ca): return title, '', 'the «ل» name disagrees with the record\'s author'
+        elif DERIVED.match(t):
+            return title, '', 'a derived work («شرح/حاشية/نظم … لفلان») without a record: whose name?'
+        return t, cand, ''
+    return title, '', ''
+
+PUBLISHER = {'صادر': 'دار صادر', 'العلمية': 'دار الكتب العلمية', 'القلم': 'دار القلم', 'بيروت': 'دار بيروت',
+             'الكتاب العربي': 'دار الكتاب العربي'}       # the uploaders' short forms «ط. صادر» of these houses
 
 def parse_folder(name):
-    """«title - author (edition)» → (title, author, edition)."""
+    """«title - author (edition)» → (title, author, edition); old forms «- ط. X», «- ت- X» read as the edition"""
+    name = re.sub(r'\s*-\s*ط\.\s*(.+)$', r' (ط \1)', name) if not name.endswith(')') else name
+    name = re.sub(r'\s*-\s*ت-\s*(.+)$', r' (ت \1)', name) if not name.endswith(')') else name
+    name = re.sub(r'\s-\s*ت\s*-\s*([^()]+)$', r' (ت \1)', name) if not name.endswith(')') else name
+    name = re.sub(r'\(ط\.\s*', '(ط ', name)
     m = re.match(r'^(.*?)\s*\(([^()]*)\)\s*$', name)
     ed = m.group(2).strip() if m else ''
     base = m.group(1) if m else name
+    if ed and not re.match(r'^(ت|ط|رسالة|دار|مكتبة|مؤسسة|المكتب|مطبعة)', ed): base, ed = name, ''   # «(رسالة علمية)», «(الجد)» belong to the title
     parts = [x.strip() for x in base.split(' - ')]
-    title, author = parts[0], (parts[-1] if len(parts) > 1 else '')
-    if re.match(r'^(ت|ط)\b', author): ed, author = ed or author, ''
+    title, author = (' - '.join(parts[:-1]), parts[-1]) if len(parts) > 1 else (parts[0], '')
+    author = re.split(r'\s*؛', author)[0].strip()
+    if re.match(r'^(ت|ط)\s', author): ed, author = ed or author, ''
+    m = re.match(r'^ط\s+(.+)$', ed)
+    if m and m.group(1) in PUBLISHER: ed = 'ط ' + PUBLISHER[m.group(1)]
     return title, author, ed
 
-def main(index, out):
-    idx = [p for p, s in csv.reader(open(index, encoding='utf-8'), delimiter='\t')]
-    prov = {r['path']: r for r in csv.DictReader(open(J('data/phone/provenance.tsv'), encoding='utf-8'), delimiter='\t')}
+JUNK = re.compile(r'كتاب اقرا اونلاين|اقرا اونلاين|نسخة مفهرسة وقابلة للبحث|مفهرس[ةه]?|كاملا|ألوان|\bpdf\b|\b\d+\b|book\d*|[A-Za-z_]+')
+
+def file_info(fn, folder_title):
+    """what the file name adds to the folder name: (author, extra words not explained)"""
+    stem = re.sub(r'^0*1\s*-\s*', '', fn.removesuffix('.pdf'))
+    stem = re.sub(r'الهدية\s*\(\s*\d+\s*\)', '', stem)
+    stem = JUNK.sub(' ', stem)
+    base = re.sub(r'\([^()]*\)', ' ', stem)
+    parts = [x.strip() for x in base.split(' - ') if x.strip()]
+    au = parts[-1] if len(parts) > 1 and not re.match(r'^(ط|ت)\.?\s', parts[-1]) else ''
+    au = re.split(r'\s*[؛،]', au)[0].strip()
+    extra = {w for w in norm(stem).split() if len(w) > 2} - set(norm(folder_title).split())
+    expl = {w for w in norm(au).split()} | {'ط', 'ت', 'تحقيق'}
+    return au, {w for w in extra if w not in expl and w.removeprefix('ال') not in {x.removeprefix('ال') for x in expl}}
+
+def moved_from():
+    """later path → earlier path, every logged move (to follow a file back to its old names)"""
+    back = {}
+    for r in csv.reader(open(J('data/changes/changes.tsv'), encoding='utf-8'), delimiter='\t'):
+        if len(r) > 3 and r[1] == 'move' and r[2] and r[3]: back[N(r[3])] = N(r[2])
+    return back
+
+def history(path, back):
+    out, p, seen = [], N('Books/' + path), set()
+    while p in back and p not in seen and len(out) < 30: seen.add(p); p = back[p]; out.append(p)
+    return out
+
+def main(index, out, review_out=None, skip=()):
+    idx = [(N(p), int(s or 0)) for p, s in csv.reader(open(index, encoding='utf-8'), delimiter='\t')]
+    rawof = {N(p): p for p, _ in csv.reader(open(index, encoding='utf-8'), delimiter='\t')}   # the phone's own bytes: a
+    # non-NFC name moved by its NFC form leaves its folder behind (plan 310: 4 folders), so «from» is always the raw path
+    prov = {N(r['path']): r for r in csv.DictReader(open(J('data/phone/provenance.tsv'), encoding='utf-8'), delimiter='\t')}
     books = {}
     for fn in ('data/waqfeya/details.jsonl', 'data/waqfeya/details2.jsonl'):
         if os.path.exists(J(fn)):
             for l in open(J(fn), encoding='utf-8'):
                 d = json.loads(l); books[d['_id']] = d
-    folders = collections.defaultdict(list)
-    plain = collections.defaultdict(set)
-    for p in idx:
+    meta = {}
+    for l in open(J('data/inspect/files.jsonl'), encoding='utf-8'):
+        d = json.loads(l)
+        try: meta[N(d['path'])] = (eval(d['meta']) if isinstance(d.get('meta'), str) else (d.get('meta') or {})).get('title', '') or ''
+        except Exception: pass
+    known, back = known_authors(), moved_from()
+    cutrev = {N(r['book']) for r in csv.DictReader(open(J('data/review/name-fix-review.tsv'), encoding='utf-8'), delimiter='\t')
+              if 'cut' in r['defect']}
+    under = collections.defaultdict(list); deep = set(); plain = collections.defaultdict(set)
+    for p, s in idx:
         parts = p.split('/')
-        if len(parts) == 3: folders['/'.join(parts[:2])].append(p)
-        elif len(parts) == 2: plain[parts[0]].add(parts[1])
-    rows, stats = [], collections.Counter()
-    for folder, ps in sorted(folders.items()):
+        if len(parts) >= 3: under['/'.join(parts[:2])].append((p, s))
+        if len(parts) > 3: deep.add('/'.join(parts[:2]))
+        if len(parts) == 2: plain[parts[0]].add(norm(parts[1].removesuffix('.pdf')))
+    rows, review, stats = [], [], collections.Counter()
+    def hold(why, folder, extra=''):
+        stats[why] += 1; review.append((folder, why, extra))
+    for folder, ps in sorted(under.items()):
         if len(ps) != 1: continue
         cat, name = folder.split('/', 1)
-        fn = ps[0].rsplit('/', 1)[1]
-        if not fn.lower().endswith('.pdf') or cat in NOT_BOOKS: continue
-        if re.match(r'^(مؤلفات|سلسلة|مجلة|موسوعة|مجموع|أدب)', name): stats['keep: collection'] += 1; continue
-        r = prov.get(ps[0]) or {}
-        b = books.get(r.get('waqfeya_id')) if r.get('waqfeya_id') else None
-        nvol = re.sub(r'\D', '', str((b or {}).get('numberOfVolumes') or ''))
-        vm = re.match(r'^(\d{1,3}) - ', fn) or re.search(r'\((?:جزء|الجزء|المجلد|مجلد)\s*(\d+)\)', fn)
-        if (nvol and int(nvol) > 1) or (vm and int(vm.group(1)) > 1) or re.search(r'الجزء (الثاني|الثالث|الرابع)', fn):
-            stats['keep: part of a multi-volume work'] += 1; continue
-        stem = fn[:-4]
-        if re.match(r'^0*1 - ', fn) and nvol != '1':
-            stats['wait: «01 - …» alone (first volume of more?)'] += 1; continue
-        if re.search(r'[A-Za-z]', stem) and re.search(r'\d', stem):
-            stats['wait: raw file name with digits (volume?)'] += 1; continue
-        if re.search(r'[A-Za-z_\-]\d{1,3}$|^\d{1,3}[_\-]|(^|[^\d])\d{1,2}$', stem) and re.search(r'[A-Za-z]', stem):
-            stats['keep: raw file name with a volume number'] += 1; continue
-        extra = {w for w in norm(stem).split() if len(w) > 2} - set(norm(name).split()) - {'pdf'}
-        if len(extra) >= 2 and re.search(r'[\u0600-\u06FF]', stem):
-            stats['wait: the file name carries more than the folder name'] += 1; continue
-        t0 = re.split(r'\s+-\s+', re.sub(r'\([^()]*\)', '', name))[0].split()
-        if t0 and norm(t0[-1]) in {norm(w) for w in 'بن ابن أبي أبو عبد في من على عن إلى و'.split()}:
-            stats['wait: cut title'] += 1; continue
-        if BAD_FOLDER.search(name) or deficient(name) or ' - ' not in name:
-            stats['wait: junk or authorless name (renamed from the PDF after inspection)'] += 1; continue
+        path, size = ps[0]; fn = path.rsplit('/', 1)[1]
+        if path in skip: stats['later: busy (--skip)'] += 1; continue
+        if cat in NOT_BOOKS or not fn.lower().endswith('.pdf'): continue
+        if folder in deep: stats['keep: has sub-folders'] += 1; continue
+        if COLLECTION.match(name): stats['keep: collection or series'] += 1; continue
+        r = prov.get(path) or {}
+        b = books.get(r.get('waqfeya_id')) if r.get('match') in ('unique', 'substituted-unique') else None   # one record by exact size
+        nvol = int(re.sub(r'\D', '', str((b or {}).get('numberOfVolumes') or '')) or 0)
+        nlinks = len([x for x in (b or {}).get('links') or [] if 'archive.org/download' in x.get('url', '') and x.get('url', '').lower().endswith('.pdf')])
+        mt = meta.get(path, '')
+        vm = re.match(r'^0*(\d{1,3}) - ', fn) or re.search(r'\((?:جزء|الجزء|المجلد|مجلد)\s*(\d+)\)', fn) or re.search(r'(?:^|\s)ج\s*(\d{1,2})(?:\s|$)', fn)
+        vol_meta = re.search(r'(?:^|\s)-\s*ج\s*(\d+)', mt)
+        if (vm and int(vm.group(1)) > 1) or re.search(r'الجزء (الثاني|الثالث|الرابع|الخامس)|المجلد (الثاني|الثالث)', fn) \
+           or (vol_meta and int(vol_meta.group(1)) > 1):
+            stats['keep: one volume of a larger set'] += 1; continue
+        gift = any('الهدية' in h for h in history(path, back))
+        one = re.match(r'^0*1 - ', fn) or re.search(r'\((?:جزء|الجزء|المجلد|مجلد)\s*1\)', fn)
+        if b and (nvol > 1 or nlinks > 1) and not gift:
+            stats['keep: the record has more volumes (incomplete set)'] += 1; continue
+        if one:
+            if gift: why1 = 'was «الهدية (N)» (plan 066 made it «01 -»)'
+            elif b and nvol <= 1 and nlinks <= 1: why1 = 'its exact-size Waqfeya record: one volume, one file'
+            elif vol_meta: stats['keep: «01 -», the PDF title says «ج 1»'] += 1; continue
+            else: hold('wait: «01 -» alone, no evidence it is the whole book', folder, fn); continue
+        if CUT.search(name) or deficient(name) or folder in cutrev:
+            hold('wait: cut name (title-page pass)', folder, fn); continue
         t, au, ed = parse_folder(name)
+        how = 'folder name'
+        fau, extra = file_info(fn, name)
+        if extra:
+            hold('wait: the file name says more than the folder name (read it)', folder, fn); continue
+        if fau and not au and norm(fau) not in norm(t):
+            au, how = fau, 'folder name + the author in the file name'
+        if not au:
+            t2, au2, doubt = lam_author(t, known, author_short((b or {}).get('author', {}).get('name', '') if b else ''))
+            if au2: t, au, how = t2, au2, 'author from «لفلان» in the title'
+            elif doubt: stats['note: «ل» name not used — ' + doubt] += 1
+        if gift: how += '; ' + why1
+        elif one: how += '; ' + why1
         t, au, ed = clean(t), clean(au), clean(ed)
-        if not t: stats['skip: no title'] += 1; continue
-        new = compose(t, au if au and not redundant(au, t) else '', ed, 196) + '.pdf'      # title shortened only for length
-        if new in plain[cat]: stats['skip: name taken'] += 1; continue
-        plain[cat].add(new)
-        rows.append((f'Books/{ps[0]}', f'Books/{cat}/{new}', 'single-volume book: plain file in its section (§4)'))
-        stats['to plain file'] += 1
+        if not t: hold('skip: no title', folder, fn); continue
+        new = compose(t, au if au and not redundant(au, t) else '', ed, 196) + '.pdf'
+        if norm(new.removesuffix('.pdf')) in plain[cat]:
+            hold('wait: the plain name is taken in the section', folder, new); continue
+        plain[cat].add(norm(new.removesuffix('.pdf')))
+        rows.append((f'Books/{rawof[path]}', f'Books/{cat}/{new}', f'single-volume book: plain file in its section (§4); {how}'))
+        stats['to plain file' + (' (author from «ل»)' if 'لفلان' in how else '') + (' (was «01 -»)' if one else '')] += 1
     with open(out, 'w', encoding='utf-8') as w:
         for r in rows: w.write('\t'.join(r) + '\n')
-    print(dict(stats))
+    if review_out:
+        with open(review_out, 'w', encoding='utf-8') as w:
+            w.write('folder\twhy\tfile\n')
+            for r in review: w.write('\t'.join(r) + '\n')
+    for k, v in sorted(stats.items(), key=lambda x: -x[1]): print(f'{v:6}  {k}')
 
 if __name__ == '__main__':
-    main(sys.argv[1], sys.argv[2])
+    a = sys.argv[1:]; skip = set()
+    if '--skip' in a:
+        k = a.index('--skip'); lst = a[k + 1]; del a[k:k + 2]
+        done = {N(l.split('\t')[0]) for l in open(J('data/crop/done.tsv'), encoding='utf-8')} if os.path.exists(J('data/crop/done.tsv')) else set()
+        skip = {N(l.strip().removeprefix('Books/')) for l in open(lst, encoding='utf-8') if l.strip()} - done
+    main(*a[:3], skip=skip)

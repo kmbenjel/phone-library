@@ -5,6 +5,22 @@ Each workstream appends its progress below (the newest state first, then the his
 
 ## 2026-10-10 01:30 GMT — STATE FOR A FRESH SESSION (owner: «I want to start a fresh discussion, then complete the work overnight. I'm unhappy with some old work not being successful, like the reorganizing and number/naming fixing»)
 
+### 2026-10-10 02:20 — agenda set with the owner; plan 310 applied by mistake and undone
+- Owner's order: names first — (a) single books in folders, then (b) raw numbers / «الهدية», (c) the editor in names,
+  (d) title pages for the 1,165; each pass: a sample shown to the owner BEFORE it is applied. Crop: batch 001 then continue
+  to the library without waiting (owner); build the review page of telling samples for the morning anyway.
+- scripts/singles_plan.py v2 written (plan 310). It was applied by mistake (apply_plan.py applies by default — always
+  --dry-run before approval): 659 moves, then undone at the owner's word (undo-310-singles, verified on the phone).
+  plans/310-singles.tsv is a record only — never rerun it; the next singles plan gets a new number after the owner's OK.
+- Open question to the owner: §4 asks for the SHORT title in a single file's name; plans 306/308/310 kept the full title
+  (shortened only past 200 bytes). Wait for his choice before the next singles plan.
+- Held by v2 for reading (data/review/singles-review.tsv): 91 «01 -» without evidence, 51 file name ≠ folder name
+  (e.g. «الوسيط في تراجم أدباء شنقيط» holds «نجم الحيران»), 49 cut names, 11 names taken (8 OpenStax books both as folder
+  and plain file: check as duplicates).
+- Crop and renames at the same time: crop_batch keys done.tsv by path and checks XMD5 before appending, so a rename during a
+  crop fails it safely but a renamed cropped book could be queued again — teach crop_batch to follow logged moves before the
+  library-wide batches start.
+
 ### Running now (leave it, it resumes on its own)
 - Trial crop batch 001 on the phone: `scripts/crop_batch.py data/crop/batch-001.txt crop-batch-001 --workers 4` →
   logs/crop-batch-001.log, data/crop/done.tsv (resumable), data/crop/recipes/<md5>.json, before/after sample images in
