@@ -1,5 +1,5 @@
 """Names from the title-page readings (data/names/title-read.tsv) under AGENTS.md §4 (scripts/name_compose.py):
-«<title> - <author> - ت <editor> - <publisher>، <city>، <year>», no parentheses; a thesis or a manuscript says so at the
+«<title> - <author> - ت <editor> - <publisher> <city> <year>», no parentheses or commas; a thesis or a manuscript says so at the
 end; a translator is «ترجمة X»; «part» (one volume of a set) stays a folder: «<folder>/NN - <title> - <label>.pdf».
 Usage: python3 scripts/names_from_reading.py [N…]   (prints old → new for the readings N, or all)"""
 import csv, os, re, sys
@@ -19,7 +19,7 @@ def year_of(y):
 def name_of(r):
     t, au, ed, pub, city = r['title'], r['author'], r['editor'], r['publisher'], r['city']
     kind = r.get('kind', '')
-    tail = '، '.join(x for x in (pub, city.replace('، ', ' و') if city else '', year_of(r['year'])) if x)
+    tail = ' '.join(x for x in (pub, city.replace('، ', ' و') if city else '', year_of(r['year'])) if x)
     if ed and kind == 'ترجمة': edition = f'ترجمة {ed}' + (f' - {tail}' if tail else '')
     elif ed: edition = f'ت {ed}' + (f' - {tail}' if tail else '')
     else: edition = f'ط {tail}' if tail else ''

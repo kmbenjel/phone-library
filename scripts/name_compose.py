@@ -1,7 +1,8 @@
 """Book and volume names under the owner's rules of 2026-10-10 (AGENTS.md §4):
   * nothing is shortened when the whole name fits in 200 bytes: the full title, the author, the editor, the publisher —
     every piece of information we have («All the possible info should be present»);
-  * no parentheses anywhere (owner: «avoid ()», then «تبقي على الأقواس»): «<title> - <author> - ت <editor> - <publisher>»,
+  * no parentheses and no commas anywhere (owner: «avoid ()», «تبقي على الأقواس», «استغن عن الفواصل»):
+    «<title> - <author> - ت <editor> - <publisher> <city> <year>»,
     «… - ط <publisher>»; a title's own «(مخطوط)», «(رسالة ماجستير)» go after the edition («… - مخطوط»), a one- or two-word
     «(الجد)» is written inline, a longer one («(شاعر الطبيعة والأندلس)») becomes a «، …» subtitle;
   * only when the name is too long, the combination that keeps the most information is chosen; what gives way, first to
@@ -83,6 +84,7 @@ def build(title_parts, joins, sub, author, ed, kinds=()):
     if author: s += f' - {author}'
     ed = ' - '.join([e for e in [ed] + list(kinds) if e])          # «مخطوط», «رسالة ماجستير» stay to the end
     if ed: s += f' - {ed}'                                         # owner 2026-10-10: no parentheses at all
+    s = re.sub(r'\s*[،,]\s*', ' ', s)                             # and no commas: «مكتبة المعارف الرباط 1985»
     return tidy(s)
 
 def one_name(x):
@@ -116,9 +118,11 @@ def parse_edition(ed):
     if '،' in pub: pub, city = [x.strip() for x in pub.split('،', 1)]
     return names, pub, city, ''
 
-def edition_text(names, pub, city, other):
-    if other: return other
-    p = pub + (f'، {city}' if city and pub else '')
+def edition_text(names, pub, city, other, year=''):
+    """«ت أ وب - الناشر، المدينة، السنة» / «ط الناشر، السنة» / «ت أ - السنة»"""
+    if other: return other + (f'، {year}' if year else '')
+    if city and norm(city) in norm(pub): city = ''               # «الجامعة الأميركية في بيروت» already says where
+    p = ' '.join(x for x in (pub, city if pub else '', year) if x)
     if names: return 'ت ' + ' و'.join(names) + (f' - {p}' if p else '')
     return f'ط {p}' if p else ''
 
@@ -138,7 +142,7 @@ def wscore(text, seg):
     n = len(text.split())
     return 10 * min(n, 2) + 2 * max(0, min(n, hn) - 2) + 0.6 * max(0, n - max(hn, 2))
 
-def compose(title, author='', edition='', limit=LIMIT):
+def compose(title, author='', edition='', limit=LIMIT, year=''):
     """the name that carries the most information within `limit` bytes: every combination of the title's cut, its joined
     titles («ويليه، ومعه، =»), its subtitle, the editors and the publisher is weighed; nothing is cut when all fits"""
     import itertools
@@ -151,17 +155,18 @@ def compose(title, author='', edition='', limit=LIMIT):
     author = tidy(re.sub(r'\([^()]*\)', ' ', author))
     parts = JOIN.split(t)
     segs, joins = parts[0::2], parts[1::2]
-    full = build(segs, joins, sub, author, edition_text(names, pub, city, other), kinds)
+    full = build(segs, joins, sub, author, edition_text(names, pub, city, other, year), kinds)
     if B(full) <= limit: return full
     seg_opts = [title_options(sg)[:10] for sg in segs]
     ed_opts = []
     for k in sorted({len(names), min(2, len(names)), min(1, len(names)), 0}, reverse=True):
-        for pp, cc in ((pub, city), (pub, ''), ('', '')):
+        for pp, cc, yy in ((pub, city, year), (pub, city, ''), (pub, '', year), (pub, '', ''), ('', '', year), ('', '', '')):
             generic = re.match(r'^(وزارة|المجلس|الهيئة|جامعة|مجمع|مركز|الأمانة|دار المعارف|المكتب)', pp or '')
             # owner 2026-10-10: when the whole title and the publisher cannot both fit, the publisher goes first; the
             # (first) editor stays — so a publisher weighs less than any word of the title, an editor more
             sc = (8 if k >= 1 else 0) + (2.5 if k >= 2 else 0) + 0.3 * max(0, k - 2) + (0.5 if pp else 0) + ((0.2 if generic else 0.1) if cc else 0)
-            e = edition_text(names[:k], pp, cc, other)
+            sc += 0.3 if yy else 0                       # the year gives way first
+            e = edition_text(names[:k], pp, cc, other, yy)
             ed_opts.append((sc + (6 if other else 0), e))
     ed_opts = list(dict.fromkeys(ed_opts))
     best = None

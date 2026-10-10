@@ -86,8 +86,10 @@ Single-volume books are stored as plain files in the category folder without the
 - **Nothing is shortened when the whole name fits (≤ 200 bytes).** Every piece of information we have is in it: the
   full title, the author, the editor(s), the publisher — taken from evidence (the name itself, the exact-size Waqfeya
   record when its title is the same book, the title page).
-- **No parentheses anywhere** (owner: «avoid ()», then «تبقي على الأقواس»): the parts follow one another with « - »,
-  the edition marked by «ت» (editor) or «ط» (publisher only): `<title> - <author> - ت <editor> - <publisher>`. A title's
+- **No parentheses and no commas anywhere** (owner: «avoid ()», «تبقي على الأقواس», «استغن عن الفواصل في كل العناوين»):
+  the parts follow one another with « - », the edition marked by «ت» (editor), «ترجمة» (translator) or «ط» (publisher
+  only); publisher, city and year separated by single spaces:
+  `<title> - <author> - ت <editor> - <publisher> <city> <year>` («… - ت محمد حجي - دار الغرب الإسلامي بيروت 1997»). A title's
   own «(مخطوط)», «(رسالة ماجستير)» go after the edition («… - مخطوط»); a one- or two-word aside is written inline
   («ابن رشد (الجد)» → «ابن رشد الجد»); a longer aside becomes a «، …» subtitle.
 - **Only when the name is too long**, the combination that keeps the most information is chosen. What gives way, first
@@ -99,7 +101,7 @@ Single-volume books are stored as plain files in the category folder without the
 **Book folder** (for multi-file works): `<title> - <author> - <edition>`
 - `<author>`: the commonly used name (e.g. `ابن قدامة`, `الإمام الغزالي`); not repeated when the title already holds it
   («تفسير ابن أبي حاتم الرازي»). Omit for periodicals/series.
-- `<edition>`: `ت <editor> و<editor> - <publisher>، <city>` or `ط <publisher>`; omit when unknown.
+- `<edition>`: `ت <editor> و<editor> - <publisher> <city> <year>` or `ط <publisher> <city> <year>`; omit what is unknown.
 - Collections: `مؤلفات <author> - <publisher>`; periodicals: `مجلة <name> - <publisher>`; series: `سلسلة <name> - <publisher>`.
 - Different editions of the same book are separate folders that differ only in their edition part.
 
