@@ -21,9 +21,8 @@ Each workstream appends its progress below (the newest state first, then the his
   001, then the library 300 books at a time (crop_queue.py: books ≥ 40 pages first, widest margins first; ≈ 15 books/hour →
   ~6 weeks for 15,630 scans), refresh + WORKLOG + commit after each batch. Stop: kill its PID, then its crop_batch.py.
   Still to do for the morning: a review page of telling samples from ~/.cache/phone-library/crop-sheets/.
-- Crop and renames at the same time: crop_batch keys done.tsv by path and checks XMD5 before appending, so a rename during a
-  crop fails it safely but a renamed cropped book could be queued again — teach crop_batch to follow logged moves before the
-  library-wide batches start.
+- Crop and renames at the same time: DONE (8a45a79) — crop_batch follows logged moves before staging and before the
+  append; crop_queue skips a book cropped under any earlier name.
 
 ### Running now (leave it, it resumes on its own)
 - Trial crop batch 001 on the phone: `scripts/crop_batch.py data/crop/batch-001.txt crop-batch-001 --workers 4` →
