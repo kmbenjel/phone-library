@@ -694,6 +694,159 @@
   }
  },
  {
+  "work": "رياض الصالحين",
+  "title": "رياض الصالحين",
+  "author": "النووي",
+  "bytes": 574259367,
+  "editions": [
+   {
+    "folder": "رياض الصالحين - النووي (ت الأرناؤوط، ط 1405)",
+    "cat": "كتب السنة",
+    "edition": "1405 - 1985",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 15062507,
+    "quality": {
+     "files": 1,
+     "pages": 728,
+     "kbpp": 20,
+     "px": 1974,
+     "colour": "أبيض وأسود",
+     "width_used": 0.74,
+     "text": false
+    },
+    "score": 79.8,
+    "waqfeya": [
+     "https://waqfeya.net/books/-رياض-الصالحين-ت-الأرناؤوط-ط-1405-e1cb6e6d4ca54750a7952e828f9179a6"
+    ]
+   },
+   {
+    "folder": "رياض الصالحين - النووي (ت شعيب الأرناؤوط)",
+    "cat": "كتب السنة",
+    "edition": "ت شعيب الأرناؤوط - 1422 - 2001",
+    "researcher": "شعيب الأرناؤوط",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 507301098,
+    "quality": null,
+    "score": -1,
+    "waqfeya": [
+     "https://waqfeya.net/books/رياض-الصالحين--ت-الأرناؤوط--ملون-74b06b9b780c468f88440569d66eba5b"
+    ]
+   },
+   {
+    "folder": "رياض الصالحين - النووي (ت محمد ناصر الدين الألباني - المكتب الإسلامي)",
+    "cat": "كتب السنة",
+    "edition": "ت محمد ناصر الدين الألباني - ط المكتب الإسلامي - 1412 - 1992",
+    "researcher": "محمد ناصر الدين الألباني",
+    "publisher": "المكتب الإسلامي",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 12527280,
+    "quality": {
+     "files": 1,
+     "pages": 704,
+     "kbpp": 17,
+     "px": 1968,
+     "colour": "أبيض وأسود",
+     "width_used": 0.77,
+     "text": false
+    },
+    "score": 80.4,
+    "waqfeya": [
+     "https://waqfeya.net/books/رياض-الصالحين-ت-الألباني-ط-1412-e01a5bf169f14dff894594b16332c36e"
+    ]
+   },
+   {
+    "folder": "رياض الصالحين - النووي (ط دار ابن الجوزي)",
+    "cat": "كتب السنة",
+    "edition": "ت علي حسن عبد الحميد الحلبي - ط دار ابن الجوزي - 1421",
+    "researcher": "علي حسن عبد الحميد الحلبي",
+    "publisher": "دار ابن الجوزي",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 15771624,
+    "quality": {
+     "files": 1,
+     "pages": 680,
+     "kbpp": 23,
+     "px": 1956,
+     "colour": "أبيض وأسود",
+     "width_used": 0.77,
+     "text": false
+    },
+    "score": 80.4,
+    "waqfeya": [
+     "https://waqfeya.net/books/رياض-الصالحين-من-حديث-سيد-المرسلين-ت-الحلبي-19d8a2b4228f4561a96c4dac4cae44ce"
+    ]
+   },
+   {
+    "folder": "رياض الصالحين - النووي (ط دار ابن كثير)",
+    "cat": "كتب السنة",
+    "edition": "ت ماهر ياسين الفحل - ط دار ابن كثير - 1428 - 2007",
+    "researcher": "ماهر ياسين الفحل",
+    "publisher": "دار ابن كثير",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 12603690,
+    "quality": {
+     "files": 1,
+     "pages": 552,
+     "kbpp": 22,
+     "px": 1811,
+     "colour": "أبيض وأسود",
+     "width_used": 0.84,
+     "text": false
+    },
+    "score": 81.8,
+    "waqfeya": [
+     "https://waqfeya.net/books/رياض-الصالحين-من-كلام-سيد-المرسلين-ت-الفحل-ee9813f679944a58b938a07bd14a4019"
+    ]
+   },
+   {
+    "folder": "رياض الصالحين - النووي (ط وزارة الأوقاف والشؤون الإسلامية - قطر)",
+    "cat": "كتب السنة",
+    "edition": "ت عصام موسى هادي - ط وزارة الأوقاف والشؤون الإسلامية - قطر - 1428 - 2007",
+    "researcher": "عصام موسى هادي",
+    "publisher": "وزارة الأوقاف والشؤون الإسلامية - قطر",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 10993168,
+    "quality": {
+     "files": 1,
+     "pages": 480,
+     "kbpp": 22,
+     "px": 1827,
+     "colour": "أبيض وأسود",
+     "width_used": 0.8,
+     "text": false
+    },
+    "score": 81.0,
+    "waqfeya": [
+     "https://waqfeya.net/books/رياض-الصالحين-من-حديث-سيد-المرسلين-ت-هادي-ط-الأوقاف-القطرية-c58f043b728b49c6a6e20ab9597ffef3"
+    ]
+   }
+  ],
+  "note": {
+   "key": "رياض الصالحين",
+   "author": "نووي",
+   "note": "نصّ الدليل على طبعة المكتب الإسلامي (الألباني) أو مؤسسة الرسالة (الأرناؤوط).",
+   "best": "المكتب الإسلامي أو الرسالة.",
+   "sources": [
+    "«دليلك إلى أفضل الطبعات لأمهات الكتب» — محمد عبد الله آل سنه، صيد الفوائد: https://saaid.org/mktarat/alalm/63.htm"
+   ]
+  }
+ },
+ {
   "work": "روح المعاني في تفسير",
   "title": "روح المعاني في تفسير القرآن العظيم والسبع المثاني للألوسي",
   "author": "",
@@ -4968,6 +5121,59 @@
   "note": null
  },
  {
+  "work": "الفصل في الملل والاهوا",
+  "title": "الفصل في الملل والأهواء والنحل وبهامشه الملل والنحل",
+  "author": "ابن حزم",
+  "bytes": 142669920,
+  "editions": [
+   {
+    "folder": "الفصل في الملل والأهواء والنحل وبهامشه الملل والنحل - ابن حزم (ت عبد الرحمن خليفة - محمد علي صبيح وأولاده)",
+    "cat": "الفرق والردود",
+    "edition": "ت عبد الرحمن خليفة - ط محمد علي صبيح وأولاده - 1347",
+    "researcher": "عبد الرحمن خليفة",
+    "publisher": "محمد علي صبيح وأولاده",
+    "files": 6,
+    "vols_edition": "5",
+    "complete": true,
+    "bytes": 108667535,
+    "quality": null,
+    "score": -1,
+    "waqfeya": [
+     "https://waqfeya.net/books/الفصل-في-الملل-والأهواء-والنحل-وبهامشه-الملل-والنحل-ملون-b57c2b92ff804f9f904e576c4af45e88"
+    ],
+    "same_edition": true,
+    "best_scan": false
+   },
+   {
+    "folder": "الفصل في الملل والأهواء والنحل، وبهامشه الملل والنحل- ط. صبيح - ابن حزم (ط محمد علي صبيح)",
+    "cat": "الفرق والردود",
+    "edition": "ط محمد علي صبيح - 1348",
+    "researcher": "",
+    "publisher": "محمد علي صبيح",
+    "files": 6,
+    "vols_edition": "5",
+    "complete": true,
+    "bytes": 34002385,
+    "quality": {
+     "files": 6,
+     "pages": 728,
+     "kbpp": 46,
+     "px": 2183,
+     "colour": "أبيض وأسود",
+     "width_used": 0.82,
+     "text": false
+    },
+    "score": 81.4,
+    "waqfeya": [
+     "https://waqfeya.net/books/الفصل-في-الملل-والأهواء-والنحل-وبهامشه-الملل-والنحل-ط-صبيح-aa98335e08b44f669db650e691890711"
+    ],
+    "same_edition": true,
+    "best_scan": true
+   }
+  ],
+  "note": null
+ },
+ {
   "work": "الصحاح تاج اللغه وصحاح",
   "title": "الصحاح تاج اللغة وصحاح العربية",
   "author": "إسماعيل الجوهري",
@@ -5234,29 +5440,21 @@
  {
   "work": "انوار التنزيل واسرار التاويل",
   "title": "أنوار التنزيل وأسرار التأويل = تفسير البيضاوي",
-  "author": "",
+  "author": "ناصر الدين البيضاوي",
   "bytes": 133392110,
   "editions": [
    {
-    "folder": "أنوار التنزيل وأسرار التأويل = تفسير البيضاوي (وبهامشه حاشية الكازروني - دار الكتب العربية الكبرى)",
+    "folder": "أنوار التنزيل وأسرار التأويل = تفسير البيضاوي - ناصر الدين البيضاوي (وبهامشه حاشية الكازروني - دار الكتب)",
     "cat": "التفسير",
-    "edition": "وبهامشه حاشية الكازروني - دار الكتب العربية الكبرى",
+    "edition": "وبهامشه حاشية الكازروني - دار الكتب",
     "researcher": "",
     "publisher": "",
     "files": 5,
     "vols_edition": "",
     "complete": false,
     "bytes": 83607540,
-    "quality": {
-     "files": 5,
-     "pages": 1131,
-     "kbpp": 73,
-     "px": 2078,
-     "colour": "ملون",
-     "width_used": 0.91,
-     "text": false
-    },
-    "score": 68.2,
+    "quality": null,
+    "score": -1,
     "waqfeya": []
    },
    {
@@ -6655,7 +6853,7 @@
     ]
    },
    {
-    "folder": "ترتيب المدارك وتقريب المسالك لمعرفة أعلام مذهب مالك للقاضي عياض",
+    "folder": "ترتيب المدارك وتقريب المسالك لمعرفة أعلام مذهب مالك - القاضي عياض",
     "cat": "التراجم والطبقات",
     "edition": "",
     "researcher": "",
@@ -6664,16 +6862,8 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 54821922,
-    "quality": {
-     "files": 6,
-     "pages": 1566,
-     "kbpp": 34,
-     "px": 1947,
-     "colour": "ملون",
-     "width_used": 0.79,
-     "text": false
-    },
-    "score": 65.8,
+    "quality": null,
+    "score": -1,
     "waqfeya": []
    }
   ],
@@ -6787,6 +6977,113 @@
    "author": "نسايي",
    "note": "نصّ الدليل على ترقيم عبد الفتاح أبو غدة (المجتبى، مكتب المطبوعات الإسلامية).",
    "best": "أبو غدة.",
+   "sources": [
+    "«دليلك إلى أفضل الطبعات لأمهات الكتب» — محمد عبد الله آل سنه، صيد الفوائد: https://saaid.org/mktarat/alalm/63.htm"
+   ]
+  }
+ },
+ {
+  "work": "الشريعه",
+  "title": "الشريعة",
+  "author": "الآجري",
+  "bytes": 101994158,
+  "editions": [
+   {
+    "folder": "الشريعة - الآجري (ت الوليد بن محمد نبيه سيف الناصر - مؤسسة قرطبة)",
+    "cat": "العقيدة",
+    "edition": "ت الوليد بن محمد نبيه سيف الناصر - ط مؤسسة قرطبة - 1417 - 1996",
+    "researcher": "الوليد بن محمد نبيه سيف الناصر",
+    "publisher": "مؤسسة قرطبة",
+    "files": 4,
+    "vols_edition": "3",
+    "complete": true,
+    "bytes": 24741382,
+    "quality": {
+     "files": 4,
+     "pages": 1584,
+     "kbpp": 15,
+     "px": 1277,
+     "colour": "أبيض وأسود",
+     "width_used": 0.77,
+     "text": false
+    },
+    "score": 76.0,
+    "waqfeya": [
+     "https://waqfeya.net/books/الشريعة-ت-الناصر-74af42cec29c469281a09d27741006b4"
+    ],
+    "same_edition": true,
+    "best_scan": false
+   },
+   {
+    "folder": "الشريعة - الآجري (ط دار الوطن)",
+    "cat": "العقيدة",
+    "edition": "ت عبد الله بن عمر بن سليمان الدميجي - ط دار الوطن - 1418 - 1997",
+    "researcher": "عبد الله بن عمر بن سليمان الدميجي",
+    "publisher": "دار الوطن",
+    "files": 1,
+    "vols_edition": "6",
+    "complete": false,
+    "bytes": 33255069,
+    "quality": {
+     "files": 1,
+     "pages": 2920,
+     "kbpp": 11,
+     "px": 1274,
+     "colour": "أبيض وأسود",
+     "width_used": 0.7,
+     "text": false
+    },
+    "score": 59.5,
+    "waqfeya": [
+     "https://waqfeya.net/books/الشريعة-ت-الدميجي-c4310d2042ab48e7a01483ae26590fab"
+    ]
+   },
+   {
+    "folder": "كتاب الشريعة - الآجري (ط دار الكتب العلمية)",
+    "cat": "العقيدة",
+    "edition": "ت محمد بن الحسن إسماعيل - ط دار الكتب العلمية - 1416 - 1995",
+    "researcher": "محمد بن الحسن إسماعيل",
+    "publisher": "دار الكتب العلمية",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 9057677,
+    "quality": {
+     "files": 1,
+     "pages": 472,
+     "kbpp": 19,
+     "px": 1940,
+     "colour": "أبيض وأسود",
+     "width_used": 0.79,
+     "text": false
+    },
+    "score": 80.8,
+    "waqfeya": [
+     "https://waqfeya.net/books/كتاب-الشريعة-ويليه-كتاب-الأربعين-حديثا-ط-العلمية-92e5fa180d1845dd88655592930b16b6"
+    ],
+    "same_edition": true,
+    "best_scan": true
+   },
+   {
+    "folder": "كتاب الشريعة - الآجري",
+    "cat": "كتب السنة",
+    "edition": "",
+    "researcher": "",
+    "publisher": "",
+    "files": 3,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 34940030,
+    "quality": null,
+    "score": -1,
+    "waqfeya": []
+   }
+  ],
+  "note": {
+   "key": "الشريعه",
+   "author": "اجري",
+   "note": "نصّ الدليل على تحقيق عبد الله الدميجي (دار الوطن).",
+   "best": "الدميجي.",
    "sources": [
     "«دليلك إلى أفضل الطبعات لأمهات الكتب» — محمد عبد الله آل سنه، صيد الفوائد: https://saaid.org/mktarat/alalm/63.htm"
    ]
@@ -6968,7 +7265,7 @@
     "waqfeya": []
    },
    {
-    "folder": "المدخل إلي تنمية الاعمال بتحسين النيات لابن الحاج",
+    "folder": "المدخل إلي تنمية الاعمال بتحسين النيات - ابن الحاج",
     "cat": "الفقه المالكي",
     "edition": "",
     "researcher": "",
@@ -6977,16 +7274,8 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 60146156,
-    "quality": {
-     "files": 7,
-     "pages": 2353,
-     "kbpp": 25,
-     "px": 2146,
-     "colour": "أبيض وأسود",
-     "width_used": 0.59,
-     "text": false
-    },
-    "score": 61.8,
+    "quality": null,
+    "score": -1,
     "waqfeya": []
    }
   ],
@@ -9232,236 +9521,6 @@
   "note": null
  },
  {
-  "work": "الشريعه",
-  "title": "الشريعة",
-  "author": "الآجري",
-  "bytes": 67054128,
-  "editions": [
-   {
-    "folder": "الشريعة - الآجري (ت الوليد بن محمد نبيه سيف الناصر - مؤسسة قرطبة)",
-    "cat": "العقيدة",
-    "edition": "ت الوليد بن محمد نبيه سيف الناصر - ط مؤسسة قرطبة - 1417 - 1996",
-    "researcher": "الوليد بن محمد نبيه سيف الناصر",
-    "publisher": "مؤسسة قرطبة",
-    "files": 4,
-    "vols_edition": "3",
-    "complete": true,
-    "bytes": 24741382,
-    "quality": {
-     "files": 4,
-     "pages": 1584,
-     "kbpp": 15,
-     "px": 1277,
-     "colour": "أبيض وأسود",
-     "width_used": 0.77,
-     "text": false
-    },
-    "score": 76.0,
-    "waqfeya": [
-     "https://waqfeya.net/books/الشريعة-ت-الناصر-74af42cec29c469281a09d27741006b4"
-    ],
-    "same_edition": true,
-    "best_scan": false
-   },
-   {
-    "folder": "الشريعة - الآجري (ط دار الوطن)",
-    "cat": "العقيدة",
-    "edition": "ت عبد الله بن عمر بن سليمان الدميجي - ط دار الوطن - 1418 - 1997",
-    "researcher": "عبد الله بن عمر بن سليمان الدميجي",
-    "publisher": "دار الوطن",
-    "files": 1,
-    "vols_edition": "6",
-    "complete": false,
-    "bytes": 33255069,
-    "quality": {
-     "files": 1,
-     "pages": 2920,
-     "kbpp": 11,
-     "px": 1274,
-     "colour": "أبيض وأسود",
-     "width_used": 0.7,
-     "text": false
-    },
-    "score": 59.5,
-    "waqfeya": [
-     "https://waqfeya.net/books/الشريعة-ت-الدميجي-c4310d2042ab48e7a01483ae26590fab"
-    ]
-   },
-   {
-    "folder": "كتاب الشريعة - الآجري (ط دار الكتب العلمية)",
-    "cat": "العقيدة",
-    "edition": "ت محمد بن الحسن إسماعيل - ط دار الكتب العلمية - 1416 - 1995",
-    "researcher": "محمد بن الحسن إسماعيل",
-    "publisher": "دار الكتب العلمية",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 9057677,
-    "quality": {
-     "files": 1,
-     "pages": 472,
-     "kbpp": 19,
-     "px": 1940,
-     "colour": "أبيض وأسود",
-     "width_used": 0.79,
-     "text": false
-    },
-    "score": 80.8,
-    "waqfeya": [
-     "https://waqfeya.net/books/كتاب-الشريعة-ويليه-كتاب-الأربعين-حديثا-ط-العلمية-92e5fa180d1845dd88655592930b16b6"
-    ],
-    "same_edition": true,
-    "best_scan": true
-   }
-  ],
-  "note": {
-   "key": "الشريعه",
-   "author": "اجري",
-   "note": "نصّ الدليل على تحقيق عبد الله الدميجي (دار الوطن).",
-   "best": "الدميجي.",
-   "sources": [
-    "«دليلك إلى أفضل الطبعات لأمهات الكتب» — محمد عبد الله آل سنه، صيد الفوائد: https://saaid.org/mktarat/alalm/63.htm"
-   ]
-  }
- },
- {
-  "work": "رياض الصالحين",
-  "title": "رياض الصالحين",
-  "author": "النووي",
-  "bytes": 66958269,
-  "editions": [
-   {
-    "folder": "رياض الصالحين - النووي (ت الأرناؤوط، ط 1405)",
-    "cat": "كتب السنة",
-    "edition": "1405 - 1985",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 15062507,
-    "quality": {
-     "files": 1,
-     "pages": 728,
-     "kbpp": 20,
-     "px": 1974,
-     "colour": "أبيض وأسود",
-     "width_used": 0.74,
-     "text": false
-    },
-    "score": 79.8,
-    "waqfeya": [
-     "https://waqfeya.net/books/-رياض-الصالحين-ت-الأرناؤوط-ط-1405-e1cb6e6d4ca54750a7952e828f9179a6"
-    ]
-   },
-   {
-    "folder": "رياض الصالحين - النووي (ت محمد ناصر الدين الألباني - المكتب الإسلامي)",
-    "cat": "كتب السنة",
-    "edition": "ت محمد ناصر الدين الألباني - ط المكتب الإسلامي - 1412 - 1992",
-    "researcher": "محمد ناصر الدين الألباني",
-    "publisher": "المكتب الإسلامي",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 12527280,
-    "quality": {
-     "files": 1,
-     "pages": 704,
-     "kbpp": 17,
-     "px": 1968,
-     "colour": "أبيض وأسود",
-     "width_used": 0.77,
-     "text": false
-    },
-    "score": 80.4,
-    "waqfeya": [
-     "https://waqfeya.net/books/رياض-الصالحين-ت-الألباني-ط-1412-e01a5bf169f14dff894594b16332c36e"
-    ]
-   },
-   {
-    "folder": "رياض الصالحين - النووي (ط دار ابن الجوزي)",
-    "cat": "كتب السنة",
-    "edition": "ت علي حسن عبد الحميد الحلبي - ط دار ابن الجوزي - 1421",
-    "researcher": "علي حسن عبد الحميد الحلبي",
-    "publisher": "دار ابن الجوزي",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 15771624,
-    "quality": {
-     "files": 1,
-     "pages": 680,
-     "kbpp": 23,
-     "px": 1956,
-     "colour": "أبيض وأسود",
-     "width_used": 0.77,
-     "text": false
-    },
-    "score": 80.4,
-    "waqfeya": [
-     "https://waqfeya.net/books/رياض-الصالحين-من-حديث-سيد-المرسلين-ت-الحلبي-19d8a2b4228f4561a96c4dac4cae44ce"
-    ]
-   },
-   {
-    "folder": "رياض الصالحين - النووي (ط دار ابن كثير)",
-    "cat": "كتب السنة",
-    "edition": "ت ماهر ياسين الفحل - ط دار ابن كثير - 1428 - 2007",
-    "researcher": "ماهر ياسين الفحل",
-    "publisher": "دار ابن كثير",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 12603690,
-    "quality": {
-     "files": 1,
-     "pages": 552,
-     "kbpp": 22,
-     "px": 1811,
-     "colour": "أبيض وأسود",
-     "width_used": 0.84,
-     "text": false
-    },
-    "score": 81.8,
-    "waqfeya": [
-     "https://waqfeya.net/books/رياض-الصالحين-من-كلام-سيد-المرسلين-ت-الفحل-ee9813f679944a58b938a07bd14a4019"
-    ]
-   },
-   {
-    "folder": "رياض الصالحين - النووي (ط وزارة الأوقاف والشؤون الإسلامية - قطر)",
-    "cat": "كتب السنة",
-    "edition": "ت عصام موسى هادي - ط وزارة الأوقاف والشؤون الإسلامية - قطر - 1428 - 2007",
-    "researcher": "عصام موسى هادي",
-    "publisher": "وزارة الأوقاف والشؤون الإسلامية - قطر",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 10993168,
-    "quality": {
-     "files": 1,
-     "pages": 480,
-     "kbpp": 22,
-     "px": 1827,
-     "colour": "أبيض وأسود",
-     "width_used": 0.8,
-     "text": false
-    },
-    "score": 81.0,
-    "waqfeya": [
-     "https://waqfeya.net/books/رياض-الصالحين-من-حديث-سيد-المرسلين-ت-هادي-ط-الأوقاف-القطرية-c58f043b728b49c6a6e20ab9597ffef3"
-    ]
-   }
-  ],
-  "note": {
-   "key": "رياض الصالحين",
-   "author": "نووي",
-   "note": "نصّ الدليل على طبعة المكتب الإسلامي (الألباني) أو مؤسسة الرسالة (الأرناؤوط).",
-   "best": "المكتب الإسلامي أو الرسالة.",
-   "sources": [
-    "«دليلك إلى أفضل الطبعات لأمهات الكتب» — محمد عبد الله آل سنه، صيد الفوائد: https://saaid.org/mktarat/alalm/63.htm"
-   ]
-  }
- },
- {
   "work": "ازهار الرياض في اخبار",
   "title": "أزهار الرياض في أخبار عياض",
   "author": "المقري",
@@ -10623,61 +10682,6 @@
   "note": null
  },
  {
-  "work": "الايما الي اطراف احاديث",
-  "title": "الإيماء إلى أطراف أحاديث كتاب الموطأ",
-  "author": "",
-  "bytes": 56957581,
-  "editions": [
-   {
-    "folder": "الإيماء إلى أطراف أحاديث كتاب الموطأ",
-    "cat": "التخريج والأطراف",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 7344893,
-    "quality": {
-     "files": 1,
-     "pages": 313,
-     "kbpp": 23,
-     "px": 918,
-     "colour": "ملون",
-     "width_used": 0.61,
-     "text": false
-    },
-    "score": 45.0,
-    "waqfeya": []
-   },
-   {
-    "folder": "الإيماء إلى أطراف أحاديث كتاب الموطأ - أبو العباس الداني",
-    "cat": "التخريج والأطراف",
-    "edition": "ت رضا بو شامة الجزائري أبو عبد الباري - ط مكتبة المعارف - الرياض - 1424 - 2003",
-    "researcher": "رضا بو شامة الجزائري أبو عبد الباري",
-    "publisher": "مكتبة المعارف - الرياض",
-    "files": 6,
-    "vols_edition": "5",
-    "complete": true,
-    "bytes": 49612688,
-    "quality": {
-     "files": 6,
-     "pages": 2729,
-     "kbpp": 18,
-     "px": 1951,
-     "colour": "أبيض وأسود",
-     "width_used": 0.77,
-     "text": false
-    },
-    "score": 80.4,
-    "waqfeya": [
-     "https://waqfeya.net/books/الإيماء-إلى-أطراف-أحاديث-كتاب-الموطأ-ac178b080f6a456b8f4012a0ab2bd33a"
-    ]
-   }
-  ],
-  "note": null
- },
- {
   "work": "الفصل للوصل المدرج في",
   "title": "الفصل للوصل المدرج في النقل",
   "author": "الخطيب البغدادي",
@@ -11039,12 +11043,12 @@
  },
  {
   "work": "الديباج المذهب في معرفه",
-  "title": "الديباج المذهب في معرفة أعيان علماء المذهب لابن فرحون",
-  "author": "",
+  "title": "الديباج المذهب في معرفة أعيان علماء المذهب",
+  "author": "ابن فرحون",
   "bytes": 53274910,
   "editions": [
    {
-    "folder": "الديباج المذهب في معرفة أعيان علماء المذهب لابن فرحون",
+    "folder": "الديباج المذهب في معرفة أعيان علماء المذهب - ابن فرحون",
     "cat": "التراجم والطبقات",
     "edition": "",
     "researcher": "",
@@ -11053,16 +11057,8 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 37116022,
-    "quality": {
-     "files": 2,
-     "pages": 1500,
-     "kbpp": 24,
-     "px": 1702,
-     "colour": "أبيض وأسود",
-     "width_used": 0.86,
-     "text": false
-    },
-    "score": 67.2,
+    "quality": null,
+    "score": -1,
     "waqfeya": []
    },
    {
@@ -13807,12 +13803,12 @@
  },
  {
   "work": "موطا الامام مالك روايه",
-  "title": "موطأ الإمام مالك رواية محمد بن",
-  "author": "الإمام مالك؛ مالك بن أنس بن مالك الأصبحي الحميري، أبو عبد الله",
+  "title": "موطأ الإمام مالك رواية محمد بن الحسن الشيباني",
+  "author": "مالك بن أنس",
   "bytes": 32245852,
   "editions": [
    {
-    "folder": "موطأ الإمام مالك رواية محمد بن (ط المكتبة العلمية - بيروت)",
+    "folder": "موطأ الإمام مالك رواية محمد بن الحسن الشيباني - مالك بن أنس (ط المكتبة العلمية - بيروت)",
     "cat": "كتب السنة",
     "edition": "ت عبد الوهاب عبد اللطيف - ط المكتبة العلمية - بيروت",
     "researcher": "عبد الوهاب عبد اللطيف",
@@ -13821,22 +13817,14 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 12059184,
-    "quality": {
-     "files": 1,
-     "pages": 394,
-     "kbpp": 30,
-     "px": 1935,
-     "colour": "أبيض وأسود",
-     "width_used": 0.78,
-     "text": false
-    },
-    "score": 80.6,
+    "quality": null,
+    "score": -1,
     "waqfeya": [
      "https://waqfeya.net/books/موطأ-الإمام-مالك-رواية-محمد-بن-الحسن-الشيباني--ط-العلمية-88537fcbf0dd46f38b94b7392d267c1c"
     ]
    },
    {
-    "folder": "موطأ الإمام مالك رواية يحيى الليثي (ت بشار عواد - دار الغرب)",
+    "folder": "موطأ الإمام مالك رواية يحيى الليثي - مالك بن أنس (ت بشار عواد - دار الغرب)",
     "cat": "كتب السنة",
     "edition": "ت بشار عواد - دار الغرب",
     "researcher": "",
@@ -13845,16 +13833,8 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 20186668,
-    "quality": {
-     "files": 1,
-     "pages": 1384,
-     "kbpp": 14,
-     "px": 1914,
-     "colour": "أبيض وأسود",
-     "width_used": 0.84,
-     "text": false
-    },
-    "score": 66.8,
+    "quality": null,
+    "score": -1,
     "waqfeya": []
    }
   ],
@@ -14103,6 +14083,105 @@
   "note": null
  },
  {
+  "work": "الزهد",
+  "title": "كتاب الزهد",
+  "author": "أحمد بن حنبل",
+  "bytes": 30440956,
+  "editions": [
+   {
+    "folder": "كتاب الزهد - أحمد بن حنبل",
+    "cat": "الرقائق والآداب والأذكار",
+    "edition": "",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 9470596,
+    "quality": null,
+    "score": -1,
+    "waqfeya": []
+   },
+   {
+    "folder": "كتاب الزهد - الإمام ابن حنبل (ط دار الكتب العلمية)",
+    "cat": "الرقائق والآداب والأذكار",
+    "edition": "ت محمد عبد السلام شاهين - ط دار الكتب العلمية - 1420 - 1999",
+    "researcher": "محمد عبد السلام شاهين",
+    "publisher": "دار الكتب العلمية",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 7286194,
+    "quality": {
+     "files": 1,
+     "pages": 327,
+     "kbpp": 22,
+     "px": 1961,
+     "colour": "أبيض وأسود",
+     "width_used": 0.77,
+     "text": false
+    },
+    "score": 80.4,
+    "waqfeya": [
+     "https://waqfeya.net/books/كتاب-الزهد-ط-العلمية-4c0455ae62864a9e9c5eb58a4b63188a"
+    ],
+    "same_edition": true,
+    "best_scan": false
+   },
+   {
+    "folder": "كتاب الزهد - الإمام ابن حنبل (ط دار النهضة العربية)",
+    "cat": "الرقائق والآداب والأذكار",
+    "edition": "ت محمد جلال شرف - ط دار النهضة العربية - 1981",
+    "researcher": "محمد جلال شرف",
+    "publisher": "دار النهضة العربية",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 2989279,
+    "quality": {
+     "files": 1,
+     "pages": 187,
+     "kbpp": 15,
+     "px": 1847,
+     "colour": "أبيض وأسود",
+     "width_used": 0.86,
+     "text": false
+    },
+    "score": 82.2,
+    "waqfeya": [
+     "https://waqfeya.net/books/كتاب-الزهد-ط-النهضة-96fb31038c0148aa8ff56ce709c64652"
+    ],
+    "same_edition": true,
+    "best_scan": true
+   },
+   {
+    "folder": "الزهد - الإمام ابن حنبل (ت حامد أحمد طاهر حامد البسيوني)",
+    "cat": "كتب السنة",
+    "edition": "ت حامد أحمد طاهر حامد البسيوني - 1425 - 2004",
+    "researcher": "حامد أحمد طاهر حامد البسيوني",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 10694887,
+    "quality": {
+     "files": 1,
+     "pages": 456,
+     "kbpp": 23,
+     "px": 1892,
+     "colour": "أبيض وأسود",
+     "width_used": 0.83,
+     "text": true
+    },
+    "score": 91.6,
+    "waqfeya": [
+     "https://waqfeya.net/books/الزهد-ت-البسيوني-fe43805dba7a4ff39bbe820b3fb49c50"
+    ]
+   }
+  ],
+  "note": null
+ },
+ {
   "work": "الانصاف في مسايل الخلاف",
   "title": "الإنصاف في مسائل الخلاف",
   "author": "الأنباري",
@@ -14201,59 +14280,6 @@
     "«دليلك إلى أفضل الطبعات لأمهات الكتب» — محمد عبد الله آل سنه، صيد الفوائد: https://saaid.org/mktarat/alalm/63.htm"
    ]
   }
- },
- {
-  "work": "امالي ابن الحاجب",
-  "title": "أمالي ابن الحاجب",
-  "author": "",
-  "bytes": 29930491,
-  "editions": [
-   {
-    "folder": "أمالي ابن الحاجب",
-    "cat": "النحو والصرف",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 17447093,
-    "quality": {
-     "files": 1,
-     "pages": 969,
-     "kbpp": 18,
-     "px": 1703,
-     "colour": "أبيض وأسود",
-     "width_used": 0.77,
-     "text": false
-    },
-    "score": 65.4,
-    "waqfeya": []
-   },
-   {
-    "folder": "أمالي ابن الحاجب - ط",
-    "cat": "النحو والصرف",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 12483398,
-    "quality": {
-     "files": 1,
-     "pages": 475,
-     "kbpp": 26,
-     "px": 2146,
-     "colour": "أبيض وأسود",
-     "width_used": 0.63,
-     "text": false
-    },
-    "score": 62.6,
-    "waqfeya": []
-   }
-  ],
-  "note": null
  },
  {
   "work": "الرساله الفقهيه لابن ابي",
@@ -14678,113 +14704,6 @@
     ],
     "same_edition": true,
     "best_scan": false
-   }
-  ],
-  "note": null
- },
- {
-  "work": "مسايل الامام احمد روايه",
-  "title": "مسائل الإمام أحمد رواية أبي داود السجستاني",
-  "author": "",
-  "bytes": 28248787,
-  "editions": [
-   {
-    "folder": "مسائل الإمام أحمد رواية أبي داود السجستاني",
-    "cat": "الفقه الحنبلي",
-    "edition": "",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 7246237,
-    "quality": {
-     "files": 1,
-     "pages": 524,
-     "kbpp": 13,
-     "px": 1934,
-     "colour": "أبيض وأسود",
-     "width_used": 0.75,
-     "text": false
-    },
-    "score": 65.0,
-    "waqfeya": []
-   },
-   {
-    "folder": "مسائل الإمام أحمد رواية أبي داود سليمان بن الأشعث السجستاني",
-    "cat": "الفقه الحنبلي",
-    "edition": "ت طارق بن عوض الله بن محمد أبو معاذ - ط مكتبة ابن تيمية - 1420 - 1999",
-    "researcher": "طارق بن عوض الله بن محمد أبو معاذ",
-    "publisher": "مكتبة ابن تيمية",
-    "files": 2,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 7371789,
-    "quality": {
-     "files": 2,
-     "pages": 539,
-     "kbpp": 13,
-     "px": 1931,
-     "colour": "أبيض وأسود",
-     "width_used": 0.75,
-     "text": false
-    },
-    "score": 80.0,
-    "waqfeya": [
-     "https://waqfeya.net/books/مسائل-الإمام-أحمد-رواية-أبي-داود-سليمان-بن-الأشعث-السجستاني-ت-عوض-الله-65c888cdf91d488088d0c7e1b4441540"
-    ],
-    "same_edition": true,
-    "best_scan": true
-   },
-   {
-    "folder": "مسائل الإمام أحمد رواية أبي داود وعنه التمار (ت محمد رشيد رضا ومحمد بهجة البيطار - تصوير دار المعرفة)",
-    "cat": "الفقه الحنبلي",
-    "edition": "ت محمد رشيد رضا - محمد بهجة البيطار - ط تصوير دار المعرفة - 1353",
-    "researcher": "محمد رشيد رضا - محمد بهجة البيطار",
-    "publisher": "تصوير دار المعرفة",
-    "files": 2,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 7199700,
-    "quality": {
-     "files": 2,
-     "pages": 343,
-     "kbpp": 20,
-     "px": 2016,
-     "colour": "أبيض وأسود",
-     "width_used": 0.63,
-     "text": false
-    },
-    "score": 77.6,
-    "waqfeya": [
-     "https://waqfeya.net/books/مسائل-الإمام-أحمد-رواية-أبي-داود-وعنه-التمار-ت-رضا-والبيطار-3027bf109cd04659b1ed9e70cefd7e4b"
-    ],
-    "same_edition": true,
-    "best_scan": false
-   },
-   {
-    "folder": "مسائل الإمام أحمد رواية ابنه عبد الله - عبد الله بن أحمد (ت زهير الشاويش - المكتب الإسلامي)",
-    "cat": "الفقه الحنبلي",
-    "edition": "ت زهير الشاويش - ط المكتب الإسلامي - 1401 - 1981",
-    "researcher": "زهير الشاويش",
-    "publisher": "المكتب الإسلامي",
-    "files": 2,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 6431061,
-    "quality": {
-     "files": 2,
-     "pages": 504,
-     "kbpp": 13,
-     "px": 1927,
-     "colour": "أبيض وأسود",
-     "width_used": 0.67,
-     "text": false
-    },
-    "score": 78.4,
-    "waqfeya": [
-     "https://waqfeya.net/books/مسائل-الإمام-أحمد-رواية-ابنه-عبد-الله-ت-الشاويش-c67eb8df787f41ad85253bc63fda1349"
-    ]
    }
   ],
   "note": null
@@ -15565,36 +15484,12 @@
  },
  {
   "work": "اخلاق النبي وادابه صلي",
-  "title": "أخلاق النبي وآدابه صلى الله عليه",
-  "author": "الحباني",
+  "title": "أخلاق النبي وآدابه صلى الله عليه وسلم",
+  "author": "أبو الشيخ الأصبهاني",
   "bytes": 25744465,
   "editions": [
    {
-    "folder": "أخلاق النبي وآدابه صلى الله عليه - الحباني (ط دار الكتاب العربي)",
-    "cat": "السيرة النبوية",
-    "edition": "ت السيد الجميلي - ط دار الكتاب العربي - 1406 - 1986",
-    "researcher": "السيد الجميلي",
-    "publisher": "دار الكتاب العربي",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 3342481,
-    "quality": {
-     "files": 1,
-     "pages": 245,
-     "kbpp": 13,
-     "px": 1690,
-     "colour": "أبيض وأسود",
-     "width_used": 0.85,
-     "text": false
-    },
-    "score": 82.0,
-    "waqfeya": [
-     "https://waqfeya.net/books/أخلاق-النبي-وآدابه-صلى-الله-عليه-وسلم-ت-الجميلي-8ef0a039cc91488da1fcb989691afa26"
-    ]
-   },
-   {
-    "folder": "أخلاق النبي وآدابه صلى الله عليه وسلم - الحباني (ت صالح بن محمد الونيان - دار المسلم للنشر والتوزيع)",
+    "folder": "أخلاق النبي وآدابه صلى الله عليه وسلم - أبو الشيخ الأصبهاني (ت صالح بن محمد الونيان - دار المسلم للنشر والتوزيع)",
     "cat": "السيرة النبوية",
     "edition": "ت صالح بن محمد الونيان - ط دار المسلم للنشر والتوزيع - 1418 - 1998",
     "researcher": "صالح بن محمد الونيان",
@@ -15603,18 +15498,26 @@
     "vols_edition": "4",
     "complete": true,
     "bytes": 22401984,
-    "quality": {
-     "files": 5,
-     "pages": 1999,
-     "kbpp": 11,
-     "px": 1971,
-     "colour": "أبيض وأسود",
-     "width_used": 0.67,
-     "text": false
-    },
-    "score": 78.4,
+    "quality": null,
+    "score": -1,
     "waqfeya": [
      "https://waqfeya.net/books/أخلاق-النبي-وآدابه-صلى-الله-عليه-وسلم-ت-الونيان-13384d3847e04a60baf7edaec6abd048"
+    ]
+   },
+   {
+    "folder": "أخلاق النبي وآدابه صلى الله عليه وسلم - أبو الشيخ الأصبهاني (ط دار الكتاب العربي)",
+    "cat": "السيرة النبوية",
+    "edition": "ت السيد الجميلي - ط دار الكتاب العربي - 1406 - 1986",
+    "researcher": "السيد الجميلي",
+    "publisher": "دار الكتاب العربي",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 3342481,
+    "quality": null,
+    "score": -1,
+    "waqfeya": [
+     "https://waqfeya.net/books/أخلاق-النبي-وآدابه-صلى-الله-عليه-وسلم-ت-الجميلي-8ef0a039cc91488da1fcb989691afa26"
     ]
    }
   ],
@@ -16180,11 +16083,11 @@
  {
   "work": "ايضاح المحصول من برهان",
   "title": "إيضاح المحصول من برهان الأصول",
-  "author": "",
+  "author": "المازري",
   "bytes": 24610734,
   "editions": [
    {
-    "folder": "إيضاح المحصول من برهان الأصول",
+    "folder": "إيضاح المحصول من برهان الأصول - المازري",
     "cat": "أصول الفقه",
     "edition": "",
     "researcher": "",
@@ -16193,16 +16096,8 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 12593171,
-    "quality": {
-     "files": 1,
-     "pages": 634,
-     "kbpp": 19,
-     "px": 1957,
-     "colour": "أبيض وأسود",
-     "width_used": 0.75,
-     "text": false
-    },
-    "score": 65.0,
+    "quality": null,
+    "score": -1,
     "waqfeya": []
    },
    {
@@ -17042,7 +16937,7 @@
     ]
    },
    {
-    "folder": "المعجم في أصحاب القاضي أبي علي الصدفي لابن الابار",
+    "folder": "المعجم في أصحاب القاضي أبي علي الصدفي - ابن الأبار",
     "cat": "فهارس الكتب والأدلة",
     "edition": "",
     "researcher": "",
@@ -17051,16 +16946,8 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 7364773,
-    "quality": {
-     "files": 1,
-     "pages": 335,
-     "kbpp": 21,
-     "px": 607,
-     "colour": "ملون",
-     "width_used": 0.74,
-     "text": false
-    },
-    "score": 36.5,
+    "quality": null,
+    "score": -1,
     "waqfeya": []
    }
   ],
@@ -17115,91 +17002,6 @@
     },
     "score": 74.2,
     "waqfeya": []
-   }
-  ],
-  "note": null
- },
- {
-  "work": "الزهد",
-  "title": "كتاب الزهد",
-  "author": "الإمام ابن حنبل",
-  "bytes": 20970360,
-  "editions": [
-   {
-    "folder": "كتاب الزهد - الإمام ابن حنبل (ط دار الكتب العلمية)",
-    "cat": "الرقائق والآداب والأذكار",
-    "edition": "ت محمد عبد السلام شاهين - ط دار الكتب العلمية - 1420 - 1999",
-    "researcher": "محمد عبد السلام شاهين",
-    "publisher": "دار الكتب العلمية",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 7286194,
-    "quality": {
-     "files": 1,
-     "pages": 327,
-     "kbpp": 22,
-     "px": 1961,
-     "colour": "أبيض وأسود",
-     "width_used": 0.77,
-     "text": false
-    },
-    "score": 80.4,
-    "waqfeya": [
-     "https://waqfeya.net/books/كتاب-الزهد-ط-العلمية-4c0455ae62864a9e9c5eb58a4b63188a"
-    ],
-    "same_edition": true,
-    "best_scan": false
-   },
-   {
-    "folder": "كتاب الزهد - الإمام ابن حنبل (ط دار النهضة العربية)",
-    "cat": "الرقائق والآداب والأذكار",
-    "edition": "ت محمد جلال شرف - ط دار النهضة العربية - 1981",
-    "researcher": "محمد جلال شرف",
-    "publisher": "دار النهضة العربية",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 2989279,
-    "quality": {
-     "files": 1,
-     "pages": 187,
-     "kbpp": 15,
-     "px": 1847,
-     "colour": "أبيض وأسود",
-     "width_used": 0.86,
-     "text": false
-    },
-    "score": 82.2,
-    "waqfeya": [
-     "https://waqfeya.net/books/كتاب-الزهد-ط-النهضة-96fb31038c0148aa8ff56ce709c64652"
-    ],
-    "same_edition": true,
-    "best_scan": true
-   },
-   {
-    "folder": "الزهد - الإمام ابن حنبل (ت حامد أحمد طاهر حامد البسيوني)",
-    "cat": "كتب السنة",
-    "edition": "ت حامد أحمد طاهر حامد البسيوني - 1425 - 2004",
-    "researcher": "حامد أحمد طاهر حامد البسيوني",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 10694887,
-    "quality": {
-     "files": 1,
-     "pages": 456,
-     "kbpp": 23,
-     "px": 1892,
-     "colour": "أبيض وأسود",
-     "width_used": 0.83,
-     "text": true
-    },
-    "score": 91.6,
-    "waqfeya": [
-     "https://waqfeya.net/books/الزهد-ت-البسيوني-fe43805dba7a4ff39bbe820b3fb49c50"
-    ]
    }
   ],
   "note": null
@@ -17314,6 +17116,53 @@
     },
     "score": 60.3,
     "waqfeya": []
+   }
+  ],
+  "note": null
+ },
+ {
+  "work": "اعجاز القران",
+  "title": "إعجاز القرآن",
+  "author": "الباقلاني",
+  "bytes": 20806169,
+  "editions": [
+   {
+    "folder": "إعجاز القرآن - الباقلاني",
+    "cat": "علوم القرآن وأصول التفسير",
+    "edition": "",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 11328578,
+    "quality": null,
+    "score": -1,
+    "waqfeya": []
+   },
+   {
+    "folder": "إعجاز القرآن - القاضي الباقلاني (ت السيد أحمد صقر - دار المعارف)",
+    "cat": "علوم القرآن وأصول التفسير",
+    "edition": "ت السيد أحمد صقر - ط دار المعارف - مصر",
+    "researcher": "السيد أحمد صقر",
+    "publisher": "دار المعارف - مصر",
+    "files": 2,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 9477591,
+    "quality": {
+     "files": 2,
+     "pages": 504,
+     "kbpp": 18,
+     "px": 1890,
+     "colour": "أبيض وأسود",
+     "width_used": 0.85,
+     "text": false
+    },
+    "score": 82.0,
+    "waqfeya": [
+     "https://waqfeya.net/books/إعجاز-القرآن-ت-صقر-dc4f2a9d21b0409eb3f180960a911191"
+    ]
    }
   ],
   "note": null
@@ -19503,6 +19352,67 @@
   "note": null
  },
  {
+  "work": "مسايل الامام احمد روايه",
+  "title": "مسائل الإمام أحمد رواية أبي داود سليمان بن الأشعث السجستاني",
+  "author": "أبو داود؛ سليمان بن الأشعث بن إسحاق بن بشير الأزدي السجستاني، أبو داود",
+  "bytes": 14571489,
+  "editions": [
+   {
+    "folder": "مسائل الإمام أحمد رواية أبي داود سليمان بن الأشعث السجستاني",
+    "cat": "الفقه الحنبلي",
+    "edition": "ت طارق بن عوض الله بن محمد أبو معاذ - ط مكتبة ابن تيمية - 1420 - 1999",
+    "researcher": "طارق بن عوض الله بن محمد أبو معاذ",
+    "publisher": "مكتبة ابن تيمية",
+    "files": 2,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 7371789,
+    "quality": {
+     "files": 2,
+     "pages": 539,
+     "kbpp": 13,
+     "px": 1931,
+     "colour": "أبيض وأسود",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 80.0,
+    "waqfeya": [
+     "https://waqfeya.net/books/مسائل-الإمام-أحمد-رواية-أبي-داود-سليمان-بن-الأشعث-السجستاني-ت-عوض-الله-65c888cdf91d488088d0c7e1b4441540"
+    ],
+    "same_edition": true,
+    "best_scan": true
+   },
+   {
+    "folder": "مسائل الإمام أحمد رواية أبي داود وعنه التمار (ت محمد رشيد رضا ومحمد بهجة البيطار - تصوير دار المعرفة)",
+    "cat": "الفقه الحنبلي",
+    "edition": "ت محمد رشيد رضا - محمد بهجة البيطار - ط تصوير دار المعرفة - 1353",
+    "researcher": "محمد رشيد رضا - محمد بهجة البيطار",
+    "publisher": "تصوير دار المعرفة",
+    "files": 2,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 7199700,
+    "quality": {
+     "files": 2,
+     "pages": 343,
+     "kbpp": 20,
+     "px": 2016,
+     "colour": "أبيض وأسود",
+     "width_used": 0.63,
+     "text": false
+    },
+    "score": 77.6,
+    "waqfeya": [
+     "https://waqfeya.net/books/مسائل-الإمام-أحمد-رواية-أبي-داود-وعنه-التمار-ت-رضا-والبيطار-3027bf109cd04659b1ed9e70cefd7e4b"
+    ],
+    "same_edition": true,
+    "best_scan": false
+   }
+  ],
+  "note": null
+ },
+ {
   "work": "نزهه النظر في توضيح",
   "title": "نزهة النظر في توضيح نخبة الفكر في مصطلح أهل الأثر",
   "author": "ت- الرحيلي - ط. 1",
@@ -19842,6 +19752,53 @@
     },
     "score": 64.6,
     "waqfeya": []
+   }
+  ],
+  "note": null
+ },
+ {
+  "work": "مسايل الامام احمد روايه",
+  "title": "مسائل الإمام أحمد رواية أبي داود السجستاني",
+  "author": "أحمد بن حنبل",
+  "bytes": 13677298,
+  "editions": [
+   {
+    "folder": "مسائل الإمام أحمد رواية أبي داود السجستاني - أحمد بن حنبل",
+    "cat": "الفقه الحنبلي",
+    "edition": "",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 7246237,
+    "quality": null,
+    "score": -1,
+    "waqfeya": []
+   },
+   {
+    "folder": "مسائل الإمام أحمد رواية ابنه عبد الله - عبد الله بن أحمد (ت زهير الشاويش - المكتب الإسلامي)",
+    "cat": "الفقه الحنبلي",
+    "edition": "ت زهير الشاويش - ط المكتب الإسلامي - 1401 - 1981",
+    "researcher": "زهير الشاويش",
+    "publisher": "المكتب الإسلامي",
+    "files": 2,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 6431061,
+    "quality": {
+     "files": 2,
+     "pages": 504,
+     "kbpp": 13,
+     "px": 1927,
+     "colour": "أبيض وأسود",
+     "width_used": 0.67,
+     "text": false
+    },
+    "score": 78.4,
+    "waqfeya": [
+     "https://waqfeya.net/books/مسائل-الإمام-أحمد-رواية-ابنه-عبد-الله-ت-الشاويش-c67eb8df787f41ad85253bc63fda1349"
+    ]
    }
   ],
   "note": null
@@ -22702,11 +22659,11 @@
  {
   "work": "احاديث الموطا وذكر اتفاق",
   "title": "أحاديث الموطأ وذكر اتفاق الرواة عن مالك واختلافهم فيه وزيادتهم ونقصانهم",
-  "author": "",
+  "author": "الدارقطني",
   "bytes": 6410557,
   "editions": [
    {
-    "folder": "أحاديث الموطأ وذكر اتفاق الرواة عن مالك واختلافهم فيه وزيادتهم ونقصانهم",
+    "folder": "أحاديث الموطأ وذكر اتفاق الرواة عن مالك واختلافهم فيه وزيادتهم ونقصانهم - الدارقطني",
     "cat": "التخريج والأطراف",
     "edition": "",
     "researcher": "",
@@ -22715,16 +22672,8 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 2718660,
-    "quality": {
-     "files": 1,
-     "pages": 270,
-     "kbpp": 10,
-     "px": 1201,
-     "colour": "أبيض وأسود",
-     "width_used": 0.78,
-     "text": false
-    },
-    "score": 58.5,
+    "quality": null,
+    "score": -1,
     "waqfeya": []
    },
    {
@@ -24779,12 +24728,12 @@
  },
  {
   "work": "الصوارم الحداد القاطعه لعلايق",
-  "title": "الصوارم الحداد القاطعة لعلائق ارباب الاتحاد للشوكاني",
-  "author": "",
+  "title": "الصوارم الحداد القاطعة لعلائق ارباب الاتحاد",
+  "author": "الشوكاني",
   "bytes": 3583679,
   "editions": [
    {
-    "folder": "الصوارم الحداد القاطعة لعلائق ارباب الاتحاد للشوكاني",
+    "folder": "الصوارم الحداد القاطعة لعلائق ارباب الاتحاد - الشوكاني",
     "cat": "العقيدة",
     "edition": "",
     "researcher": "",
@@ -24793,16 +24742,8 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 1171898,
-    "quality": {
-     "files": 1,
-     "pages": 87,
-     "kbpp": 13,
-     "px": 1030,
-     "colour": "أبيض وأسود",
-     "width_used": 0.65,
-     "text": false
-    },
-    "score": 49.8,
+    "quality": null,
+    "score": -1,
     "waqfeya": []
    },
    {

@@ -1,7 +1,56 @@
 # HANDOFF — current job (started 2026-10-03 07:00 UTC)
 
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
-Each workstream appends its progress below (newest last). Everything is resumable.
+Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
+
+## 2026-10-10 01:30 GMT — STATE FOR A FRESH SESSION (owner: «I want to start a fresh discussion, then complete the work overnight. I'm unhappy with some old work not being successful, like the reorganizing and number/naming fixing»)
+
+### Running now (leave it, it resumes on its own)
+- Trial crop batch 001 on the phone: `scripts/crop_batch.py data/crop/batch-001.txt crop-batch-001 --workers 4` →
+  logs/crop-batch-001.log, data/crop/done.tsv (resumable), data/crop/recipes/<md5>.json, before/after sample images in
+  ~/.cache/phone-library/crop-sheets/<hash>/ (telling pages: notes kept, pages shrunk to fit, turns, short pages).
+  7 workers swapped the laptop (15 GB): keep ≤ 4 (one large book took 3.2 GB). When it ends: build a review page from
+  the sheets for the owner (he asked for interesting samples, not whole books), then batch the library under the same rules.
+
+### Crop method (scripts/book_crop.py, commit 9463719 + bda4ec5): regression 0 failures (data/improve/crop-regression.tsv)
+- Rules the owner set on 2026-10-09 (all in the docstring): one page size per book, exact (frames: a larger part is shrunk
+  to fit, never a wider page); margins 6 % of the text width; marginal notes kept (notes_of); uploaders' stamps found by
+  their recurrence and again at any size by their grey image, left out of every measure and erased with a white patch
+  (stamps_of, erase_stamp); short pages placed by their page number (folio axis), a flush edge, else centred on themselves;
+  crop only for a real gain (text ≥ 15 % larger) or a flaw (tilt, off-centre, sway, bands, stains); a good scan whose only
+  flaw is tilt → level only; tilt certified by the shear measure + image, or the line-by-line ruler (baseline_tilt), or
+  the lines' edge (edge_tilt) for lists; stains dodged only while margins stay balanced; `--jobs N` shares one book's
+  pages among N processes (urgent single books).
+- Done on the phone: الفوائد المحصورة (crop-urgent-001e; the owner reviewed it page by page).
+- Random sample of 60 scans (laptop copies): 56 crop, 3 level only, 1 left as it is — nearly every scan has many tilted
+  pages (median 56 % of the pages ≥ 0.2°) and sway; text gain alone is modest (median +13 %).
+- NOT DONE — tilt on two-column index pages (owner: «لم تعالج ص 456 وجميع الفهرس»): all whole-page measures are fooled there.
+  Designed and measured (not in the code; the draft was reverted untested): find the gutter (emptiest pixel column at
+  30–70 % of the width, ≤ 2 % of the fullest), run edge_tilt on each column; if both columns' line starts read the same
+  tilt (within 0.15°) of ≥ 0.3°, try turns −u ± 0.05·k (k = −3…3) and keep the one leaving both columns' edges ≤ 0.15°,
+  else record it as disputed. Measured: الفوائد 456 −0.36/−0.33 (tilted), 457 0.65/0.61 (tilted); must stay unturned:
+  المثلث 499 −0.80/−0.51 (disagree), الاتباع 98 −0.17/−0.24 (small), الفوائد 446 0.25/0.42 (disagree), فهرسة 355 (one side).
+  Add 456/457 as «turn yes» cases, run crop_regress, then redo الفوائد on the phone (undo + crop_batch --jobs 8).
+- NOT DONE — damaged source scans: in الفوائد المحصورة the uploader's scan cuts the index's left column (ص 456 «٢٥٢، ٤٠٦»,
+  ص 468 «اليربوعي»): the archive.org original MQSORH.pdf has the same images. Build a check: ink touching the scanned
+  image's own edge on text rows → list the book and its pages (data/review/scan-cut.tsv) and look for another copy.
+
+### Names and organisation — the old work the owner is unhappy with (priority for the fresh session)
+- 2026-10-09 this session: 307 (شرح مقصورة ابن دريد: الصاوي / التبريزي), 308 (scripts/name_fix_plan.py: 161 books, 327 files —
+  author from Shamela's common name or the exact-size Waqfeya record, full titles, «صلى الله عليه» completed, single books in
+  folders → plain files, titles' «لفلان» dropped when it names the author; magazines/series excluded), 309 (أضواء من المولد
+  السعيد — كامل كيلاني, title page). compare_shamela: two full names are one man when their distinctive «X بن Y بن Z»
+  agree (أبو الشيخ = Waqfeya's «الحباني») → 8 more Shamela matches, death years shown instead of centuries.
+- Still wrong (counts on 2026-10-10):
+  * 1,178 books stored as one file in a folder of their own (§4: plain files) — 176 of them «01 - …» alone; 99 of those
+    are plan 066's mistake (an uploader's gift number «الهدية (N)» turned into a volume number «01 -»).
+  * 4 names still «الهدية (N) …»; 679 file names start with a raw number (some are real issue numbers, e.g. عالم المعرفة).
+  * data/review/name-fix-review.tsv: 1,165 books whose author/title is missing or cut and no record proves the right one
+    (1,130 «no evidence») → title pages must be read (pdftotext for typeset ones, low-res renders read by eye otherwise).
+  * HANDOFF 2026-10-06 list still open: death year for every author (2: done for Shamela-matched books only), category
+    audit (4), header numbers (5).
+  Ask the owner first which of these hurts most; propose a single, tested pass per defect with a sample read by eye before
+  any plan is applied (the earlier passes failed exactly where no one read the result).
 
 ## 2026-10-09 07:05 GMT — owner pauses me until 09:50 GMT (one-shot resume scheduled); unattended jobs running
 - RUNNING (CPU only, read-only on the phone): crop_regress (logs/crop-regress.log) after book_crop's joint search for the
