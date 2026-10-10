@@ -495,6 +495,24 @@ def edge_tilt(a, paper):
         out.append(float(np.degrees(np.arctan(np.median(sl)))) if sl else None)
     return out
 
+def columns_tilt(a, paper):
+    """TWO-COLUMN PAGES (owner 2026-10-09, الفوائد المحصورة: «لم تعالج ص 456 وجميع الفهرس»): an index in two columns fools
+    every whole-page measure (the gutter between the columns). The gutter = the emptiest column of pixels between 30 % and
+    70 % of the width (smoothed over 1 % of the width), at most 2 % as inked as the fullest column, with ink on both sides
+    (each side ≥ 20 % of the ink). Then each column is measured on its own by its lines' edge (edge_tilt): the line starts
+    of right-to-left text stand on its right edge. Returns None (not two columns) or [right column, left column] (degrees,
+    the sign of skew_of's angle; None for a column whose edge cannot be read)"""
+    m = a < max(60, min(200, paper - 50)); H, W = m.shape
+    col = ndimage.uniform_filter1d(m.sum(0).astype(float), max(3, int(0.01 * W)))
+    lo, hi = int(0.30 * W), int(0.70 * W)
+    if hi <= lo or col.max() <= 0: return None
+    x = lo + int(np.argmin(col[lo:hi]))
+    if col[x] > 0.02 * col.max(): return None
+    left, right = m[:, :x].sum(), m[:, x:].sum(); tot = left + right
+    if tot == 0 or min(left, right) < 0.2 * tot: return None
+    r = edge_tilt(a[:, x:], paper)[0]; l = edge_tilt(a[:, :x], paper)[0]
+    return [r, l]
+
 def proj_tilt(a, paper, lo=-0.5, hi=0.5, step=0.05, width=700):
     """the SECOND tilt measure (2026-10-09): the page image itself, scaled to 700 px wide, is turned by each angle and the
     ink rows of its central part (8–92 % of the width, 5–95 % of the height) counted; the sharpest row profile wins
@@ -1051,6 +1069,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         mk['proj'] = lambda lo=-0.5, hi=0.5, step=0.05: proj_tilt(a, mk['paper'], lo, hi, step)
         mk['lines'] = lambda: baseline_tilt(a, mk['paper']) if mk.get('paper') else None
         mk['edges'] = lambda: edge_tilt(a, mk['paper']) if mk.get('paper') else [None, None]
+        mk['cols'] = lambda: columns_tilt(a, mk['paper']) if mk.get('paper') else None
         return mk
     def best_turn(i, p, d0):                          # the turn near d0 that leaves the least tilt by BOTH measures:
         tried = {}                                    # d0 first; if not level, 10 more angles around it in 0.05° steps
@@ -1096,12 +1115,38 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         # never kept). An untouched page showing a tilt the first look did not treat is turned here when the image measure
         # sees the tilt too (≥ 0.15°) and the turn passes the same tests; else it is reported. An untouched page cannot
         # gain a tilt.
-        if p.get('skew'):
+        # TWO COLUMNS (owner 2026-10-09, الفوائد ص 456–457): the page untouched is measured column by column; when both
+        # columns' line starts read the same clear tilt (≥ 0.3°, within 0.15° of each other), the turns around it are tried
+        # and the one leaving both columns' edges ≤ 0.15° is kept; else (columns disagree, a small tilt, one side
+        # unreadable) the page is not turned — the whole-page measures are not trusted on such a page
+        m0 = look(i, {k: v for k, v in p.items() if k != 'skew'}) if p.get('skew') else mk
+        ct = m0['cols']() if m0.get('paper') else None
+        if ct is not None:
+            tr, tl = ct
+            if tr is not None and tl is not None and tr * tl > 0 and abs(tr - tl) <= 0.15 and min(abs(tr), abs(tl)) >= 0.3:
+                u2 = (tr + tl) / 2; best = None
+                for sgn in (-1, 1):
+                    for k in range(-3, 4):
+                        d = round(sgn * u2 + 0.05 * k, 3); m2 = look(i, dict(p, skew=d)); c2 = m2['cols']()
+                        if not c2 or c2[0] is None or c2[1] is None: continue
+                        sc = max(abs(c2[0]), abs(c2[1]))
+                        if best is None or sc < best[0]: best = (sc, d, m2)
+                if best and best[0] <= 0.15:
+                    sc, d, m2 = best; p['skew'] = d; p['tilt_by_columns'] = [round(tr, 3), round(tl, 3)]
+                    p['level_by_columns'] = round(sc, 3); mk = m2
+                    if m2['xy'] is not None: p['after_tilt'] = round(abs(skew_of(m2['xy'], raw=True)[0]), 3)
+                    p['after_tilt_image'] = m2['proj']()
+                else:
+                    p.pop('skew', None); p['tilt_disputed'] = round(u2, 3); mk = m0
+            else:
+                if p.get('skew'): p.pop('skew', None); p['unsure_tilt'] = True
+                mk = m0
+        elif p.get('skew'):
             before = p['skew']; d, r, im, m2 = best_turn(i, p, before)
             if keep(p, d, r, im, before, m2): p['skew'], mk = d, m2; p['after_tilt'] = round(r, 3); p['after_tilt_image'] = im
             else:
                 p.pop('skew', None); p['unsure_tilt'] = True; mk = look(i, p)
-        elif mk['xy'] is not None:
+        elif mk['xy'] is not None and ct is None:
             u, g = skew_of(mk['xy'])
             # (no turn when the halves disagree, even if the whole page and its image agree on a tilt: index pages fool
             # all of them alike — 2026-10-09, الفوائد المحصورة ص 432 and 446, «فهرس اللغة», turned 3° by mistake) — unless
@@ -1197,7 +1242,8 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
     rec['residual_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('skew') and not (p.get('after_tilt', 9) <= LEVEL and p.get('after_tilt_image', 9) <= IMG_LEVEL)
                             and not (p.get('curved') and p.get('after_tilt', 9) <= CURVED and p.get('after_tilt_image', 9) <= CURVED)
                             and not (p.get('level_by_lines') is not None and max(p.get('after_tilt', 9), p.get('after_tilt_image', 9)) <= 0.35)
-                            and not (p.get('level_by_edge') is not None and p.get('after_tilt', 9) <= 0.2)]
+                            and not (p.get('level_by_edge') is not None and p.get('after_tilt', 9) <= 0.2)
+                            and not (p.get('level_by_columns') is not None and p['level_by_columns'] <= 0.15)]
     rec['level_by_lines'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('level_by_lines') is not None and p.get('skew')]
     rec['curved'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('curved')]
     rec['enlarged'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('enlarged')]
