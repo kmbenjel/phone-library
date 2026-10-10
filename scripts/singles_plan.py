@@ -96,6 +96,8 @@ def parse_folder(name):
     parts = [x.strip() for x in base.split(' - ')]
     title, author = (' - '.join(parts[:-1]), parts[-1]) if len(parts) > 1 else (parts[0], '')
     author = re.split(r'\s*؛', author)[0].strip()
+    if re.match(r'^(من\s|ج\s*\d|الجزء|المجلد|قطعة|السفر|القسم|سورة\s)', author):    # a part described, not an author
+        title, author = f'{title}، {author}', ''
     if re.match(r'^(ت|ط)\s', author): ed, author = ed or author, ''
     m = re.match(r'^ط\s+(.+)$', ed)
     if m and m.group(1) in PUBLISHER: ed = 'ط ' + PUBLISHER[m.group(1)]
