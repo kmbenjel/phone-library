@@ -27,6 +27,11 @@ RUNNING also: scratch/inspect_after_crop001_2026-10-10.sh (waits for crop 001, i
 the 141 page-less singles first — OCR, auto_check, commit; log logs/inspect-2026-10-10.log). Names: ≤ 240 bytes (phone limit 255), no year (owner, later).
 RUNNING: scratch/after_ocr_2026-10-10.sh (OCR of 5,334 queued front pages → auto_check → commit; log logs/ocr-2026-10-10.log);
 crop batch 001 (ends ~06:30; library chain stopped by the owner).
+Unreadable names → site/names-unreadable.html, one by one with a local copy (scripts/report_unreadable.py add N "why"
+after reading further with pages_sheet.py); the owner checks/comments there through scripts/review_server.py
+(http://127.0.0.1:8765/, running; restart it after a reboot) → READ data/names/review-comments.jsonl at the start of
+each session. Hard cases left to read further: 30 (poet's name), 128 (edition); closer look: 20 44 63 75 97 98 99 105
+109 112 117 134 138.
 Next steps: (1) refine auto_check (imprint page vs title page, Shamela/Waqfeya fields matched in the OCR text) so «confirmed»
 books are named without eye reading; (2) read by eye only CONFLICT/no-text/incomplete; (3) a names plan from readings +
 auto-check (dry-run, sample to the owner, then apply); (4) the same for folders and their volume files.
