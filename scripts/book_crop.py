@@ -197,6 +197,11 @@ def marks(a, scale, width, exclude=None):
     box_of = lambda i: pt(objs[i - 1][1].start, objs[i - 1][0].start, objs[i - 1][1].stop, objs[i - 1][0].stop)
     out['specks'] = [box_of(i) for i in sorted(isolated)]
     if not pre: return out
+    # a blank page showing only the edges of the photocopied sheet (owner 2026-10-10, القوافي للتنوخي pp. 54–60: blank
+    # versos whose border lines became «text» as wide as the page): every mark lies in the outer 8 % of a side → no content
+    if all(small[i] or objs[i - 1][1].stop <= 0.08 * Wd or objs[i - 1][1].start >= 0.92 * Wd or objs[i - 1][0].stop <= 0.08 * H
+           or objs[i - 1][0].start >= 0.92 * H for i in pre):          # dust in the middle does not make it a page of text
+        out['edge'] = [box_of(i) for i in pre]; return out
     # the text block: every mark counts once (2nd / 98th percentile of the marks' edges), so one heavy streak cannot drag it;
     # marks lying wholly in the outer 3 % of a side (border grains) are not counted in this first estimate
     def in_strip(i):
@@ -208,7 +213,30 @@ def marks(a, scale, width, exclude=None):
     # scanner edge noise: grains and broken border lines lying wholly in the outer 3 % of a side, thin across it, on a
     # side where the text block is at least 5 % away (a tight scan whose text reaches the edge keeps everything)
     edge = set()
+    # the photocopied sheet's border, broken into pieces (owner 2026-10-10, القوافي للتنوخي): the text block measured
+    # without the outer 6 % of each side; a mark lying wholly in that outer 6 %, at most 4 % thick across it, and at least
+    # 5 % of the width away from the text block is the sheet's edge (printed margin numbers sit close to their text)
+    def out6(i):
+        t = objs[i - 1]
+        return t[1].stop <= 0.06 * Wd or t[1].start >= 0.94 * Wd or t[0].stop <= 0.06 * H or t[0].start >= 0.94 * H
+    inner = [i for i in pre if not small[i] and not out6(i)]
+    if inner:
+        ex0 = np.percentile([objs[i - 1][1].start for i in inner], 2); ex1 = np.percentile([objs[i - 1][1].stop for i in inner], 98)
+        ey0 = np.percentile([objs[i - 1][0].start for i in inner], 2); ey1 = np.percentile([objs[i - 1][0].stop for i in inner], 98)
+        for i in pre:
+            t = objs[i - 1]; x0, x1, y0, y1 = t[1].start, t[1].stop, t[0].start, t[0].stop
+            if (x1 <= 0.06 * Wd and wid[i] <= 0.04 * Wd and ex0 - x1 >= 0.05 * Wd) or (x0 >= 0.94 * Wd and wid[i] <= 0.04 * Wd and x0 - ex1 >= 0.05 * Wd) \
+               or (y1 <= 0.06 * H and hgt[i] <= 0.04 * H and ey0 - y1 >= 0.05 * Wd) or (y0 >= 0.94 * H and hgt[i] <= 0.04 * H and y0 - ey1 >= 0.05 * Wd):
+                edge.add(i)
+    # a tilted edge of the sheet: starts at the very border (outer 3 %), runs along half the side or more, thin on average
+    # (its ink over its length — the outline box of a tilted line is tall), and sparse in that box (a printed rule is solid)
     for i in pre:
+        t = objs[i - 1]; x0, x1, y0, y1 = t[1].start, t[1].stop, t[0].start, t[0].stop; fill = area[i] / max(1, hgt[i] * wid[i])
+        if (wid[i] >= 0.5 * Wd and (y0 <= 0.03 * H or y1 >= 0.97 * H) and area[i] / wid[i] <= 0.03 * H and fill < 0.5) \
+           or (hgt[i] >= 0.5 * H and (x0 <= 0.03 * Wd or x1 >= 0.97 * Wd) and area[i] / hgt[i] <= 0.03 * Wd and fill < 0.5):
+            edge.add(i)
+    for i in pre:
+        if i in edge: continue
         s = objs[i - 1]; x0, x1, y0, y1 = s[1].start, s[1].stop, s[0].start, s[0].stop
         if (x1 <= 0.03 * Wd and wid[i] <= 0.02 * Wd and cx0 >= 0.05 * Wd) or (x0 >= 0.97 * Wd and wid[i] <= 0.02 * Wd and Wd - cx1 >= 0.05 * Wd) \
            or (y1 <= 0.03 * H and hgt[i] <= 0.02 * H and cy0 >= 0.05 * H) or (y0 >= 0.97 * H and hgt[i] <= 0.02 * H and H - cy1 >= 0.05 * H):
@@ -219,6 +247,13 @@ def marks(a, scale, width, exclude=None):
         elif (x0 <= 0.01 * Wd or x1 >= 0.99 * Wd or y0 <= 0.01 * H or y1 >= 0.99 * H) and wid[i] <= 0.05 * Wd and hgt[i] <= 0.05 * H \
              and (x0 <= 0.04 * Wd or x1 >= 0.96 * Wd) and (y0 <= 0.04 * H or y1 >= 0.96 * H) \
              and (x1 <= cx0 or x0 >= cx1 or y1 <= cy0 or y0 >= cy1):
+            edge.add(i)
+        # the edge of the photocopied sheet (owner 2026-10-10, القوافي للتنوخي: a long line along the border kept the whole
+        # page): a long line or band within 6 % of a side and at least 5 % of the width away from the text block — a printed
+        # frame hugs its text (a few % away), the sheet's edge lies at the border, far from it
+        # (a solid black bar of the copier as well as a hairline: up to 4 % thick, whatever its fill)
+        elif (hgt[i] >= 0.3 * H and wid[i] <= 0.04 * Wd and ((x1 <= 0.06 * Wd and cx0 - x1 >= 0.05 * Wd) or (x0 >= 0.94 * Wd and x0 - cx1 >= 0.05 * Wd))) \
+             or (wid[i] >= 0.3 * Wd and hgt[i] <= 0.04 * H and ((y1 <= 0.06 * H and cy0 - y1 >= 0.05 * Wd) or (y0 >= 0.94 * H and y0 - cy1 >= 0.05 * Wd))):
             edge.add(i)
         elif (x0 <= 0.01 * Wd or x1 >= 0.99 * Wd or y0 <= 0.01 * H or y1 >= 0.99 * H) and area[i] / max(1, hgt[i] * wid[i]) < 0.08:
             ix0, ix1, iy0, iy1 = int(cx0), int(cx1), int(cy0), int(cy1)
@@ -273,8 +308,9 @@ def marks(a, scale, width, exclude=None):
     bw = max(3, int(round(0.01 * Wd)))               # a band ≈ 1 % of the width: chain links alternate across it
     colcov = ndimage.maximum_filter(faint[iy0:iy1, :], size=(1, bw)).mean(0)
     rowcov = ndimage.maximum_filter(faint[:, ix0:ix1], size=(bw, 1)).mean(1)
-    rule_x = [x for x in range(Wd) if colcov[x] >= 0.5 and (x <= cx0 - g or x >= cx1 + g) and 0.03 * Wd < x < 0.97 * Wd]
-    rule_y = [y for y in range(H) if rowcov[y] >= 0.5 and (y <= cy0 - g or y >= cy1 + g) and 0.03 * H < y < 0.97 * H]
+    sheet = lambda v, lo, hi, n: (v < 0.06 * n and lo - v >= 0.05 * Wd) or (v > 0.94 * n and v - hi >= 0.05 * Wd)   # the sheet's edge, not a rule
+    rule_x = [x for x in range(Wd) if colcov[x] >= 0.5 and (x <= cx0 - g or x >= cx1 + g) and 0.03 * Wd < x < 0.97 * Wd and not sheet(x, cx0, cx1, Wd)]
+    rule_y = [y for y in range(H) if rowcov[y] >= 0.5 and (y <= cy0 - g or y >= cy1 + g) and 0.03 * H < y < 0.97 * H and not sheet(y, cy0, cy1, H)]
     out['rules'] = []
     if rule_x: out['rules'].append(pt(min(rule_x), iy0, max(rule_x) + 1, iy1))
     if rule_y: out['rules'].append(pt(ix0, min(rule_y), ix1, max(rule_y) + 1))
@@ -725,7 +761,11 @@ def decide(pages, wq=0.95):
     core = {i: pages[i].get('core') or pages[i]['box'] for i in text}
     cw = {i: core[i][2] - core[i][0] for i in text}
     pw = q([pages[i]['w'] for i in text], 0.5); ph = q([pages[i]['h'] for i in text], 0.5)
-    Tw, Th = q(bw.values(), wq), q(bh.values(), 1.0)            # width: wq of the pages (wider ones centre on their own content); height: the tallest page
+    # typical pages decide the width (owner 2026-10-10, القوافي للتنوخي: a title page, blank versos with the sheet's edges and
+    # a plate — 6 % of the book — held the box at the full page): a page whose box is > 25 % wider than the median page is
+    # not typical; it gets the book's size all the same (its content shrunk to fit / centred on its own content)
+    _mw = q(bw.values(), 0.5)
+    Tw, Th = q([v for v in bw.values() if v <= 1.25 * _mw] or list(bw.values()), wq), q(bh.values(), 1.0)
     full_w = [i for i in text if cw[i] >= 0.9 * q(cw.values(), 0.5)]
     full_h = [i for i in text if bh[i] >= 0.9 * q(bh.values(), 0.5)]
     # a printed frame around the text (a vertical rule on both sides on most full pages) is the page's own border: the box
@@ -785,7 +825,8 @@ def decide(pages, wq=0.95):
         off = {0: 0.0, 1: 0.0}; out['parity_offsets'] = {'0': 0.0, '1': 0.0}
         tw = {i: tb[i][2] - tb[i][0] for i in text if tb.get(i)}; th = {i: tb[i][3] - tb[i][1] for i in text if tb.get(i)}
         full_t = [i for i in full_w if i in tw]
-        Tq = q([tw[i] for i in full_t], wq); mc = CLEAN_MARGIN * Tq; out['margin_pt'] = round(mc, 2)
+        _mt = q([tw[i] for i in full_t], 0.5)                       # typical pages only (see Tw above)
+        Tq = q([tw[i] for i in full_t if tw[i] <= 1.25 * _mt] or [tw[i] for i in full_t], wq); mc = CLEAN_MARGIN * Tq; out['margin_pt'] = round(mc, 2)
         W = min(Tq + 2 * mc, pw)
         H = min(q([th[i] for i in full_h if i in th] or list(th.values()), 0.98) + 2 * mc, ph)
         cx = {i: ((tb[i][0] + tb[i][2]) / 2 if tb.get(i) else cx[i]) for i in text}
