@@ -71,6 +71,10 @@ auto-check (dry-run, sample to the owner, then apply); (4) the same for folders 
   7 workers swapped the laptop (15 GB): keep ≤ 4 (one large book took 3.2 GB). When it ends: build a review page from
   the sheets for the owner (he asked for interesting samples, not whole books), then batch the library under the same rules.
 
+### CROP (2026-10-10 evening): the two-column fix is in book_crop.py (columns_tilt); regression run logs/crop-regress-2026-10-10d.log;
+scratch/crop_after_regress_2026-10-10.sh starts scripts/crop_library.sh by itself if it ends with 0 failures (owner: the crop
+must run while the agent's quota is paused). Check logs/crop-library.log. Batch 001's books with two-column index pages
+still need a redo (crop_batch --undo + crop) — not done yet.
 ### CROP GATE (owner 2026-10-10, «are you solving this for what's coming»): NO crop batch may start before
 (1) the two-column index tilt fix (design below: gutter + per-column edge_tilt, both columns agree) is in book_crop.py with
 الفوائد 456/457 as «turn yes» and المثلث 499 / الاتباع 98 / الفوائد 446 / فهرسة 355 as «leave» in crop-regression.tsv, and
