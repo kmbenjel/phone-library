@@ -57,6 +57,8 @@ def cuts(seg):
         if n in PARTICLES or n in {'فيما', 'مما', 'عما', 'بما', 'لما', 'وما', 'ومن', 'وفي'} or (len(n) > 3 and (n.startswith('و') or n.startswith('لل')
                 or n.startswith('لم') or n.startswith('لا'))):
             k = w[:i]
+            # a «و…» word is not left hanging without its complement («وتفسير | لمسلم بن خالد»)
+            if len(k) > 1 and n.startswith('ل') and norm(k[-1]).startswith('و') and len(norm(k[-1])) > 3: k.pop()
             while len(k) > 1 and norm(k[-1]) in WEAK_END: k.pop()
             if k and ' '.join(k) not in out: out.append(' '.join(k))
     return out
@@ -98,6 +100,7 @@ def parse_edition(ed):
     if not ed: return [], '', '', ''
     m = re.match(r'^(ت|ط)\s+(.*)$', ed)
     kind, rest = (m.group(1), m.group(2)) if m else ('', ed)
+    if not kind and PUBLISHER_WORD.match(ed) and not re.match(r'^\d', ed): kind, rest = 'ط', ed     # «(مطبعة السعادة)»
     segs = [one_name(x.strip()) for x in re.split(r'\s+-\s+', rest) if x.strip()]
     if kind == 'ت':
         eds = [segs[0]] + [x for x in segs[1:-1] if not PUBLISHER_WORD.match(x)] if segs else []

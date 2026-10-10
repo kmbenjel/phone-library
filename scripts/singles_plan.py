@@ -21,8 +21,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 from textnorm import norm
 from special_dirs import NOT_BOOKS
-from rename_plan import clean, deficient, redundant, author_short
-from names_plan import compose
+from rename_plan import clean, deficient, redundant, author_short, researcher_short
+from textnorm import title_key
+import name_compose
 J = lambda p: os.path.join(ROOT, p)
 N = lambda s: unicodedata.normalize('NFC', s)
 
@@ -118,16 +119,42 @@ def file_info(fn, folder_title):
     expl = {w for w in norm(au).split()} | {'ط', 'ت', 'تحقيق'}
     return au, {w for w in extra if w not in expl and w.removeprefix('ال') not in {x.removeprefix('ال') for x in expl}}
 
+def same_book(t, b):
+    """a Waqfeya record lends its author/editor only when its title is this book (a bundle's record names another)"""
+    rt = {w for w in title_key(b.get('name', '')).split() if len(w) > 2}; tt = {w for w in norm(t).split() if len(w) > 2}
+    return bool(rt) and len(rt & tt) / max(1, min(len(rt), len(tt))) >= 0.6
+
+def enrich(au, ed, b):
+    """the author, editor and publisher the name lacks, from the exact-size record of the same book"""
+    why = []
+    v = lambda x: '' if (x or '').strip() in ('', '-', 'بدون', 'دون', 'لا يوجد', 'غير معروف') else x.strip()
+    if not au:
+        a = author_short((b.get('author') or {}).get('name', ''))
+        if a and a not in ('كتاب سماوي', 'مجموعة من المؤلفين'): au = a; why.append('author')
+    r, pub = researcher_short(v(b.get('researcher'))), v(b.get('publisher')).replace(' - ', '، ')
+    if r and not ed.startswith('ت ') and norm(r) not in norm(ed):
+        p0 = ed[2:].strip() if ed.startswith('ط ') else ''
+        ed = f'ت {r}' + (f' - {p0 or pub}' if (p0 or pub) else ''); why.append('editor')
+    elif pub and not ed:
+        ed = f'ط {pub}'; why.append('publisher')
+    elif pub and ed.startswith('ت ') and ' - ' not in ed and norm(pub) not in norm(ed):
+        ed = f'{ed} - {pub}'; why.append('publisher')
+    return au, ed, why
+
 def moved_from():
-    """later path → earlier path, every logged move (to follow a file back to its old names)"""
-    back = {}
+    """later path → every earlier path it was moved from (all of them: an undo moves a file back into its old name, and
+    the name before that must still be reachable — plan 310's undo hid plan 066's «الهدية» names)"""
+    back = collections.defaultdict(list)
     for r in csv.reader(open(J('data/changes/changes.tsv'), encoding='utf-8'), delimiter='\t'):
-        if len(r) > 3 and r[1] == 'move' and r[2] and r[3]: back[N(r[3])] = N(r[2])
+        if len(r) > 3 and r[1] == 'move' and r[2] and r[3]: back[N(r[3])].append(N(r[2]))
     return back
 
 def history(path, back):
-    out, p, seen = [], N('Books/' + path), set()
-    while p in back and p not in seen and len(out) < 30: seen.add(p); p = back[p]; out.append(p)
+    out, todo, seen = [], [N('Books/' + path)], set()
+    while todo and len(out) < 60:
+        p = todo.pop()
+        for q in back.get(p, ()):
+            if q not in seen: seen.add(q); out.append(q); todo.append(q)
     return out
 
 def main(index, out, review_out=None, skip=()):
@@ -184,9 +211,12 @@ def main(index, out, review_out=None, skip=()):
             elif b and nvol <= 1 and nlinks <= 1: why1 = 'its exact-size Waqfeya record: one volume, one file'
             elif vol_meta: stats['keep: «01 -», the PDF title says «ج 1»'] += 1; continue
             else: hold('wait: «01 -» alone, no evidence it is the whole book', folder, fn); continue
+        if re.search(r'\((الواجهة|المقدمة|الفهارس|الفهرس|الغلاف)\)|^0*0 - ', fn):
+            stats['keep: a cover, preface or index alone (part of a set)'] += 1; continue
         if CUT.search(name) or deficient(name) or folder in cutrev:
             hold('wait: cut name (title-page pass)', folder, fn); continue
         t, au, ed = parse_folder(name)
+        au = re.sub(r'\s+ط\s+\S+$', '', au)
         how = 'folder name'
         fau, extra = file_info(fn, name)
         if extra:
@@ -199,9 +229,12 @@ def main(index, out, review_out=None, skip=()):
             elif doubt: stats['note: «ل» name not used — ' + doubt] += 1
         if gift: how += '; ' + why1
         elif one: how += '; ' + why1
+        if b and same_book(t, b):
+            au, ed, got = enrich(au, ed, b)
+            if got: how += '; from the exact-size Waqfeya record: ' + ', '.join(got)
         t, au, ed = clean(t), clean(au), clean(ed)
         if not t: hold('skip: no title', folder, fn); continue
-        new = compose(t, au if au and not redundant(au, t) else '', ed, 196) + '.pdf'
+        new = name_compose.compose(t, au if au and not redundant(au, t) else '', ed) + '.pdf'
         if norm(new.removesuffix('.pdf')) in plain[cat]:
             hold('wait: the plain name is taken in the section', folder, new); continue
         plain[cat].add(norm(new.removesuffix('.pdf')))
