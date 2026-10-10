@@ -9,7 +9,7 @@ VERDICTS = {'ok', 'other-book', 'other-edition', 'part', 'no-title-page', 'unrea
 out = open(J('data', 'names', 'title-read.tsv'), 'a', encoding='utf-8')
 for line in sys.stdin:
     if not line.strip(): continue
-    f = [x.strip() for x in line.rstrip('\n').split(' | ')]
+    f = [x.strip() for x in line.rstrip('\n').split('|')]      # an empty field between two bars stays empty
     f += [''] * (11 - len(f))
     n, verdict = f[0], f[1]
     assert n in books, n; assert verdict in VERDICTS, verdict

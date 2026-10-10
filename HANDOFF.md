@@ -5,6 +5,30 @@ Each workstream appends its progress below (the newest state first, then the his
 
 ## 2026-10-10 01:30 GMT — STATE FOR A FRESH SESSION (owner: «I want to start a fresh discussion, then complete the work overnight. I'm unhappy with some old work not being successful, like the reorganizing and number/naming fixing»)
 
+### 2026-10-10 ~06:00 — STATE: names from the books themselves (owner's priority); crop postponed
+Owner's decisions this session (all in AGENTS.md §4 and memory naming-rules-2026-10-10):
+- NO parentheses anywhere: «<title> - <author> - ت <editor> - <publisher>، <city>، <year>» («ط …» when no editor,
+  «ترجمة …» for a translator, «- رسالة ماجستير», «- مخطوط» at the end); volumes «NN - <folder title> - <label>.pdf».
+  Nothing shortened when it fits (200 B); publisher gives way first, then title tails (joined titles keep heads).
+- Names come from the book's own pages; Shamela card AND Waqfeya record looked up by title whatever the source; when
+  anything is missing or doubtful → read the file. Watch for wrong books / other editions. ALL names (also those named
+  before) must reach the same format and completeness. Crop can wait (owner: «يمكن تأجيل مهام القص»).
+- Plan 310 was applied by mistake and undone; plan 311 (singles, DRY) is superseded — do not apply it.
+Tools (all committed): scripts/name_compose.py (names), read_status.py (what was read before → data/names/read-status.tsv:
+1,073 read, 445 sheet only, 4,449 never), title_sheets.py (reading sheets from data/inspect/pages; sidecar .txt with the
+Shamela + Waqfeya candidates), title_read_add.py (record readings: «n | verdict | title | author | editor | publisher |
+city | year | kind | section | note»), names_from_reading.py (reading → name), auto_check.py (OCR/text-layer check of every
+unread book → data/names/auto-check.tsv: confirmed 818, partial 786, CONFLICT 2,219 (mostly OCR failing on calligraphy:
+refine by checking the imprint page separately), no-text 1,071).
+Progress: singles sheets s0000–s0402 (806 books; 141 without page images: data/names/sheets/no-pages.tsv). READ 0–183
+(data/names/title-read.tsv). Next: sheet s0092 (book 184). Findings so far: many «other-book» (the file is a commentary,
+a collection, or another work than the name), «part» (one volume of a set: stays a folder), typos (بئر العزب، القصص المية).
+RUNNING: scratch/after_ocr_2026-10-10.sh (OCR of 5,334 queued front pages → auto_check → commit; log logs/ocr-2026-10-10.log);
+crop batch 001 (ends ~06:30; library chain stopped by the owner).
+Next steps: (1) refine auto_check (imprint page vs title page, Shamela/Waqfeya fields matched in the OCR text) so «confirmed»
+books are named without eye reading; (2) read by eye only CONFLICT/no-text/incomplete; (3) a names plan from readings +
+auto-check (dry-run, sample to the owner, then apply); (4) the same for folders and their volume files.
+
 ### 2026-10-10 02:20 — agenda set with the owner; plan 310 applied by mistake and undone
 - Owner's order: names first — (a) single books in folders, then (b) raw numbers / «الهدية», (c) the editor in names,
   (d) title pages for the 1,165; each pass: a sample shown to the owner BEFORE it is applied. Crop: batch 001 then continue
