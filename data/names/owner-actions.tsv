@@ -45,3 +45,6 @@ n	action	what
 741	remove	see book 729 (a piece of شرح الطيبي، المجلد الأول)
 802	remove	see book 729 (a piece of شرح الطيبي، المجلد الأول)
 727	piece	the poem printed at the end (pp. 283–289) of «شرح قلائد الجمان في نظم عوامل عالم جرجان» لابن علان، ت عبد الوهاب عبد العالي ومحمد سالم الدرويش: find the whole book (the commentary with the poem)
+414	fix	most pages are shown sideways (wrong /Rotate): reset the rotation (lossless) after the owner's word
+416	fix	the pages draw as empty boxes (a Word file of 2009 without embedded fonts): replace with a proper copy or re-render from the text layer
+438	replace	the file lacks its title page and first pages (starts at p. 4): look for a complete copy
