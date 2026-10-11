@@ -33,3 +33,5 @@ n	action	what
 762	fix	every page is shown sideways (a wrong /Rotate 270 on 248 pages): reset the rotation (lossless) after the owner's word
 758	piece	one piece of a larger volume (26 pp., the text from p. 71: وصية ابن عمار الكلاعي الميورقي لابنه ت محمد بوخزنة): find the whole volume
 764	compare	books 235 and 764: both «ديوان شعر حاتم الطائي» ت عادل سليمان جمال (417 / 432 pages); 764 is the 2nd enlarged edition (الخانجي 1990) — if 235 is the 1st edition both stay, if the same printing keep the better scan (duplicate-editions rule)
+774	compare	«منهاج السنة النبوية» ت محمد رشاد سالم: one 5,333-page file (book 774) and a 9-volume set in الفرق والردود — if the same edition keep the better copy (the set is easier to read)
+772	piece	one piece of a larger volume (the text from p. 133: توضيح طرق الرشاد لمحمد بن عبد القادر العلوي): find the whole volume
