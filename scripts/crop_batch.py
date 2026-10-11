@@ -205,6 +205,7 @@ def finish(fu, meta, batch):
     src = r['src']
     def mark(result):
         with open(DONE, 'a', encoding='utf-8') as f: f.write(f'{path}\t{m0}\t{result}\n')
+    touched = False                                   # nothing written to the phone yet
     try:
         if not r.get('dst'):
             mark(f'skip: {r["decision"]}' + (f'; residual tilt {r["residual"][:5]}' if r.get('residual') else ''))
@@ -219,6 +220,7 @@ def finish(fu, meta, batch):
                 now = ph.md5(new); print('MOVED', path[:60], '→', new[:60], flush=True); path = new
             if now != m0: raise RuntimeError('the phone file changed meanwhile')
             try:
+                touched = True
                 ph.append(path, tail)
                 ok = ph.size(path) == n1 and ph.md5(path) == m1
             except Exception as e:
@@ -235,7 +237,10 @@ def finish(fu, meta, batch):
         mark(f'cropped {n0}->{n1}')
         print('CROPPED', path[:80], '| gain', r['gain'], '| turned', r['turned'], '| shrunk to fit', r['scaled'], flush=True)
     except Exception as e:
-        mark(f'FAIL {e}'); print('FAIL', path, e, flush=True)
+        if not touched and isinstance(e, OSError):    # the phone was away before anything was written: not done, retried
+            print('RETRY LATER (phone away)', path, e, flush=True)   # in a later batch (2026-10-11: «No route to host»)
+        else:
+            mark(f'FAIL {e}'); print('FAIL', path, e, flush=True)
     finally:
         for p in (src, r.get('dst')):
             if p and os.path.exists(p): os.remove(p)

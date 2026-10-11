@@ -5,7 +5,7 @@ PHONE_HOST overrides; otherwise the first candidate whose FTP port answers is us
 import os, socket
 from concurrent.futures import ThreadPoolExecutor
 
-CANDIDATES = ['192.168.11.102', '192.168.11.100', '192.168.11.103']   # .102 again on 2026-10-11 evening (owner: «keep up with 102»)
+CANDIDATES = ['192.168.11.100', '192.168.11.102', '192.168.11.103']   # it alternates .100 ↔ .102 (2026-10-11); phone_watchdog.sh follows it
 PORT = int(os.environ.get('PHONE_PORT', '2221'))
 
 
