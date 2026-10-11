@@ -25,3 +25,5 @@ n	action	what
 714	fix	five blank pages before the title page shift the PDF numbering from the printed one (owner's complaint on book 45)
 709	stray	a one-page file (only the cover of «الكتاب الثاني» of Harun's البيان والتبيين): move it into that set as its cover or delete
 720	piece	one piece of a larger book (pp. 603ff: فاكهة الخوان لمحمد حبيب الله بن مايأبى، كلمة الناشر حسام الدين القدسي): find the whole book
+724	fix	the PDF runs back to front (Toronto scan: the title page is p. 298 of 300, the errata at the start): reverse the page order (lossless) after the owner's word
+727	piece	one piece of a larger book (pp. 283ff: قلائد الجمان in a volume with its commentary «شرح قلائد الجمان»): find the whole book
