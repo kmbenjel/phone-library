@@ -2,6 +2,7 @@
 data/names/owner-actions.tsv that needs his word — copies to compare, page fixes, stray covers, removals, replacements —
 with the book's current path, what was found, «أوافق» and a comment (review_server.py; report «decisions»).
 Rows the agent can do alone (pieces to find, additions to look for) are listed after, for information.
+The page is in Arabic (owner 2026-10-11): the «ar» column of owner-actions.tsv; write it for every new row.
 Usage: python3 scripts/owner_decisions_page.py   → site/decisions.html"""
 import csv, html, os, re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -36,7 +37,7 @@ def main():
         box = (f'<div class="review" data-n="{E(rid)}"><label><input type="checkbox" class="chk"> أوافق</label>'
                f'<textarea class="cmt" rows="2" placeholder="قرارك أو تعليقك"></textarea><span class="st"></span></div>') if ask else ''
         return (f'<article><div class="tag">{E(AR.get(r["action"], r["action"]))}</div><h2>الكتاب {E(n)}</h2>'
-                f'<div class="path">{E(now(n))}</div><p>{E(r["what"])}</p>{box}</article>')
+                f'<div class="path">{E(now(n))}</div><p>{E(r.get("ar") or r["what"])}</p>{box}</article>')
     need = [r for r in rows if r['action'] in NEED]
     info = [r for r in rows if r['action'] in INFO]
     order = list(NEED)

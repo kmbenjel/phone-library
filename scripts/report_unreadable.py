@@ -90,7 +90,7 @@ p{{margin:.3em 0}} .review{{display:flex;gap:10px;align-items:flex-start;margin-
 .st{{font-size:.8rem;color:var(--mut)}} .warn{{background:#fff3cd;color:#5c4400;padding:8px 12px;border-radius:8px}} .pages{{display:flex;gap:8px;overflow-x:auto;padding-top:6px}} .pages img{{height:300px;border:1px solid var(--line);border-radius:4px}}
 </style></head><body><main><h1>كتب تعذرت قراءة اسمها من الكتاب نفسه</h1>
 <p class="lead">تضاف الكتب واحدا واحدا أثناء القراءة، بعد محاولة قراءة صفحات أبعد بدقة كاملة. {len(rows)} كتابا حتى الآن.</p>
-<p class="warn" id="noserver" hidden>لحفظ الفحص والتعليقات افتح الصفحة من الخادم المحلي: http://127.0.0.1:8765/ (scripts/review_server.py)</p>
+<p class="warn" id="noserver" hidden>لحفظ الفحص والتعليقات افتح الصفحة من الخادم المحلي: http://127.0.0.1:8765/</p>
 {''.join(cards) or '<p>لا شيء بعد.</p>'}</main><script>
 const R = 'unreadable';
 const live = location.protocol.startsWith('http');

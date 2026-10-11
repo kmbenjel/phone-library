@@ -7,6 +7,23 @@ Usage: python3 scripts/plan_review_page.py plans/NNN-name.tsv [--prev plans/MMM-
 import html, json, os, re, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+VERDICT = {'ok': 'قُرئت صفحة عنوانه', 'other-book': 'كتاب غير الذي يقوله اسمه', 'other-edition': 'طبعة غير التي يقولها اسمه'}
+
+def why_ar(why):
+    """the plan's reason (English, for the log) in Arabic for the page (owner 2026-10-11: «arabic for consistency»)"""
+    out = []
+    for part in [x.strip() for x in why.split(';') if x.strip()]:
+        m = re.match(r'title page read \(book (\d+), ([\w-]+)\)', part)
+        if m: out.append(f'الكتاب {m.group(1)}: {VERDICT.get(m.group(2), m.group(2))}'); continue
+        m = re.match(r'section (.+?) → (.+)', part)
+        if m: out.append(f'ينقل من قسم {m.group(1)} إلى {m.group(2)}'); continue
+        if part.startswith('shortened'): out.append('اختصر ليتسع للحد (240 بايتا) — قوبل بالغلاف'); continue
+        if part.startswith('forbidden'): out.append('حذفت حروف ممنوعة في أسماء الملفات («/» «:»)'); continue
+        if 'Asilan' in part: out.append('طبعة عسيلان مرتبة: التقديم، الدراسة، النص'); continue
+        if part.startswith('owner'): out.append('بطلبك'); continue
+        out.append(part)
+    return '؛ '.join(out)
+
 def previous(prev):
     """source path → (earlier proposal, owner's comment) from an earlier plan and its review"""
     if not prev: return {}, ''
@@ -45,7 +62,7 @@ def main(plan, prev=None):
                         + ('لم يتغير' if same else f'تغيّر — كان: <span class="was">{E(ob13.split("/", 2)[2])}</span>')
                         + (f'<div class="cm">تعليقك: {E(cm)}</div>' if cm else '') + '</div>')
         trs.append(f'''<tr class="row{' moved' if ca != cb else ''}{flag}" data-n="{k}"><td class="k">{k}</td><td>{sec}<div class="old">{E(oa)}</div>
-<div class="new">{E(ob)}</div>{hist}<div class="why">{E(why)}</div></td>
+<div class="new">{E(ob)}</div>{hist}<div class="why">{E(why_ar(why))}</div></td>
 <td class="review" data-n="{k}"><textarea class="cmt" rows="2" placeholder="تعليق على هذا الصف"></textarea><span class="st"></span></td></tr>''')
     page = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>خطة {E(num)}</title><style>
@@ -56,7 +73,7 @@ body{{background:var(--bg);color:var(--fg);font:15px/1.6 "Noto Naskh Arabic","Am
 main{{max-width:1300px;margin:auto}} h1{{font-size:1.4rem}} .lead,.why,.st,.k,.cat{{color:var(--mut)}}
 table{{width:100%;border-collapse:collapse;background:var(--card)}} td{{border-top:1px solid var(--line);padding:8px;vertical-align:top}}
 .old{{text-decoration:line-through;color:var(--mut)}} .hist{{font-size:.9rem;margin-top:4px}} .was{{color:var(--mut)}} .cm{{background:#fff3cd;color:#5c4400;padding:2px 6px;border-radius:4px;margin-top:2px}} .new{{color:var(--new);font-weight:bold}} .sec{{color:var(--sec);font-weight:bold}}
-.why{{font-size:.85rem;direction:ltr;text-align:right}} td.review{{width:28%}} textarea{{width:100%;font:inherit;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px}}
+.why{{font-size:.85rem}} td.review{{width:28%}} textarea{{width:100%;font:inherit;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px}}
 .bar{{position:sticky;top:0;background:var(--bg);padding:8px 0;display:flex;gap:14px;flex-wrap:wrap;align-items:center;z-index:1}}
 input[type=search]{{font:inherit;padding:4px 8px;min-width:240px}} .warn{{background:#fff3cd;color:#5c4400;padding:8px 12px;border-radius:8px}}
 </style></head><body><main><h1>خطة {E(num)}: تسمية الكتب المفردة من صفحات عناوينها</h1>
@@ -83,7 +100,12 @@ function save(b) {{ if (!live) return; const st = b.querySelector('.st'); st.tex
     .then(r => r.json()).then(j => st.textContent = ' حُفظ ' + j.time).catch(() => st.textContent = ' لم يُحفظ'); }}
 document.querySelectorAll('.review').forEach(b => {{ let tm; const c = b.querySelector('.chk'), t = b.querySelector('.cmt');
   if (c) c.addEventListener('change', () => save(b));
-  if (t) t.addEventListener('input', () => {{ clearTimeout(tm); tm = setTimeout(() => save(b), 800); }}); }});
+  if (t) t.addEventListener('input', () => {{
+    clearTimeout(tm);
+    const v = t.value.trim().toLowerCase();
+    if (v === 'x' || v.startsWith('x')) {{ save(b); }}
+    else {{ tm = setTimeout(() => save(b), 800); }}
+  }}); }});
 function filt() {{ const g = id => document.getElementById(id).checked, q = document.getElementById('q').value.trim();
   document.querySelectorAll('tr.row').forEach(r => {{ const c = x => r.classList.contains(x);
     r.hidden = (q && !r.textContent.includes(q)) || (g('onlymoved') && !c('moved')) || (g('onlyother') && !c('other')) || (g('onlychanged') && !c('changed')) || (g('onlynew') && c('seen')); }}); }}

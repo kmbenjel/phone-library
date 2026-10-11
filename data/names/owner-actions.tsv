@@ -1,50 +1,50 @@
-n	action	what
+n	action	what	ar
 # (owner's review of plan 313, 2026-10-10 night; data/names/review-comments.jsonl «plan-313»)
-0	ask	owner: «العنوان خطأ … الكتاب والمؤلف مختلفان»؛ the file (42 pp.) reads throughout as إيصال السالك by محمد يحيى الولاتي (title page, p. 3, ترجمة الشارح at the end) — asked the owner what he saw
-5	check-file	does not open in Files (opens in Acrobat)
-7	check-file	does not open in Files (opens in Acrobat)
-24	check-file	slow to open in Files (fine in Acrobat)
-12	add	add the commentary «جواهر الدرر في نظم مبادئ أصول ابن باديس الأبر» (دار ابن حزم) if a scan exists (it is in Shamela), and «مبادئ الأصول» لابن باديس ت عمار الطالبي (archive.org)
-17	add	the poems of محمد مولود بن أحمد فال اليعقوبي and their commentaries: what is printed, the best copy, no duplicates (list first)
-26	set	the Asilan edition (دار المدني) = three files (تقديم، القسم الأول الدراسة، النص): name them in order with all the edition's information
-27	replace	the cover page very small and pages missing — look for a complete copy
-31	replace	defects (e.g. p. 36) — look for a better copy
-45	fix	a blank page at the start shifts the PDF numbering from the printed one
-47	replace-whole	the file is one study (24 pp.: الوشي العبقري للإفراني) from «وقفات في تاريخ المغرب» (تنسيق القدوري، كلية الآداب بالرباط 2001): put the whole book in its place; look for other files that are one piece of a larger book
-71	remove	the poem is incomplete (only the beginnings of some chapters) — remove or replace with a complete copy
-82	replace	a manuscript: replace with the printed edition if found, else remove
-86	index	a manuscript (العبدري); the printed book is in the library (book 84) — owner: build an index of the library's manuscripts with their sources
-103	remove	remove this edition of the مقدمة (المطبعة الشرفية)
-113	add	add the better edition on Hindawi
-116	ask	owner asked why it is in التاريخ (Ibn Badrun's historical commentary on the poem)
-507	piece	one piece of a larger book (pp. 218ff: الدرة الإلغية نظم الآجرومية): find the whole book (owner: look for files that are one piece of a larger book)
-568	piece	one piece of a larger book (pp. 148ff: الجكنية نظم الجكني): find the whole book
-620	piece	one piece of a larger book (pp. 347–404: كنز اليواقيت الغالية للحجوجي with manuscript images): find the whole volume
-631	set	books 631 and 672 are one printed volume in two files (مكتبة الرشد 1418، تخريج سمير ولد سعدي): a folder «الجزء من فوائد حديث أبي ذر الهروي ومن فوائد أبي بكر الشاشي» with 01 (أبو ذر) and 02 (الشاشي)
-713	replace	the file is browser screen captures (Google Drive viewer, taskbar visible): replace with the institute's own digital edition (معهد المخطوطات العربية، نشرة رقمية 1440)
-714	fix	five blank pages before the title page shift the PDF numbering from the printed one (owner's complaint on book 45)
-709	stray	a one-page file (only the cover of «الكتاب الثاني» of Harun's البيان والتبيين): move it into that set as its cover or delete
-720	piece	pp. 603–648 of «رسائل أولاد ما يأبى» (محمد الخضر ومحمد العاقب ومحمد حبيب الله بن مايأبى الشنقيطي، دار البشير عمان 2003، 718 pp.): find the whole volume
-724	fix	the PDF runs back to front (Toronto scan: the title page is p. 298 of 300, the errata at the start): reverse the page order (lossless) after the owner's word
-762	fix	every page is shown sideways (a wrong /Rotate 270 on 248 pages): reset the rotation (lossless) after the owner's word
-764	compare	books 235 and 764: both «ديوان شعر حاتم الطائي» ت عادل سليمان جمال (417 / 432 pages); 764 is the 2nd enlarged edition (الخانجي 1990) — if 235 is the 1st edition both stay, if the same printing keep the better scan (duplicate-editions rule)
-774	compare	«منهاج السنة النبوية» ت محمد رشاد سالم: one 5,333-page file (book 774) and a 9-volume set in الفرق والردود — if the same edition keep the better copy (the set is easier to read)
-777	compare	«بيان تلبيس الجهمية» مجمع الملك فهد: one 5,910-page file (book 777, الفرق والردود) and a 10-volume set in العقيدة — same edition: keep the set
-778	compare	«مقالات الإسلاميين» ت محمد محيي الدين عبد الحميد: one 613-page file (book 778) and a 2-volume set (المكتبة العصرية) — compare printings
-779	piece	«نقد مراتب الإجماع» القسم الثاني (pp. 203ff) — the second part of «مراتب الإجماع» (ط وزارة الأوقاف السعودية, الفقه العام)? join or keep as its part
-781	compare	«إرشاد السالك إلى أفعال المناسك» ت أبو الأجفان (بيت الحكمة 1989, 778 pp.) and another file of the book in الفقه المالكي — compare
-795	piece	only 48 pages of volume 1 of «الفوائد الجنية» للفاداني (دار البشائر 1417): find the whole book
-804	stray	a one-page file (the title page of vol. 1 of مصابيح السنة, دار المعرفة): move it into that set as its cover or delete
-805	compare	«معجم مقاييس اللغة» ت هارون: one 2,979-page file (دار الجيل) and a 6-volume set (دار الفكر) — different printings of one edition: keep both or the better
-750	piece	«الحقائق والرقائق» للمقري is the second book of the volume «حل العقال لابن قضيب البان ويليه الحقائق والرقائق» (اعتنى بهما عمرو سيد شوكت، دار الكتب العلمية 2006): find the whole volume
-758	remove	books 747 and 758 are pieces cut from a volume the library already has whole: «كتب السنة/تلقين الوليد الصغير (ط دار الكتب العلمية).pdf» (138 pp.: تلقين الوليد الصغير لعبد الحق الإشبيلي، ثم وصية محمد بن موسى ابن عمار p. 71، ثم معرفة رجال البخاري للنحات p. 95، ت بدر العمراني): remove the two pieces and name the whole volume with its three books
-747	remove	see book 758: a piece of «تلقين الوليد الصغير» (the whole volume is in كتب السنة); remove with 758
-772	remove	a piece (pp. 133ff) cut from «الدفاع عن الصحيحين للحجوي ويليه توضيح طرق الرشاد للعلوي» (مركز التراث الثقافي المغربي ودار ابن حزم 2003), which the library has whole in العقيدة: remove the piece
-773	piece	the second book (pp. 47ff) of «رسالة في أن القرآن غير مخلوق للحربي ويليه رسالة الإمام أحمد إلى المتوكل» ت علي الشبل (دار العاصمة 1416): find the whole volume
-729	remove	books 729, 741, 802 are three pieces cut from volume 1 of «شرح الطيبي على مشكاة المصابيح» (ت عبد الحميد هنداوي، مكتبة نزار مصطفى الباز 1417)، which the library has whole in شروح الحديث (4,467 pp.): remove the three pieces
-741	remove	see book 729 (a piece of شرح الطيبي، المجلد الأول)
-802	remove	see book 729 (a piece of شرح الطيبي، المجلد الأول)
-727	piece	the poem printed at the end (pp. 283–289) of «شرح قلائد الجمان في نظم عوامل عالم جرجان» لابن علان، ت عبد الوهاب عبد العالي ومحمد سالم الدرويش: find the whole book (the commentary with the poem)
-414	fix	most pages are shown sideways (wrong /Rotate): reset the rotation (lossless) after the owner's word
-416	fix	the pages draw as empty boxes (a Word file of 2009 without embedded fonts): replace with a proper copy or re-render from the text layer
-438	replace	the file lacks its title page and first pages (starts at p. 4): look for a complete copy
+0	ask	owner: «العنوان خطأ … الكتاب والمؤلف مختلفان»؛ the file (42 pp.) reads throughout as إيصال السالك by محمد يحيى الولاتي (title page, p. 3, ترجمة الشارح at the end) — asked the owner what he saw	قلتَ إن العنوان خطأ وإن الكتاب والمؤلف مختلفان، والملف (42 صفحة) من أوله إلى آخره «إيصال السالك» لمحمد يحيى الولاتي: صفحة العنوان، وص 3، وترجمة الشارح في آخره. ما الذي رأيتَ فيه مختلفا؟
+5	check-file	does not open in Files (opens in Acrobat)	لا يفتح في تطبيق Files ويفتح في أكروبات: أفحص الملف وأقترح إصلاحا لا يمس الصفحات
+7	check-file	does not open in Files (opens in Acrobat)	لا يفتح في تطبيق Files ويفتح في أكروبات: أفحص الملف وأقترح إصلاحا لا يمس الصفحات
+24	check-file	slow to open in Files (fine in Acrobat)	بطيء الفتح في Files، سليم في أكروبات: أفحص الملف
+12	add	add the commentary «جواهر الدرر في نظم مبادئ أصول ابن باديس الأبر» (دار ابن حزم) if a scan exists (it is in Shamela), and «مبادئ الأصول» لابن باديس ت عمار الطالبي (archive.org)	إضافة «جواهر الدرر في نظم مبادئ أصول ابن باديس الأبر» (دار ابن حزم) إن وجد مصورا، و«مبادئ الأصول» لابن باديس ت عمار الطالبي (أرشيف)
+17	add	the poems of محمد مولود بن أحمد فال اليعقوبي and their commentaries: what is printed, the best copy, no duplicates (list first)	أنظام محمد مولود بن أحمد فال اليعقوبي وشروحها: ما طبع منها، أحسن نسخة، بلا تكرار (أعرض القائمة أولا)
+26	set	the Asilan edition (دار المدني) = three files (تقديم، القسم الأول الدراسة، النص): name them in order with all the edition's information	طبعة عسيلان (دار المدني) ثلاثة ملفات: التقديم، والقسم الأول الدراسة، والنص — رتبت وسميت بكل معلومات الطبعة (طبق في 317)
+27	replace	the cover page very small and pages missing — look for a complete copy	صفحة الغلاف صغيرة جدا وصفحات ناقصة: أبحث عن نسخة كاملة
+31	replace	defects (e.g. p. 36) — look for a better copy	خلل في الصفحات (مثل ص 36): أبحث عن نسخة أحسن
+45	fix	a blank page at the start shifts the PDF numbering from the printed one	صفحة بيضاء في أوله تخالف بين ترقيم الملف والترقيم المطبوع: أحذفها أو أضيف أرقام الصفحات المطبوعة بعد موافقتك
+47	replace-whole	the file is one study (24 pp.: الوشي العبقري للإفراني) from «وقفات في تاريخ المغرب» (تنسيق القدوري، كلية الآداب بالرباط 2001): put the whole book in its place; look for other files that are one piece of a larger book	الملف دراسة واحدة (24 صفحة: «الوشي العبقري» للإفراني) من كتاب «وقفات في تاريخ المغرب» (تنسيق القدوري، كلية الآداب بالرباط 2001): أضع الكتاب كاملا مكانها
+71	remove	the poem is incomplete (only the beginnings of some chapters) — remove or replace with a complete copy	النظم ناقص (أوائل بعض الأبواب فقط): يحذف أو يستبدل بنسخة كاملة
+82	replace	a manuscript: replace with the printed edition if found, else remove	مخطوط: يستبدل بالمطبوع إن وجد، وإلا يحذف
+86	index	a manuscript (العبدري); the printed book is in the library (book 84) — owner: build an index of the library's manuscripts with their sources	مخطوط «رحلة العبدري»، والمطبوع في المكتبة (الكتاب 84): فهرس خاص بمخطوطات المكتبة ومصادرها
+103	remove	remove this edition of the مقدمة (المطبعة الشرفية)	حذف طبعة المقدمة هذه (المطبعة الشرفية)
+113	add	add the better edition on Hindawi	إضافة الطبعة الأحسن من موقع هنداوي
+116	ask	owner asked why it is in التاريخ (Ibn Badrun's historical commentary on the poem)	سألتَ لماذا هو في التاريخ: شرح ابن بدرون التاريخي على قصيدة ابن عبدون، يسرد أخبار الدول على أبياتها
+507	piece	one piece of a larger book (pp. 218ff: الدرة الإلغية نظم الآجرومية): find the whole book (owner: look for files that are one piece of a larger book)	قطعة من كتاب أكبر (ص 218 وما بعدها: «الدرة الإلغية» نظم الآجرومية): أبحث عن الكتاب كاملا
+568	piece	one piece of a larger book (pp. 148ff: الجكنية نظم الجكني): find the whole book	قطعة من كتاب أكبر (ص 148–158: «الجكنية» نظم الجكني): أبحث عن الكتاب كاملا
+620	piece	one piece of a larger book (pp. 347–404: كنز اليواقيت الغالية للحجوجي with manuscript images): find the whole volume	قطعة من مجلد أكبر (ص 347–404: «كنز اليواقيت الغالية» للحجوجي مع صور المخطوط): أبحث عن المجلد كاملا
+631	set	books 631 and 672 are one printed volume in two files (مكتبة الرشد 1418، تخريج سمير ولد سعدي): a folder «الجزء من فوائد حديث أبي ذر الهروي ومن فوائد أبي بكر الشاشي» with 01 (أبو ذر) and 02 (الشاشي)	الكتابان 631 و672 مجلد واحد مطبوع في ملفين (مكتبة الرشد 1418، تخريج سمير ولد سعدي): مجلد واحد فيه 01 فوائد أبي ذر الهروي و02 فوائد أبي بكر الشاشي
+713	replace	the file is browser screen captures (Google Drive viewer, taskbar visible): replace with the institute's own digital edition (معهد المخطوطات العربية، نشرة رقمية 1440)	الملف لقطات شاشة من متصفح (عارض Google Drive وشريط المهام ظاهر): يستبدل بالنشرة الرقمية لمعهد المخطوطات العربية (1440)
+714	fix	five blank pages before the title page shift the PDF numbering from the printed one (owner's complaint on book 45)	خمس صفحات بيضاء قبل صفحة العنوان تخالف بين ترقيم الملف والترقيم المطبوع
+709	stray	a one-page file (only the cover of «الكتاب الثاني» of Harun's البيان والتبيين): move it into that set as its cover or delete	ملف من صفحة واحدة: غلاف «الكتاب الثاني» من البيان والتبيين بتحقيق هارون: ينقل إلى مجموعته غلافا أو يحذف
+720	piece	pp. 603–648 of «رسائل أولاد ما يأبى» (محمد الخضر ومحمد العاقب ومحمد حبيب الله بن مايأبى الشنقيطي، دار البشير عمان 2003، 718 pp.): find the whole volume	ص 603–648 من «رسائل أولاد ما يأبى» (محمد الخضر ومحمد العاقب ومحمد حبيب الله، دار البشير عمان 2003، 718 صفحة): أبحث عن المجلد كاملا
+724	fix	the PDF runs back to front (Toronto scan: the title page is p. 298 of 300, the errata at the start): reverse the page order (lossless) after the owner's word	ترتيب صفحات الملف مقلوب (صفحة العنوان هي ص 298 من 300): أعكس الترتيب دون مساس بالصفحات بعد موافقتك
+762	fix	every page is shown sideways (a wrong /Rotate 270 on 248 pages): reset the rotation (lossless) after the owner's word	كل الصفحات معروضة على جنبها (تدوير خاطئ في 248 صفحة): أصلح التدوير دون مساس بالصفحات بعد موافقتك
+764	compare	books 235 and 764: both «ديوان شعر حاتم الطائي» ت عادل سليمان جمال (417 / 432 pages); 764 is the 2nd enlarged edition (الخانجي 1990) — if 235 is the 1st edition both stay, if the same printing keep the better scan (duplicate-editions rule)	الكتابان 235 و764 «ديوان شعر حاتم الطائي» ت عادل سليمان جمال (417 / 432 صفحة)، و764 الطبعة الثانية المزيدة (الخانجي 1990): إن كان 235 الطبعة الأولى يبقيان، وإن كانا طبعة واحدة يبقى الأحسن
+774	compare	«منهاج السنة النبوية» ت محمد رشاد سالم: one 5,333-page file (book 774) and a 9-volume set in الفرق والردود — if the same edition keep the better copy (the set is easier to read)	«منهاج السنة النبوية» ت محمد رشاد سالم: ملف واحد في 5,333 صفحة (774) ومجموعة في 9 مجلدات في الفرق والردود: إن كانت الطبعة واحدة تبقى المجموعة
+777	compare	«بيان تلبيس الجهمية» مجمع الملك فهد: one 5,910-page file (book 777, الفرق والردود) and a 10-volume set in العقيدة — same edition: keep the set	«بيان تلبيس الجهمية» (مجمع الملك فهد): ملف واحد في 5,910 صفحة (777) ومجموعة في 10 مجلدات في العقيدة، والطبعة واحدة: تبقى المجموعة
+778	compare	«مقالات الإسلاميين» ت محمد محيي الدين عبد الحميد: one 613-page file (book 778) and a 2-volume set (المكتبة العصرية) — compare printings	«مقالات الإسلاميين» ت محمد محيي الدين عبد الحميد: ملف في 613 صفحة (778، مكتبة النهضة المصرية 1950) ومجموعة في مجلدين (المكتبة العصرية): تقارن الطبعتان
+779	piece	«نقد مراتب الإجماع» القسم الثاني (pp. 203ff) — the second part of «مراتب الإجماع» (ط وزارة الأوقاف السعودية, الفقه العام)? join or keep as its part	«نقد مراتب الإجماع» القسم الثاني (ص 203 وما بعدها): الجزء الثاني من «مراتب الإجماع» (ط وزارة الأوقاف السعودية، في الفقه العام)؟ يضم إليه أو يبقى جزءا منه
+781	compare	«إرشاد السالك إلى أفعال المناسك» ت أبو الأجفان (بيت الحكمة 1989, 778 pp.) and another file of the book in الفقه المالكي — compare	«إرشاد السالك إلى أفعال المناسك» ت أبو الأجفان (بيت الحكمة 1989، 778 صفحة) وملف آخر للكتاب في الفقه المالكي: تقارن النسختان
+795	piece	only 48 pages of volume 1 of «الفوائد الجنية» للفاداني (دار البشائر 1417): find the whole book	48 صفحة فقط من الجزء الأول من «الفوائد الجنية» للفاداني (دار البشائر 1417): أبحث عن الكتاب كاملا
+804	stray	a one-page file (the title page of vol. 1 of مصابيح السنة, دار المعرفة): move it into that set as its cover or delete	ملف من صفحة واحدة: صفحة عنوان المجلد الأول من «مصابيح السنة» (دار المعرفة): ينقل إلى مجموعته غلافا أو يحذف
+805	compare	«معجم مقاييس اللغة» ت هارون: one 2,979-page file (دار الجيل) and a 6-volume set (دار الفكر) — different printings of one edition: keep both or the better	«معجم مقاييس اللغة» ت هارون: ملف في 2,979 صفحة (دار الجيل) ومجموعة في 6 مجلدات (دار الفكر)، طبعتان مصورتان لتحقيق واحد: يبقيان أو الأحسن
+750	piece	«الحقائق والرقائق» للمقري is the second book of the volume «حل العقال لابن قضيب البان ويليه الحقائق والرقائق» (اعتنى بهما عمرو سيد شوكت، دار الكتب العلمية 2006): find the whole volume	«الحقائق والرقائق» للمقري هو الكتاب الثاني من مجلد «حل العقال لابن قضيب البان ويليه الحقائق والرقائق» (اعتنى بهما عمرو سيد شوكت، دار الكتب العلمية 2006): أبحث عن المجلد كاملا
+758	remove	books 747 and 758 are pieces cut from a volume the library already has whole: «كتب السنة/تلقين الوليد الصغير (ط دار الكتب العلمية).pdf» (138 pp.: تلقين الوليد الصغير لعبد الحق الإشبيلي، ثم وصية محمد بن موسى ابن عمار p. 71، ثم معرفة رجال البخاري للنحات p. 95، ت بدر العمراني): remove the two pieces and name the whole volume with its three books	الكتابان 747 و758 قطعتان من مجلد في المكتبة كاملا: «كتب السنة/تلقين الوليد الصغير (ط دار الكتب العلمية)» (138 صفحة: تلقين الوليد الصغير لعبد الحق الإشبيلي، ثم وصية ابن عمار ص 71، ثم معرفة رجال البخاري للنحات ص 95): تحذف القطعتان ويسمى المجلد بكتبه الثلاثة
+747	remove	see book 758: a piece of «تلقين الوليد الصغير» (the whole volume is in كتب السنة); remove with 758	انظر الكتاب 758: قطعة من «تلقين الوليد الصغير» الكامل في كتب السنة، تحذف معه
+772	remove	a piece (pp. 133ff) cut from «الدفاع عن الصحيحين للحجوي ويليه توضيح طرق الرشاد للعلوي» (مركز التراث الثقافي المغربي ودار ابن حزم 2003), which the library has whole in العقيدة: remove the piece	قطعة (ص 133 وما بعدها) من «الدفاع عن الصحيحين للحجوي ويليه توضيح طرق الرشاد للعلوي» (مركز التراث الثقافي المغربي ودار ابن حزم 2003)، والمجلد كامل في العقيدة: تحذف القطعة
+773	piece	the second book (pp. 47ff) of «رسالة في أن القرآن غير مخلوق للحربي ويليه رسالة الإمام أحمد إلى المتوكل» ت علي الشبل (دار العاصمة 1416): find the whole volume	الكتاب الثاني (ص 47 وما بعدها) من «رسالة في أن القرآن غير مخلوق للحربي ويليه رسالة الإمام أحمد إلى المتوكل» ت علي الشبل (دار العاصمة 1416): أبحث عن المجلد كاملا
+729	remove	books 729, 741, 802 are three pieces cut from volume 1 of «شرح الطيبي على مشكاة المصابيح» (ت عبد الحميد هنداوي، مكتبة نزار مصطفى الباز 1417)، which the library has whole in شروح الحديث (4,467 pp.): remove the three pieces	الكتب 729 و741 و802 ثلاث قطع من المجلد الأول من «شرح الطيبي على مشكاة المصابيح» (ت عبد الحميد هنداوي، مكتبة نزار مصطفى الباز 1417)، والكتاب كامل في شروح الحديث (4,467 صفحة): تحذف القطع الثلاث
+741	remove	see book 729 (a piece of شرح الطيبي، المجلد الأول)	انظر الكتاب 729: قطعة من شرح الطيبي، المجلد الأول
+802	remove	see book 729 (a piece of شرح الطيبي، المجلد الأول)	انظر الكتاب 729: قطعة من شرح الطيبي، المجلد الأول
+727	piece	the poem printed at the end (pp. 283–289) of «شرح قلائد الجمان في نظم عوامل عالم جرجان» لابن علان، ت عبد الوهاب عبد العالي ومحمد سالم الدرويش: find the whole book (the commentary with the poem)	النظم المطبوع في آخر (ص 283–289) «شرح قلائد الجمان في نظم عوامل عالم جرجان» لابن علان ت عبد الوهاب عبد العالي ومحمد سالم الدرويش: أبحث عن الكتاب كاملا
+414	fix	most pages are shown sideways (wrong /Rotate): reset the rotation (lossless) after the owner's word	أكثر الصفحات معروضة على جنبها (تدوير خاطئ): أصلح التدوير دون مساس بالصفحات بعد موافقتك
+416	fix	the pages draw as empty boxes (a Word file of 2009 without embedded fonts): replace with a proper copy or re-render from the text layer	الصفحات تظهر مربعات فارغة (ملف وورد من 2009 بلا خطوط مضمنة): يستبدل بنسخة سليمة أو يعاد إخراجه من طبقة النص
+438	replace	the file lacks its title page and first pages (starts at p. 4): look for a complete copy	الملف بلا صفحة العنوان والصفحات الأولى (يبدأ بص 4): أبحث عن نسخة كاملة
