@@ -88,13 +88,21 @@ Single-volume books are stored as plain files in the category folder without the
   record when its title is the same book, the title page).
 - **No parentheses and no commas anywhere** (owner: «avoid ()», «تبقي على الأقواس», «استغن عن الفواصل في كل العناوين»):
   the parts follow one another with « - »; the editor marked by «ت», a translator by «ترجمة», the publisher by nothing
-  (owner: no «ط»); no city, no year (owner); no «=» — an alternative title joins with «أو»:
-  `<title> - <author> - ت <editor> - <publisher>` («… - ت محمد حجي - دار الغرب الإسلامي»,
+  (owner: no «ط»); no «=» — an alternative title joins with «أو».
+  After the owner's review of plan 313 (2026-10-10 night): the **city** follows its publisher with «بـ» («مطبعة حجازي
+  بالقاهرة», «وزارة الأوقاف والشؤون الإسلامية بالمغرب», two places «بالكويت وبيروت»; a city without a publisher stands
+  alone); the **year** only when it is on the main cover (found in page 1's text/OCR) or the print is old (≤ 1950 /
+  ≤ 1370 هـ): «المطبعة السلفية بمصر 1341 هـ»; **people's names in full** or by their famous kunya/laqab, shortened only
+  when a long title forces it; the editor's **printed role** when it is not tahqiq («صححه وعلق عليه فلان», «تنسيق فلان»,
+  «قدم لها فلان»); never a «ويليه», «في» or subject the title page does not print; the book's own author before the
+  authors of companion texts; a collection of poems names all of them. Corrections by hand: data/names/name-override.tsv;
+  the owner's remove/replace/add decisions: data/names/owner-actions.tsv (held out of rename plans).
+  `<title> - <author> - ت <editor> - <publisher> بـ<city>` («… - ت محمد حجي - دار الغرب الإسلامي ببيروت»,
   «الجمع والفرق أو كتاب الفروق - الجويني - …»). A title's
   own «(مخطوط)», «(رسالة ماجستير)» go after the edition («… - مخطوط»); a one- or two-word aside is written inline
   («ابن رشد (الجد)» → «ابن رشد الجد»); a longer aside becomes a «، …» subtitle.
 - **Only when the name is too long**, the combination that keeps the most information is chosen. What gives way, first
-  to last: a subtitle that came from parentheses; the publisher (owner: when the whole title and the publisher cannot
+  to last: the year, the city; a subtitle that came from parentheses; the publisher (owner: when the whole title and the publisher cannot
   both fit, the publisher goes); editors after the second; the words after the title's head — joined titles keep their
   heads: «جمع الجوامع في كذا كذا ويليه همع الهوامع في كذا كذا» → «جمع الجوامع ويليه همع الهوامع»; the later joined titles
   («ويليه، ومعه، وبهامشه، =»); the first editor. A title is never cut inside a word or a name; no `...`.
@@ -237,7 +245,7 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `book_crop.py` | crop + levelling of scanned books (the method after the 2026-10-07 revert; full description in its docstring): ONE box size per file, placed on each page so its text block is centred (short pages take their full neighbours' place, odd pages are centred on their own content); stains, edge streaks, scanner edge noise, sheet edges, corner marks and dust stay outside, printed rules and frames inside; tilted pages levelled; second look at 1,000 px; the narrowest box that leaves ≤ 5 % of the pages whole (`plan()`). LOSSLESS: only the CropBox and, for tilted/moved pages, a «q … cm» / «Q» pair around the content change — image streams untouched. `analyse`, `apply`, `sheet`; `review_page()` builds the Arabic approval page. Needs numpy + scipy. Nothing reaches the phone without the owner's approval of a sample page |
 | `same_scan.py` | are two phone files the same scan? identical raw image streams page by page (`--sets "A1\|A2" "B1"` for copies split differently: pages of each set missing from the other) — proof for the duplicate-editions rule |
 | `excerpt.py` | citations («book | volume | pages») → one bookmarked PDF for the phone, or Brave tabs at the right pages |
-| `name_compose.py`, `names_from_reading.py` | names under §4 (no parentheses/commas/«ط»/«=»/city/year; one shared part per set; ≤ 240 bytes); a title-page reading → its name |
+| `name_compose.py`, `names_from_reading.py`, `title_read_fix.py` | names under §4 (no parentheses/commas/«ط»/«=»; city after the publisher; year from the cover or old prints; printed roles; one shared part per set; ≤ 240 bytes); a title-page reading → its name; field corrections of earlier readings («n \| field=value») |
 | `read_status.py`, `auto_check.py` | which books were already read by eye (→ data/names/read-status.tsv); the OCR/text-layer check of every unread book (→ data/names/auto-check.tsv) |
 | `title_sheets.py`, `title_read_add.py`, `pages_sheet.py` | reading sheets of the first pages (+ the Shamela/Waqfeya candidates by title); recording a reading («n \| verdict \| title \| author \| editor \| publisher \| city \| year \| kind \| section \| note» → data/names/title-read.tsv; a later row for the same n supersedes); any page range of a PDF as one sheet (reading further) |
 | `report_unreadable.py`, `review_server.py` | books whose name cannot be read from the book itself, appended one by one with a local copy (data/names/copies/, not in git) → site/names-unreadable.html; a 127.0.0.1 server so the owner checks and comments there (→ data/names/review-comments.jsonl; read those comments) |
