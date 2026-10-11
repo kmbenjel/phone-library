@@ -64,12 +64,21 @@ def pacer():
         _PACER = Pacer()
     return _PACER
 
+_HOST = None
+
 class Phone:
     """one FTP connection under the shared lock, for the few operations of one file"""
     def __enter__(self):
-        from phone_host import HOST, PORT
+        import phone_host
+        global _HOST
         self.lk = open(LOCK, 'w'); fcntl.flock(self.lk, fcntl.LOCK_EX)
-        self.f = ftplib.FTP(); self.f.connect(HOST, PORT, timeout=120); self.f.login(); self.f.encoding = 'utf-8'
+        self.f = ftplib.FTP()
+        try: self.f.connect(_HOST or phone_host.HOST, phone_host.PORT, timeout=120)
+        except OSError:                                  # the phone moved (it switched .100 ↔ .102 on 2026-10-11)
+            _HOST = phone_host.find()
+            if not _HOST: raise
+            self.f = ftplib.FTP(); self.f.connect(_HOST, phone_host.PORT, timeout=120)
+        self.f.login(); self.f.encoding = 'utf-8'
         return self
     def __exit__(self, *a):
         try: self.f.quit()
