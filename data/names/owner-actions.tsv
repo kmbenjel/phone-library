@@ -32,7 +32,6 @@ n	action	what
 762	fix	every page is shown sideways (a wrong /Rotate 270 on 248 pages): reset the rotation (lossless) after the owner's word
 764	compare	books 235 and 764: both «ديوان شعر حاتم الطائي» ت عادل سليمان جمال (417 / 432 pages); 764 is the 2nd enlarged edition (الخانجي 1990) — if 235 is the 1st edition both stay, if the same printing keep the better scan (duplicate-editions rule)
 774	compare	«منهاج السنة النبوية» ت محمد رشاد سالم: one 5,333-page file (book 774) and a 9-volume set in الفرق والردود — if the same edition keep the better copy (the set is easier to read)
-772	piece	one piece of a larger volume (the text from p. 133: توضيح طرق الرشاد لمحمد بن عبد القادر العلوي): find the whole volume
 777	compare	«بيان تلبيس الجهمية» مجمع الملك فهد: one 5,910-page file (book 777, الفرق والردود) and a 10-volume set in العقيدة — same edition: keep the set
 778	compare	«مقالات الإسلاميين» ت محمد محيي الدين عبد الحميد: one 613-page file (book 778) and a 2-volume set (المكتبة العصرية) — compare printings
 779	piece	«نقد مراتب الإجماع» القسم الثاني (pp. 203ff) — the second part of «مراتب الإجماع» (ط وزارة الأوقاف السعودية, الفقه العام)? join or keep as its part
@@ -44,3 +43,5 @@ n	action	what
 750	piece	«الحقائق والرقائق» للمقري is the second book of the volume «حل العقال لابن قضيب البان ويليه الحقائق والرقائق» (اعتنى بهما عمرو سيد شوكت، دار الكتب العلمية 2006): find the whole volume
 758	remove	books 747 and 758 are pieces cut from a volume the library already has whole: «كتب السنة/تلقين الوليد الصغير (ط دار الكتب العلمية).pdf» (138 pp.: تلقين الوليد الصغير لعبد الحق الإشبيلي، ثم وصية محمد بن موسى ابن عمار p. 71، ثم معرفة رجال البخاري للنحات p. 95، ت بدر العمراني): remove the two pieces and name the whole volume with its three books
 747	remove	see book 758: a piece of «تلقين الوليد الصغير» (the whole volume is in كتب السنة); remove with 758
+772	remove	a piece (pp. 133ff) cut from «الدفاع عن الصحيحين للحجوي ويليه توضيح طرق الرشاد للعلوي» (مركز التراث الثقافي المغربي ودار ابن حزم 2003), which the library has whole in العقيدة: remove the piece
+773	piece	the second book (pp. 47ff) of «رسالة في أن القرآن غير مخلوق للحربي ويليه رسالة الإمام أحمد إلى المتوكل» ت علي الشبل (دار العاصمة 1416): find the whole volume
