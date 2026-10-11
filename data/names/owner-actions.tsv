@@ -24,11 +24,8 @@ n	action	what
 713	replace	the file is browser screen captures (Google Drive viewer, taskbar visible): replace with the institute's own digital edition (معهد المخطوطات العربية، نشرة رقمية 1440)
 714	fix	five blank pages before the title page shift the PDF numbering from the printed one (owner's complaint on book 45)
 709	stray	a one-page file (only the cover of «الكتاب الثاني» of Harun's البيان والتبيين): move it into that set as its cover or delete
-720	piece	one piece of a larger book (pp. 603ff: فاكهة الخوان لمحمد حبيب الله بن مايأبى، كلمة الناشر حسام الدين القدسي): find the whole book
+720	piece	pp. 603–648 of «رسائل أولاد ما يأبى» (محمد الخضر ومحمد العاقب ومحمد حبيب الله بن مايأبى الشنقيطي، دار البشير عمان 2003، 718 pp.): find the whole volume
 724	fix	the PDF runs back to front (Toronto scan: the title page is p. 298 of 300, the errata at the start): reverse the page order (lossless) after the owner's word
-727	piece	one piece of a larger book (pp. 283ff: قلائد الجمان in a volume with its commentary «شرح قلائد الجمان»): find the whole book
-729	piece	one piece of a larger volume («سابعا»، the text starts p. 49: لطائف التبيان للطيبي ت عبد الحميد هنداوي): find the whole volume
-741	piece	one piece of a larger volume («ثامنا»، the text starts p. 150: الإكمال في أسماء الرجال للتبريزي): find the whole volume
 762	fix	every page is shown sideways (a wrong /Rotate 270 on 248 pages): reset the rotation (lossless) after the owner's word
 764	compare	books 235 and 764: both «ديوان شعر حاتم الطائي» ت عادل سليمان جمال (417 / 432 pages); 764 is the 2nd enlarged edition (الخانجي 1990) — if 235 is the 1st edition both stay, if the same printing keep the better scan (duplicate-editions rule)
 774	compare	«منهاج السنة النبوية» ت محمد رشاد سالم: one 5,333-page file (book 774) and a 9-volume set in الفرق والردود — if the same edition keep the better copy (the set is easier to read)
@@ -37,7 +34,6 @@ n	action	what
 779	piece	«نقد مراتب الإجماع» القسم الثاني (pp. 203ff) — the second part of «مراتب الإجماع» (ط وزارة الأوقاف السعودية, الفقه العام)? join or keep as its part
 781	compare	«إرشاد السالك إلى أفعال المناسك» ت أبو الأجفان (بيت الحكمة 1989, 778 pp.) and another file of the book in الفقه المالكي — compare
 795	piece	only 48 pages of volume 1 of «الفوائد الجنية» للفاداني (دار البشائر 1417): find the whole book
-802	piece	«أجوبة الحافظ ابن حجر عن أحاديث المصابيح» (تاسعا، pp. 342ff): a piece of a larger volume (مشكاة المصابيح ت الألباني?) — find the whole volume
 804	stray	a one-page file (the title page of vol. 1 of مصابيح السنة, دار المعرفة): move it into that set as its cover or delete
 805	compare	«معجم مقاييس اللغة» ت هارون: one 2,979-page file (دار الجيل) and a 6-volume set (دار الفكر) — different printings of one edition: keep both or the better
 750	piece	«الحقائق والرقائق» للمقري is the second book of the volume «حل العقال لابن قضيب البان ويليه الحقائق والرقائق» (اعتنى بهما عمرو سيد شوكت، دار الكتب العلمية 2006): find the whole volume
@@ -45,3 +41,7 @@ n	action	what
 747	remove	see book 758: a piece of «تلقين الوليد الصغير» (the whole volume is in كتب السنة); remove with 758
 772	remove	a piece (pp. 133ff) cut from «الدفاع عن الصحيحين للحجوي ويليه توضيح طرق الرشاد للعلوي» (مركز التراث الثقافي المغربي ودار ابن حزم 2003), which the library has whole in العقيدة: remove the piece
 773	piece	the second book (pp. 47ff) of «رسالة في أن القرآن غير مخلوق للحربي ويليه رسالة الإمام أحمد إلى المتوكل» ت علي الشبل (دار العاصمة 1416): find the whole volume
+729	remove	books 729, 741, 802 are three pieces cut from volume 1 of «شرح الطيبي على مشكاة المصابيح» (ت عبد الحميد هنداوي، مكتبة نزار مصطفى الباز 1417)، which the library has whole in شروح الحديث (4,467 pp.): remove the three pieces
+741	remove	see book 729 (a piece of شرح الطيبي، المجلد الأول)
+802	remove	see book 729 (a piece of شرح الطيبي، المجلد الأول)
+727	piece	the poem printed at the end (pp. 283–289) of «شرح قلائد الجمان في نظم عوامل عالم جرجان» لابن علان، ت عبد الوهاب عبد العالي ومحمد سالم الدرويش: find the whole book (the commentary with the poem)
