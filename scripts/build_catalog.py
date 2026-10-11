@@ -16,10 +16,21 @@ STOP0 = {norm(w) for w in ('كتاب', 'رسالة', 'جزء', 'شرح', 'مخت
 def _w(t):
     return {w for w in title_key(t).split() if len(w) > 2 and w not in STOP0}
 
+EDITION_HEAD = re.compile(r'^(ت|ط|ترجمة|تنسيق|تقديم|إعداد|جمع|اعتنى|اعتناء|عني|صحح|صححه|قدم|قرأ|نسخه|ضبط|شرح|راجع|أعده|خرج|وقف على|'
+                          r'دار|مكتبة|المكتبة|مطبعة|المطبعة|مؤسسة|منشورات|وزارة|جامعة|مركز|المجمع|مجمع|الهيئة|المجلس|الدار|'
+                          r'مخطوط|رسالة|أطروحة|مستل|\d)\b')
+
 def split_folder(name):
-    """'Title - Author (edition)' -> (title, author, edition). Separators inside brackets are ignored."""
+    """'Title - Author (edition)' -> (title, author, edition). Separators inside brackets are ignored.
+    The names of 2026-10-10 have no parentheses: «Title - Author - ت Editor - Publisher City» → the author is the
+    second part unless it opens an edition («ت»، a printed role, a publisher, «مخطوط»…)."""
     if '/' in name:
         _, name = name.rsplit('/', 1)
+    if '(' not in name and ' - ' in name:
+        segs = name.split(' - ')
+        title, rest = segs[0], segs[1:]
+        author = rest.pop(0) if rest and not EDITION_HEAD.match(rest[0]) else ''
+        return title.strip(), author.strip(), ' - '.join(rest).strip()
     depth, cut = 0, -1
     for i, ch in enumerate(name):
         depth += ch == '('; depth -= ch == ')'

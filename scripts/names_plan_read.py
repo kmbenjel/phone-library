@@ -8,11 +8,25 @@ Usage: python3 scripts/names_plan_read.py plans/NNN-names-read.tsv data/names/pl
 import csv, os, re, sys, unicodedata, collections
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
-from names_from_reading import name_of
+from names_from_reading import name_of, name_auto, overrides
+import name_compose
 from textnorm import norm
 J = lambda *p: os.path.join(ROOT, *p)
 N = lambda s: unicodedata.normalize('NFC', s)
 DOUBT = re.compile(r'check|not legible|too faint|read further|read the file|read the inner|dark cover|stylised|small print')
+
+def shortened(r):
+    """did the 240-byte limit cut anything? (the same name composed without a limit is longer)"""
+    lim = name_compose.LIMIT
+    try:
+        name_compose.LIMIT = 10_000
+        import names_from_reading as m
+        m.compose.__defaults__ = tuple(10_000 if x == lim else x for x in m.compose.__defaults__)
+        full = name_auto(r)
+    finally:
+        name_compose.LIMIT = lim
+        m.compose.__defaults__ = tuple(lim if x == 10_000 else x for x in m.compose.__defaults__)
+    return full != name_auto(r)
 
 def main(out, held_out):
     idx = [l.split('\t', 1)[0] for l in open(J('data', 'phone', 'index-now.tsv'), encoding='utf-8') if l.strip()]
@@ -46,6 +60,7 @@ def main(out, held_out):
         if len(src.split('/')) == 2 and src == f'{dest_cat}/{new}': c['already right'] += 1; continue
         plain[dest_cat].add(norm(new.removesuffix('.pdf')))
         why = f"title page read (book {n}, {r['verdict']})" + (f'; section {cat} → {dest_cat}' if dest_cat != cat else '')
+        if n not in overrides() and shortened(r): why += '; shortened (check against the cover)'
         rows.append((f'Books/{raw[src]}', f'Books/{dest_cat}/{new}', why))
         c['to rename' + (' + section' if dest_cat != cat else '') + (' (another book than its name)' if r['verdict'] != 'ok' else '')] += 1
     with open(out, 'w', encoding='utf-8') as w:

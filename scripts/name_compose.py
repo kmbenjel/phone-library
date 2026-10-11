@@ -88,7 +88,14 @@ def build(title_parts, joins, sub, author, ed, kinds=()):
     ed = ' - '.join([e for e in [ed] + list(kinds) if e])          # «مخطوط», «رسالة ماجستير» stay to the end
     if ed: s += f' - {ed}'                                         # owner 2026-10-10: no parentheses at all
     s = re.sub(r'\s*[،,]\s*', ' ', s)                             # and no commas: «مكتبة المعارف الرباط 1985»
-    return tidy(s)
+    return tidy(safe(s))
+
+def safe(s):
+    """AGENTS §4 characters: none of \\ / : * ? " < > | (FAT/Windows; «/» is a folder on the phone — plan 315 failed on
+    «1276 هـ / 1860» and «ديوان …: …»): «/» and «:» → a space, «?» → «؟», «"…"» → «…», the rest dropped"""
+    s = re.sub(r'\s*[/\\:|]\s*', ' ', s).replace('?', '؟').replace('*', '')
+    s = re.sub(r'"([^"]*)"', r'«\1»', s).replace('"', '').replace('<', '').replace('>', '')
+    return re.sub(r'\s+', ' ', s)
 
 def one_name(x):
     """Shamela's «short؛ full» form of a name → the full name when it contains the short one, else the short one"""

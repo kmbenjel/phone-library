@@ -40,9 +40,65 @@ def same_publisher(a, b):
     ta, tb = toks(a), toks(b)
     return bool(ta) and bool(tb) and (ta <= tb or tb <= ta)
 
+def readings():
+    """title pages read by eye (data/names/title-read.tsv, the latest row per book) → catalog key «cat/folder» of the
+    book NOW (its path when the sheet was made, followed through the logged moves): the first source of a card"""
+    sheet = J('data/names/sheets/books.tsv')
+    if not os.path.exists(sheet): return {}
+    path = {r[0]: r[2] for r in csv.reader(open(sheet, encoding='utf-8'), delimiter='\t') if len(r) > 2}
+    moved = {}
+    for r in csv.reader(open(J('data/changes/changes.tsv'), encoding='utf-8'), delimiter='\t'):
+        if len(r) > 3 and r[1] == 'move': moved[r[2].removeprefix('Books/')] = r[3].removeprefix('Books/')
+    last = {}
+    for r in csv.DictReader(open(J('data/names/title-read.tsv'), encoding='utf-8'), delimiter='\t'): last[r['n']] = r
+    out = {}
+    for n, r in last.items():
+        if r['verdict'] not in ('ok', 'other-book', 'other-edition') or n not in path: continue
+        p = path[n]
+        for _ in range(30):
+            if p not in moved: break
+            p = moved[p]
+        parts = p.split('/')
+        key = f"{parts[0]}/{parts[1][:-4]}" if len(parts) == 2 else f"{parts[0]}/{'/'.join(parts[1:-1])}"
+        out[key] = r
+    return out
+
+ORD = {'الأولى': '1', 'الثانية': '2', 'الثالثة': '3', 'الرابعة': '4', 'الخامسة': '5', 'السادسة': '6', 'السابعة': '7',
+       'الثامنة': '8', 'التاسعة': '9', 'العاشرة': '10'}
+
+def reading_card(r):
+    """a reading → card fields (editor with its printed role, publisher as printed + city, years, edition number)"""
+    import names_from_reading as m
+    out = {}
+    if r.get('editor'):
+        role = m.role_of(r)
+        ed = re.sub(r'^[^:]{2,40}:\s*', '', r['editor'])
+        out['editor'] = ed if role == 'ت' else f'{role} {ed}'
+    pub = ' '.join(x for x in (r.get('publisher', ''), (r.get('city') or '').replace('،', ' ')) if x).strip()
+    if pub: out['publisher'] = re.sub(r'\s+', ' ', pub)
+    y = (r.get('year') or '').translate(AR)
+    h = re.search(r'\b(\d{3,4})\s*هـ', y); g = re.search(r'\b(1[5-9]\d\d|20\d\d)\b', y)
+    if h: out['hijri'] = int(h.group(1))
+    if g and not (h and g.group(1) == h.group(1)): out['gregorian'] = int(g.group(1))
+    e = re.search(r'الطبعة\s+(الأولى|الثانية|الثالثة|الرابعة|الخامسة|السادسة|السابعة|الثامنة|التاسعة|العاشرة|\d+)', r.get('note') or '')
+    if e: out['edition_no'] = ORD.get(e.group(1), e.group(1))
+    return out
+
 def phone_edition(folder):
-    """editor / publisher named in the phone folder «… (ت X - Y)» or «(ط Y)»"""
+    """editor / publisher named in the phone folder «… (ت X - Y)» or «(ط Y)»; in a name of 2026-10-10 (no parentheses)
+    «… - ت X - Y» / «… - <role> X - Y» / «… - Y»"""
     m = re.search(r'\((ت|ط)\s+([^()]*)\)\s*$', folder)
+    if not m and '(' not in folder:
+        from build_catalog import split_folder
+        _, _, ed = split_folder(folder)
+        ed = re.sub(r'\s+-\s+(مخطوط|رسالة.*|أطروحة.*|مستل.*)$', '', ed)
+        if not ed: return '', ''
+        segs = ed.split(' - ')
+        if re.match(r'^(ت|ترجمة)\s', segs[0]): return segs[0].split(' ', 1)[1], ' - '.join(segs[1:])
+        from build_catalog import EDITION_HEAD
+        if EDITION_HEAD.match(segs[0]) and not re.match(r'^(دار|مكتبة|المكتبة|مطبعة|المطبعة|مؤسسة|منشورات|وزارة|جامعة|مركز|المجمع|مجمع|الهيئة|المجلس|الدار|\d)', segs[0]):
+            return segs[0], ' - '.join(segs[1:])                    # a printed role: «نسخه وعني بتصحيحه X»
+        return '', ed
     if not m: return '', ''
     if m.group(1) == 'ط': return '', m.group(2).strip()
     parts = [p.strip() for p in m.group(2).split(' - ')]
@@ -130,6 +186,7 @@ def main():
     if os.path.exists(J('data/editions/imprint-text.tsv')):
         for r in csv.reader(open(J('data/editions/imprint-text.tsv'), encoding='utf-8'), delimiter='\t'):
             if len(r) >= 6: textread[r[0]] = {'hijri': r[3], 'gregorian': r[4], 'edition': r[5]}
+    reads = readings()
     out, review, stats = {}, [], collections.Counter()
     for b in cat['books']:
         key = f"{b['cat']}/{b['folder']}"
@@ -137,6 +194,10 @@ def main():
         info = {}
         def put(field, value, source):
             if value and field not in info: info[field] = {'v': value, 's': source}
+        # 0. the title page read by eye (owner 2026-10-10: names and cards from the book itself)
+        if key in reads:
+            for k, v in reading_card(reads[key]).items(): put(k, v, 'قراءة صفحة العنوان')
+            stats['read by eye'] += 1
         # 1. Waqfeya record of the very file
         ws = [wq[x['id']] for x in b.get('waqfeya') or [] if x['id'] in wq]
         if len({(w.get('yearOfPublish') or '').strip() for w in ws}) > 1:
