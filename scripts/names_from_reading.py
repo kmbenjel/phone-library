@@ -84,7 +84,8 @@ def name_auto(r):
     kind = r.get('kind', '')
     role = 'ترجمة' if kind == 'ترجمة' and ed else role_of(r)
     m = re.match(r'^([^:]{2,40}):\s*(.+)$', ed or '')          # «صححه وعلق عليه: فلان»
-    if m and ROLE_WORD.search(m.group(1)): role, ed = m.group(1).strip(), m.group(2).strip()
+    if m and TAHQIQ.search(m.group(1)) and len(m.group(1).split()) <= 2: role, ed = 'ت', m.group(2).strip()   # «حققها: فلان» → «ت فلان»
+    elif m and ROLE_WORD.search(m.group(1)): role, ed = m.group(1).strip(), m.group(2).strip()
     place = pub + (f'، {city}' if city else '')
     edition = (f'ت {ed}' + (f' - {place}' if place else '')) if ed else (f'ط {place}' if place else '')
     extra = [kind] if kind and kind not in ('نظم', 'متن', 'ترجمة') else []
