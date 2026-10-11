@@ -47,6 +47,12 @@ def main(out, held_out):
     for n, r in sorted(last.items(), key=lambda kv: int(kv[0])):
         if r['verdict'] not in ('ok', 'other-book', 'other-edition'): hold(r, r['verdict']); continue
         if DOUBT.search(r.get('note') or ''): hold(r, 'a closer look first'); continue
+        # owner 2026-10-11 («why they didn't follow the rule»): missing information must be read from the file itself —
+        # a reading without a publisher or an editor goes into a plan only after the file was read further
+        # (deep_sheets.py: pages 2-9 and the last pages; the note then says «read further»)
+        if r['verdict'] in ('ok', 'other-book', 'other-edition') and not r.get('publisher') \
+                and 'مخطوط' not in (r.get('kind') or '') and 'read further' not in (r.get('note') or '') and n not in overrides():
+            hold(r, 'publisher or editor missing: read the file further first (deep_sheets.py)'); continue
         a = act.get(n, {}).get('action', '')
         if a in ('remove', 'replace-whole', 'ask', 'stray'): hold(r, f"owner: {a} — {act[n]['what'][:80]}"); continue
         src = N(sheet[n][2]) if n in sheet else ''

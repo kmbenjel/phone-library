@@ -21,10 +21,12 @@ def main():
     moved = {}
     for r in csv.reader(open(J('data', 'changes', 'changes.tsv'), encoding='utf-8'), delimiter='\t'):
         if len(r) > 3 and r[1] == 'move': moved[r[2].removeprefix('Books/')] = r[3].removeprefix('Books/')
+    import unicodedata
+    idx = {unicodedata.normalize('NFC', l.split('\t')[0]) for l in open(J('data', 'phone', 'index-now.tsv'), encoding='utf-8')}
     def now(n):
         p = books.get(n, '')
         for _ in range(30):
-            if p not in moved: break
+            if unicodedata.normalize('NFC', p) in idx or p not in moved: break
             p = moved[p]
         return p
     E = html.escape

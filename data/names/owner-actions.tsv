@@ -29,9 +29,7 @@ n	action	what
 727	piece	one piece of a larger book (pp. 283ff: قلائد الجمان in a volume with its commentary «شرح قلائد الجمان»): find the whole book
 729	piece	one piece of a larger volume («سابعا»، the text starts p. 49: لطائف التبيان للطيبي ت عبد الحميد هنداوي): find the whole volume
 741	piece	one piece of a larger volume («ثامنا»، the text starts p. 150: الإكمال في أسماء الرجال للتبريزي): find the whole volume
-747	piece	one piece of a larger volume (47 pp., the introduction is p. 95: معرفة رجال البخاري لابن النحات ت بدر العمراني): find the whole volume
 762	fix	every page is shown sideways (a wrong /Rotate 270 on 248 pages): reset the rotation (lossless) after the owner's word
-758	piece	one piece of a larger volume (26 pp., the text from p. 71: وصية ابن عمار الكلاعي الميورقي لابنه ت محمد بوخزنة): find the whole volume
 764	compare	books 235 and 764: both «ديوان شعر حاتم الطائي» ت عادل سليمان جمال (417 / 432 pages); 764 is the 2nd enlarged edition (الخانجي 1990) — if 235 is the 1st edition both stay, if the same printing keep the better scan (duplicate-editions rule)
 774	compare	«منهاج السنة النبوية» ت محمد رشاد سالم: one 5,333-page file (book 774) and a 9-volume set in الفرق والردود — if the same edition keep the better copy (the set is easier to read)
 772	piece	one piece of a larger volume (the text from p. 133: توضيح طرق الرشاد لمحمد بن عبد القادر العلوي): find the whole volume
@@ -43,3 +41,6 @@ n	action	what
 802	piece	«أجوبة الحافظ ابن حجر عن أحاديث المصابيح» (تاسعا، pp. 342ff): a piece of a larger volume (مشكاة المصابيح ت الألباني?) — find the whole volume
 804	stray	a one-page file (the title page of vol. 1 of مصابيح السنة, دار المعرفة): move it into that set as its cover or delete
 805	compare	«معجم مقاييس اللغة» ت هارون: one 2,979-page file (دار الجيل) and a 6-volume set (دار الفكر) — different printings of one edition: keep both or the better
+750	piece	«الحقائق والرقائق» للمقري is the second book of the volume «حل العقال لابن قضيب البان ويليه الحقائق والرقائق» (اعتنى بهما عمرو سيد شوكت، دار الكتب العلمية 2006): find the whole volume
+758	remove	books 747 and 758 are pieces cut from a volume the library already has whole: «كتب السنة/تلقين الوليد الصغير (ط دار الكتب العلمية).pdf» (138 pp.: تلقين الوليد الصغير لعبد الحق الإشبيلي، ثم وصية محمد بن موسى ابن عمار p. 71، ثم معرفة رجال البخاري للنحات p. 95، ت بدر العمراني): remove the two pieces and name the whole volume with its three books
+747	remove	see book 758: a piece of «تلقين الوليد الصغير» (the whole volume is in كتب السنة); remove with 758

@@ -51,12 +51,14 @@ def readings():
         if len(r) > 3 and r[1] == 'move': moved[r[2].removeprefix('Books/')] = r[3].removeprefix('Books/')
     last = {}
     for r in csv.DictReader(open(J('data/names/title-read.tsv'), encoding='utf-8'), delimiter='\t'): last[r['n']] = r
+    import unicodedata
+    idx = {unicodedata.normalize('NFC', l.split('\t')[0]) for l in open(J('data/phone/index-now.tsv'), encoding='utf-8')}
     out = {}
     for n, r in last.items():
         if r['verdict'] not in ('ok', 'other-book', 'other-edition') or n not in path: continue
         p = path[n]
-        for _ in range(30):
-            if p not in moved: break
+        for _ in range(30):                       # only while the path is gone (substituted copies return to it)
+            if unicodedata.normalize('NFC', p) in idx or p not in moved: break
             p = moved[p]
         parts = p.split('/')
         key = f"{parts[0]}/{parts[1][:-4]}" if len(parts) == 2 else f"{parts[0]}/{'/'.join(parts[1:-1])}"
