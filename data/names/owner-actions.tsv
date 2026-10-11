@@ -27,3 +27,4 @@ n	action	what
 720	piece	one piece of a larger book (pp. 603ff: فاكهة الخوان لمحمد حبيب الله بن مايأبى، كلمة الناشر حسام الدين القدسي): find the whole book
 724	fix	the PDF runs back to front (Toronto scan: the title page is p. 298 of 300, the errata at the start): reverse the page order (lossless) after the owner's word
 727	piece	one piece of a larger book (pp. 283ff: قلائد الجمان in a volume with its commentary «شرح قلائد الجمان»): find the whole book
+729	piece	one piece of a larger volume («سابعا»، the text starts p. 49: لطائف التبيان للطيبي ت عبد الحميد هنداوي): find the whole volume
