@@ -91,7 +91,7 @@ def name_auto(r):
     extra = [kind] if kind and kind not in ('نظم', 'متن', 'ترجمة') else []
     # the author is left out only when the title holds his whole name (not one word of it: «رحلة التجاني» keeps
     # «أبو محمد عبد الله التجاني» — owner: «تقصير كبير»)
-    drop = au and f' {norm(au)} ' in f' {norm(t)} '                   # whole words: «الجكني» is not in «الجكنية»
+    drop = au and norm(au).strip() and f' {norm(au)} ' in f' {norm(t)} '                   # whole words: «الجكني» is not in «الجكنية»
     return compose(t, '' if drop else au, edition, kinds_extra=extra, year=year_of(r.get('year'), r['n'], '[cover-year]' in (r.get('note') or '')), role=role)
 
 if __name__ == '__main__':

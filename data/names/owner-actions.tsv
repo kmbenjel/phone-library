@@ -30,3 +30,5 @@ n	action	what
 729	piece	one piece of a larger volume («سابعا»، the text starts p. 49: لطائف التبيان للطيبي ت عبد الحميد هنداوي): find the whole volume
 741	piece	one piece of a larger volume («ثامنا»، the text starts p. 150: الإكمال في أسماء الرجال للتبريزي): find the whole volume
 747	piece	one piece of a larger volume (47 pp., the introduction is p. 95: معرفة رجال البخاري لابن النحات ت بدر العمراني): find the whole volume
+762	fix	every page is shown sideways (a wrong /Rotate 270 on 248 pages): reset the rotation (lossless) after the owner's word
+758	piece	one piece of a larger volume (26 pp., the text from p. 71: وصية ابن عمار الكلاعي الميورقي لابنه ت محمد بوخزنة): find the whole volume
