@@ -32,3 +32,4 @@ n	action	what
 747	piece	one piece of a larger volume (47 pp., the introduction is p. 95: معرفة رجال البخاري لابن النحات ت بدر العمراني): find the whole volume
 762	fix	every page is shown sideways (a wrong /Rotate 270 on 248 pages): reset the rotation (lossless) after the owner's word
 758	piece	one piece of a larger volume (26 pp., the text from p. 71: وصية ابن عمار الكلاعي الميورقي لابنه ت محمد بوخزنة): find the whole volume
+764	compare	books 235 and 764: both «ديوان شعر حاتم الطائي» ت عادل سليمان جمال (417 / 432 pages); 764 is the 2nd enlarged edition (الخانجي 1990) — if 235 is the 1st edition both stay, if the same printing keep the better scan (duplicate-editions rule)
