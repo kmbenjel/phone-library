@@ -30,10 +30,20 @@ def main(size=300):
         d = json.loads(l); insp[N(d['path'])] = d
     done = {l.split('\t')[0] for l in open(DONE, encoding='utf-8')} if os.path.exists(DONE) else set()
     done |= {r[2].removeprefix('Books/') for r in csv.reader(open(LOG, encoding='utf-8'), delimiter='\t') if len(r) > 2 and r[1] == 'crop'}
+    # a file counts as «tried» in a batch only if that batch did not lose it to the phone being away: «STAGE FAIL … No
+    # route to host / Connection refused / timed out» and «RETRY LATER (phone away)» are not attempts (2026-10-11: the
+    # phone's FTP went down and moved address several times; 60 books were failing for that reason only)
+    away = re.compile(r'^(?:STAGE FAIL|RETRY LATER \(phone away\)) (.+?\.pdf)\b.*(No route to host|Connection refused|timed out|Network is unreachable)', re.I)
+    lost = Counter()
+    for lg in glob.glob(J('logs', 'crop-batch-*.log')):
+        for l in open(lg, encoding='utf-8', errors='replace'):
+            m = away.match(l)
+            if m: lost[m.group(1).removeprefix('Books/')] += 1
     listed = Counter()
     for b in sorted(glob.glob(J('data', 'crop', 'batch-*.txt'))):
         for l in open(b, encoding='utf-8'):
             if l.strip(): listed[l.strip().removeprefix('Books/')] += 1
+    for k, v in lost.items(): listed[k] = max(0, listed[k] - v)
     _, back = moves()
     cand = []
     for p in idx:
