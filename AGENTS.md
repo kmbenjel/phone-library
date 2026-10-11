@@ -92,8 +92,8 @@ Single-volume books are stored as plain files in the category folder without the
   After the owner's review of plan 313 (2026-10-10 night, corrected 2026-10-11): the **publisher as printed** and the
   **city** after it with a space only («مكتبة المعارف الرباط», «وزارة الأوقاف والشؤون الإسلامية المغرب»); a printed form
   such as «مطبعة حجازي بالقاهرة» is copied as it is, but the city is NOT joined with «بـ» as a rule; a city without a
-  publisher stands alone; the **year** only when it is on the main cover (found in page 1's text/OCR) or the print is old (≤ 1950 /
-  ≤ 1370 هـ): «المطبعة السلفية بمصر 1341 هـ»; **people's names in full** or by their famous kunya/laqab, shortened only
+  publisher stands alone; the **year** when it has a special useful meaning (the owner's convention: an old print ≤ 1950 / ≤ 1370 هـ, a
+  journal offprint's issue) and, added to that (not a limit), whenever it is on the main cover (page 1's text/OCR, or «[cover-year]» in the reading): «المطبعة السلفية بمصر 1341 هـ»; **people's names in full** or by their famous kunya/laqab, shortened only
   when a long title forces it; the editor's **printed role** when it is not plain tahqiq («صححه وعلق عليه فلان», «تنسيق فلان»,
   «قدم لها فلان») — also a tahqiq with its own wording («قرأه وشرحه» as محمود شاكر writes it); plain «تحقيق/حققه» → «ت»; never a «ويليه», «في» or subject the title page does not print; the book's own author before the
   authors of companion texts; a collection of poems names all of them. Corrections by hand: data/names/name-override.tsv;

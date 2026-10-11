@@ -115,7 +115,15 @@ def analyse(pdf, path, size, md5, key):
             if os.path.exists(tmpb): os.remove(tmpb)
     run(['pdftoppm', '-gray', '-jpeg', '-jpegopt', 'quality=60', '-r', '18', '-f', '1', '-l', '1', '-singlefile', pdf, os.path.join(THUMBS, key)], 120)
     if rec['text_first_chars'] < 300:            # image-only front matter: queue the first 4 pages for OCR
-        while len(os.listdir(OCRQ)) > OCR_CAP: time.sleep(30)     # OCR is slower than the download: cap the backlog
+        while len(os.listdir(OCRQ)) > OCR_CAP:                     # OCR is slower than the download: cap the backlog
+            # and make sure someone drains it: on 2026-10-10 a chain ran the OCR only AFTER this script ended, so both
+            # waited for each other for 13 hours (owner: «you stopped some jobs»)
+            if subprocess.run(['pgrep', '-f', '[i]nspect_ocr.py'], capture_output=True).returncode != 0:
+                subprocess.Popen(['nice', '/usr/bin/python3', os.path.join(ROOT, 'scripts', 'inspect_ocr.py'), '2'],
+                                 stdout=open(os.path.join(ROOT, 'logs', 'inspect-ocr-auto.log'), 'a'), stderr=subprocess.STDOUT,
+                                 start_new_session=True)
+                print('OCR queue full and no OCR running: started inspect_ocr.py', flush=True)
+            time.sleep(30)
         run(['pdftoppm', '-gray', '-jpeg', '-jpegopt', 'quality=85', '-r', '150', '-f', '1', '-l', str(min(4, pages)), pdf, os.path.join(OCRQ, key)], 300)
         rec['ocr_queued'] = True
     return rec
