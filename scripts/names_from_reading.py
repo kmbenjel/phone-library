@@ -30,7 +30,7 @@ def cover_text(n):
     t = _COVER.get(str(n), '')
     return t.translate(str.maketrans('٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹', '01234567890123456789'))
 
-def year_of(y, n=None):
+def year_of(y, n=None, on_cover=False):
     """the year when it says something (owner 2026-10-10/11): an old print (≤ 1950 / ≤ 1370 هـ), or a year printed on the
     main cover («when year mentioned in the main cover, mention it») — then as the cover has it: «1428 هـ 2007»"""
     y = (y or '').replace('?', '').strip()
@@ -39,6 +39,7 @@ def year_of(y, n=None):
     hy, gy = (h.group(1) if h else ''), (g.group(1) if g and not (h and g.group(1) == h.group(1)) else '')
     cov = cover_text(n) if n is not None else ''
     on = [x for x in (hy, gy) if x and re.search(r'(?<!\d)' + x + r'(?!\d)', cov)]
+    if on_cover and (hy or gy): on = [x for x in (hy, gy) if x]          # «[cover-year]»: seen on the cover by eye
     if on: return ' '.join(f'{x} هـ' if x == hy else x for x in on)
     if gy: return gy if int(gy) <= 1950 else ''
     return f'{hy} هـ' if hy and int(hy) <= 1370 else ''
@@ -89,8 +90,8 @@ def name_auto(r):
     extra = [kind] if kind and kind not in ('نظم', 'متن', 'ترجمة') else []
     # the author is left out only when the title holds his whole name (not one word of it: «رحلة التجاني» keeps
     # «أبو محمد عبد الله التجاني» — owner: «تقصير كبير»)
-    drop = au and norm(au) in norm(t)
-    return compose(t, '' if drop else au, edition, kinds_extra=extra, year=year_of(r.get('year'), r['n']), role=role)
+    drop = au and f' {norm(au)} ' in f' {norm(t)} '                   # whole words: «الجكني» is not in «الجكنية»
+    return compose(t, '' if drop else au, edition, kinds_extra=extra, year=year_of(r.get('year'), r['n'], '[cover-year]' in (r.get('note') or '')), role=role)
 
 if __name__ == '__main__':
     want = set(sys.argv[1:])
