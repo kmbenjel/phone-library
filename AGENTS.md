@@ -89,15 +89,16 @@ Single-volume books are stored as plain files in the category folder without the
 - **No parentheses and no commas anywhere** (owner: «avoid ()», «تبقي على الأقواس», «استغن عن الفواصل في كل العناوين»):
   the parts follow one another with « - »; the editor marked by «ت», a translator by «ترجمة», the publisher by nothing
   (owner: no «ط»); no «=» — an alternative title joins with «أو».
-  After the owner's review of plan 313 (2026-10-10 night): the **city** follows its publisher with «بـ» («مطبعة حجازي
-  بالقاهرة», «وزارة الأوقاف والشؤون الإسلامية بالمغرب», two places «بالكويت وبيروت»; a city without a publisher stands
-  alone); the **year** only when it is on the main cover (found in page 1's text/OCR) or the print is old (≤ 1950 /
+  After the owner's review of plan 313 (2026-10-10 night, corrected 2026-10-11): the **publisher as printed** and the
+  **city** after it with a space only («مكتبة المعارف الرباط», «وزارة الأوقاف والشؤون الإسلامية المغرب»); a printed form
+  such as «مطبعة حجازي بالقاهرة» is copied as it is, but the city is NOT joined with «بـ» as a rule; a city without a
+  publisher stands alone; the **year** only when it is on the main cover (found in page 1's text/OCR) or the print is old (≤ 1950 /
   ≤ 1370 هـ): «المطبعة السلفية بمصر 1341 هـ»; **people's names in full** or by their famous kunya/laqab, shortened only
-  when a long title forces it; the editor's **printed role** when it is not tahqiq («صححه وعلق عليه فلان», «تنسيق فلان»,
-  «قدم لها فلان»); never a «ويليه», «في» or subject the title page does not print; the book's own author before the
+  when a long title forces it; the editor's **printed role** when it is not plain tahqiq («صححه وعلق عليه فلان», «تنسيق فلان»,
+  «قدم لها فلان») — also a tahqiq with its own wording («قرأه وشرحه» as محمود شاكر writes it); plain «تحقيق/حققه» → «ت»; never a «ويليه», «في» or subject the title page does not print; the book's own author before the
   authors of companion texts; a collection of poems names all of them. Corrections by hand: data/names/name-override.tsv;
   the owner's remove/replace/add decisions: data/names/owner-actions.tsv (held out of rename plans).
-  `<title> - <author> - ت <editor> - <publisher> بـ<city>` («… - ت محمد حجي - دار الغرب الإسلامي ببيروت»,
+  `<title> - <author> - ت <editor> - <publisher> <city>` («… - ت محمد حجي - دار الغرب الإسلامي بيروت»,
   «الجمع والفرق أو كتاب الفروق - الجويني - …»). A title's
   own «(مخطوط)», «(رسالة ماجستير)» go after the edition («… - مخطوط»); a one- or two-word aside is written inline
   («ابن رشد (الجد)» → «ابن رشد الجد»); a longer aside becomes a «، …» subtitle.

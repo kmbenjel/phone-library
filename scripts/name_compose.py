@@ -122,14 +122,11 @@ def parse_edition(ed):
     return names, pub, city, ''
 
 def with_place(pub, city):
-    """«مطبعة حجازي» + «القاهرة» → «مطبعة حجازي بالقاهرة»; two places «بالكويت وبيروت»; a city without a publisher stands
-    alone; a city the publisher's name already holds («كلية الآداب بالرباط») is not repeated (owner 2026-10-10 night:
-    «أعد إضافة المدينة إلى القواعد», «بالقاهرة», «ببغداد», «المغرب»)"""
+    """the publisher as printed, then the city with a space only («مكتبة المعارف الرباط»; owner 2026-10-11: «مطبعة حجازي
+    بالقاهرة» is kept because the cover prints it so — the city is not joined with «بـ» as a rule); a city the
+    publisher's name already holds is not repeated; a city without a publisher stands alone"""
     cs = [c.strip() for c in re.split(r'\s*[،,/]\s*', city or '') if c.strip() and norm(c.strip()) not in norm(pub or '')]
-    if not cs: return pub
-    if not pub: return ' و'.join(cs)
-    arabic = re.match(r'[\u0600-\u06ff]', cs[0])
-    return f"{pub} {'ب' if arabic else ''}{' و'.join(cs)}"
+    return ' '.join(x for x in [pub] + cs if x)
 
 def edition_text(names, pub, city, other, year='', role='ت'):
     """«ت أ وب - الناشر بالمدينة» / «الناشر بالمدينة 1341 هـ» / «ت أ»; the role as printed when it is not tahqiq
