@@ -1,0 +1,322 @@
+{
+ "cc55b78717": {
+  "path": "علوم الحديث/رسالة أبي داود إلى أهل مكة في وصف سننه - ط. المكتب الإسلامي.pdf",
+  "pages": 47,
+  "size_px": [
+   1684,
+   2542
+  ],
+  "turned": 32,
+  "grey_pages": 0,
+  "same_pages": true,
+  "size_orig": 1188136,
+  "size_final": 1068230,
+  "ocr_orig": {
+   "conf": 72.0,
+   "good_words": 471
+  },
+  "ocr_final": {
+   "conf": 71.6,
+   "good_words": 492
+  },
+  "sample_pages": [
+   7,
+   13,
+   20,
+   27,
+   34,
+   40
+  ],
+  "sec_clean": 15,
+  "sec_ocr": 37,
+  "done": true
+ },
+ "cfffdb5d5f": {
+  "path": "الرقائق والآداب والأذكار/مختصر شعب الإيمان - القزويني (ت عبد القادر الأرناؤوط - دار ابن كثير).pdf",
+  "pages": 179,
+  "size_px": [
+   1584,
+   2468
+  ],
+  "turned": 123,
+  "grey_pages": 1,
+  "same_pages": true,
+  "size_orig": 48349103,
+  "size_final": 5792199,
+  "ocr_orig": {
+   "conf": 69.1,
+   "good_words": 550
+  },
+  "ocr_final": {
+   "conf": 71.4,
+   "good_words": 536
+  },
+  "sample_pages": [
+   26,
+   51,
+   77,
+   102,
+   128,
+   153
+  ],
+  "sec_clean": 124,
+  "sec_ocr": 181,
+  "done": true
+ },
+ "8490bdbaae": {
+  "path": "النحو والصرف/الدرة الألفية - ابن معط (دار الف).pdf",
+  "pages": 103,
+  "size_px": [
+   1640,
+   2590
+  ],
+  "turned": 10,
+  "grey_pages": 0,
+  "same_pages": true,
+  "size_orig": 6976262,
+  "size_final": 2865575,
+  "ocr_orig": {
+   "conf": 50.8,
+   "good_words": 318
+  },
+  "ocr_final": {
+   "conf": 52.0,
+   "good_words": 346
+  },
+  "sample_pages": [
+   15,
+   29,
+   44,
+   59,
+   74,
+   88
+  ],
+  "sec_clean": 58,
+  "sec_ocr": 121,
+  "done": true
+ },
+ "5058287884": {
+  "path": "الرقائق والآداب والأذكار/شرح نظم مكفرات الذنوب - محمد يحيى الولاتي (ط شركة الكتب الإسلامية الموريتانية).pdf",
+  "pages": 61,
+  "size_px": [
+   2343,
+   3218
+  ],
+  "turned": 45,
+  "grey_pages": 0,
+  "same_pages": true,
+  "size_orig": 3838965,
+  "size_final": 4030735,
+  "ocr_orig": {
+   "conf": 66.5,
+   "good_words": 338
+  },
+  "ocr_final": {
+   "conf": 78.3,
+   "good_words": 1083
+  },
+  "sample_pages": [
+   9,
+   17,
+   26,
+   35,
+   44,
+   52
+  ],
+  "sec_clean": 33,
+  "sec_ocr": 71,
+  "done": true
+ },
+ "97ea115f34": {
+  "path": "علوم الحديث/القسطاس في تصحيح حديث الأكياس - محمد عمرو عبد اللطيف.pdf",
+  "pages": 43,
+  "size_px": [
+   2361,
+   3287
+  ],
+  "turned": 0,
+  "grey_pages": 0,
+  "same_pages": true,
+  "size_orig": 4448873,
+  "size_final": 1058803,
+  "ocr_orig": {
+   "conf": 78.6,
+   "good_words": 720
+  },
+  "ocr_final": {
+   "conf": 80.7,
+   "good_words": 744
+  },
+  "sample_pages": [
+   6,
+   12,
+   18,
+   25,
+   31,
+   37
+  ],
+  "sec_clean": 23,
+  "sec_ocr": 54,
+  "done": true
+ },
+ "b479395814": {
+  "path": "الأدب/رسالة في الشاي والقهوة والدخان - جمال الدين القاسمي.pdf",
+  "pages": 56,
+  "size_px": [
+   1536,
+   2359
+  ],
+  "turned": 40,
+  "grey_pages": 0,
+  "same_pages": true,
+  "size_orig": 11005742,
+  "size_final": 1462054,
+  "ocr_orig": {
+   "conf": 69.5,
+   "good_words": 737
+  },
+  "ocr_final": {
+   "conf": 71.1,
+   "good_words": 771
+  },
+  "sample_pages": [
+   8,
+   16,
+   24,
+   32,
+   40,
+   48
+  ],
+  "sec_clean": 36,
+  "sec_ocr": 73,
+  "done": true
+ },
+ "7b72a15cff": {
+  "path": "النحو والصرف/ارتقاء السيادة في علم أصول النحو للشاوي/ارتقاء السيادة في علم أصول النحو للشاوي.pdf",
+  "pages": 49,
+  "size_px": [
+   1891,
+   2678
+  ],
+  "turned": 0,
+  "grey_pages": 0,
+  "same_pages": true,
+  "size_orig": 8468046,
+  "size_final": 1725584,
+  "ocr_orig": {
+   "conf": 34.7,
+   "good_words": 80
+  },
+  "ocr_final": {
+   "conf": 34.8,
+   "good_words": 92
+  },
+  "sample_pages": [
+   7,
+   14,
+   21,
+   28,
+   35,
+   42
+  ],
+  "sec_clean": 27,
+  "sec_ocr": 88,
+  "done": true
+ },
+ "1d2a5d283e": {
+  "path": "النحو والصرف/شرح على نظم لمعاني حروف الجر للعلوي/شرح على نظم لمعاني حروف الجر للعلوي.pdf",
+  "pages": 116,
+  "size_px": [
+   2756,
+   3570
+  ],
+  "turned": 19,
+  "grey_pages": 0,
+  "same_pages": true,
+  "size_orig": 23686626,
+  "size_final": 7335265,
+  "ocr_orig": {
+   "conf": 26.8,
+   "good_words": 12
+  },
+  "ocr_final": {
+   "conf": 24.9,
+   "good_words": 15
+  },
+  "sample_pages": [
+   17,
+   33,
+   50,
+   66,
+   83,
+   99
+  ],
+  "sec_clean": 106,
+  "sec_ocr": 270,
+  "done": true
+ },
+ "d91f0ad9df": {
+  "path": "الجوامع/متون موقع المتون العلمية (almtoon.com)/hedaia.pdf",
+  "pages": 120,
+  "size_px": [
+   1639,
+   2358
+  ],
+  "turned": 0,
+  "grey_pages": 0,
+  "same_pages": true,
+  "size_orig": 16802569,
+  "size_final": 3230635,
+  "ocr_orig": {
+   "conf": 57.2,
+   "good_words": 336
+  },
+  "ocr_final": {
+   "conf": 53.3,
+   "good_words": 306
+  },
+  "sample_pages": [
+   17,
+   34,
+   51,
+   69,
+   86,
+   103
+  ],
+  "sec_clean": 117,
+  "sec_ocr": 406,
+  "done": true
+ },
+ "b100a75a38": {
+  "path": "الأدب/اللطف واللطائف - الثعالبي (ت محمود عبد الله الجادر).pdf",
+  "pages": 98,
+  "size_px": [
+   1651,
+   2529
+  ],
+  "turned": 82,
+  "grey_pages": 2,
+  "same_pages": true,
+  "size_orig": 1694458,
+  "size_final": 3363695,
+  "ocr_orig": {
+   "conf": 61.0,
+   "good_words": 581
+  },
+  "ocr_final": {
+   "conf": 61.4,
+   "good_words": 597
+  },
+  "sample_pages": [
+   14,
+   28,
+   42,
+   56,
+   70,
+   84
+  ],
+  "sec_clean": 87,
+  "sec_ocr": 279,
+  "done": true
+ }
+}
