@@ -251,6 +251,7 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `read_status.py`, `auto_check.py` | which books were already read by eye (→ data/names/read-status.tsv); the OCR/text-layer check of every unread book (→ data/names/auto-check.tsv) |
 | `title_sheets.py`, `title_read_add.py`, `pages_sheet.py` | reading sheets of the first pages (+ the Shamela/Waqfeya candidates by title); recording a reading («n \| verdict \| title \| author \| editor \| publisher \| city \| year \| kind \| section \| note» → data/names/title-read.tsv; a later row for the same n supersedes); any page range of a PDF as one sheet (reading further) |
 | `report_unreadable.py`, `review_server.py` | books whose name cannot be read from the book itself, appended one by one with a local copy (data/names/copies/, not in git) → site/names-unreadable.html; a 127.0.0.1 server so the owner checks and comments there (→ data/names/review-comments.jsonl; read those comments) |
+| `plan_review_page.py`, `owner_decisions_page.py` | a rename plan as a review page (old → new, earlier proposals and comments with `--prev`); the owner's open decisions from data/names/owner-actions.tsv in one page (site/decisions.html, report «decisions») |
 | `find_on_archive.py` | other archive.org uploads of books whose Waqfeya items went dark (candidates to read before adding) |
 
 Only reusable tools live in `scripts/`. A one-off generator goes in `scratch/`; the plan or queue it writes is the
