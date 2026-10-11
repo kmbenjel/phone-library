@@ -25,11 +25,16 @@ def main(out, held_out):
     sheet = {l.split('\t')[0]: l.rstrip('\n').split('\t') for l in open(J('data', 'names', 'sheets', 'books.tsv'), encoding='utf-8')}
     last = {}
     for r in csv.DictReader(open(J('data', 'names', 'title-read.tsv'), encoding='utf-8'), delimiter='\t'): last[r['n']] = r
+    act = {}
+    if os.path.exists(J('data', 'names', 'owner-actions.tsv')):
+        for r in csv.DictReader((l for l in open(J('data', 'names', 'owner-actions.tsv'), encoding='utf-8') if not l.startswith('#')), delimiter='\t'): act[r['n']] = r
     rows, held, c = [], [], collections.Counter()
     def hold(r, why): held.append((r['n'], r['book'], why)); c['held: ' + why] += 1
     for n, r in sorted(last.items(), key=lambda kv: int(kv[0])):
         if r['verdict'] not in ('ok', 'other-book', 'other-edition'): hold(r, r['verdict']); continue
         if DOUBT.search(r.get('note') or ''): hold(r, 'a closer look first'); continue
+        a = act.get(n, {}).get('action', '')
+        if a in ('remove', 'replace-whole', 'ask'): hold(r, f"owner: {a} — {act[n]['what'][:80]}"); continue
         src = N(sheet[n][2]) if n in sheet else ''
         if src not in raw: hold(r, 'the file is no longer at its path'); continue
         cat = src.split('/')[0]

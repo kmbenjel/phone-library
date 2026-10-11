@@ -121,12 +121,22 @@ def parse_edition(ed):
     if '،' in pub: pub, city = [x.strip() for x in pub.split('،', 1)]
     return names, pub, city, ''
 
-def edition_text(names, pub, city, other, year=''):
-    """«ت أ وب - الناشر، المدينة، السنة» / «ط الناشر، السنة» / «ت أ - السنة»"""
-    if other: return other + (f'، {year}' if year else '')
-    city = ''                                                     # owner 2026-10-10: no city in names
-    p = ' '.join(x for x in (pub, year) if x)
-    if names: return 'ت ' + ' و'.join(names) + (f' - {p}' if p else '')
+def with_place(pub, city):
+    """«مطبعة حجازي» + «القاهرة» → «مطبعة حجازي بالقاهرة»; two places «بالكويت وبيروت»; a city without a publisher stands
+    alone; a city the publisher's name already holds («كلية الآداب بالرباط») is not repeated (owner 2026-10-10 night:
+    «أعد إضافة المدينة إلى القواعد», «بالقاهرة», «ببغداد», «المغرب»)"""
+    cs = [c.strip() for c in re.split(r'\s*[،,/]\s*', city or '') if c.strip() and norm(c.strip()) not in norm(pub or '')]
+    if not cs: return pub
+    if not pub: return ' و'.join(cs)
+    arabic = re.match(r'[\u0600-\u06ff]', cs[0])
+    return f"{pub} {'ب' if arabic else ''}{' و'.join(cs)}"
+
+def edition_text(names, pub, city, other, year='', role='ت'):
+    """«ت أ وب - الناشر بالمدينة» / «الناشر بالمدينة 1341 هـ» / «ت أ»; the role as printed when it is not tahqiq
+    («صححه وعلق عليه فلان», «تنسيق فلان» — owner 2026-10-10 night)"""
+    if other: return other + (f' {year}' if year else '')
+    p = ' '.join(x for x in (with_place(pub, city), year) if x)
+    if names: return f'{role or "ت"} ' + ' و'.join(names) + (f' - {p}' if p else '')
     return p                                                          # owner: no «ط» — the publisher speaks for itself
 
 def title_options(seg):
@@ -145,7 +155,7 @@ def wscore(text, seg):
     n = len(text.split())
     return 10 * min(n, 2) + 2 * max(0, min(n, hn) - 2) + 0.6 * max(0, n - max(hn, 2))
 
-def compose(title, author='', edition='', limit=LIMIT, year='', kinds_extra=()):
+def compose(title, author='', edition='', limit=LIMIT, year='', kinds_extra=(), role='ت'):
     """the name that carries the most information within `limit` bytes: every combination of the title's cut, its joined
     titles («ويليه، ومعه، =»), its subtitle, the editors and the publisher is weighed; nothing is cut when all fits"""
     import itertools
@@ -159,7 +169,7 @@ def compose(title, author='', edition='', limit=LIMIT, year='', kinds_extra=()):
     author = tidy(re.sub(r'\([^()]*\)', ' ', author))
     parts = JOIN.split(t)
     segs, joins = parts[0::2], parts[1::2]
-    full = build(segs, joins, sub, author, edition_text(names, pub, city, other, year), kinds)
+    full = build(segs, joins, sub, author, edition_text(names, pub, city, other, year, role), kinds)
     if B(full) <= limit: return full
     seg_opts = [title_options(sg)[:10] for sg in segs]
     ed_opts = []
@@ -168,9 +178,9 @@ def compose(title, author='', edition='', limit=LIMIT, year='', kinds_extra=()):
             generic = re.match(r'^(وزارة|المجلس|الهيئة|جامعة|مجمع|مركز|الأمانة|دار المعارف|المكتب)', pp or '')
             # owner 2026-10-10: when the whole title and the publisher cannot both fit, the publisher goes first; the
             # (first) editor stays — so a publisher weighs less than any word of the title, an editor more
-            sc = (8 if k >= 1 else 0) + (2.5 if k >= 2 else 0) + 0.3 * max(0, k - 2) + (0.5 if pp else 0) + ((0.2 if generic else 0.1) if cc else 0)
+            sc = (40 if k >= 1 else 0) + (2.5 if k >= 2 else 0) + 0.3 * max(0, k - 2) + (0.5 if pp else 0) + ((0.2 if generic else 0.1) if cc else 0)
             sc += 0.3 if yy else 0                       # the year gives way first
-            e = edition_text(names[:k], pp, cc, other, yy)
+            e = edition_text(names[:k], pp, cc, other, yy, role)
             ed_opts.append((sc + (6 if other else 0), e))
     ed_opts = list(dict.fromkeys(ed_opts))
     best = None

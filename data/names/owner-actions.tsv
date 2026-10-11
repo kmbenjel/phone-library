@@ -1,0 +1,19 @@
+n	action	what
+# (owner's review of plan 313, 2026-10-10 night; data/names/review-comments.jsonl «plan-313»)
+0	ask	owner: «العنوان خطأ … الكتاب والمؤلف مختلفان»؛ the file (42 pp.) reads throughout as إيصال السالك by محمد يحيى الولاتي (title page, p. 3, ترجمة الشارح at the end) — asked the owner what he saw
+5	check-file	does not open in Files (opens in Acrobat)
+7	check-file	does not open in Files (opens in Acrobat)
+24	check-file	slow to open in Files (fine in Acrobat)
+12	add	add the commentary «جواهر الدرر في نظم مبادئ أصول ابن باديس الأبر» (دار ابن حزم) if a scan exists (it is in Shamela), and «مبادئ الأصول» لابن باديس ت عمار الطالبي (archive.org)
+17	add	the poems of محمد مولود بن أحمد فال اليعقوبي and their commentaries: what is printed, the best copy, no duplicates (list first)
+26	set	the Asilan edition (دار المدني) = three files (تقديم، القسم الأول الدراسة، النص): name them in order with all the edition's information
+27	replace	the cover page very small and pages missing — look for a complete copy
+31	replace	defects (e.g. p. 36) — look for a better copy
+45	fix	a blank page at the start shifts the PDF numbering from the printed one
+47	replace-whole	the file is one study (24 pp.: الوشي العبقري للإفراني) from «وقفات في تاريخ المغرب» (تنسيق القدوري، كلية الآداب بالرباط 2001): put the whole book in its place; look for other files that are one piece of a larger book
+71	remove	the poem is incomplete (only the beginnings of some chapters) — remove or replace with a complete copy
+82	replace	a manuscript: replace with the printed edition if found, else remove
+86	index	a manuscript (العبدري); the printed book is in the library (book 84) — owner: build an index of the library's manuscripts with their sources
+103	remove	remove this edition of the مقدمة (المطبعة الشرفية)
+113	add	add the better edition on Hindawi
+116	ask	owner asked why it is in التاريخ (Ibn Badrun's historical commentary on the poem)
