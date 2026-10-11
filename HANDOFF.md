@@ -3,6 +3,14 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-11 — names: all 806 single books read; plan 318 waits for the owner
+- Plans 315, 316, 317 applied (owner-approved): 477 single books renamed from their title pages.
+- Books 332–805 read today (data/names/title-read.tsv; hand-written names for shortened ones in data/names/name-override.tsv).
+- plans/318-names-read.tsv (232 rows, dry run 232/0) → http://127.0.0.1:8765/plan-318.html — NOT applied; wait for the owner's «أوافق».
+- data/names/owner-actions.tsv: 45 owner-side items (pieces of larger books 13, copies to compare 6, fixes 4 incl. reversed page order 724
+  and wrong rotation 762, replacements, stray one-page covers 709/804, additions). Held out of rename plans.
+- scripts/phone_watchdog.sh runs detached (pauses phone jobs while FTP is silent; it worked 08:10–09:42).
+
 ## 2026-10-10 01:30 GMT — STATE FOR A FRESH SESSION (owner: «I want to start a fresh discussion, then complete the work overnight. I'm unhappy with some old work not being successful, like the reorganizing and number/naming fixing»)
 
 ### RETRY LATER (owner 2026-10-10): the complete «كتاب القوافي» ت عوني عبد الرؤوف (مكتبة الخانجي): the phone copy stops at
