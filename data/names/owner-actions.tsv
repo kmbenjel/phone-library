@@ -21,3 +21,6 @@ n	action	what
 568	piece	one piece of a larger book (pp. 148ff: الجكنية نظم الجكني): find the whole book
 620	piece	one piece of a larger book (pp. 347–404: كنز اليواقيت الغالية للحجوجي with manuscript images): find the whole volume
 631	set	books 631 and 672 are one printed volume in two files (مكتبة الرشد 1418، تخريج سمير ولد سعدي): a folder «الجزء من فوائد حديث أبي ذر الهروي ومن فوائد أبي بكر الشاشي» with 01 (أبو ذر) and 02 (الشاشي)
+713	replace	the file is browser screen captures (Google Drive viewer, taskbar visible): replace with the institute's own digital edition (معهد المخطوطات العربية، نشرة رقمية 1440)
+714	fix	five blank pages before the title page shift the PDF numbering from the printed one (owner's complaint on book 45)
+709	stray	a one-page file (only the cover of «الكتاب الثاني» of Harun's البيان والتبيين): move it into that set as its cover or delete
