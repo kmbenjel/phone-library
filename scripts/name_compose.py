@@ -93,6 +93,8 @@ def build(title_parts, joins, sub, author, ed, kinds=()):
 def safe(s):
     """AGENTS §4 characters: none of \\ / : * ? " < > | (FAT/Windows; «/» is a folder on the phone — plan 315 failed on
     «1276 هـ / 1860» and «ديوان …: …»): «/» and «:» → a space, «?» → «؟», «"…"» → «…», the rest dropped"""
+    s = re.sub(r'\s*\((?:\?|؟)\)', '', s)                         # a reader's «(?)» never reaches a name
+    s = s.replace('(', '').replace(')', '')                           # owner: no parentheses anywhere
     s = re.sub(r'\s*[/\\:|]\s*', ' ', s).replace('?', '؟').replace('*', '')
     s = re.sub(r'"([^"]*)"', r'«\1»', s).replace('"', '').replace('<', '').replace('>', '')
     return re.sub(r'\s+', ' ', s)
