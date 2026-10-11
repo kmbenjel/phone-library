@@ -96,4 +96,8 @@ if __name__ == '__main__':
     want = set(sys.argv[1:])
     for r in csv.DictReader(open(os.path.join(ROOT, 'data', 'names', 'title-read.tsv'), encoding='utf-8'), delimiter='\t'):
         if want and r['n'] not in want: continue
-        print(f"[{r['n']}] {r['verdict']:10} {r['book']}\n      → {name_of(r)}.pdf  [{B(name_of(r))} B]")
+        short = ''
+        if r['n'] not in overrides():
+            from names_plan_read import shortened
+            short = '  SHORT — check against the cover' if shortened(r) else ''
+        print(f"[{r['n']}] {r['verdict']:10} {r['book']}\n      → {name_of(r)}.pdf  [{B(name_of(r))} B]{short}")
