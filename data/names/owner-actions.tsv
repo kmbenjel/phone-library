@@ -1,9 +1,9 @@
 n	action	what	ar
 # (owner's review of plan 313, 2026-10-10 night; data/names/review-comments.jsonl «plan-313»)
 0	ask	owner: «العنوان خطأ … الكتاب والمؤلف مختلفان»؛ the file (42 pp.) reads throughout as إيصال السالك by محمد يحيى الولاتي (title page, p. 3, ترجمة الشارح at the end) — asked the owner what he saw	قلتَ إن العنوان خطأ وإن الكتاب والمؤلف مختلفان، والملف (42 صفحة) من أوله إلى آخره «إيصال السالك» لمحمد يحيى الولاتي: صفحة العنوان، وص 3، وترجمة الشارح في آخره. ما الذي رأيتَ فيه مختلفا؟
-5	check-file	does not open in Files (opens in Acrobat)	لا يفتح في تطبيق Files ويفتح في أكروبات: أفحص الملف وأقترح إصلاحا لا يمس الصفحات
-7	check-file	does not open in Files (opens in Acrobat)	لا يفتح في تطبيق Files ويفتح في أكروبات: أفحص الملف وأقترح إصلاحا لا يمس الصفحات
-24	check-file	slow to open in Files (fine in Acrobat)	بطيء الفتح في Files، سليم في أكروبات: أفحص الملف
+5	check-file	does not open in Files (opens in Acrobat)	فحصته: ملف سليم البنية (7 صفحات، صور CCITT، من Acrobat Distiller 7). لا خلل ظاهر يفسر تعذر فتحه في Files؛ هل ما زال لا يفتح بعد تغيير اسمه؟ إن بقي أعيد كتابته (linearize) دون مساس بالصفحات
+7	check-file	does not open in Files (opens in Acrobat)	فحصته: ملف سليم البنية (97 صفحة، صور JBIG2 التي يبطئ بها بعض العارضات). إن بقي لا يفتح في Files أعيد ترميز الصور ترميزا مكافئا بلا فقد (CCITT) بعد إذنك
+24	check-file	slow to open in Files (fine in Acrobat)	فحصته: ملف سليم (333 صفحة JPEG، 23 م.ب، PDF 1.3): بطء الفتح من حجمه؛ إعادة كتابته مرتبة للعرض السريع (linearize) ممكنة دون مساس بالصفحات
 12	add	add the commentary «جواهر الدرر في نظم مبادئ أصول ابن باديس الأبر» (دار ابن حزم) if a scan exists (it is in Shamela), and «مبادئ الأصول» لابن باديس ت عمار الطالبي (archive.org)	إضافة «جواهر الدرر في نظم مبادئ أصول ابن باديس الأبر» (دار ابن حزم) إن وجد مصورا، و«مبادئ الأصول» لابن باديس ت عمار الطالبي (أرشيف)
 17	add	the poems of محمد مولود بن أحمد فال اليعقوبي and their commentaries: what is printed, the best copy, no duplicates (list first)	أنظام محمد مولود بن أحمد فال اليعقوبي وشروحها: ما طبع منها، أحسن نسخة، بلا تكرار (أعرض القائمة أولا)
 26	set	the Asilan edition (دار المدني) = three files (تقديم، القسم الأول الدراسة، النص): name them in order with all the edition's information	طبعة عسيلان (دار المدني) ثلاثة ملفات: التقديم، والقسم الأول الدراسة، والنص — رتبت وسميت بكل معلومات الطبعة (طبق في 317)
