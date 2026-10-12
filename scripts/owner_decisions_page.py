@@ -10,10 +10,11 @@ J = lambda *p: os.path.join(ROOT, *p)
 NEED = {'compare': 'نسختان من الكتاب: أيهما تبقى؟', 'fix': 'إصلاح لا يمس الصفحات', 'stray': 'ملف من صفحة واحدة',
         'remove': 'حذف بأمرك', 'replace': 'استبدال بنسخة أفضل', 'replace-whole': 'استبدال بالكتاب كاملا',
         'ask': 'سؤال لك', 'check-file': 'لا يفتح في Files', 'set': 'مجموعة ملفات', 'index': 'فهرس المخطوطات'}
-INFO = {'piece': 'قطعة من كتاب أكبر: أبحث عن الكتاب كاملا', 'add': 'إضافة أبحث عنها'}
+INFO = {'piece': 'قطعة من كتاب أكبر: أبحث عن الكتاب كاملا', 'add': 'إضافة أبحث عنها',
+        'dup': 'نسخة ثانية من الطبعة نفسها: تُنحّى إلى «نسخ مستبعدة» وتبقى الأجود'}
 AR = {'compare': 'مقارنة', 'fix': 'إصلاح', 'stray': 'غلاف منفرد', 'remove': 'حذف', 'replace': 'استبدال',
       'replace-whole': 'الكتاب كاملا', 'ask': 'سؤال', 'check-file': 'فحص الملف', 'set': 'مجموعة', 'index': 'فهرس',
-      'piece': 'قطعة', 'add': 'إضافة'}
+      'piece': 'قطعة', 'add': 'إضافة', 'dup': 'مكرر'}
 
 def main():
     rows = [r for r in csv.DictReader((l for l in open(J('data', 'names', 'owner-actions.tsv'), encoding='utf-8')

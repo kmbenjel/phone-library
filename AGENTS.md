@@ -230,6 +230,7 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `phone_watchdog.sh` | runs detached (`setsid nohup … >> logs/phone-watchdog.log &`): pauses (SIGSTOP) crop_library/crop_batch/inspect_files/ocr_clean while the FTP port is silent, resumes when it is back on the same address; another address → stays paused, written to data/phone/new-address.txt |
 | `publish.py` | uploads `site/`, `reports/`, data tables and this guide to the phone (copy, never deletes) — only when the owner asks |
 | `publish_web.sh` | copies `site/0*.html` to the GitHub Pages copy (benjelloun.dev/library), commits only changes, pushes (`NO_WEB=1` skips) |
+| `resources_report.sh` | a few lines every 5 min (load, memory, disk, temperature, battery, top processes, phone up/away, crop batch progress) printed into a terminal the owner has open: `setsid nohup scripts/resources_report.sh /dev/pts/N &`; stops when that terminal closes |
 | `open_index.sh` | opens `site/00 - الفهرس العام.html` in Brave on the laptop (`NO_OPEN=1` skips) |
 | `refresh.sh` | everything above in order |
 | `fetch_queue.py` | THE download/upload pipeline (§7): parallel aria2c, verify, one serialized phone connection, resumable; `file:///…` = a file already downloaded and read; falls back to the item's own storage servers when archive.org's redirect lands on a failing node (HTTP 500) |

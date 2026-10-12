@@ -55,7 +55,7 @@ def main(out, held_out):
                 and 'مخطوط' not in (r.get('kind') or '') and 'read further' not in (r.get('note') or '') and n not in overrides():
             hold(r, 'publisher or editor missing: read the file further first (deep_sheets.py)'); continue
         a = act.get(n, {}).get('action', '')
-        if a in ('remove', 'replace-whole', 'ask', 'stray'): hold(r, f"owner: {a} — {act[n]['what'][:80]}"); continue
+        if a in ('remove', 'replace-whole', 'ask', 'stray', 'dup'): hold(r, f"owner: {a} — {act[n]['what'][:80]}"); continue
         src = N(sheet[n][2]) if n in sheet else ''
         if src not in raw: hold(r, 'the file is no longer at its path'); continue
         cat = src.split('/')[0]

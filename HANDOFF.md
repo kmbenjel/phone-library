@@ -14,6 +14,11 @@ Each workstream appends its progress below (the newest state first, then the his
 - Names: 372 single-file folders never read (2026-10-12): data/names/singles2-2026-10-12.txt; sheets for books 806–1043
   (front pages of 139 rendered by front_pages.py); reading in progress (806–821 recorded).
 - Applied plans since the owner's «change on phone, no problem» (2026-10-12): 318, 319, 320, 321 — show them for review.
+- 14:15 owner: «keep the background jobs running, open the review pages for me, and hold on … until I talk to you; a tiny
+  reporting script on my open zsh session every 5 min». Opened in Brave: plan-318/319/320a/320b/321, decisions, ocr-review-001,
+  crop-review-004/003/002. scripts/resources_report.sh → /dev/pts/1 (his GNOME Terminal). Reading paused at book 829
+  (806–829 recorded; sheets ready up to 1177). Gathering only: front pages of 150 multi-file sets without page images
+  (data/names/front-need-sets.txt → logs/front-pages-sets.log). Book 822 (dup of مختار الأغاني 03) NOT set aside yet.
 
 ## 2026-10-11 night → owner back on 2026-10-12: REOPEN THE PREVIEWS FOR HIM (carefully, nothing applied before his word)
 Open in Brave (review_server.py on 127.0.0.1:8765 must be running; restart it alone if not):
