@@ -46,7 +46,7 @@ def main(out, held_out):
     def hold(r, why): held.append((r['n'], r['book'], why)); c['held: ' + why] += 1
     for n, r in sorted(last.items(), key=lambda kv: int(kv[0])):
         if r['verdict'] not in ('ok', 'other-book', 'other-edition'): hold(r, r['verdict']); continue
-        note = re.sub(r'read further[:(][^؛]*', '', r.get('note') or '')      # a further reading already done is not a doubt
+        note = re.sub(r'read further\s*(\(|:|in\b|with\b)[^؛]*', '', r.get('note') or '')      # a further reading already done is not a doubt
         if DOUBT.search(note): hold(r, 'a closer look first'); continue
         # owner 2026-10-11 («why they didn't follow the rule»): missing information must be read from the file itself —
         # a reading without a publisher or an editor goes into a plan only after the file was read further
