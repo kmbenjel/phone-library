@@ -4,7 +4,7 @@ data/names/review-comments.jsonl, report «plan-NNN»; row ids = line numbers in
 A plan rebuilt after an earlier review shows, per row, the earlier proposal and the owner's comment on it
 (--prev plans/MMM-x.tsv: rows matched by their source path; comments of report «plan-MMM»), «unchanged» or «changed».
 Usage: python3 scripts/plan_review_page.py plans/NNN-name.tsv [--prev plans/MMM-name.tsv]   → site/plan-NNN.html"""
-import html, json, os, re, sys
+import csv, html, json, os, re, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 VERDICT = {'ok': 'قُرئت صفحة عنوانه', 'other-book': 'كتاب غير الذي يقوله اسمه', 'other-edition': 'طبعة غير التي يقولها اسمه'}
@@ -44,6 +44,7 @@ def main(plan, prev=None):
     rows = [l.rstrip('\n').split('\t') for l in open(plan, encoding='utf-8') if l.strip()]
     E, trs, moved = html.escape, [], 0
     old, pn = previous(prev)
+    applied = any(r[5:6] == [name] for r in csv.reader(open(os.path.join(ROOT, 'data', 'changes', 'changes.tsv'), encoding='utf-8'), delimiter='\t'))
     n_seen = n_changed = 0
     for k, (a, b, why) in enumerate(rows, 1):
         ca, cb = a.split('/')[1], b.split('/')[1]
@@ -78,7 +79,7 @@ table{{width:100%;border-collapse:collapse;background:var(--card)}} td{{border-t
 input[type=search]{{font:inherit;padding:4px 8px;min-width:240px}} .warn{{background:#fff3cd;color:#5c4400;padding:8px 12px;border-radius:8px}}
 </style></head><body><main><h1>خطة {E(num)}: تسمية الكتب المفردة من صفحات عناوينها</h1>
 <p class="lead">القواعد بعد ملاحظاتك: المدينة بعد الناشر («مطبعة حجازي بالقاهرة»)، السنة إن كانت على الغلاف أو كانت الطبعة قديمة، الأسماء كاملة أو بالكنية واللقب المشهورين، الدور كما طُبع إن لم يكن تحقيقا («صححه وعلق عليه»، «تنسيق»، «قدم لها»)، لا «ويليه» ولا «في» من عندي. ما طلبتَ حذفه أو استبداله بالكتاب كاملا ليس في هذه الخطة.</p>
-<p class="lead">{len(rows)} صفا؛ منها {moved} تنتقل إلى قسم آخر (بالبرتقالي). لم يُطبق شيء على الهاتف. {f"راجعتَ {n_seen} منها في الخطة {E(pn)}، تغيّر منها {n_changed} بعد ملاحظاتك؛ الباقي جديد عليك. " if pn else ""}علّق على أي صف، ثم علّم الموافقة إن رضيت بالباقي.</p>
+<p class="lead">{len(rows)} صفا؛ منها {moved} تنتقل إلى قسم آخر (بالبرتقالي). {"طُبّقت على الهاتف، ويمكن التراجع عنها؛ علّق على ما تريد تصحيحه وأصلحه هو ومثيلاته. " if applied else "لم يُطبق شيء على الهاتف. "}{f"راجعتَ {n_seen} منها في الخطة {E(pn)}، تغيّر منها {n_changed} بعد ملاحظاتك؛ الباقي جديد عليك. " if pn else ""}{"" if applied else "علّق على أي صف، ثم علّم الموافقة إن رضيت بالباقي."}</p>
 <p class="warn" id="noserver" hidden>لحفظ التعليقات افتح الصفحة من الخادم المحلي: http://127.0.0.1:8765/plan-{E(num)}.html</p>
 <div class="bar"><span class="review" data-n="approve"><label><input type="checkbox" class="chk"> أوافق على الخطة (مع ما علقت عليه)</label><span class="st"></span></span>
 <input type="search" id="q" placeholder="تصفية: كلمة أو قسم"><label><input type="checkbox" id="onlymoved"> الأقسام المنقولة فقط</label>
