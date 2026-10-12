@@ -12,7 +12,7 @@ other-edition | no-title-page | unreadable; section = the Shamela section the bo
 (owner: «في غاية التنظيم والدقة وحسن التصنيف»).
 Usage: python3 scripts/title_sheets.py LIST [--per 2]   (LIST: one book per line, «cat/folder» or «cat/file-stem»)
        → data/names/sheets/sNNNN.jpg + sNNNN.txt, data/names/sheets/books.tsv (n, book, path, key)"""
-import csv, json, os, re, sys, unicodedata, collections
+import csv, hashlib, json, os, re, sys, unicodedata, collections
 from PIL import Image, ImageDraw, ImageFont, ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True              # a page cut short by an interrupted render still shows its top
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -68,6 +68,7 @@ def main(lst, per=2):
     os.makedirs(OUT, exist_ok=True)
     books = [N(l.strip()) for l in open(lst, encoding='utf-8') if l.strip()]
     idx = [N(l.split('\t', 1)[0]) for l in open(J('data', 'phone', 'index-now.tsv'), encoding='utf-8') if l.strip()]
+    raw = {N(a): (a, b) for a, b in (l.rstrip('\n').split('\t')[:2] for l in open(J('data', 'phone', 'index-now.tsv'), encoding='utf-8') if l.strip())}
     files_of = collections.defaultdict(list)
     for p in idx:
         parts = p.split('/')
@@ -89,6 +90,8 @@ def main(lst, per=2):
         fs = sorted(files_of.get(b, []))
         f = next((x for x in fs if re.search(r'/0*1 - |/[^/]*\(الواجهة\)', x)), fs[0] if fs else None)
         k = key.get(f) if f else None
+        if f and not pages.get(k):                  # renamed since inspection: front_pages.py keys by the current path
+            k = hashlib.md5('\t'.join(raw.get(f, (f, ''))).encode()).hexdigest()[:16]   # the phone's own bytes
         if not k or not pages.get(k): missing.append(b); continue
         todo.append((b, f, k))
     font = ImageFont.load_default()

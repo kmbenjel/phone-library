@@ -3,6 +3,18 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-12 14:10 — laptop restarted at 13:57; jobs relaunched; lid inhibitor on
+- The restart stopped crop batch-005 (65/300 done; checked: no phone file half-written — every unfinished one keeps its
+  logged size), phone_watchdog.sh and review_server.py. Relaunched (setsid nohup): phone_watchdog.sh, review_server.py 8765,
+  scratch/resume_crop_005_2026-10-12.sh (finishes batch-005, refresh + commit, then execs crop_library.sh; one-off, marker
+  data/crop/.resume-005-done). After any restart: check `uptime -s` and relaunch these.
+- Lid (owner: «launch the lid script previously run by antigravity»): `setsid nohup systemd-inhibit
+  --what=handle-lid-switch:sleep:idle --who=phone-library --why="permanent inhibitor requested by user" --mode=block sleep
+  infinity &` — the laptop keeps running with the lid closed (`systemd-inhibit --list | grep phone-library`).
+- Names: 372 single-file folders never read (2026-10-12): data/names/singles2-2026-10-12.txt; sheets for books 806–1043
+  (front pages of 139 rendered by front_pages.py); reading in progress (806–821 recorded).
+- Applied plans since the owner's «change on phone, no problem» (2026-10-12): 318, 319, 320, 321 — show them for review.
+
 ## 2026-10-11 night → owner back on 2026-10-12: REOPEN THE PREVIEWS FOR HIM (carefully, nothing applied before his word)
 Open in Brave (review_server.py on 127.0.0.1:8765 must be running; restart it alone if not):
   1. http://127.0.0.1:8765/plan-318.html        — names of books 332–805 (+ books read further), NOT applied
