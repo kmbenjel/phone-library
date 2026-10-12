@@ -11,6 +11,9 @@ Each workstream appends its progress below (the newest state first, then the his
 - Lid (owner: «launch the lid script previously run by antigravity»): `setsid nohup systemd-inhibit
   --what=handle-lid-switch:sleep:idle --who=phone-library --why="permanent inhibitor requested by user" --mode=block sleep
   infinity &` — the laptop keeps running with the lid closed (`systemd-inhibit --list | grep phone-library`).
+- 17:52 GNOME's own idle suspend (on battery: «will suspend for inactivity») is not blocked by systemd-inhibit: also
+  `setsid nohup gnome-session-inhibit --inhibit suspend:idle --reason "phone-library jobs" sleep infinity &`. And
+  scripts/phone_keepalive.py (login + NOOP every 2 min: the phone's FTP app no longer idles). Relaunch all three after a restart.
 - Names: 372 single-file folders never read (2026-10-12): data/names/singles2-2026-10-12.txt; sheets for books 806–1043
   (front pages of 139 rendered by front_pages.py); reading in progress (806–821 recorded).
 - Applied plans since the owner's «change on phone, no problem» (2026-10-12): 318, 319, 320, 321 — show them for review.
