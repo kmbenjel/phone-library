@@ -3,6 +3,17 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-11 night → owner back on 2026-10-12: REOPEN THE PREVIEWS FOR HIM (carefully, nothing applied before his word)
+Open in Brave (review_server.py on 127.0.0.1:8765 must be running; restart it alone if not):
+  1. http://127.0.0.1:8765/plan-318.html        — names of books 332–805 (+ books read further), NOT applied
+  2. http://127.0.0.1:8765/decisions.html       — his open decisions (Arabic), nothing applied
+  3. http://127.0.0.1:8765/ocr-review-001.html  — OCR sample (10 books), nothing on the phone
+  4. http://127.0.0.1:8765/crop-review-003.html and crop-review-002.html — crop batches to spot-check
+Rebuild each page first (plan_review_page.py plans/318-names-read.tsv; owner_decisions_page.py; crop_review_page.py NNN for any
+new batch) so they show the latest state. The owner wants pages in Arabic.
+Running: crop_library.sh (batch 004 since 19:50, follows the phone's address), phone_watchdog.sh (follows the address:
+the phone alternates .100 ↔ .102 — random MAC; he was told to set «device MAC» + a DHCP reservation), review_server.py.
+
 ## 2026-10-11 — names: all 806 single books read; plan 318 waits for the owner
 - Plans 315, 316, 317 applied (owner-approved): 477 single books renamed from their title pages.
 - Books 332–805 read today (data/names/title-read.tsv; hand-written names for shortened ones in data/names/name-override.tsv).
