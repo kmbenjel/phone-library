@@ -3,6 +3,12 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-13 00:20 — laptop down 2026-10-12 ~21:45 (battery empty), restarted 00:00; all relaunched
+- Relaunched: both inhibitors, phone_watchdog.sh, phone_keepalive.py, review_server.py, resources_report.sh → /dev/pts/0,
+  scratch/resume_crop_005_2026-10-13.sh (waits for the phone, checks batch-005's unfinished files keep their logged size —
+  stops on any mismatch — then finishes batch-005 and execs crop_library.sh). Phone on the Wi-Fi at .100 but its FTP app was
+  not running at 00:16. Front pages of the 150 sets: done (150/150). Keep the laptop on its charger.
+
 ## 2026-10-12 14:10 — laptop restarted at 13:57; jobs relaunched; lid inhibitor on
 - The restart stopped crop batch-005 (65/300 done; checked: no phone file half-written — every unfinished one keeps its
   logged size), phone_watchdog.sh and review_server.py. Relaunched (setsid nohup): phone_watchdog.sh, review_server.py 8765,
