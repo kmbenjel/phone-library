@@ -3,6 +3,14 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-15 — CROP PAUSED (owner: «you can pause if necessary»)
+- Owner reviewed crop-review-002 (92 books, 14 with faults) and 004 (~60 of 236, 17 with faults) + OCR sample + plans 320a/b
+  (data/names/review-comments.jsonl, reports crop-002, crop-004, ocr-001, plan-320a/b). «راجعت إلى هنا فقط / ويجب عليك مراجعة
+  الباقي وإصلاح ما تجده / وعسى أن تكون العمليات المقبلة أكبر جودة وتصحيحا ذاتيا».
+- crop_library.sh stopped; crop_batch on batch-006 stopped at 108 cropped (workers killed; main died at submit, no write in
+  progress; 188 unfinished files keep their sizes). Do NOT restart crop_library.sh before the method is fixed and passes
+  his marked books; then redo the affected books already cropped (002–006).
+
 ## 2026-10-13 00:20 — laptop down 2026-10-12 ~21:45 (battery empty), restarted 00:00; all relaunched
 - Relaunched: both inhibitors, phone_watchdog.sh, phone_keepalive.py, review_server.py, resources_report.sh → /dev/pts/0,
   scratch/resume_crop_005_2026-10-13.sh (waits for the phone, checks batch-005's unfinished files keep their logged size —

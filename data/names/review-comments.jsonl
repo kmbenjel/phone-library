@@ -373,3 +373,326 @@
 {"time": "2026-10-11 11:24:52", "report": "plan-318", "n": "2", "checked": false, "comment": ""}
 {"time": "2026-10-11 11:25:06", "report": "plan-318", "n": "3", "checked": false, "comment": "x"}
 {"time": "2026-10-11 17:36:49", "report": "decisions", "n": "764-compare", "checked": true, "comment": ""}
+{"time": "2026-10-14 03:08:58", "report": "ocr-001", "n": "cc55b78717", "checked": false, "comment": "جيد"}
+{"time": "2026-10-14 03:09:02", "report": "ocr-001", "n": "cc55b78717", "checked": false, "comment": "جيد، ولكن"}
+{"time": "2026-10-14 03:09:07", "report": "ocr-001", "n": "cc55b78717", "checked": false, "comment": "جيد، ولكنك قلبت قبل مع بعد"}
+{"time": "2026-10-14 03:09:27", "report": "ocr-001", "n": "cc55b78717", "checked": true, "comment": "جيد، ولكنك قلبت قبل مع بعد"}
+{"time": "2026-10-14 03:09:36", "report": "ocr-001", "n": "cfffdb5d5f", "checked": true, "comment": ""}
+{"time": "2026-10-14 03:09:41", "report": "ocr-001", "n": "cfffdb5d5f", "checked": true, "comment": "=ي"}
+{"time": "2026-10-14 03:09:42", "report": "ocr-001", "n": "cfffdb5d5f", "checked": true, "comment": "=يجي"}
+{"time": "2026-10-14 03:09:45", "report": "ocr-001", "n": "cfffdb5d5f", "checked": true, "comment": "جيد"}
+{"time": "2026-10-14 03:10:00", "report": "ocr-001", "n": "8490bdbaae", "checked": true, "comment": ""}
+{"time": "2026-10-14 03:10:06", "report": "ocr-001", "n": "5058287884", "checked": false, "comment": "ب"}
+{"time": "2026-10-14 03:10:08", "report": "ocr-001", "n": "5058287884", "checked": false, "comment": ""}
+{"time": "2026-10-14 03:10:31", "report": "ocr-001", "n": "5058287884", "checked": false, "comment": "أبقيت الهوامش "}
+{"time": "2026-10-14 03:10:33", "report": "ocr-001", "n": "5058287884", "checked": false, "comment": "أبقيت الهوامش وا"}
+{"time": "2026-10-14 03:10:36", "report": "ocr-001", "n": "5058287884", "checked": false, "comment": ""}
+{"time": "2026-10-14 03:10:38", "report": "ocr-001", "n": "5058287884", "checked": false, "comment": "و"}
+{"time": "2026-10-14 03:10:47", "report": "ocr-001", "n": "5058287884", "checked": false, "comment": "هوامش غير موحدة "}
+{"time": "2026-10-14 03:10:55", "report": "ocr-001", "n": "5058287884", "checked": false, "comment": "هوامش غير موحدة ربما بسبب ال"}
+{"time": "2026-10-14 03:11:02", "report": "ocr-001", "n": "5058287884", "checked": false, "comment": "هوامش غير موحدة ربما بسبب البق"}
+{"time": "2026-10-14 03:11:04", "report": "ocr-001", "n": "5058287884", "checked": false, "comment": "هوامش غير موحدة ربما بسبب ال"}
+{"time": "2026-10-14 03:11:09", "report": "ocr-001", "n": "5058287884", "checked": false, "comment": "هوامش غير موحدة ربما بسبب السؤاد"}
+{"time": "2026-10-14 03:11:15", "report": "ocr-001", "n": "5058287884", "checked": false, "comment": "هوامش غير موحدة ربما بسبب سواد "}
+{"time": "2026-10-14 03:11:23", "report": "ocr-001", "n": "5058287884", "checked": false, "comment": "هوامش غير موحدة ربما بسبب عيوب التصوير التي ليست كتابة"}
+{"time": "2026-10-14 03:11:38", "report": "ocr-001", "n": "8490bdbaae", "checked": true, "comment": ""}
+{"time": "2026-10-14 03:11:54", "report": "ocr-001", "n": "97ea115f34", "checked": false, "comment": "ا"}
+{"time": "2026-10-14 03:12:00", "report": "ocr-001", "n": "97ea115f34", "checked": false, "comment": "الهوامش بقيت واس"}
+{"time": "2026-10-14 03:12:13", "report": "ocr-001", "n": "97ea115f34", "checked": false, "comment": "الهوامش بقيت وا"}
+{"time": "2026-10-14 03:12:15", "report": "ocr-001", "n": "97ea115f34", "checked": false, "comment": ""}
+{"time": "2026-10-14 03:12:23", "report": "ocr-001", "n": "97ea115f34", "checked": false, "comment": ""}
+{"time": "2026-10-14 03:12:59", "report": "ocr-001", "n": "97ea115f34", "checked": false, "comment": "هوامش واسعة"}
+{"time": "2026-10-14 03:13:03", "report": "ocr-001", "n": "97ea115f34", "checked": false, "comment": "هوامش واسعة "}
+{"time": "2026-10-14 03:13:04", "report": "ocr-001", "n": "97ea115f34", "checked": false, "comment": "هوامش واسعة"}
+{"time": "2026-10-14 03:13:05", "report": "ocr-001", "n": "97ea115f34", "checked": true, "comment": "هوامش واسعة"}
+{"time": "2026-10-14 03:13:29", "report": "ocr-001", "n": "b479395814", "checked": true, "comment": ""}
+{"time": "2026-10-14 03:13:49", "report": "ocr-001", "n": "b479395814", "checked": true, "comment": "مقبول على مضض"}
+{"time": "2026-10-14 03:14:17", "report": "ocr-001", "n": "7b72a15cff", "checked": false, "comment": "ـ"}
+{"time": "2026-10-14 03:14:19", "report": "ocr-001", "n": "7b72a15cff", "checked": false, "comment": ""}
+{"time": "2026-10-14 03:18:05", "report": "ocr-001", "n": "7b72a15cff", "checked": true, "comment": ""}
+{"time": "2026-10-14 03:19:04", "report": "ocr-001", "n": "1d2a5d283e", "checked": false, "comment": "هوامش واسعة ولا توسط"}
+{"time": "2026-10-14 03:19:06", "report": "ocr-001", "n": "1d2a5d283e", "checked": true, "comment": "هوامش واسعة ولا توسط"}
+{"time": "2026-10-14 03:19:08", "report": "ocr-001", "n": "1d2a5d283e", "checked": true, "comment": "هوامش واسعة ولا توسيط"}
+{"time": "2026-10-14 03:19:17", "report": "ocr-001", "n": "d91f0ad9df", "checked": true, "comment": ""}
+{"time": "2026-10-14 03:19:24", "report": "ocr-001", "n": "d91f0ad9df", "checked": true, "comment": "المتون العلمية تيقى"}
+{"time": "2026-10-14 03:19:26", "report": "ocr-001", "n": "d91f0ad9df", "checked": true, "comment": "المتون العلمية تبقى "}
+{"time": "2026-10-14 03:19:29", "report": "ocr-001", "n": "d91f0ad9df", "checked": true, "comment": ""}
+{"time": "2026-10-14 03:19:50", "report": "ocr-001", "n": "d91f0ad9df", "checked": true, "comment": "/متون موقع المتون العلمية تبقى بألوانها كما هي، وليست مخطوطات"}
+{"time": "2026-10-14 03:20:13", "report": "ocr-001", "n": "b100a75a38", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:09:30", "report": "crop-002", "n": "00597fea27cf", "checked": false, "comment": "1"}
+{"time": "2026-10-14 04:09:30", "report": "crop-002", "n": "00597fea27cf", "checked": true, "comment": "1"}
+{"time": "2026-10-14 04:09:36", "report": "crop-002", "n": "00597fea27cf", "checked": true, "comment": "ص 18 غير موس"}
+{"time": "2026-10-14 04:09:38", "report": "crop-002", "n": "00597fea27cf", "checked": true, "comment": "ص 18 غير موسطة"}
+{"time": "2026-10-14 04:10:08", "report": "crop-002", "n": "012d2992bd94", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:10:54", "report": "crop-002", "n": "064846139175", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:11:13", "report": "crop-002", "n": "064846139175", "checked": true, "comment": "بقي الميل "}
+{"time": "2026-10-14 04:11:20", "report": "crop-002", "n": "064846139175", "checked": true, "comment": "بقي الميل ولا أدري هل "}
+{"time": "2026-10-14 04:11:42", "report": "crop-002", "n": "064846139175", "checked": true, "comment": "بقي الميل في الأخيرة وتزاحم عن اليمين لا ا"}
+{"time": "2026-10-14 04:11:53", "report": "crop-002", "n": "064846139175", "checked": true, "comment": "بقي الميل في الأخيرة وتزاحم عن اليمين لا أدري هل بسبب الأصل ولكن يمكن التوسيط على كل حال"}
+{"time": "2026-10-14 04:12:05", "report": "crop-002", "n": "064846139175", "checked": true, "comment": "بقي الميل في الأخيرة وتزاحم عن اليمين لا أدري هل بسبب الأصل ولكن يمكن التوسيط والإصلاخ على كل حال"}
+{"time": "2026-10-14 04:12:06", "report": "crop-002", "n": "064846139175", "checked": true, "comment": "بقي الميل في الأخيرة وتزاحم عن اليمين لا أدري هل بسبب الأصل ولكن يمكن التوسيط والإصلاح على كل حال"}
+{"time": "2026-10-14 04:12:18", "report": "crop-002", "n": "0cec1b0fabca", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:12:26", "report": "crop-002", "n": "0f9d613f2be1", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:12:32", "report": "crop-002", "n": "10ce0d38fc38", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:12:49", "report": "crop-002", "n": "1630dbe0b7ce", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:12:55", "report": "crop-002", "n": "18a5128ecc66", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:12:59", "report": "crop-002", "n": "1a2571e459e0", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:13:57", "report": "crop-002", "n": "1a4cd4e0bce6", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:14:03", "report": "crop-002", "n": "1b86a938c962", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:14:17", "report": "crop-002", "n": "1ca6493485b3", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:15:00", "report": "crop-002", "n": "23d1d9d13751", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:15:17", "report": "crop-002", "n": "29b9db6c6baa", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:15:22", "report": "crop-002", "n": "29b9db6c6baa", "checked": true, "comment": "التوسيط"}
+{"time": "2026-10-14 04:15:29", "report": "crop-002", "n": "29b9db6c6baa", "checked": true, "comment": "خلل في التوسيط"}
+{"time": "2026-10-14 04:15:57", "report": "crop-002", "n": "29b9db6c6baa", "checked": true, "comment": "خلل في التوسيط و"}
+{"time": "2026-10-14 04:16:03", "report": "crop-002", "n": "29b9db6c6baa", "checked": true, "comment": "خلل في التوسيط وفي تحديد الإطار في الأولى"}
+{"time": "2026-10-14 04:16:12", "report": "crop-002", "n": "2b6fd779f85f", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:16:25", "report": "crop-002", "n": "2bdda6976e90", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:17:08", "report": "crop-002", "n": "2be6fb8d16ce", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:17:15", "report": "crop-002", "n": "2dbd92c2c037", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:17:29", "report": "crop-002", "n": "3488dc5e3059", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:17:40", "report": "crop-002", "n": "35fbe344b8c6", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:18:08", "report": "crop-002", "n": "35fbe344b8c6", "checked": true, "comment": "لم تزل الطابع في الأولى لتحصل على نفس التكبير ا"}
+{"time": "2026-10-14 04:18:09", "report": "crop-002", "n": "35fbe344b8c6", "checked": true, "comment": "لم تزل الطابع في الأولى لتحصل على نفس التكبير "}
+{"time": "2026-10-14 04:18:14", "report": "crop-002", "n": "35fbe344b8c6", "checked": true, "comment": "لم تزل الطابع في الأولى لتحصل على نفس التكبير في غيرها"}
+{"time": "2026-10-14 04:18:23", "report": "crop-002", "n": "36660ecba735", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:18:32", "report": "crop-002", "n": "3e52dfa46475", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:18:37", "report": "crop-002", "n": "43fb5d8d546e", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:22:19", "report": "crop-002", "n": "46cfdde58d53", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:22:24", "report": "crop-002", "n": "476e3fa9e3ea", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:22:32", "report": "crop-002", "n": "4c33506b3013", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:22:40", "report": "crop-002", "n": "4ccd2df1399a", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:22:46", "report": "crop-002", "n": "4d43f307ec7a", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:22:53", "report": "crop-002", "n": "4ffc24a41702", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:23:00", "report": "crop-002", "n": "509e09183456", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:23:07", "report": "crop-002", "n": "5191fc1f54f0", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:23:18", "report": "crop-002", "n": "52072388499d", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:23:39", "report": "crop-002", "n": "52072388499d", "checked": true, "comment": "توسيط 187"}
+{"time": "2026-10-14 04:23:48", "report": "crop-002", "n": "536f32910743", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:23:55", "report": "crop-002", "n": "542d02652dbe", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:24:08", "report": "crop-002", "n": "555cbb106432", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:24:14", "report": "crop-002", "n": "5972977fc564", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:24:35", "report": "crop-002", "n": "5b214426d112", "checked": false, "comment": ""}
+{"time": "2026-10-14 04:24:37", "report": "crop-002", "n": "5b214426d112", "checked": false, "comment": "492 ت"}
+{"time": "2026-10-14 04:24:39", "report": "crop-002", "n": "5b214426d112", "checked": false, "comment": "492 تعاد"}
+{"time": "2026-10-14 04:24:44", "report": "crop-002", "n": "5b214426d112", "checked": false, "comment": "492 تعاد، الإطار كله يتوسط"}
+{"time": "2026-10-14 04:24:59", "report": "crop-002", "n": "615de00eb3f1", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:25:04", "report": "crop-002", "n": "615eee0f199a", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:25:09", "report": "crop-002", "n": "645b61df7e44", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:25:13", "report": "crop-002", "n": "660e19298e73", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:25:17", "report": "crop-002", "n": "668839551ba0", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:25:22", "report": "crop-002", "n": "67d8b9dbd07c", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:25:37", "report": "crop-002", "n": "68600214e7de", "checked": false, "comment": "كلها سيئة"}
+{"time": "2026-10-14 04:25:38", "report": "crop-002", "n": "68600214e7de", "checked": true, "comment": "كلها سيئة"}
+{"time": "2026-10-14 04:25:52", "report": "crop-002", "n": "73158267ab5d", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:26:03", "report": "crop-002", "n": "73ef61da29b8", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:26:08", "report": "crop-002", "n": "752819ebd705", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:26:12", "report": "crop-002", "n": "7636e66c8bdd", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:26:18", "report": "crop-002", "n": "7845764a2a13", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:26:32", "report": "crop-002", "n": "798db4530493", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:26:36", "report": "crop-002", "n": "7c305a9f5c76", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:26:40", "report": "crop-002", "n": "7e2855ff5b40", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:26:43", "report": "crop-002", "n": "7effc3806833", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:26:48", "report": "crop-002", "n": "86efce2c7edd", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:26:59", "report": "crop-002", "n": "8ba5c6e5f79a", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:27:12", "report": "crop-002", "n": "8ec1fd8095ad", "checked": false, "comment": "1 "}
+{"time": "2026-10-14 04:27:18", "report": "crop-002", "n": "8ec1fd8095ad", "checked": false, "comment": "1 سيء"}
+{"time": "2026-10-14 04:27:39", "report": "crop-002", "n": "8ec1fd8095ad", "checked": false, "comment": "1 سيء، اشمل الصفحة بالغلاف فقط"}
+{"time": "2026-10-14 04:27:40", "report": "crop-002", "n": "8ec1fd8095ad", "checked": true, "comment": "1 سيء، اشمل الصفحة بالغلاف فقط"}
+{"time": "2026-10-14 04:27:49", "report": "crop-002", "n": "93ad7dc26d21", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:27:54", "report": "crop-002", "n": "93baba072bdd", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:27:57", "report": "crop-002", "n": "9d30ddc1532d", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:28:03", "report": "crop-002", "n": "9da21ff3808b", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:28:25", "report": "crop-002", "n": "9da5c530d977", "checked": false, "comment": "1 يمكن شملها بالغلاف"}
+{"time": "2026-10-14 04:28:27", "report": "crop-002", "n": "9da5c530d977", "checked": true, "comment": "1 يمكن شملها بالغلاف"}
+{"time": "2026-10-14 04:28:39", "report": "crop-002", "n": "9f4bbbc8820a", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:28:43", "report": "crop-002", "n": "ab91ce0ed522", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:32:38", "report": "crop-002", "n": "ada0d8a6b33b", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:32:55", "report": "crop-002", "n": "b38ba50ba788", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:32:59", "report": "crop-002", "n": "b34f46307827", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:33:02", "report": "crop-002", "n": "b301077fd68a", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:33:04", "report": "crop-002", "n": "b2faf645d5c0", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:33:20", "report": "crop-002", "n": "b4973f7461b6", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:33:37", "report": "crop-002", "n": "ba20288d8ba4", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:33:53", "report": "crop-002", "n": "c4741124c39f", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:34:09", "report": "crop-002", "n": "c68f9785d555", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:34:14", "report": "crop-002", "n": "d1cde2d50a3f", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:34:41", "report": "crop-002", "n": "d2e6995099bc", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:34:47", "report": "crop-002", "n": "d2e6995099bc", "checked": true, "comment": "الأخيرة سيئة"}
+{"time": "2026-10-14 04:34:53", "report": "crop-002", "n": "d2e6995099bc", "checked": true, "comment": "الأخيرة سيئة اشمل"}
+{"time": "2026-10-14 04:35:01", "report": "crop-002", "n": "d2e6995099bc", "checked": true, "comment": "الأخيرة سيئة لا تحافظ على مقاس الأوراق"}
+{"time": "2026-10-14 04:35:11", "report": "crop-002", "n": "d2e6995099bc", "checked": true, "comment": "الأخيرة سيئة لا تحافظ على مقاس الأوراق ولا شمول الغلاف"}
+{"time": "2026-10-14 04:35:30", "report": "crop-002", "n": "d319e06e78d0", "checked": false, "comment": "ص 8 سيئة"}
+{"time": "2026-10-14 04:35:31", "report": "crop-002", "n": "d319e06e78d0", "checked": true, "comment": "ص 8 سيئة"}
+{"time": "2026-10-14 04:35:37", "report": "crop-002", "n": "d57c22ddef55", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:35:37", "report": "crop-002", "n": "d57c22ddef55", "checked": false, "comment": ""}
+{"time": "2026-10-14 04:35:38", "report": "crop-002", "n": "d57c22ddef55", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:35:49", "report": "crop-002", "n": "d85796a4a478", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:35:53", "report": "crop-002", "n": "dc70b4b13da6", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:36:49", "report": "crop-002", "n": "dec91f60f4c1", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:36:53", "report": "crop-002", "n": "df3b0bd9bc36", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:36:59", "report": "crop-002", "n": "e1536f0c7714", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:37:10", "report": "crop-002", "n": "e27411fc9a16", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:37:22", "report": "crop-002", "n": "e27411fc9a16", "checked": true, "comment": "بإزالة الطابع في كل المواضع يمكن ال"}
+{"time": "2026-10-14 04:37:27", "report": "crop-002", "n": "e27411fc9a16", "checked": true, "comment": "بإزالة الطابع في كل المواضع يمكن الإصلاح بشكل أحسن"}
+{"time": "2026-10-14 04:37:56", "report": "crop-002", "n": "e27411fc9a16", "checked": true, "comment": "بإزالة الطابع في كل المواضع يمكن الإصلاح بشكل أحسن\n88 خلقت ميلا لا وجود له من قبل"}
+{"time": "2026-10-14 04:38:03", "report": "crop-002", "n": "e2f1921e4bb4", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:38:12", "report": "crop-002", "n": "e558db7f291e", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:38:19", "report": "crop-002", "n": "e58523ec92ef", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:38:24", "report": "crop-002", "n": "ebb2280b4bf2", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:38:32", "report": "crop-002", "n": "ed837a32e526", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:38:47", "report": "crop-002", "n": "f134344a7421", "checked": false, "comment": "69 "}
+{"time": "2026-10-14 04:38:51", "report": "crop-002", "n": "f134344a7421", "checked": false, "comment": "69 متأثرة ب"}
+{"time": "2026-10-14 04:39:01", "report": "crop-002", "n": "f134344a7421", "checked": false, "comment": "69 متأثرة بأضرار الطبع"}
+{"time": "2026-10-14 04:39:10", "report": "crop-002", "n": "f134344a7421", "checked": false, "comment": "69 متأثرة بأضرار الطبع، لتكن النتيجة كالأخريات"}
+{"time": "2026-10-14 04:39:12", "report": "crop-002", "n": "f134344a7421", "checked": true, "comment": "69 متأثرة بأضرار الطبع، لتكن النتيجة كالأخريات"}
+{"time": "2026-10-14 04:39:17", "report": "crop-002", "n": "f52e44b24220", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:39:21", "report": "crop-002", "n": "f80fab8f2f75", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:39:27", "report": "crop-002", "n": "faa44de187cd", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:39:46", "report": "crop-002", "n": "fbf39d55c6f7", "checked": true, "comment": ""}
+{"time": "2026-10-14 04:39:51", "report": "crop-002", "n": "fbf39d55c6f7", "checked": true, "comment": "يبحث عن "}
+{"time": "2026-10-14 04:39:57", "report": "crop-002", "n": "fbf39d55c6f7", "checked": true, "comment": "يبحث عن طبعة أفضل تصويرا"}
+{"time": "2026-10-14 04:40:00", "report": "crop-002", "n": "fbf39d55c6f7", "checked": true, "comment": "يبحث عن نسحة أفضل تصويرا"}
+{"time": "2026-10-14 04:40:02", "report": "crop-002", "n": "fbf39d55c6f7", "checked": true, "comment": "يبحث عن نس أفضل تصويرا"}
+{"time": "2026-10-14 04:40:03", "report": "crop-002", "n": "fbf39d55c6f7", "checked": true, "comment": "يبحث عن نسخة أفضل تصويرا"}
+{"time": "2026-10-14 04:40:07", "report": "crop-002", "n": "fbf39d55c6f7", "checked": true, "comment": "يبحث عن نسخة أفضل تصويرا و"}
+{"time": "2026-10-14 04:40:08", "report": "crop-002", "n": "fbf39d55c6f7", "checked": true, "comment": "يبحث عن نسخة أفضل تصويرا "}
+{"time": "2026-10-14 04:40:12", "report": "crop-002", "n": "fbf39d55c6f7", "checked": true, "comment": "يبحث عن نسخة أفضل تصويرا، ولما"}
+{"time": "2026-10-14 04:40:26", "report": "crop-002", "n": "fbf39d55c6f7", "checked": true, "comment": "يبحث عن نسخة أفضل تصويرا، ولماذا لم تحاول تقسيم الصفحات المزدوجة"}
+{"time": "2026-10-14 04:40:27", "report": "crop-002", "n": "fbf39d55c6f7", "checked": true, "comment": "يبحث عن نسخة أفضل تصويرا، ولماذا لم تحاول تقسيم الصفحات المزدوجة؟"}
+{"time": "2026-10-14 04:40:38", "report": "crop-002", "n": "fd50e5e1af43", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:45:56", "report": "crop-004", "n": "04ace05c8688", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:46:02", "report": "crop-004", "n": "079d82907d94", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:46:07", "report": "crop-004", "n": "079e35304dce", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:46:23", "report": "crop-004", "n": "088ec8162be5", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:46:29", "report": "crop-004", "n": "0983439ce1de", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:46:34", "report": "crop-004", "n": "09aa7cebac26", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:46:39", "report": "crop-004", "n": "0a6b1fd1881f", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:46:43", "report": "crop-004", "n": "0ad0f35b20f3", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:46:48", "report": "crop-004", "n": "0c440bc2a2e5", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:47:06", "report": "crop-004", "n": "0e655bcab0be", "checked": false, "comment": "لب"}
+{"time": "2026-10-14 06:47:15", "report": "crop-004", "n": "0e655bcab0be", "checked": false, "comment": "الأوسطان سيئان"}
+{"time": "2026-10-14 06:47:15", "report": "crop-004", "n": "0e655bcab0be", "checked": true, "comment": "الأوسطان سيئان"}
+{"time": "2026-10-14 06:47:46", "report": "crop-004", "n": "1120ebd46313", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:47:56", "report": "crop-004", "n": "1120ebd46313", "checked": true, "comment": "يمكن تجاهل الختن"}
+{"time": "2026-10-14 06:47:58", "report": "crop-004", "n": "1120ebd46313", "checked": true, "comment": "يمكن تجاهل الختمن"}
+{"time": "2026-10-14 06:47:59", "report": "crop-004", "n": "1120ebd46313", "checked": true, "comment": "يمكن تجاهل الختم"}
+{"time": "2026-10-14 06:48:15", "report": "crop-004", "n": "1120ebd46313", "checked": true, "comment": "يمكن تجاهل الختم في الأولى لنتيجة تشبه الثانية"}
+{"time": "2026-10-14 06:48:23", "report": "crop-004", "n": "14e9a6149e7b", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:48:34", "report": "crop-004", "n": "16737c8e808d", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:48:41", "report": "crop-004", "n": "16b15400af27", "checked": false, "comment": "رائع"}
+{"time": "2026-10-14 06:48:42", "report": "crop-004", "n": "16b15400af27", "checked": true, "comment": "رائع"}
+{"time": "2026-10-14 06:48:47", "report": "crop-004", "n": "1952421d0f6b", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:49:06", "report": "crop-004", "n": "1ab3b838b6d1", "checked": false, "comment": "1 و 4 سيء"}
+{"time": "2026-10-14 06:49:08", "report": "crop-004", "n": "1ab3b838b6d1", "checked": true, "comment": "1 و 4 سيء"}
+{"time": "2026-10-14 06:49:43", "report": "crop-004", "n": "1d12000b2925", "checked": false, "comment": "1 تأثرت ببقاء "}
+{"time": "2026-10-14 06:49:48", "report": "crop-004", "n": "1d12000b2925", "checked": false, "comment": "1 تأثرت ببقاء عيب طباعة بالي"}
+{"time": "2026-10-14 06:49:50", "report": "crop-004", "n": "1d12000b2925", "checked": false, "comment": "1 تأثرت ببقاء عيب طباعة باليسار"}
+{"time": "2026-10-14 06:49:51", "report": "crop-004", "n": "1d12000b2925", "checked": true, "comment": "1 تأثرت ببقاء عيب طباعة باليسار"}
+{"time": "2026-10-14 06:50:02", "report": "crop-004", "n": "203c9d770855", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:50:06", "report": "crop-004", "n": "207cac787b1b", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:50:15", "report": "crop-004", "n": "2171e12f063a", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:50:25", "report": "crop-004", "n": "250554a1a192", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:50:30", "report": "crop-004", "n": "29c935dff2a4", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:50:59", "report": "crop-004", "n": "2a8c4bfeff47", "checked": false, "comment": "ميلان لم يصلح"}
+{"time": "2026-10-14 06:51:03", "report": "crop-004", "n": "2a8c4bfeff47", "checked": true, "comment": "ميلان لم يصلح"}
+{"time": "2026-10-14 06:51:16", "report": "crop-004", "n": "2a8c4bfeff47", "checked": true, "comment": "ميلان لم يصلح في "}
+{"time": "2026-10-14 06:51:17", "report": "crop-004", "n": "2a8c4bfeff47", "checked": true, "comment": "ميلان لم يصلح في 42"}
+{"time": "2026-10-14 06:51:34", "report": "crop-004", "n": "2af978d37d97", "checked": false, "comment": "250"}
+{"time": "2026-10-14 06:51:36", "report": "crop-004", "n": "2af978d37d97", "checked": false, "comment": "250 "}
+{"time": "2026-10-14 06:51:42", "report": "crop-004", "n": "2af978d37d97", "checked": false, "comment": "250 لم تقوم"}
+{"time": "2026-10-14 06:51:43", "report": "crop-004", "n": "2af978d37d97", "checked": true, "comment": "250 لم تقوم"}
+{"time": "2026-10-14 06:52:05", "report": "crop-004", "n": "2b47002d18ab", "checked": false, "comment": "2 و 3"}
+{"time": "2026-10-14 06:52:06", "report": "crop-004", "n": "2b47002d18ab", "checked": true, "comment": "2 و 3"}
+{"time": "2026-10-14 06:52:13", "report": "crop-004", "n": "2b47002d18ab", "checked": true, "comment": "2 و 3 ()"}
+{"time": "2026-10-14 06:52:16", "report": "crop-004", "n": "2b47002d18ab", "checked": true, "comment": "2 و 3 (أي: يصل)"}
+{"time": "2026-10-14 06:52:18", "report": "crop-004", "n": "2b47002d18ab", "checked": true, "comment": "2 و 3 (أي: ي)"}
+{"time": "2026-10-14 06:52:22", "report": "crop-004", "n": "2b47002d18ab", "checked": true, "comment": "2 و 3 (أي: يجب إصلاحهما)"}
+{"time": "2026-10-14 06:52:28", "report": "crop-004", "n": "2c39ea83a740", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:52:34", "report": "crop-004", "n": "2da348ccab6c", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:52:49", "report": "crop-004", "n": "3103a9db389b", "checked": false, "comment": "توسيط في الأولى"}
+{"time": "2026-10-14 06:52:50", "report": "crop-004", "n": "3103a9db389b", "checked": true, "comment": "توسيط في الأولى"}
+{"time": "2026-10-14 06:52:58", "report": "crop-004", "n": "32cc1e90c8d3", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:53:04", "report": "crop-004", "n": "330c83cd2445", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:53:10", "report": "crop-004", "n": "34fcb7383957", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:53:18", "report": "crop-004", "n": "358ea705fdb7", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:53:26", "report": "crop-004", "n": "3b2ef4f4536d", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:53:34", "report": "crop-004", "n": "3b9422aeb1ee", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:53:38", "report": "crop-004", "n": "3bf13d3dffef", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:53:42", "report": "crop-004", "n": "3cd94f771da5", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:53:46", "report": "crop-004", "n": "3d1d0b6f7fc6", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:53:53", "report": "crop-004", "n": "3dc9712f7634", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:53:57", "report": "crop-004", "n": "3e405f895bd4", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:54:04", "report": "crop-004", "n": "3ee795ab24bc", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:54:17", "report": "crop-004", "n": "3fb2832a6f91", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:54:30", "report": "crop-004", "n": "40ecb2d0d194", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:54:36", "report": "crop-004", "n": "41bbe097a139", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:54:53", "report": "crop-004", "n": "43b1158bc5be", "checked": false, "comment": ""}
+{"time": "2026-10-14 06:55:10", "report": "crop-004", "n": "43b1158bc5be", "checked": false, "comment": "444 مالت عكسيا ولم تقوم تماما"}
+{"time": "2026-10-14 06:56:05", "report": "crop-004", "n": "4a0fc25a3d64", "checked": false, "comment": "ميلان"}
+{"time": "2026-10-14 06:56:11", "report": "crop-004", "n": "4a0fc25a3d64", "checked": false, "comment": "ميلان في الصفحات"}
+{"time": "2026-10-14 06:56:20", "report": "crop-004", "n": "4a22ffbf7118", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:56:31", "report": "crop-004", "n": "4a2702766a96", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:56:37", "report": "crop-004", "n": "4beee6373529", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:56:41", "report": "crop-004", "n": "4e3f5e8d8279", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:56:45", "report": "crop-004", "n": "4eba1b51624e", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:56:48", "report": "crop-004", "n": "4fc22c63aac5", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:56:52", "report": "crop-004", "n": "5024fd11850c", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:56:56", "report": "crop-004", "n": "504498067311", "checked": true, "comment": ""}
+{"time": "2026-10-14 06:57:16", "report": "crop-004", "n": "51cfa6854fda", "checked": false, "comment": "أزل الطابع لتتسق الصفحات"}
+{"time": "2026-10-14 06:57:18", "report": "crop-004", "n": "51cfa6854fda", "checked": false, "comment": "أزل الطابع لتتسق الصفحات كلها"}
+{"time": "2026-10-14 06:57:19", "report": "crop-004", "n": "51cfa6854fda", "checked": true, "comment": "أزل الطابع لتتسق الصفحات كلها"}
+{"time": "2026-10-14 06:57:35", "report": "crop-004", "n": "51cfa6854fda", "checked": true, "comment": "أزل الطابع في 1 لتتسق الصفحات كلها"}
+{"time": "2026-10-14 06:58:01", "report": "crop-004", "n": "54dce4c59b22", "checked": false, "comment": "1 خطأ"}
+{"time": "2026-10-14 06:58:23", "report": "crop-004", "n": "55d35c02e3e0", "checked": false, "comment": "وسط ولا تلتفت للخط "}
+{"time": "2026-10-14 06:58:29", "report": "crop-004", "n": "55d35c02e3e0", "checked": false, "comment": "وسط ولا تلتفت للخط الذي هو عيب طباعة"}
+{"time": "2026-10-14 06:58:59", "report": "crop-004", "n": "5c6d5b1e8bbd", "checked": true, "comment": ""}
+{"time": "2026-10-14 07:00:56", "report": "crop-004", "n": "816413b0e765", "checked": false, "comment": "قبل وبعد كلاهما خطأ"}
+{"time": "2026-10-14 07:01:37", "report": "crop-004", "n": "83dfc7786870", "checked": false, "comment": "أحدثت ميلا "}
+{"time": "2026-10-14 07:01:44", "report": "crop-004", "n": "83dfc7786870", "checked": false, "comment": "أحدثت ميلا في الثانية"}
+{"time": "2026-10-14 07:03:10", "report": "crop-004", "n": "ae39a500653d", "checked": false, "comment": "راجعت إلى هنا فقط\nويجب عليك مراجعة الباقي وإصلاح ما تش"}
+{"time": "2026-10-14 07:03:18", "report": "crop-004", "n": "ae39a500653d", "checked": false, "comment": "راجعت إلى هنا فقط\nويجب عليك مراجعة الباقي وإصلاح ما تجده"}
+{"time": "2026-10-14 07:03:19", "report": "crop-004", "n": "ae39a500653d", "checked": false, "comment": "راجعت إلى هنا فقط\nويجب عليك مراجعة الباقي وإصلاح ما تجده "}
+{"time": "2026-10-14 07:03:27", "report": "crop-004", "n": "ae39a500653d", "checked": false, "comment": "راجعت إلى هنا فقط\nويجب عليك مراجعة الباقي وإصلاح ما تجده \nوعسى أن تكون "}
+{"time": "2026-10-14 07:03:38", "report": "crop-004", "n": "ae39a500653d", "checked": false, "comment": "راجعت إلى هنا فقط\nويجب عليك مراجعة الباقي وإصلاح ما تجده \nوعسى أن تكون العمليات المقبلة أكبر جودة"}
+{"time": "2026-10-14 07:03:47", "report": "crop-004", "n": "ae39a500653d", "checked": false, "comment": "راجعت إلى هنا فقط\nويجب عليك مراجعة الباقي وإصلاح ما تجده \nوعسى أن تكون العمليات المقبلة أكبر جودة وتصحيحا ذاتيا"}
+{"time": "2026-10-14 07:39:20", "report": "plan-321", "n": "1", "checked": false, "comment": "x"}
+{"time": "2026-10-14 07:39:32", "report": "plan-321", "n": "1", "checked": false, "comment": ""}
+{"time": "2026-10-14 07:47:09", "report": "plan-319", "n": "1", "checked": false, "comment": ""}
+{"time": "2026-10-14 07:47:13", "report": "plan-319", "n": "1", "checked": false, "comment": ""}
+{"time": "2026-10-14 07:47:21", "report": "plan-320a", "n": "1", "checked": false, "comment": "ءيب"}
+{"time": "2026-10-14 07:47:22", "report": "plan-320a", "n": "1", "checked": false, "comment": "x"}
+{"time": "2026-10-14 07:47:41", "report": "plan-320a", "n": "1", "checked": false, "comment": ""}
+{"time": "2026-10-14 07:53:29", "report": "plan-320a", "n": "1", "checked": false, "comment": "x"}
+{"time": "2026-10-14 07:54:05", "report": "plan-320a", "n": "1", "checked": false, "comment": "c"}
+{"time": "2026-10-14 07:54:09", "report": "plan-320a", "n": "1", "checked": false, "comment": "cropping should "}
+{"time": "2026-10-14 07:54:17", "report": "plan-320a", "n": "1", "checked": false, "comment": "cropping should be redonem, it was horrible"}
+{"time": "2026-10-14 07:54:21", "report": "plan-320a", "n": "2", "checked": false, "comment": "x"}
+{"time": "2026-10-14 07:54:41", "report": "plan-320a", "n": "2", "checked": false, "comment": "x"}
+{"time": "2026-10-14 07:54:44", "report": "plan-320a", "n": "3", "checked": false, "comment": "x"}
+{"time": "2026-10-14 07:56:04", "report": "plan-320a", "n": "2", "checked": false, "comment": ""}
+{"time": "2026-10-14 07:56:06", "report": "plan-320a", "n": "2", "checked": false, "comment": ""}
+{"time": "2026-10-14 07:56:13", "report": "plan-320a", "n": "2", "checked": false, "comment": "لم كان مستبعدا. "}
+{"time": "2026-10-14 07:56:30", "report": "plan-320a", "n": "2", "checked": false, "comment": "لم كان مستبعدا."}
+{"time": "2026-10-14 07:56:32", "report": "plan-320a", "n": "2", "checked": false, "comment": "لم كان مستبعدا؟"}
+{"time": "2026-10-14 07:56:36", "report": "plan-320a", "n": "1", "checked": false, "comment": "cropping should be redone, it was horrible"}
+{"time": "2026-10-14 07:56:43", "report": "plan-320a", "n": "3", "checked": false, "comment": ""}
+{"time": "2026-10-14 07:57:09", "report": "plan-320a", "n": "3", "checked": false, "comment": "يبب"}
+{"time": "2026-10-14 07:57:12", "report": "plan-320a", "n": "3", "checked": false, "comment": ""}
+{"time": "2026-10-14 07:57:15", "report": "plan-320a", "n": "3", "checked": false, "comment": ""}
+{"time": "2026-10-14 07:57:21", "report": "plan-320a", "n": "3", "checked": false, "comment": "نعم، إن لم ك"}
+{"time": "2026-10-14 07:57:24", "report": "plan-320a", "n": "3", "checked": false, "comment": "نعم، إن لم توجد نسخة "}
+{"time": "2026-10-14 07:57:37", "report": "plan-320a", "n": "3", "checked": false, "comment": "نعم، إن لم توجد نسخة أخرى لنفس النشرة يجب إصلاحه وتفريق كل صفحتين..."}
+{"time": "2026-10-14 07:58:12", "report": "plan-320b", "n": "3", "checked": false, "comment": "ء"}
+{"time": "2026-10-14 07:58:13", "report": "plan-320b", "n": "3", "checked": false, "comment": "x"}
+{"time": "2026-10-14 07:58:32", "report": "plan-320b", "n": "3", "checked": false, "comment": "x"}
+{"time": "2026-10-14 07:59:11", "report": "plan-320b", "n": "3", "checked": false, "comment": ""}
+{"time": "2026-10-14 07:59:14", "report": "plan-320b", "n": "1", "checked": false, "comment": "x"}
+{"time": "2026-10-14 07:59:32", "report": "plan-320b", "n": "1", "checked": false, "comment": "c"}
+{"time": "2026-10-14 07:59:36", "report": "plan-320b", "n": "1", "checked": false, "comment": "cropping horrible"}
+{"time": "2026-10-14 07:59:46", "report": "plan-320b", "n": "2", "checked": false, "comment": "x"}
+{"time": "2026-10-14 07:59:51", "report": "plan-320b", "n": "3", "checked": false, "comment": "sould be "}
+{"time": "2026-10-14 08:00:07", "report": "plan-320b", "n": "3", "checked": false, "comment": "to be fixed and every 2 pages divided"}
+{"time": "2026-10-14 08:00:11", "report": "plan-320b", "n": "2", "checked": false, "comment": "x"}
+{"time": "2026-10-14 08:01:04", "report": "plan-320b", "n": "2", "checked": false, "comment": "لم أفه"}
+{"time": "2026-10-14 08:01:05", "report": "plan-320b", "n": "2", "checked": false, "comment": "لم أفهم"}
