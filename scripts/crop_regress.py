@@ -20,6 +20,16 @@ def local_copy(path):
     hits = [p for p in idx if N(p) == N(path)]
     if len(hits) != 1 or not hits[0].endswith('.pdf'): raise SystemExit(f'not on the phone (index-now): {path}')
     subprocess.run(['flock', '/tmp/phone-ftp.lock', 'rclone', 'copyto', '--retries', '3', 'phone:Books/' + hits[0], out], check=True)
+    # a book already cropped on the phone: its original bytes are the first <original size> bytes (the crop is an appended
+    # revision), proven by the logged MD5 — the method is always tested on the book as it was scanned
+    logged = [r[4] for r in csv.reader(open(os.path.join(ROOT, 'data/changes/changes.tsv'), encoding='utf-8'), delimiter='\t')
+              if len(r) > 4 and r[1] == 'crop' and N(r[2]) == N('Books/' + hits[0]) and 'original ' in r[4]]
+    if logged and 'crop undone' not in logged[-1]:
+        n0 = int(logged[-1].split('original ')[1].split(' B')[0]); m0 = logged[-1].split('md5 ')[1].split(';')[0]
+        if os.path.getsize(out) > n0:
+            with open(out, 'r+b') as f: f.truncate(n0)
+        if hashlib.md5(open(out, 'rb').read()).hexdigest() != m0:
+            os.remove(out); raise SystemExit(f'original bytes not recovered for {path}')
     return out
 
 def recipe(pdf):
