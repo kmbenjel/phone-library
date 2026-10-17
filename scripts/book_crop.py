@@ -621,6 +621,25 @@ def figures_of(margin, w, h):
     tall and 4 % of its area is content that must be shown whole, wherever it lies"""
     return [b for b in margin if b[2] - b[0] >= 0.15 * w and b[3] - b[1] >= 0.15 * h and (b[2] - b[0]) * (b[3] - b[1]) >= 0.04 * w * h]
 
+def printed_groups(margin, w, h):
+    """PRINT IN THE MARGIN of a book that prints there (folio numbers of the manuscript, glosses, side headings): groups of
+    margin marks (less than 1.5 % of the width apart) holding two letter-sized marks or more (≥ 0.6 % of the height tall and
+    ≥ 0.3 % of the width wide), or one large glyph (≥ 1.5 % of the height); not lines. A few dots or a speck far from the text
+    are not print (owner 2026-10-14, أسرار البلاغة ص 187 «توسيط»: five dots at the foot pulled the box aside)"""
+    M_ = [b for b in margin if not thin_line(b, w, h)]
+    if not M_: return []
+    from scipy.sparse.csgraph import connected_components
+    B = np.array(M_, float); g = 0.015 * w
+    adj = (B[:, None, 0] < B[None, :, 2] + g) & (B[None, :, 0] < B[:, None, 2] + g) & \
+          (B[:, None, 1] < B[None, :, 3] + g) & (B[None, :, 1] < B[:, None, 3] + g)
+    k, lab = connected_components(adj, directed=False)
+    out = []
+    for j in range(k):
+        S = B[lab == j]; hh, ww = S[:, 3] - S[:, 1], S[:, 2] - S[:, 0]
+        if ((hh >= 0.006 * h) & (ww >= 0.003 * w)).sum() >= 2 or (hh >= 0.015 * h).any():
+            out.append([float(S[:, 0].min()), float(S[:, 1].min()), float(S[:, 2].max()), float(S[:, 3].max())])
+    return out
+
 def notes_of(margin, w, h):
     """MARGINAL NOTES (owner 2026-10-09, اللآلئ ج2 ص 40 «لعله الدارقطني»: «جميل، أبق مثل هذه الهوامش ولو اختلف الزوجي عن الفردي
     في موضع النص»): words a reader or the printer put beside the text. Among a page's marks outside its text block: the
@@ -1016,7 +1035,8 @@ def decide(pages, wq=0.95):
             p['box'] = [min(bx[0], bl[0]), min(bx[1], bl[1]), max(bx[2], bl[2]), max(bx[3], bl[3])]
     # PRINTED RULES AND FRAMES belong to the page when the book prints them (marks() leaves every line out): a rule on the
     # same side of the text block at the same distance (± 2 % of the page) on ≥ 40 % of the text pages (at least 3); a rule
-    # inside the text block's span stays. Scan lines and print damage do not repeat (owner 2026-10-14: «لا تلتفت للخط الذي هو
+    # inside the text block's span stays; a rule further than 6 % of the page from the text is the scanner's or the sheet's
+    # edge, however often it recurs. Scan lines and print damage do not repeat (owner 2026-10-14: «لا تلتفت للخط الذي هو
     # عيب طباعة», مختصر تاريخ دمشق; صبح الأعشى ص 47 «خلل في التوسيط وفي تحديد الإطار»)
     def rkey(i, r):
         c = pages[i].get('core') or pages[i]['box']; w_, h_ = pages[i]['w'], pages[i]['h']
@@ -1026,7 +1046,9 @@ def decide(pages, wq=0.95):
     rk = {i: [(rkey(i, r), r) for r in pages[i].get('rules') or []] for i in text}
     allk = [k for i in text for k, _ in rk[i]]
     for i in text:
-        kept = [r for k, r in rk[i] if k[0] == 'I' or sum(1 for k2 in allk if k2[0] == k[0] and abs(k2[1] - k[1]) <= 0.02) >= max(3, 0.4 * len(text))]
+        # (a printed frame hugs its text — within 6 % of the page; the scanner's or the sheet's edges recur at one place on
+        # most pages too, but further out: صبح الأعشى ج 5, bars 13 % from the edge on both sides made the book «framed»)
+        kept = [r for k, r in rk[i] if k[0] == 'I' or (k[1] <= 0.06 and sum(1 for k2 in allk if k2[0] == k[0] and abs(k2[1] - k[1]) <= 0.02) >= max(3, 0.4 * len(text)))]
         dropped = [r for k, r in rk[i] if not any(r is x for x in kept)]
         if dropped: pages[i]['rules_dropped'] = dropped
         pages[i]['rules'] = kept
@@ -1190,6 +1212,16 @@ def decide(pages, wq=0.95):
             b = [x - W / 2, y - H / 2, x + W / 2, y + H / 2]
             dx = bx[0] - b[0] if bx[0] < b[0] else (bx[2] - b[2] if bx[2] > b[2] else 0)
             dy = bx[1] - b[1] if bx[1] < b[1] else (bx[3] - b[3] if bx[3] > b[3] else 0)
+            if (dx or dy) and not clean and p.get('text'):
+                # what the page needs (owner 2026-10-14): its text block, notes, pictures, the book's printed rules and its
+                # print in the margin (printed_groups) — stray dots and specks do not move the box (they are cut)
+                need = union([p['text']] + notes_of(p.get('margin') or [], p['w'], p['h']) + figures_of(p.get('margin') or [], p['w'], p['h'])
+                             + printed_groups(p.get('margin') or [], p['w'], p['h']) + (p.get('rules') or []) + ([p['folio'][:4]] if p.get('folio') else []))
+                if inside(need, bx, 1.0) and not inside(bx, need, 1.0):
+                    p['cut_stray'] = [m for m in (p.get('margin') or []) if not inside(m, need, 1.0)]
+                    p['content_box'] = bx; p['box'] = bx = need
+                    dx = bx[0] - b[0] if bx[0] < b[0] else (bx[2] - b[2] if bx[2] > b[2] else 0)
+                    dy = bx[1] - b[1] if bx[1] < b[1] else (bx[3] - b[3] if bx[3] > b[3] else 0)
             if dx or dy:
                 # the usual place does not hold this page's marks (a stamp, a plate, a chapter start, a marginal note):
                 # centre the box on the page's own content on that axis — equal margins, never text against the frame
@@ -1208,9 +1240,11 @@ def decide(pages, wq=0.95):
                 p['specks'] = [[v[0] + sx, v[1] + sy, v[2] + sx, v[3] + sy] for v in p.get('specks', [])]
                 p['edge'] = [[v[0] + sx, v[1] + sy, v[2] + sx, v[3] + sy] for v in p.get('edge', [])]
         b = [round(b[0] + sx, 1), round(b[1] + sy, 1), round(b[2] + sx, 1), round(b[3] + sy, 1)]
-        if bx and p.get('blots'):                    # dodge a stain: slide the box away from it, as far as the content and
+        tbx = p.get('text') or bx                    # a line beside the text (a scan line, an edge, print damage) is dodged
+        avoid = (p.get('blots') or []) + [ln for ln in (p.get('lines') or []) if tbx and not (ln[0] >= tbx[0] - 1 and ln[2] <= tbx[2] + 1 and ln[1] >= tbx[1] - 1 and ln[3] <= tbx[3] + 1)]
+        if bx and avoid:                             # dodge a stain: slide the box away from it, as far as the content and
             lo, hi = max(0, bx[2] - (b[2] - b[0])), min(bx[0], p['w'] - (b[2] - b[0]))      # the page allow (same size)
-            for bl in p['blots']:
+            for bl in avoid:
                 if bl[2] > b[0] and bl[0] < b[2] and bl[3] > b[1] and bl[1] < b[3]:
                     nx = bl[2] + 2 if bl[2] <= bx[0] else (bl[0] - 2 - (b[2] - b[0]) if bl[0] >= bx[2] else None)
                     if nx is not None and lo <= hi:
@@ -1227,6 +1261,15 @@ def decide(pages, wq=0.95):
                             p['blots'] = [[v[0] + sh, v[1], v[2] + sh, v[3]] for v in p.get('blots', [])]
                             p['specks'] = [[v[0] + sh, v[1], v[2] + sh, v[3]] for v in p.get('specks', [])]
                             p['edge'] = [[v[0] + sh, v[1], v[2] + sh, v[3]] for v in p.get('edge', [])]
+        if bx and avoid:                             # the same up and down: a line or stain along the top or the bottom edge
+            lo_y, hi_y = max(0, bx[3] - (b[3] - b[1])), min(bx[1], p['h'] - (b[3] - b[1]))   # (owner 2026-10-14, خزانة
+            for bl in avoid:                                                                  # الأدب ج 4 ص 44: a dark line)
+                if bl[2] > b[0] and bl[0] < b[2] and bl[3] > b[1] and bl[1] < b[3]:
+                    ny = bl[3] + 2 if bl[3] <= bx[1] else (bl[1] - 2 - (b[3] - b[1]) if bl[1] >= bx[3] else None)
+                    if ny is not None and lo_y <= hi_y:
+                        cand = min(max(ny, lo_y), hi_y); mt, mbm = bx[1] - cand, cand + (b[3] - b[1]) - bx[3]
+                        if min(mt, mbm) < 0.6 * max(mt, mbm): p['stain_kept'] = True; continue
+                        b = [b[0], round(cand, 1), b[2], round(cand + b[3] - b[1], 1)]; p['dodged'] = True
         b = [max(0, b[0]), max(0, b[1]), min(p['w'], b[2]), min(p['h'], b[3])]
         hm = 0.5 * mc                                 # half the margin at least, else the box grows (اللآلئ ج2 ص 40: 2 pt)
         if clean and p['kind'] == 'text' and bx and not inside([bx[0] - hm, bx[1] - hm, bx[2] + hm, bx[3] + hm], b):
@@ -1414,7 +1457,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                         if p.get('tilt_by_edge') is not None: p['tilt_disputed'] = round(u, 3)   # measures disagree)
                         else: p['untreated_tilt'] = round(u, 3)
         if tilt_only or not p.get('crop'): continue
-        c = p['crop']; known = (p.get('blots') or []) + (p.get('edge') or []) + (p.get('rules_dropped') or []) + (p.get('lines') or [])
+        c = p['crop']; known = (p.get('blots') or []) + (p.get('edge') or []) + (p.get('rules_dropped') or []) + (p.get('lines') or []) + (p.get('cut_stray') or [])
         if rec.get('clean_margins') and mk.get('text'):
             # a book without print in its side margins: the text block seen at 1,000 px must be inside the box, and no mark
             # may straddle the box edge (half in, half out = a cut letter); marks wholly outside the text columns are the
