@@ -334,6 +334,34 @@ def marks(a, scale, width, exclude=None):
     out['blots'] = [box_of(i) for i in sorted(blots)]
     content = [i for i in pre if i not in blots]
     if not content: return out
+    # LINES ARE NOT CONTENT HERE (owner 2026-10-14: «وسط ولا تلتفت للخط الذي هو عيب طباعة», مختصر تاريخ دمشق; scan lines and
+    # print damage along a side pulled boxes off-centre or kept pages whole — صبح الأعشى ص 47, مشتبهات القرآن ص 8): a long thin
+    # mark (≤ 0.6 % thick, ≥ 20 % of the page long), or a dashed line beside the text block (≥ 4 thin dashes in one column or
+    # row, spanning ≥ 15 % of the page). A printed rule or frame comes back in decide() when the book prints it (the same rule
+    # on many pages); a scan line or a flaw does not
+    lines = {i for i in content if (wid[i] <= 0.006 * Wd and hgt[i] >= 0.2 * H) or (hgt[i] <= 0.006 * H and wid[i] >= 0.2 * Wd)}
+    for i in content:                                 # a shorter thin line (≥ 3 % long, ≤ 0.4 % thick) beyond the text block
+        s_ = objs[i - 1]                              # (خزانة الأدب ص 18: 64 × 1.2 pt above the running head)
+        yc, xc = (s_[0].start + s_[0].stop) / 2, (s_[1].start + s_[1].stop) / 2
+        if (hgt[i] <= 0.004 * H and wid[i] >= 0.03 * Wd and (yc <= cy0 - g or yc >= cy1 + g)) or \
+           (wid[i] <= 0.004 * Wd and hgt[i] >= 0.03 * H and (xc <= cx0 - g or xc >= cx1 + g)): lines.add(i)
+    for vert in (True, False):
+        pos = (lambda i: (objs[i - 1][1].start + objs[i - 1][1].stop) / 2) if vert else (lambda i: (objs[i - 1][0].start + objs[i - 1][0].stop) / 2)
+        lo_c, hi_c, span, tol = (cx0, cx1, H, 0.004 * Wd) if vert else (cy0, cy1, Wd, 0.004 * H)
+        cand = sorted((i for i in content if i not in lines and (pos(i) <= lo_c - g or pos(i) >= hi_c + g)
+                       and ((wid[i] <= 0.004 * Wd and hgt[i] >= 2 * wid[i]) if vert else (hgt[i] <= 0.004 * H and wid[i] >= 2 * hgt[i]))), key=pos)
+        k = 0
+        while k < len(cand):
+            j = k
+            while j + 1 < len(cand) and pos(cand[j + 1]) - pos(cand[k]) <= tol: j += 1
+            grp = cand[k:j + 1]
+            if len(grp) >= 4:
+                lo = min(objs[i - 1][0].start if vert else objs[i - 1][1].start for i in grp)
+                hi = max(objs[i - 1][0].stop if vert else objs[i - 1][1].stop for i in grp)
+                if hi - lo >= 0.15 * span and sum(hgt[i] if vert else wid[i] for i in grp) >= 0.3 * (hi - lo): lines.update(grp)
+            k = j + 1
+    out['lines'] = [box_of(i) for i in sorted(lines)]
+    content = [i for i in content if i not in lines] or content
     # printed rules and frames, even faint ones (a chain border can break into specks): beyond the text block, a column
     # (row) where light ink runs along half the text block's height (width) or more is print — the box takes it in
     faint = a[r0:r1, c0:c1] < paper - 20
@@ -344,14 +372,16 @@ def marks(a, scale, width, exclude=None):
     sheet = lambda v, lo, hi, n: (v < 0.06 * n and lo - v >= 0.05 * Wd) or (v > 0.94 * n and v - hi >= 0.05 * Wd)   # the sheet's edge, not a rule
     rule_x = [x for x in range(Wd) if colcov[x] >= 0.5 and (x <= cx0 - g or x >= cx1 + g) and 0.03 * Wd < x < 0.97 * Wd and not sheet(x, cx0, cx1, Wd)]
     rule_y = [y for y in range(H) if rowcov[y] >= 0.5 and (y <= cy0 - g or y >= cy1 + g) and 0.03 * H < y < 0.97 * H and not sheet(y, cy0, cy1, H)]
-    out['rules'] = []
-    if rule_x: out['rules'].append(pt(min(rule_x), iy0, max(rule_x) + 1, iy1))
-    if rule_y: out['rules'].append(pt(ix0, min(rule_y), ix1, max(rule_y) + 1))
+    def runs(v):                                      # one rule per run of columns (rows): a frame's two sides are two rules
+        out_, s0 = [], None
+        for k, x in enumerate(v):
+            if s0 is None: s0 = x
+            if k + 1 == len(v) or v[k + 1] > x + 1: out_.append((s0, x)); s0 = None
+        return out_
+    out['rules'] = [pt(a_, iy0, b_ + 1, iy1) for a_, b_ in runs(rule_x)] + [pt(ix0, a_, ix1, b_ + 1) for a_, b_ in runs(rule_y)]
     keep = np.zeros(n + 1, bool); keep[content] = True
     ys, xs = np.nonzero(keep[lab])
-    out['box'] = pt(xs.min(), ys.min(), xs.max() + 1, ys.max() + 1)
-    for rb in out['rules']:                           # a frame side widens the content to itself
-        b = out['box']; out['box'] = [min(b[0], rb[0]), min(b[1], rb[1]), max(b[2], rb[2]), max(b[3], rb[3])]
+    out['box'] = pt(xs.min(), ys.min(), xs.max() + 1, ys.max() + 1)   # rules join the box in decide(), when the book prints them
     out['parts'] = [box_of(i) for i in content]
     qx, qy = np.percentile(xs, [2, 98]), np.percentile(ys, [2, 98])
     out['core'] = pt(qx[0], qy[0], qx[1] + 1, qy[1] + 1)
@@ -368,7 +398,10 @@ def marks(a, scale, width, exclude=None):
     gx = 0.015 * Wd; tx0, tx1 = float(qx[0]), float(qx[1] + 1)
     strip = (X1 <= 0.03 * Wd) | (X0 >= 0.97 * Wd) | (Y1 <= 0.03 * H) | (Y0 >= 0.97 * H)
     hh, ww = Y1 - Y0, X1 - X0
-    letter = ~strip & (hh <= 0.15 * H) & ((hh >= 0.004 * H) | (ww >= 0.008 * Wd))
+    # a thin line is not a letter (owner 2026-10-14, خزانة الأدب ص 18 «غير موسطة»: a stray rule beside the running head
+    # carried the text block, and the box with it, 33 pt to the left): ≤ 0.4 % thick and ≥ 3 % long, either way
+    thin = ((hh <= 0.004 * H) & (ww >= 0.03 * Wd)) | ((ww <= 0.004 * Wd) & (hh >= 0.03 * H))
+    letter = ~strip & ~thin & (hh <= 0.15 * H) & ((hh >= 0.004 * H) | (ww >= 0.008 * Wd))
     if not letter.any(): letter = ~strip if (~strip).any() else np.ones(len(cid), bool)
     tx0, tx1 = float(np.percentile(X0[letter], 2)), float(np.percentile(X1[letter], 98))   # the seed: letters only (a heavy
     while True:                                                                           # edge streak pulls the ink core)
@@ -412,6 +445,9 @@ def skew_of(xy, raw=False):
             c = np.bincount(yy).astype(float); return float((c * c).sum())
         base = score(0.0)
         angs = np.arange(-4, 4.001, 0.25); a0 = float(angs[int(np.argmax([score(v) for v in angs]))])
+        if abs(a0) >= 3.75:                           # the best at the edge of ±4°: look up to ±8° (owner 2026-10-14, أحكام
+            angs = np.arange(-8, 8.001, 0.25)         # القرآن للجصاص ص 250 «لم تقوم»: a 4.25° page was left as it was)
+            a0 = float(angs[int(np.argmax([score(v) for v in angs]))])
         fine = np.arange(a0 - 0.25, a0 + 0.2501, 0.025); sc = [score(v) for v in fine]
         return float(fine[int(np.argmax(sc))]), max(sc) / base
     x, y = xs.astype(float), ys.astype(float)
@@ -574,6 +610,17 @@ def inside(b, box, tol=0.5):
 def union(bs):
     return [min(b[0] for b in bs), min(b[1] for b in bs), max(b[2] for b in bs), max(b[3] for b in bs)]
 
+def thin_line(b, w, h):
+    """a rule or a scan line, not a letter: ≤ 0.4 % thick and ≥ 3 % long (of the page), either way"""
+    bw, bh = b[2] - b[0], b[3] - b[1]
+    return (bh <= 0.004 * h and bw >= 0.03 * w) or (bw <= 0.004 * w and bh >= 0.03 * h)
+
+def figures_of(margin, w, h):
+    """PICTURES, PLATES, TABLES beside the text (owner 2026-10-14, القائد إلى العقائد ص 15 «خطأ»: the photo of a manuscript
+    leaf in its frame was cut — one big mark, not a letter, was taken for margin): a mark at least 15 % of the page wide and
+    tall and 4 % of its area is content that must be shown whole, wherever it lies"""
+    return [b for b in margin if b[2] - b[0] >= 0.15 * w and b[3] - b[1] >= 0.15 * h and (b[2] - b[0]) * (b[3] - b[1]) >= 0.04 * w * h]
+
 def notes_of(margin, w, h):
     """MARGINAL NOTES (owner 2026-10-09, اللآلئ ج2 ص 40 «لعله الدارقطني»: «جميل، أبق مثل هذه الهوامش ولو اختلف الزوجي عن الفردي
     في موضع النص»): words a reader or the printer put beside the text. Among a page's marks outside its text block: the
@@ -582,8 +629,11 @@ def notes_of(margin, w, h):
     specks than strokes inside its box (a smudge is a cloud of specks with a blot or two: اللآلئ ج2 ص 465), and spans
     2–30 % of the width and at most 25 % of the height. A single pen stroke, dots, smudges, stains and scan edges are not
     notes: they are cut like the rest of the margin. Returns the notes' boxes"""
+    # (a dash of a scan line is not a stroke: ≤ 0.3 % thick and 3 times as long — owner 2026-10-14, مناقب الإمام أحمد ص 578: a
+    # column of such dashes along the sheet's edge became a 0.6 pt wide «note», and the page was shrunk to keep it)
     L = [b for b in margin if not (b[2] <= 0.03 * w or b[0] >= 0.97 * w or b[3] <= 0.03 * h or b[1] >= 0.97 * h)
-         and b[3] - b[1] <= 0.06 * h and b[2] - b[0] <= 0.10 * w and (b[3] - b[1] >= 0.005 * h or b[2] - b[0] >= 0.008 * w)]
+         and b[3] - b[1] <= 0.06 * h and b[2] - b[0] <= 0.10 * w and (b[3] - b[1] >= 0.005 * h or b[2] - b[0] >= 0.008 * w)
+         and not (b[2] - b[0] <= 0.003 * w and b[3] - b[1] >= 3 * (b[2] - b[0])) and not (b[3] - b[1] <= 0.003 * h and b[2] - b[0] >= 3 * (b[3] - b[1]))]
     if not L or len(L) > 400: return []              # none, or a margin full of marks (a scan defect, not a note)
     from scipy.sparse.csgraph import connected_components
     B = np.array(L, float); g = 0.02 * w
@@ -595,8 +645,87 @@ def notes_of(margin, w, h):
         S = B[lab == j]; box = [float(S[:, 0].min()), float(S[:, 1].min()), float(S[:, 2].max()), float(S[:, 3].max())]
         bw, bh = box[2] - box[0], box[3] - box[1]
         tiny = sum(1 for b in margin if max(b[2] - b[0], b[3] - b[1]) < 0.004 * w and inside(b, box, 1.0))
-        if len(S) >= 3 and tiny <= len(S) and max(bw, bh) >= 0.02 * w and bw <= 0.3 * w and bh <= 0.25 * h:
+        if len(S) >= 3 and tiny <= len(S) and max(bw, bh) >= 0.02 * w and min(bw, bh) >= 0.008 * w and bw <= 0.3 * w and bh <= 0.25 * h:
             out.append(box)
+    return out
+
+def cover_rect(page, px=360):
+    """THE COVER ITSELF (owner 2026-10-14, دلائل الإعجاز ص 1: «اشمل الصفحة بالغلاف فقط»; معجم تيمور ص 1 «يمكن شملها
+    بالغلاف»): a cover photographed on the scanner bed or set on a white sheet. Two ways to see it: (a) the region whose
+    colour differs from the page's outer 3 % ring (≥ 45 on some channel) — a cover on a white sheet; (b) the region of the
+    colour of the page's centre (within 55, holes filled), when that colour differs from the ring's (≥ 12) and is not
+    paper's (light and grey) — a dark cloth cover on a dark scanner bed. The largest such region, trimmed to its solid rows and columns (≥ 60 % covered), is the
+    cover when: it fills 25–97 % of the page; it is solid (≥ 85 % of its rectangle) and one piece (the trimming left ≤ 5 % of
+    it out — a big logo or a block of letters trims down to a part of itself); and beside it lies only what reaches the
+    sheet's edge (the scanner bed, a sheet under the cover) — ink standing free beside it is print (a title page with lines
+    outside its frame). Returns the rectangle in pt, 1 % inside its edges, or None"""
+    z = px / page.rect.width
+    pix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), colorspace=pymupdf.csRGB, alpha=False)
+    a = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width * 3].reshape(pix.height, pix.width, 3).astype(np.int16)
+    H, W = a.shape[:2]; r = max(2, int(0.03 * min(H, W)))
+    ring = np.concatenate([a[:r].reshape(-1, 3), a[-r:].reshape(-1, 3), a[:, :r].reshape(-1, 3), a[:, -r:].reshape(-1, 3)])
+    bg = np.median(ring, axis=0)
+    diff = ndimage.binary_closing(np.abs(a - bg).max(axis=2) >= 45, iterations=2)
+    cands = [diff]
+    cc = np.median(a[int(0.35 * H):int(0.65 * H), int(0.35 * W):int(0.65 * W)].reshape(-1, 3), axis=0)
+    paperish = cc.min() >= 160 and cc.max() - cc.min() < 40     # a light, unsaturated centre is paper, not a cover
+    if np.abs(cc - bg).max() >= 12 and not paperish:
+        same = np.sqrt(((a - cc) ** 2).sum(axis=2)) <= 55
+        cands.append(ndimage.binary_fill_holes(ndimage.binary_closing(same, iterations=3)))
+    for mask in cands:
+        lab, n = ndimage.label(mask)
+        if n == 0: continue
+        big = int(np.argmax(np.bincount(lab.ravel())[1:])) + 1
+        m = lab == big; ys, xs = np.nonzero(m)
+        y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
+        sub = m[y0:y1, x0:x1]
+        rows = np.nonzero(sub.mean(1) >= 0.6)[0]; cols = np.nonzero(sub.mean(0) >= 0.6)[0]
+        if len(rows) < 10 or len(cols) < 10: continue
+        y0, y1, x0, x1 = y0 + rows[0], y0 + rows[-1] + 1, x0 + cols[0], x0 + cols[-1] + 1
+        area = (y1 - y0) * (x1 - x0) / (H * W)
+        if not 0.25 <= area <= 0.97 or m[y0:y1, x0:x1].mean() < 0.85: continue
+        if m.sum() - m[y0:y1, x0:x1].sum() > 0.05 * m.sum(): continue
+        out = diff.copy(); out[y0:y1, x0:x1] = False
+        ol, k = ndimage.label(out)
+        if k:
+            border = set(np.unique(np.concatenate([ol[0], ol[-1], ol[:, 0], ol[:, -1]]))) - {0}
+            sz = np.bincount(ol.ravel())                # print is many small marks; a sheet under the cover is one big piece
+            small = [j for j in range(1, k + 1) if j not in border and sz[j] < 0.003 * H * W]
+            if small and sz[small].sum() > 0.002 * H * W: continue
+        dx, dy = 0.01 * (x1 - x0), 0.01 * (y1 - y0)
+        return [round((x0 + dx) / z, 2), round((y0 + dy) / z, 2), round((x1 - dx) / z, 2), round((y1 - dy) / z, 2)]
+    return None
+
+def colour_stamps(page, px=500):
+    """A COLOURED STAMP ON A PAGE PRINTED IN BLACK (owner 2026-10-14, خزانة الأدب ص 18: «لم تزل الطابع في الأولى لتحصل على
+    نفس التكبير في غيرها» — a purple «dar-alkotob» octagon above the text): ink of a clear colour (channels differing by ≥ 60);
+    its groups (marks within 0.5 % of the width) at least 3 % of the width or 2 % of the height, lying wholly outside the
+    black text's extent (2–98 % of the grey ink, rows or columns) — above, below or beside it. A coloured heading or word
+    inside the text column stays, and a page printed mostly in colour (coloured ink > 30 % of all ink) is left alone.
+    Left out of every measure like an uploader's stamp. Returns their boxes (pt)"""
+    z = px / page.rect.width
+    pix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), colorspace=pymupdf.csRGB, alpha=False)
+    if pix.n < 3: return []
+    a = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width * 3].reshape(pix.height, pix.width, 3).astype(np.int16)
+    g = a.mean(axis=2); paper = float(np.percentile(g, 90))
+    if paper < 150: return []
+    ink = g < paper - 40; sat = (a.max(axis=2) - a.min(axis=2)) >= 60
+    col = ink & sat; black = ink & ~sat; ni = int(ink.sum())
+    if ni == 0 or col.sum() == 0 or col.sum() > 0.30 * ni or black.sum() < 200: return []
+    H, W = g.shape
+    lab, k = ndimage.label(ndimage.binary_dilation(col, iterations=max(1, int(0.005 * W))))
+    groups = ndimage.find_objects(lab)
+    bl = black.copy(); e = int(0.01 * W)             # the stamp's own black lettering is not the page's text
+    for sl in groups: bl[max(0, sl[0].start - e):sl[0].stop + e, max(0, sl[1].start - e):sl[1].stop + e] = False
+    if bl.sum() < 200: return []
+    by, bx = np.nonzero(bl)
+    y0, y1 = np.percentile(by, [2, 98]); x0, x1 = np.percentile(bx, [2, 98])
+    out = []
+    for sl in groups:
+        h_, w_ = sl[0].stop - sl[0].start, sl[1].stop - sl[1].start
+        if not (w_ >= 0.03 * W or h_ >= 0.02 * H): continue
+        if sl[0].stop <= y0 or sl[0].start >= y1 or sl[1].stop <= x0 or sl[1].start >= x1:
+            out.append([round(sl[1].start / z, 1), round(sl[0].start / z, 1), round(sl[1].stop / z, 1), round(sl[0].stop / z, 1)])
     return out
 
 def analyse_pages(path, stamps=None, only=None, jobs=1):
@@ -616,7 +745,12 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
         r = page.rect
         rec = {'w': round(r.width, 1), 'h': round(r.height, 1)}
         if page.rotation: rec['kind'] = 'rotated'; pages.append(rec); done[i] = rec; continue
-        st = stamps.get(i) or stamps.get(str(i))
+        if i < 2 or i >= doc.page_count - 2:              # the first and last two pages: a cover is shown alone, whole
+            cv = cover_rect(page)
+            if cv: rec.update(kind='cover', cover=cv, box=cv); pages.append(rec); done[i] = rec; continue
+        st = list(stamps.get(i) or stamps.get(str(i)) or [])
+        cs = colour_stamps(page)                       # a coloured stamp on a page printed in black: left out like the others
+        if cs: st += cs; rec['colour_stamp'] = cs
         if st: rec['stamp'] = st
         ex0 = [pad_box(b, r.width) for b in st] if st else None
         a, z = gray(page, 500)
@@ -625,6 +759,10 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
             ang, gain = skew_of(mk['xy'])
             if 0.1 <= abs(ang) < 0.35:                   # small: measure again at twice the resolution
                 a2, z2 = gray(page, 1000); ang, gain = skew_of(marks(a2, z2, r.width, ex0)['xy'])
+            # a page whose printed frame or rule stands level while its content reads ≥ 1° (a photographed leaf in a
+            # level frame: owner 2026-10-14, روضة المستبين ص 138 «أحدثت ميلا»): not turned — a 1° tilt would have kept
+            # the rule from showing as one (it drifts beyond its 1 % band over half the page)
+            if abs(ang) >= 1.0 and mk.get('rules'): rec['frame_level'] = round(ang, 3); ang = 0.0
             if abs(ang) >= SKEW_MIN and gain >= 1.02:
                 for deg in (-ang, ang):
                     t = turned(doc, i, deg); a2, z2 = gray(t[0], 500)
@@ -637,7 +775,7 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
                     if abs(left) <= max(0.1, abs(ang) / 3): rec['skew'] = round(deg, 3); mk = mk2; break
         mk.pop('xy', None); mk.pop('parts', None)
         rec.update(allowed=mk['allowed'], specks=mk['specks'], blots=mk['blots'], edge=mk['edge'], core=mk['core'], paper=round(mk.get('paper', 0)),
-                   rules=mk.get('rules', []), text=mk.get('text'), margin=mk.get('margin', []), folio=mk.get('folio'))
+                   rules=mk.get('rules', []), lines=mk.get('lines', []), text=mk.get('text'), margin=mk.get('margin', []), folio=mk.get('folio'))
         if mk['box'] is None: rec['kind'] = 'blank' if mk['dark'] < 0.5 else 'picture'
         elif mk['dark'] > 0.35: rec['kind'] = 'picture'   # dark pages only: a tight light scan is text (stays whole if it cannot fit)
         else: rec['kind'] = 'text'
@@ -738,6 +876,59 @@ def _stamp_chunk(args):
     doc.close()
     return out
 
+def spread_gutters(doc, px=500):
+    """TWO BOOK PAGES ON ONE SHEET (owner 2026-10-14, طبقات الفقهاء للشيرازي: «لماذا لم تحاول تقسيم الصفحات المزدوجة؟»; plan
+    320: «every 2 pages divided»): for each sheet wider than 1.15 × its height, the gutter between its two pages — the
+    longest run of columns between 35 % and 65 % of the width where letters (marks ≤ 4 % tall and ≤ 5 % wide: not the binding's
+    shadow, not a rule) leave at most 5 % of their fullest column's ink, rows 10–90 %. A sheet without such a run is not split
+    (a map, a table across the sheet). Returns {page index: gutter x (pt, page coordinates)}"""
+    out = {}
+    for i, page in enumerate(doc):
+        r = page.rect
+        if page.rotation or r.width <= 1.15 * r.height: continue
+        a, z = gray(page, px); paper = float(np.percentile(a, 90))
+        if paper < 110: continue
+        m = a < paper - 50; H, W = m.shape
+        lab, n = ndimage.label(m, structure=np.ones((3, 3), bool))
+        if n == 0: continue
+        objs = ndimage.find_objects(lab)
+        ok = np.zeros(n + 1, bool)
+        for k, sl in enumerate(objs, 1):
+            hh, ww = sl[0].stop - sl[0].start, sl[1].stop - sl[1].start
+            ok[k] = hh <= 0.04 * H and ww <= 0.05 * W
+        letters = ok[lab]
+        prof = ndimage.uniform_filter1d(letters[int(0.1 * H):int(0.9 * H)].sum(0).astype(float), max(3, int(0.01 * W)))
+        if prof.max() <= 0: continue
+        lo, hi = int(0.35 * W), int(0.65 * W); low = prof[lo:hi] <= 0.05 * prof.max()
+        best, run = None, None
+        for x in range(len(low) + 1):
+            if x < len(low) and low[x]: run = x if run is None else run
+            elif run is not None:
+                if best is None or x - run > best[1] - best[0]: best = (run, x)
+                run = None
+        if best and best[1] - best[0] >= 0.005 * W:
+            out[i] = round(((lo + (best[0] + best[1]) / 2) / z), 2)
+    return out
+
+def split_pages(doc, split):
+    """each sheet of `split` ({index: gutter x}) becomes two pages — its right-hand page first (Arabic), then its left —
+    the same page content shown through two CropBoxes (fullcopy_page: the images are shared, never copied). In place"""
+    for i in sorted((int(k) for k in split), reverse=True):
+        g = float(split[str(i)] if str(i) in split else split[i])
+        page = doc[i]; inv = ~page.transformation_matrix
+        cb = raw_box(doc, page.xref, 'CropBox') or raw_box(doc, page.xref, 'MediaBox')   # the file's own values
+        a, b = pymupdf.Point(g, 0) * inv, pymupdf.Point(g, page.rect.height) * inv
+        gx = (a.x + b.x) / 2                         # the gutter in the page's own (PDF) coordinates
+        doc.fullcopy_page(i, i + 1 if i + 1 < doc.page_count else -1)   # (-1: after the last page)
+        doc.xref_set_key(doc[i].xref, 'CropBox', f'[{gx:.2f} {cb[1]:.2f} {cb[2]:.2f} {cb[3]:.2f}]')
+        doc.xref_set_key(doc[i + 1].xref, 'CropBox', f'[{cb[0]:.2f} {cb[1]:.2f} {gx:.2f} {cb[3]:.2f}]')
+
+def split_open(src, rec):
+    """the book as the method sees it: split first when the recipe says so (in memory)"""
+    doc = pymupdf.open(src)
+    if rec.get('split'): split_pages(doc, rec['split'])
+    return doc
+
 def analyse(path):
     """kept for the old callers: the measured pages and the decision at the narrowest box"""
     return decide(analyse_pages(path))
@@ -745,7 +936,18 @@ def analyse(path):
 def plan(path, jobs=1):
     """the whole method: measure every page once, then the narrowest box that works — the width of 95 % of the pages,
     else 98 %, else all; each tried with the second check (a book is cropped only if few pages stay whole)"""
-    import copy
+    import copy, shutil
+    d = pymupdf.open(path); n0 = d.page_count
+    if n0 and sum(1 for pg in d if not pg.rotation and pg.rect.width > 1.15 * pg.rect.height) >= 0.5 * n0:
+        gut = spread_gutters(d); d.close()         # a book of spreads: split first, then the whole method on its pages
+        if gut:
+            tmp = path[:-4] + '.split.pdf'; shutil.copyfile(path, tmp)
+            dd = pymupdf.open(tmp); split_pages(dd, gut); dd.save(tmp, incremental=True, encryption=pymupdf.PDF_ENCRYPT_KEEP); dd.close()
+            try: rec = plan(tmp, jobs)
+            finally: os.remove(tmp)
+            rec['split'] = {str(k): v for k, v in gut.items()}; rec['split_from'] = n0
+            return rec
+    else: d.close()
     stamps = stamps_of(path, jobs)
     pages = analyse_pages(path, stamps, jobs=jobs); rec = None
     for wq in (0.95, 0.98, 1.0):
@@ -797,6 +999,10 @@ def decide(pages, wq=0.95):
     out['measured'] = len(text)
     if len(text) < 5 or len(text) < 0.5 * len(pages):
         out['decision'] = 'skip: few text pages'; return out
+    # TWO BOOK PAGES ON ONE SHEET (owner 2026-10-14, طبقات الفقهاء: «لماذا لم تحاول تقسيم الصفحات المزدوجة؟»): a box for
+    # one page cannot serve a spread — such a book is split first (each sheet into its right and left pages), not cropped
+    if sum(1 for i in text if pages[i]['w'] > 1.15 * pages[i]['h']) >= 0.5 * len(text):
+        out['decision'] = 'skip: two pages per sheet — to be split first'; out['spreads'] = True; return out
     # a «stain» found at the same place on 3 other pages or more is part of the print (ornament, logo): content again
     allb = [(i, bl) for i in text for bl in pages[i].get('blots', [])]
     def same_place(a, b, w, h):                       # scans shift a little from page to page: centres within 3 %, sizes ×2
@@ -808,6 +1014,23 @@ def decide(pages, wq=0.95):
         if sum(1 for j, c in allb if j != i and same_place(bl, c, w, h)) >= max(3, int(0.03 * len(text))):
             p = pages[i]; p['blots'].remove(bl); bx = p['box']
             p['box'] = [min(bx[0], bl[0]), min(bx[1], bl[1]), max(bx[2], bl[2]), max(bx[3], bl[3])]
+    # PRINTED RULES AND FRAMES belong to the page when the book prints them (marks() leaves every line out): a rule on the
+    # same side of the text block at the same distance (± 2 % of the page) on ≥ 40 % of the text pages (at least 3); a rule
+    # inside the text block's span stays. Scan lines and print damage do not repeat (owner 2026-10-14: «لا تلتفت للخط الذي هو
+    # عيب طباعة», مختصر تاريخ دمشق; صبح الأعشى ص 47 «خلل في التوسيط وفي تحديد الإطار»)
+    def rkey(i, r):
+        c = pages[i].get('core') or pages[i]['box']; w_, h_ = pages[i]['w'], pages[i]['h']
+        if r[3] - r[1] >= r[2] - r[0]:
+            return ('L', (c[0] - r[2]) / w_) if r[2] <= c[0] else (('R', (r[0] - c[2]) / w_) if r[0] >= c[2] else ('I', 0.0))
+        return ('T', (c[1] - r[3]) / h_) if r[3] <= c[1] else (('B', (r[1] - c[3]) / h_) if r[1] >= c[3] else ('I', 0.0))
+    rk = {i: [(rkey(i, r), r) for r in pages[i].get('rules') or []] for i in text}
+    allk = [k for i in text for k, _ in rk[i]]
+    for i in text:
+        kept = [r for k, r in rk[i] if k[0] == 'I' or sum(1 for k2 in allk if k2[0] == k[0] and abs(k2[1] - k[1]) <= 0.02) >= max(3, 0.4 * len(text))]
+        dropped = [r for k, r in rk[i] if not any(r is x for x in kept)]
+        if dropped: pages[i]['rules_dropped'] = dropped
+        pages[i]['rules'] = kept
+        if kept: pages[i]['box'] = union([pages[i]['box']] + kept)
     bw = {i: pages[i]['box'][2] - pages[i]['box'][0] for i in text}; bh = {i: pages[i]['box'][3] - pages[i]['box'][1] for i in text}
     core = {i: pages[i].get('core') or pages[i]['box'] for i in text}
     cw = {i: core[i][2] - core[i][0] for i in text}
@@ -887,8 +1110,10 @@ def decide(pages, wq=0.95):
         for i in text:                                # the text block and its marginal notes must fit; the rest may be cut
             if tb.get(i):
                 nts = notes_of(pages[i].get('margin') or [], pages[i]['w'], pages[i]['h'])
-                pages[i]['content_box'] = pages[i]['box']; pages[i]['box'] = union([tb[i]] + nts)
+                figs = figures_of(pages[i].get('margin') or [], pages[i]['w'], pages[i]['h'])
+                pages[i]['content_box'] = pages[i]['box']; pages[i]['box'] = union([tb[i]] + nts + figs)
                 if nts: pages[i]['notes'] = [[round(v, 1) for v in b] for b in nts]
+                if figs: pages[i]['figures'] = [[round(v, 1) for v in b] for b in figs]
     def near(i, pool, val):                         # a short page takes the place of its full neighbours (same parity)
         same = [j for j in pool if j % 2 == i % 2] or pool
         k = sorted(same, key=lambda j: abs(j - i))[:6]
@@ -941,6 +1166,7 @@ def decide(pages, wq=0.95):
         return fcen(f, ax) - FO[(i % 2, ax, f[4])]
     whole, offc, own, moved = [], [], 0, 0
     for i, p in enumerate(pages):
+        if p['kind'] == 'cover': p['crop'] = p['cover']; continue          # the cover alone (frames shows it at the book's size)
         if p['kind'] in ('rotated', 'picture'): p['crop'] = None; continue
         bx = p.get('box'); e = edges.get(i)
         x = cx[i] if i in fw else (near(i, full_w, cx) if full_w else pw / 2)
@@ -955,6 +1181,11 @@ def decide(pages, wq=0.95):
         elif e and i not in fh and fhe:
             dy_ = shift(e[1] - near(i, fhe, ET), e[3] - near(i, fhe, EB), 0.03 * p['h'])
             if dy_: y += dy_; p['anchored_y'] = round(dy_, 1)
+        # A PAGE WHOSE CONTENT STANDS IN THE MIDDLE — a section's title page, a heading, a dedication — not a chapter's end
+        # (which starts where the neighbours' lines start): its top lies ≥ 15 % of the page below theirs. It is centred on
+        # itself both ways (owner 2026-10-14, رسوم دار الخلافة ص 9 «توسيط»: placed by a line end matching the neighbours')
+        if e and bx and i not in fh and fhe and e[1] - near(i, fhe, ET) >= 0.15 * p['h']:
+            x, y = (bx[0] + bx[2]) / 2, (bx[1] + bx[3]) / 2; p['anchored_x'] = p['anchored_y'] = 'own-middle'
         if bx:
             b = [x - W / 2, y - H / 2, x + W / 2, y + H / 2]
             dx = bx[0] - b[0] if bx[0] < b[0] else (bx[2] - b[2] if bx[2] > b[2] else 0)
@@ -1103,10 +1334,14 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                                                                                                     # image measure near 0.3°)
             b = m2['lines']()
             if b is not None and abs(b) <= 0.15: p['level_by_lines'] = round(b, 3); return True
+        # A BIG TILT NO SINGLE TURN LEVELS (a warped leaf; owner 2026-10-14, أحكام القرآن ص 250 «لم تقوم», 4–6°): a turn that
+        # leaves both measures ≤ 20 % of the tilt (at most 0.4° left from 2°) is far better than the page as it was
+        if abs(before) >= 1.5 and max(r, im) <= max(0.4, 0.2 * abs(before)): p['reduced'] = round(max(r, im), 3); return True
         return False
     for i, p in enumerate(rec['pages']):
         if only is not None and i not in only: continue
         if not p.get('crop') and not p.get('skew'): continue
+        if p.get('kind') == 'cover': continue          # a cover is shown as found (cover_rect), never turned or widened
         mk = look(i, p)
         # LEVEL CHECK (owner: «اختبار يضمن أننا أزلنا الميل تماما ولم نصطنع ميلا جديدا أو نبق شيئا من الميل»):
         # a turned page must read level by BOTH measures — the shear profile of its ink (≤ 0.15°) and the turned page
@@ -1123,7 +1358,10 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         ct = m0['cols']() if m0.get('paper') else None
         if ct is not None:
             tr, tl = ct
-            if tr is not None and tl is not None and tr * tl > 0 and abs(tr - tl) <= 0.15 and min(abs(tr), abs(tl)) >= 0.3:
+            # (within 15 % of the tilt, at least 0.15°, from 0.25° on — owner 2026-10-14, أنساب الأشراف ص 42: columns
+            # reading 1.59° and 1.44° were left tilted for 0.0007° over a fixed 0.15°)
+            if tr is not None and tl is not None and tr * tl > 0 and abs(tr - tl) <= max(0.15, 0.15 * max(abs(tr), abs(tl))) + 1e-6 \
+               and min(abs(tr), abs(tl)) >= 0.25:
                 u2 = (tr + tl) / 2; best = None
                 for sgn in (-1, 1):
                     for k in range(-3, 4):
@@ -1157,6 +1395,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                 if abs(r_) >= 0.4 and g_ >= 1.02:
                     es = [e for e in mk['edges']() if e is not None and abs(e - r_) <= 0.2]
                     if es: u, g = r_, g_; p['tilt_by_edge'] = round(min(es, key=lambda e: abs(e - r_)), 3)
+            if abs(u) >= 1.0 and mk.get('rules'): p['frame_level'] = round(u, 3); u = 0.0   # a level frame: not turned
             if abs(u) >= SKEW_MIN and g >= 1.02:
                 if mk['proj'](-3.0, 3.0, 0.25) < SKEW_MIN - 0.05: p['tilt_disputed'] = round(u, 3)   # the image shows no tilt
                 else:
@@ -1175,7 +1414,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                         if p.get('tilt_by_edge') is not None: p['tilt_disputed'] = round(u, 3)   # measures disagree)
                         else: p['untreated_tilt'] = round(u, 3)
         if tilt_only or not p.get('crop'): continue
-        c = p['crop']; known = (p.get('blots') or []) + (p.get('edge') or [])
+        c = p['crop']; known = (p.get('blots') or []) + (p.get('edge') or []) + (p.get('rules_dropped') or []) + (p.get('lines') or [])
         if rec.get('clean_margins') and mk.get('text'):
             # a book without print in its side margins: the text block seen at 1,000 px must be inside the box, and no mark
             # may straddle the box edge (half in, half out = a cut letter); marks wholly outside the text columns are the
@@ -1188,11 +1427,13 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                      min(t[2], t0[2] + 0.03 * p['w']), min(t[3], t0[3] + 0.03 * p['h'])]   # not to the sheet's edge
             nts = notes_of(mk.get('margin') or [], p['w'], p['h'])   # marginal notes seen at 1,000 px: kept, like the text
             if nts: p['notes'] = [[round(v, 1) for v in b] for b in nts]
-            tn = union([t] + nts)
+            figs = figures_of(mk.get('margin') or [], p['w'], p['h'])   # a picture or plate beside the text: whole
+            tn = union([t] + nts + figs)
             # a cut letter lies next to the text block (within the gap that makes text); a pen stroke or speck further out
             # that happens to cross the box edge is margin, cut like the rest (2026-10-09: اللآلئ ج1 p. 8 stayed whole)
             cross = [b for b in mk.get('parts', []) if not inside(b, c, 1.0) and b[0] < c[2] and b[2] > c[0] and b[1] < c[3] and b[3] > c[1]
-                     and not near(b, known) and b[2] >= t[0] - gx_ and b[0] <= t[2] + gx_ and b[3] >= t[1] - gy_ and b[1] <= t[3] + gy_]
+                     and not near(b, known) and b[2] >= t[0] - gx_ and b[0] <= t[2] + gx_ and b[3] >= t[1] - gy_ and b[1] <= t[3] + gy_
+                     and not thin_line(b, p['w'], p['h'])]
             need = ([tn] if not inside(tn, c, 1.0) else []) + cross
             if need:
                 u = union(need + [tn])
@@ -1239,7 +1480,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
     rec['whole'] = sorted(set(rec.get('whole', [])) | set(moved)); rec['verify_whole'] = moved
     rec['blot_pages'] = sum(1 for p in rec['pages'] if p.get('crop') and p.get('blots'))
     rec['skewed'] = sum(1 for p in rec['pages'] if p.get('skew'))
-    rec['residual_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('skew') and not (p.get('after_tilt', 9) <= LEVEL and p.get('after_tilt_image', 9) <= IMG_LEVEL)
+    rec['residual_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('skew') and p.get('reduced') is None and not (p.get('after_tilt', 9) <= LEVEL and p.get('after_tilt_image', 9) <= IMG_LEVEL)
                             and not (p.get('curved') and p.get('after_tilt', 9) <= CURVED and p.get('after_tilt_image', 9) <= CURVED)
                             and not (p.get('level_by_lines') is not None and max(p.get('after_tilt', 9), p.get('after_tilt_image', 9)) <= 0.35)
                             and not (p.get('level_by_edge') is not None and p.get('after_tilt', 9) <= 0.2)
@@ -1279,7 +1520,7 @@ def frames(rec):
                 N = [max(0.0, N[0] - m), max(0.0, N[1] - m), min(pw, N[2] + m), min(ph, N[3] + m)]
             nw, nh = max(N[2] - N[0], 1.0), max(N[3] - N[1], 1.0)
             rw, rh = (nw, nw / A) if nw / nh > A else (nh * A, nh)
-            if rw < W: rw, rh = W, H                   # a small part is not magnified
+            if rw < W and p['kind'] != 'cover': rw, rh = W, H   # a small part is not magnified — a cover is: it fills the page
             x, y = (N[0] + N[2]) / 2, (N[1] + N[3]) / 2
             if rw > pw + 0.5 or rh > ph + 0.5:         # beyond the page: rather up to 5 % larger, if all it holds still fits
                 fw_ = min(pw, ph * A); fh_ = fw_ / A
@@ -1337,6 +1578,7 @@ def apply(src, rec, dst):
     frames(rec)
     shutil.copyfile(src, dst)
     before = pymupdf.open(src); imgs = images_of(before); n = len(before); before.close()
+    if rec.get('split'): imgs, n = split_first(dst, rec, imgs)
     doc = pymupdf.open(dst); done = turned_n = scaled_n = 0
     W, H = rec['size']
     for i, p in enumerate(rec['pages']):
@@ -1378,12 +1620,24 @@ def apply(src, rec, dst):
     assert not off, f'pages of different sizes: {off[:6]} (the book: {W} × {H})'
     return {'pages': n, 'cropped': done, 'turned_or_moved': turned_n, 'scaled': scaled_n, 'bytes_out': os.path.getsize(dst)}
 
+def split_first(dst, rec, imgs):
+    """the recipe's split done on dst (incremental): the expected images per page (a split sheet's two pages show the same
+    images) and the new page count"""
+    d = pymupdf.open(dst); split_pages(d, rec['split']); d.save(dst, incremental=True, encryption=pymupdf.PDF_ENCRYPT_KEEP); d.close()
+    out = []
+    for i, im in enumerate(imgs):
+        out.append(im)
+        if str(i) in rec['split']: out.append(im)
+    return out, len(out)
+
 def apply_level(src, rec, dst):
     """LOSSLESS, a level-only book: the tilted pages' turn («q … cm» / «Q»); on grey or colour paper every page's CropBox
     inset by the same thin strip. Incremental save; checked: same pages, same images, every page of its intended size"""
     import shutil
     shutil.copyfile(src, dst)
-    before = pymupdf.open(src); imgs = images_of(before); n = len(before); want = []
+    before = pymupdf.open(src); imgs = images_of(before); n = len(before)
+    if rec.get('split'): before.close(); imgs, n = split_first(dst, rec, imgs); before = pymupdf.open(dst)
+    want = []
     for i, p in enumerate(rec['pages']):
         r = before[i].rect; c = p.get('crop')
         want.append((c[2] - c[0], c[3] - c[1]) if c else (r.width, r.height))
@@ -1450,7 +1704,7 @@ def sheet(src, rec, outdir, pages=None, px=480):
     back onto the original, so a tilted page shows its box tilted); after: what the reader shows, fit to the same width.
     pages: [(index, reason)] — written to reasons.json for the review page"""
     os.makedirs(outdir, exist_ok=True)
-    doc = pymupdf.open(src); made = []; reasons = {}
+    doc = split_open(src, rec); made = []; reasons = {}
     for i, why in pages or []:
         p = rec['pages'][i]; reasons[str(i)] = why
         tmp = pymupdf.open(); tmp.insert_pdf(doc, from_page=i, to_page=i); tp = tmp[0]

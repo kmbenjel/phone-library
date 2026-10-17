@@ -9,6 +9,7 @@ import csv, hashlib, json, os, subprocess, sys, unicodedata
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 import book_crop as bc, pymupdf
+from book_crop import inside
 CACHE = os.path.expanduser('~/.cache/phone-library/crop-regress')
 N = lambda s: unicodedata.normalize('NFC', s)
 
@@ -59,12 +60,21 @@ def check(row, rec, pdf):
         ok = got == expect and (got == 'no' or (lvl is not None and img is not None and ((lvl <= bc.LEVEL and img <= bc.IMG_LEVEL)
              or (p.get('curved') and lvl <= bc.CURVED and img <= bc.CURVED) or (p.get('level_by_lines') is not None and max(lvl, img) <= 0.35)
              or (p.get('level_by_edge') is not None and lvl <= 0.2)
-             or (p.get('level_by_columns') is not None and p['level_by_columns'] <= 0.15)))) \
+             or (p.get('level_by_columns') is not None and p['level_by_columns'] <= 0.15)
+             or p.get('reduced') is not None))) \
              and (expect == 'no' or not p.get('untreated_tilt'))
         return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}){" curved" if p.get("curved") else ""}, untreated {p.get("untreated_tilt")}'
     if what == 'cropped':                              # cropped, not left whole (a book without print in its margins)
         got = 'yes' if p.get('crop') else 'no'
         return got == expect, f'crop {p.get("crop")}, enlarged {p.get("enlarged")}, book clean margins {rec.get("clean_margins")}'
+    if what == 'cover':                                # a cover photographed on the bed or a sheet: shown alone (cover_rect)
+        return (p.get('kind') == 'cover') == (expect == 'yes'), f'kind {p.get("kind")}, cover {p.get("cover")}'
+    if what == 'figures_in':                           # a picture or plate beside the text: wholly shown
+        sh = p.get('show') or p.get('crop'); fg = p.get('figures') or []
+        if expect == 'yes' and not fg: return False, f'no figure found (kind {p.get("kind")}, crop {crop})'
+        return all(inside(b, sh, 1.0) for b in fg) if sh else p.get('crop') is None, f'figures {fg}, shown {sh}'
+    if what == 'scale1':                               # shown at the book's size: not shrunk for a stamp, a line, a flaw
+        sc = p.get('scale'); return (sc is not None and abs(sc - 1) <= 1e-3) == (expect == 'yes'), f'scale {sc}, crop {crop}'
     if what == 'parity':
         got = 'yes' if any(float(v) for v in (rec.get('parity_offsets') or {}).values()) else 'no'
         return got == expect, f'offsets {rec.get("parity_offsets")}'
