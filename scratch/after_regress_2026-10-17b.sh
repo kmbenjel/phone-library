@@ -5,7 +5,7 @@
 # Never rerun: refuses when its marker exists.
 cd "$(dirname "$0")/.."
 M=data/crop/.after-regress-2026-10-17b; [ -e $M ] && { echo "already ran"; exit 1; }; touch $M
-while systemctl --user is-active -q crop-regress; do sleep 60; done
+while systemctl --user is-active -q crop-regress-b; do sleep 60; done
 f=$(grep -oE '^[0-9]+ failures' logs/crop-regress-2026-10-17b.log | tail -1 | cut -d' ' -f1)
 echo "$(date -u '+%F %T') regression finished: ${f:-?} failures"
 [ "$f" = "0" ] || { echo "STOP: the regression did not pass — see logs/crop-regress-2026-10-17b.log"; exit 2; }
