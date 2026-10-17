@@ -3,6 +3,21 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-17 02:40 — overnight; crop still PAUSED (method being fixed from the owner's remarks)
+- While Claude was away (10-15/16) Antigravity read title pages 842–1059 (data/names/title-read.tsv; commits «title-page
+  reading» / «catalog(batch)») and added book 322 (queue 322, قرة العيون). No rename/move applied. Laptop restarted 10-16 13:29.
+- Running tonight: both inhibitors; phone_watchdog, phone_keepalive, review_server (relaunched after the restart);
+  scripts/reporter_follow.sh (report in any GNOME Terminal); scratch/crop_baseline_2026-10-17.py (current method on the 31
+  marked books → ~/.cache/phone-library/crop-baseline/, log logs/crop-baseline-2026-10-17.log); inspect_files.py on the 142
+  never-inspected files (logs/inspect-2026-10-17.log).
+- Crop diagnosis so far (data/crop/owner-marked-2026-10-14.tsv = the 31 marked books): (1) a thin line counts as a «letter»
+  → text block/box pulled off-centre (00597f p18, second look «cross»); (2) non-text marks (stamps, logos, edge lines, print
+  defects, specks) make the box grow → page shrunk or off-centre; (3) covers on the scanner bed should be cut to the cover;
+  (4) a plate (dark photo in a frame) was CUT in clean mode — the big non-letter mark is treated as margin (54dce4 p15);
+  (5) section-title pages placed by the neighbours' text edge instead of centred (3103a9 p9); (6) tilt: framed plates turned
+  by the photo inside (83dfc7 p138), two-column pages not levelled (2a8c4b p42), some turns wrong/partial; (7) spreads not split
+  (طبقات الفقهاء). Next: fix in book_crop.py, regression rows for every marked page, mini-book tests, then redo affected books.
+
 ## 2026-10-15 — CROP PAUSED (owner: «you can pause if necessary»)
 - Owner reviewed crop-review-002 (92 books, 14 with faults) and 004 (~60 of 236, 17 with faults) + OCR sample + plans 320a/b
   (data/names/review-comments.jsonl, reports crop-002, crop-004, ocr-001, plan-320a/b). «راجعت إلى هنا فقط / ويجب عليك مراجعة
