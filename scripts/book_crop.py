@@ -361,7 +361,8 @@ def marks(a, scale, width, exclude=None):
                 if hi - lo >= 0.15 * span and sum(hgt[i] if vert else wid[i] for i in grp) >= 0.3 * (hi - lo): lines.update(grp)
             k = j + 1
     out['lines'] = [box_of(i) for i in sorted(lines)]
-    content = [i for i in content if i not in lines] or content
+    with_lines = list(content)                        # the tilt is read on all the print, lines included (a footnote rule is
+    content = [i for i in content if i not in lines] or content   # the straightest line of a page — الاتباع والمزاوجة ص 51)
     # printed rules and frames, even faint ones (a chain border can break into specks): beyond the text block, a column
     # (row) where light ink runs along half the text block's height (width) or more is print — the box takes it in
     faint = a[r0:r1, c0:c1] < paper - 20
@@ -426,7 +427,8 @@ def marks(a, scale, width, exclude=None):
             out['folio'] = pt(float(gx0), float(gy0), float(gx1), float(gy1)) + ['foot' if foot else 'head']; break
     tb_ = out['text']; inside_ = lambda b: b[0] >= tb_[0] - 0.5 and b[2] <= tb_[2] + 0.5 and b[1] >= tb_[1] - 0.5 and b[3] <= tb_[3] + 0.5
     out['margin'] = [b for b in (box_of(int(i)) for i in cid) if not inside_(b)]
-    out['xy'] = (xs, ys)
+    kl = np.zeros(n + 1, bool); kl[with_lines] = True
+    out['xy'] = tuple(reversed(np.nonzero(kl[lab]))) if len(with_lines) != len(content) else (xs, ys)
     return out
 
 def skew_of(xy, raw=False):
@@ -677,7 +679,7 @@ def cover_rect(page, px=360):
     cover when: it fills 25–97 % of the page; it is solid (≥ 85 % of its rectangle) and one piece (the trimming left ≤ 5 % of
     it out — a big logo or a block of letters trims down to a part of itself); and beside it lies only what reaches the
     sheet's edge (the scanner bed, a sheet under the cover) — ink standing free beside it is print (a title page with lines
-    outside its frame). Returns the rectangle in pt, 1 % inside its edges, or None"""
+    outside its frame). Returns the rectangle in pt, 0.5 % outside its edges (never cutting into it), or None"""
     z = px / page.rect.width
     pix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), colorspace=pymupdf.csRGB, alpha=False)
     a = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width * 3].reshape(pix.height, pix.width, 3).astype(np.int16)
@@ -711,8 +713,9 @@ def cover_rect(page, px=360):
             sz = np.bincount(ol.ravel())                # print is many small marks; a sheet under the cover is one big piece
             small = [j for j in range(1, k + 1) if j not in border and sz[j] < 0.003 * H * W]
             if small and sz[small].sum() > 0.002 * H * W: continue
-        dx, dy = 0.01 * (x1 - x0), 0.01 * (y1 - y0)
-        return [round((x0 + dx) / z, 2), round((y0 + dy) / z, 2), round((x1 - dx) / z, 2), round((y1 - dy) / z, 2)]
+        dx, dy = 0.005 * (x1 - x0), 0.005 * (y1 - y0)   # a hair outside its edge: never cut into the cover (فهرسة ابن خير
+        return [round(max(0, x0 - dx) / z, 2), round(max(0, y0 - dy) / z, 2),          # ص 380 «دون قصّ صورة الغلاف»)
+                round(min(W, x1 + dx) / z, 2), round(min(H, y1 + dy) / z, 2)]
     return None
 
 def colour_stamps(page, px=500):
@@ -1094,7 +1097,12 @@ def decide(pages, wq=0.95):
     # lays out like that — marginal material (folio numbers of the manuscript, side glosses, outer page numbers) on a
     # fixed side, odd pages one way and even pages the other (owner 2026-10-08: «على حسب المصلحة… والأصل التوسط الواحد»)
     off = {0: 0.0, 1: 0.0}
-    ext = {i: (pages[i]['box'][0] + pages[i]['box'][2]) / 2 - cx[i] for i in full_w}
+    def needed(i):                                   # what a page needs (stray dots far from the text do not lay a book
+        p_ = pages[i]; mg = p_.get('margin') or []   # out by parity — أسرار البلاغة ص 187 «توسيط»)
+        if not p_.get('text'): return p_['box']
+        return union([p_['text']] + notes_of(mg, p_['w'], p_['h']) + figures_of(mg, p_['w'], p_['h']) + printed_groups(mg, p_['w'], p_['h'])
+                     + (p_.get('rules') or []) + ([p_['folio'][:4]] if p_.get('folio') else []))
+    ext = {i: (needed(i)[0] + needed(i)[2]) / 2 - cx[i] for i in full_w}
     for par in (0, 1):
         v = [ext[i] for i in full_w if i % 2 == par]
         if len(v) >= 10:
@@ -1242,7 +1250,9 @@ def decide(pages, wq=0.95):
         b = [x - W / 2, y - H / 2, x + W / 2, y + H / 2]
         sx = -b[0] if b[0] < 0 else (p['w'] - b[2] if b[2] > p['w'] else 0)     # the box must stay on the page:
         sy = -b[1] if b[1] < 0 else (p['h'] - b[3] if b[3] > p['h'] else 0)     # on white paper the CONTENT moves
-        if (sx or sy) and bx and p.get('paper', 0) >= 235:                       # with it, so the text stays centred
+        # (on any paper when the box would otherwise leave the text ≥ 3 % off-centre: a strip beyond the sheet's edge is
+        # better than a page pushed aside — owner 2026-10-14, إرشاد الساري ص 492 «الإطار كله يتوسط»)
+        if (sx or sy) and bx and (p.get('paper', 0) >= 235 or max(abs(sx) / p['w'], abs(sy) / p['h']) >= 0.03):   # with it
             nb = [bx[0] + sx, bx[1] + sy, bx[2] + sx, bx[3] + sy]
             if nb[0] >= 0 and nb[1] >= 0 and nb[2] <= p['w'] and nb[3] <= p['h']:
                 p['move'] = [round(sx, 1), round(sy, 1)]; moved += 1
