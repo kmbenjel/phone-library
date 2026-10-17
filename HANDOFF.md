@@ -3,6 +3,14 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-17 19:20 — gate (b) running after the laptop died at 15:42 (battery) with 56 PASS / 6 FAIL
+- Failures fixed: lines kept in the tilt measure (الاتباع ص 51/68, اللآلئ ص 387 were left unturned); covers 0.5 % outside
+  their edge (فهرسة ابن خير ص 380); parity offsets from needed content (أسرار البلاغة ص 187); content may move beyond the
+  sheet on any paper when the text would be ≥ 3 % off-centre (إرشاد الساري ص 492).
+- crop-regress-b.service → logs/crop-regress-2026-10-17b.log; crop-chain-b.service (scratch/after_regress_2026-10-17b.sh):
+  0 failures → phone → crop_redo (1,122) → crop_library. Services relaunched as user units (phone-watchdog, phone-keepalive,
+  review-server, reporter-follow) + both inhibitors. The laptop runs on battery: it died twice — keep it on the charger.
+
 ## 2026-10-17 14:30 — crop method corrected from the owner's review; regression gate running; chain waits
 - book_crop.py fixes (commits 6c3474c … 11f8a75): lines are not letters/content; printed rules only near the text and
   recurring; notes need width and height; pictures/plates kept whole; covers cut to the cover (cover_rect; first/last 4
