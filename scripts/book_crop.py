@@ -1111,7 +1111,12 @@ def decide(pages, wq=0.95):
             if abs(med) >= 0.015 * pw and same >= 0.7: off[par] = med
     out['parity_offsets'] = {str(k): round(v, 1) for k, v in off.items()}
     if off[0] or off[1]:
-        cx = {i: v + off[i % 2] for i, v in cx.items()}   # the box follows the page's printed layout, per parity
+        # the box follows the page's printed layout, per parity — on the pages that carry that marginal material; a page
+        # without it is centred on its text (owner 2026-10-14, أسرار البلاغة ص 187 «توسيط»)
+        def carries(i):
+            o = off[i % 2]; nb = needed(i); t_ = pages[i].get('text') or pages[i]['box']
+            return (o > 0 and nb[2] - t_[2] >= 0.015 * pw) or (o < 0 and t_[0] - nb[0] >= 0.015 * pw)
+        cx = {i: v + (off[i % 2] if carries(i) else 0.0) for i, v in cx.items()}
         fitW = [2 * min(cx[i] - lim(i)[0], lim(i)[2] - cx[i]) for i in full_w]
         W = min((Tw + 2 * 0.02 * Tw) if out['framed'] else (Tw + 2 * max(m0, 0.08 * Tw)), max(Tw, q(fitW, 0.05)) if fitW else W, pw)
     # A BOOK WITHOUT PRINT IN ITS SIDE MARGINS (owner 2026-10-09 on اللآلئ: «ليس فيه كتابة على الهوامش الأفقية، فلم لا يستفاد
@@ -1222,6 +1227,11 @@ def decide(pages, wq=0.95):
         elif e and i not in fh and fhe:
             dy_ = shift(e[1] - near(i, fhe, ET), e[3] - near(i, fhe, EB), 0.03 * p['h'])
             if dy_: y += dy_; p['anchored_y'] = round(dy_, 1)
+        # A PAGE MUCH NARROWER THAN THE BOOK'S PAGES (its content < 75 % of the usual width — a frame without the
+        # commentary its neighbours carry beside it): centred on itself across (owner 2026-10-14, إرشاد الساري ص 492
+        # «الإطار كله يتوسط»)
+        if bx and i not in fw and (bx[2] - bx[0]) < 0.75 * Tw:
+            x = (bx[0] + bx[2]) / 2; p['anchored_x'] = 'own-narrow'
         # A PAGE WHOSE CONTENT STANDS IN THE MIDDLE — a section's title page, a heading, a dedication — not a chapter's end
         # (which starts where the neighbours' lines start): its top lies ≥ 15 % of the page below theirs. It is centred on
         # itself both ways (owner 2026-10-14, رسوم دار الخلافة ص 9 «توسيط»: placed by a line end matching the neighbours')
