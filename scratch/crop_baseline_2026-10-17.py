@@ -11,7 +11,7 @@ for l in open('data/crop/owner-marked-2026-10-14.tsv', encoding='utf-8'):
     dst = os.path.join(OUT, n + '.json')
     if os.path.exists(dst): continue
     try:
-        pdf = cr.local_copy(p); t = time.time(); rec = bc.plan(pdf, 6)
+        pdf = cr.local_copy(p); t = time.time(); rec = bc.plan(pdf, 3)
         json.dump(rec, open(dst, 'w'), ensure_ascii=False)
         print(time.strftime('%F %T'), n, rec.get('decision'), f'{time.time() - t:.0f}s', rec.get('n'), 'pages', flush=True)
     except BaseException as e: print(time.strftime('%F %T'), 'ERR', n, repr(e)[:200], flush=True)

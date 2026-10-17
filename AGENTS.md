@@ -297,5 +297,9 @@ file whose improved copy is not in `index-now.tsv`. Nothing goes in the repo roo
    Python), never `"phone:Books/$P"`: on 2026-10-08 a `grep` missed a name (different Unicode order of «لَّ») and
    `rclone copyto "phone:Books/"` copied the whole library (9.3 GB, 1,020 files) to the laptop before it was stopped. Look up
    names with Unicode-normalised comparison (`unicodedata.normalize('NFC', …)`).
+12. **Memory: never let a job take the desktop down** (2026-10-17 03:38: the crop baseline ran 6 workers on a large book, memory ran
+   out and systemd-oomd closed the owner's whole GNOME session — every job and his desktop with it). Heavy jobs (book_crop analyses,
+   OCR, inspection) run as capped user services, ≤ 3 workers: `systemd-run --user --unit=NAME --property=MemoryHigh=3G
+   --property=MemoryMax=4G --nice=10 --working-directory=$PWD CMD` (linger is on, so they survive a session end too).
 11. **Stopping a job:** `kill <pid>` with the PID from `pgrep -f "[n]ame"` in a separate command — a `pkill -f name`
    in the same command line that restarts the job kills the shell itself.
