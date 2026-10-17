@@ -744,7 +744,9 @@ def colour_stamps(page, px=500):
         h_, w_ = sl[0].stop - sl[0].start, sl[1].stop - sl[1].start
         if not (w_ >= 0.03 * W or h_ >= 0.02 * H): continue
         if sl[0].stop <= y0 or sl[0].start >= y1 or sl[1].stop <= x0 or sl[1].start >= x1:
-            out.append([round(sl[1].start / z, 1), round(sl[0].start / z, 1), round(sl[1].stop / z, 1), round(sl[0].stop / z, 1)])
+            e_ = 0.015 * W                           # its faint, anti-aliased edge too (خزانة الأدب ج 2 ص 18: a corner was left)
+            out.append([round(max(0, sl[1].start - e_) / z, 1), round(max(0, sl[0].start - e_) / z, 1),
+                        round(min(W, sl[1].stop + e_) / z, 1), round(min(H, sl[0].stop + e_) / z, 1)])
     return out
 
 def analyse_pages(path, stamps=None, only=None, jobs=1):
@@ -958,9 +960,9 @@ def plan(path, jobs=1):
     import copy, shutil
     d = pymupdf.open(path); n0 = d.page_count
     spreads = n0 and sum(1 for pg in d if not pg.rotation and pg.rect.width > 1.15 * pg.rect.height) >= 0.5 * n0
-    # a WRAP-AROUND COVER among the first or last two pages (back, spine and front on one wide page — owner 2026-10-14,
+    # a WRAP-AROUND COVER among the first or last four pages (back, spine and front on one wide page — owner 2026-10-14,
     # مواد البيان ص 474 «لا تحافظ على مقاس الأوراق ولا شمول الغلاف»): split like a spread, at its gutter or its middle
-    wide = {i: round(d[i].rect.width / 2, 2) for i in sorted({0, 1, n0 - 2, n0 - 1}) if 0 <= i < n0 and not d[i].rotation
+    wide = {i: round(d[i].rect.width / 2, 2) for i in sorted(set(range(4)) | set(range(n0 - 4, n0))) if 0 <= i < n0 and not d[i].rotation
             and d[i].rect.width > 1.5 * d[i].rect.height} if n0 and not spreads else {}
     if spreads or wide:
         gut = spread_gutters(d)                    # a book of spreads (or a cover spread): split first, then the method
