@@ -3,6 +3,20 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-17 14:30 — crop method corrected from the owner's review; regression gate running; chain waits
+- book_crop.py fixes (commits 6c3474c … 11f8a75): lines are not letters/content; printed rules only near the text and
+  recurring; notes need width and height; pictures/plates kept whole; covers cut to the cover (cover_rect; first/last 4
+  pages; wrap-around covers split); coloured stamps found and erased; title pages centred on themselves; stray dots cut;
+  lines/stains dodged left-right and up-down; tilt to ±8°, two columns with a relative tolerance, a level frame stops a
+  turn, a big warped tilt may be reduced; spreads split at the gutter (incremental, lossless) then cropped.
+- Tested on extracts of the 31 marked books (scratch/crop_minitest.py runs r2–r4, scratch/crop_compare.py): every marked
+  page right except 51cfa6 p16 (black emblem in the text column), 43b115 p444 (needs a shear — next), 4a0fc2 (wavy
+  lithograph lines), 816413 (the source itself is cut: find a better copy), 35fbe3 p44 (a dark corner line left).
+- crop-regress.service: the full regression set (64 old + 24 new rows) → logs/crop-regress-2026-10-17.log.
+- crop-chain.service (scratch/after_regress_2026-10-17.sh): 0 failures → wait for the phone → scripts/crop_redo.py on the
+  1,122 books cropped by the old method (data/crop/redo-list-2026-10-17.tsv; upload beside, verify, swap) → crop_library.sh.
+  Any failure → STOP (nothing touches the phone). The phone's FTP app was off from 12:17.
+
 ## 2026-10-17 02:40 — overnight; crop still PAUSED (method being fixed from the owner's remarks)
 - While Claude was away (10-15/16) Antigravity read title pages 842–1059 (data/names/title-read.tsv; commits «title-page
   reading» / «catalog(batch)») and added book 322 (queue 322, قرة العيون). No rename/move applied. Laptop restarted 10-16 13:29.
