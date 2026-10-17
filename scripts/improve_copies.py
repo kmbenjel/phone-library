@@ -7,6 +7,7 @@ Usage: PYTHONPATH=~/.local/share/phone-library-tools/site /usr/bin/python3 scrip
 import csv, ftplib, json, os, subprocess, sys, time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
+import phone_host
 from phone_host import HOST, PORT
 from netpace import Pacer
 J = lambda p: os.path.join(ROOT, p)
@@ -16,7 +17,7 @@ rows = [r for r in csv.reader(open(sys.argv[1], encoding='utf-8'), delimiter='\t
 plan = sys.argv[2]
 pacer = Pacer()
 def connect():
-    f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=300); f.login(); return f
+    f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=300); phone_host.login(f); return f
 def mkdirs(f, path):
     cur = ''
     for part in path.split('/'):

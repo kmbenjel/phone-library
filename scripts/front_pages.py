@@ -6,6 +6,7 @@ Usage: python3 scripts/front_pages.py paths.txt [N=6]"""
 import csv, ftplib, hashlib, os, subprocess, sys, time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
+import phone_host
 from phone_host import HOST, PORT
 from netpace import Pacer
 J = lambda p: os.path.join(ROOT, p)
@@ -16,7 +17,7 @@ N = int(sys.argv[2]) if len(sys.argv) > 2 else 6
 size = {p: int(s) for p, s in csv.reader(open(J('data/phone/index-now.tsv'), encoding='utf-8'), delimiter='\t') if s.isdigit()}
 key = lambda p: hashlib.md5(f'{p}\t{size[p]}'.encode()).hexdigest()[:16]
 pacer = Pacer()
-f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=300); f.login()
+f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=300); phone_host.login(f)
 for i, p in enumerate(paths):
     if p not in size: print('gone', p); continue
     k = key(p)
@@ -32,7 +33,7 @@ for i, p in enumerate(paths):
                 os.replace(os.path.join(TMP, fn), os.path.join(PAGES, f'{k}-{n}.jpg'))
     except Exception as e:
         print('FAIL', p, e); time.sleep(5)
-        try: f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=300); f.login()
+        try: f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=300); phone_host.login(f)
         except Exception: pass
     finally:
         if os.path.exists(tmp): os.remove(tmp)

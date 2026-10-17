@@ -78,7 +78,7 @@ class Phone:
             _HOST = phone_host.find()
             if not _HOST: raise
             self.f = ftplib.FTP(); self.f.connect(_HOST, phone_host.PORT, timeout=120)
-        self.f.login(); self.f.encoding = 'utf-8'
+        phone_host.login(self.f); self.f.encoding = 'utf-8'
         return self
     def __exit__(self, *a):
         try: self.f.quit()

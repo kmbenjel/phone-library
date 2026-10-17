@@ -5,6 +5,7 @@ Usage: python3 scripts/phone_md5.py [index.tsv]   → data/phone/md5.tsv (path, 
 import collections, csv, ftplib, os, sys, time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
+import phone_host
 from phone_host import HOST, PORT
 IDX = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, 'data/phone/index-now.tsv')
 OUT = os.path.join(ROOT, 'data/phone/md5.tsv')
@@ -19,7 +20,7 @@ todo = [(p, s) for p, s in rows if done.get(p) != s]
 todo.sort(key=lambda r: (n_by_size[r[1]] == 1, r[0]))
 
 def connect():
-    f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=600); f.login(); return f
+    f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=600); phone_host.login(f); return f
 
 f = connect(); t0 = time.time(); ok = 0
 with open(OUT, 'a', newline='', encoding='utf-8') as o:

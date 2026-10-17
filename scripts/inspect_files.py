@@ -11,6 +11,7 @@ Usage: python3 scripts/inspect_files.py [index.tsv] [priority.txt]"""
 import csv, ftplib, hashlib, json, os, queue, re, statistics, subprocess, sys, threading, time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
+import phone_host
 from phone_host import HOST, PORT
 from netpace import Pacer
 TOOLS = os.path.expanduser('~/.local/share/phone-library-tools/site')
@@ -166,7 +167,7 @@ def main():
     ths = [threading.Thread(target=worker, daemon=True) for _ in range(WORKERS)]
     for t in ths: t.start()
     def connect():
-        f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=300); f.login(); return f
+        f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=300); phone_host.login(f); return f
     f, t0, nbytes = connect(), time.time(), 0
     pacer = Pacer()                      # Wi-Fi is shared (games, calls): back off when the router's latency rises
     for i, (path, size) in enumerate(todo):

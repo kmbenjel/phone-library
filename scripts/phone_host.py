@@ -32,6 +32,27 @@ def find():
     return next((h for h in CANDIDATES if _answers(h)), None) or _scan()
 
 
+# THE LOGIN (owner 2026-10-18: the FTP app now has an account). Never in the repo: the user name and password live in
+# ~/.config/phone-library/ftp.env (lines «USER=…» and «PASS=…», mode 600, written by the owner) or in the environment
+# (PHONE_FTP_USER / PHONE_FTP_PASS); rclone keeps its own copy in its config (remote «phone:»). No file → anonymous.
+CRED_FILE = os.path.expanduser('~/.config/phone-library/ftp.env')
+
+def creds():
+    """(user, password) for the phone's FTP server, or ('', '') for an anonymous login"""
+    u, p = os.environ.get('PHONE_FTP_USER', ''), os.environ.get('PHONE_FTP_PASS', '')
+    if not u and os.path.exists(CRED_FILE):
+        for line in open(CRED_FILE, encoding='utf-8'):
+            k, _, v = line.strip().partition('=')
+            if k == 'USER': u = v
+            elif k == 'PASS': p = v
+    return u, p
+
+def login(f):
+    """log an ftplib.FTP connection in with the owner's account (or anonymously when none is set)"""
+    u, p = creds()
+    return f.login(u, p) if u else f.login()
+
+
 HOST = find() or CANDIDATES[0]
 FTP = os.environ.get('PHONE_FTP', f'ftp://{HOST}:{PORT}/Books/')
 

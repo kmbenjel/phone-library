@@ -34,6 +34,10 @@ Read this file first. Keep it current when you change a convention.
   (`scripts/phone_host.py`; `PHONE_HOST=<ip>` overrides). If neither answers, find it with `ip neigh` and
   `nc -z <ip> 2221`, add it to the top of `CANDIDATES` in `phone_host.py` and run
   `rclone config update phone host <ip>` (rclone takes one fixed host).
+- **Login (owner 2026-10-18):** the FTP app has an account. Its user name and password are NEVER written in this repo (it is pushed
+  to GitHub and this guide is copied to the phone): they live in `~/.config/phone-library/ftp.env` (lines `USER=…` and `PASS=…`, mode
+  600, written by the owner) and in rclone's own config for the remote `phone:`. Every script logs in through
+  `phone_host.login(ftp)` (`phone_host.creds()`); without that file it logs in anonymously. Ask the owner if you need it.
 - rclone remote: `phone:` (library = `phone:Books`). Optional mount:
   `rclone mount phone:Books ~/phone-books --daemon --vfs-cache-mode writes --dir-cache-time 1h`.
 - Moves and renames are server-side (FTP RNFR/RNTO): nothing is re-uploaded, so they are instant.

@@ -15,7 +15,7 @@ log(f'keepalive every {EVERY} s (pid {os.getpid()})')
 while True:
     try:
         host = host or (open(ADDR).read().strip() if os.path.exists(ADDR) else None) or phone_host.find()
-        f = ftplib.FTP(); f.connect(host, phone_host.PORT, timeout=20); f.login(); f.voidcmd('NOOP'); f.pwd(); f.quit()
+        f = ftplib.FTP(); f.connect(host, phone_host.PORT, timeout=20); phone_host.login(f); f.voidcmd('NOOP'); f.pwd(); f.quit()
         if up is not True: log('phone answers on', host)
         up = True
     except Exception as e:

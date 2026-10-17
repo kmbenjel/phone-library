@@ -6,6 +6,7 @@ Plan: TSV with columns  from<TAB>to<TAB>reason   (paths relative to the FTP root
 Undo:  python3 scripts/apply_plan.py --undo <plan-name>   (replays that plan's moves in reverse)
 Usage: python3 scripts/apply_plan.py plan.tsv [--dry-run]"""
 import ftplib, csv, os, sys, time, posixpath
+import os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__))); import phone_host
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG = os.path.join(ROOT, 'data/changes/changes.tsv')
 from phone_host import HOST, PORT
@@ -23,7 +24,7 @@ def connect(tries=8):
     import time
     for i in range(tries):
         try:
-            f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=60); f.login(); return f
+            f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=60); phone_host.login(f); return f
         except (OSError, EOFError, ftplib.Error) as e:
             if i == tries - 1: raise
             print(f'phone FTP not answering ({type(e).__name__}); retry {i + 1}/{tries - 1} in 30 s', flush=True); time.sleep(30)

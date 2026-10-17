@@ -1,5 +1,6 @@
 """Verify that pairs of phone files are identical: same size + identical 64 KB samples at 0/25/50/75%/end."""
 import ftplib, sys, csv
+import os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__))); import phone_host
 from phone_host import HOST as H
 def sample(f, path, size, off):
     out = bytearray()
@@ -13,7 +14,7 @@ def sample(f, path, size, off):
         f.close(); f2 = conn(); return bytes(out[:65536]), f2
     return bytes(out[:65536]), f
 def conn():
-    f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(H, 2221, timeout=60); f.login(); return f
+    f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(H, 2221, timeout=60); phone_host.login(f); return f
 f = conn()
 for a, b in csv.reader(open(sys.argv[1]), delimiter='\t'):
     sa, sb = f.size(a), f.size(b)
