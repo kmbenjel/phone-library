@@ -187,6 +187,9 @@ def main(list_tsv, batch, workers=4, jobs=1):
                         if new == path: raise RuntimeError('not on the phone')
                         print('MOVED', path[:60], '→', new[:60], flush=True); path = new
                 src, m0, staged = stage(path)
+            except ftplib.error_perm as e:
+                if str(e).startswith('530'): raise SystemExit(f'FTP login refused ({e}) — the login is not set (AGENTS.md §2); stopped, nothing marked')
+                print('STAGE FAIL', path, e, flush=True); continue
             except Exception as e:
                 print('STAGE FAIL', path, e, flush=True); continue
             work = os.path.join(STAGE, hashlib.md5(path.encode()).hexdigest()[:12] + '.work.pdf')

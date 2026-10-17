@@ -108,7 +108,7 @@ def finish(fu, meta, batch):
             mark('original restored'); print('RESTORED', path[:80], '|', r['decision'][:80], flush=True)
         cb.set_index_size(path, n1)
     except Exception as e:
-        if not touched and isinstance(e, OSError): print('RETRY LATER (phone away)', path, e, flush=True)
+        if not touched and (isinstance(e, OSError) or str(e).startswith('530')): print('RETRY LATER (phone away or login refused)', path, e, flush=True)
         else: mark(f'FAIL {e}'); print('FAIL', path, e, flush=True)
     finally:
         for p in {src, r.get('dst')}:
@@ -128,6 +128,10 @@ def main(list_tsv, batch, workers=3):
             if not lg: print('NOT CROPPED', path, flush=True); continue
             n0, m0, m1 = lg
             try: work, now = stage(path, n0, m0, m1)
+            except ftplib.error_perm as e:
+                if str(e).startswith('530'): raise SystemExit(f'FTP login refused ({e}) — the login is not set (AGENTS.md §2); nothing marked, rerun later')
+                with open(DONE, 'a', encoding='utf-8') as f: f.write(f'{path}\t{m0}\tSKIP {e}\n')
+                print('SKIP', path, e, flush=True); continue
             except Exception as e:
                 if isinstance(e, OSError): print('RETRY LATER (phone away)', path, e, flush=True)
                 else:

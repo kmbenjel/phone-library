@@ -37,7 +37,7 @@ def recipe(pdf):
     me = hashlib.md5(open(os.path.join(ROOT, 'scripts/book_crop.py'), 'rb').read()).hexdigest()[:10]
     key = os.path.join(CACHE, os.path.basename(pdf)[:-4] + f'.{me}.json')
     if os.path.exists(key): return json.load(open(key))
-    rec = bc.plan(pdf, 8); json.dump(rec, open(key, 'w'), ensure_ascii=False); return rec
+    rec = bc.plan(pdf, int(os.environ.get('JOBS', 3))); json.dump(rec, open(key, 'w'), ensure_ascii=False); return rec
 
 def forward(page, p):
     """maps original-page points to the reader's frame (turned, moved), like the content transform"""

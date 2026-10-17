@@ -18,6 +18,9 @@ while True:
         f = ftplib.FTP(); f.connect(host, phone_host.PORT, timeout=20); phone_host.login(f); f.voidcmd('NOOP'); f.pwd(); f.quit()
         if up is not True: log('phone answers on', host)
         up = True
+    except ftplib.error_perm as e:                    # the server answers but refuses the login: no need to look elsewhere
+        if up != 'refused': log('login refused on', host, '—', e, '(AGENTS.md §2: ~/.config/phone-library/ftp.env)')
+        up = 'refused'
     except Exception as e:
         if up is not False: log('no answer on', host, '—', e)
         up, host = False, phone_host.find()           # moved? look again (the known addresses, then the /24)
