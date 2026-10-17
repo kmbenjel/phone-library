@@ -957,8 +957,16 @@ def plan(path, jobs=1):
     else 98 %, else all; each tried with the second check (a book is cropped only if few pages stay whole)"""
     import copy, shutil
     d = pymupdf.open(path); n0 = d.page_count
-    if n0 and sum(1 for pg in d if not pg.rotation and pg.rect.width > 1.15 * pg.rect.height) >= 0.5 * n0:
-        gut = spread_gutters(d); d.close()         # a book of spreads: split first, then the whole method on its pages
+    spreads = n0 and sum(1 for pg in d if not pg.rotation and pg.rect.width > 1.15 * pg.rect.height) >= 0.5 * n0
+    # a WRAP-AROUND COVER among the first or last two pages (back, spine and front on one wide page — owner 2026-10-14,
+    # مواد البيان ص 474 «لا تحافظ على مقاس الأوراق ولا شمول الغلاف»): split like a spread, at its gutter or its middle
+    wide = {i: round(d[i].rect.width / 2, 2) for i in sorted({0, 1, n0 - 2, n0 - 1}) if 0 <= i < n0 and not d[i].rotation
+            and d[i].rect.width > 1.5 * d[i].rect.height} if n0 and not spreads else {}
+    if spreads or wide:
+        gut = spread_gutters(d)                    # a book of spreads (or a cover spread): split first, then the method
+        gut = {i: g for i, g in gut.items() if spreads or i in wide}
+        for i, g in wide.items(): gut.setdefault(i, g)
+        d.close()
         if gut:
             tmp = path[:-4] + '.split.pdf'; shutil.copyfile(path, tmp)
             dd = pymupdf.open(tmp); split_pages(dd, gut); dd.save(tmp, incremental=True, encryption=pymupdf.PDF_ENCRYPT_KEEP); dd.close()
@@ -1106,10 +1114,11 @@ def decide(pages, wq=0.95):
     tb = {i: pages[i].get('text') for i in text}
     def marg_print(i):                               # letter-sized marks inside the sheet beside the text: print (folio
         w, h = pages[i]['w'], pages[i]['h']          # numbers, glosses); marks at the sheet's edge (scanner corner marks)
-        def printish(b):                             # and long streaks are not
-            bw, bh = b[2] - b[0], b[3] - b[1]
+        def printish(b):                             # and long streaks are not; nor slivers of a scan line (thin and long:
+            bw, bh = b[2] - b[0], b[3] - b[1]        # صبح الأعشى ج 5 — a bar's pieces made the book «print in its margins»)
             edge = b[2] <= 0.03 * w or b[0] >= 0.97 * w or b[3] <= 0.03 * h or b[1] >= 0.97 * h
-            return not edge and bh < 0.15 * h and (bh >= 0.008 * h or bw >= 0.015 * w)
+            sliver = (bw <= 0.006 * w and bh >= 4 * bw) or (bh <= 0.006 * h and bw >= 4 * bh)
+            return not edge and not sliver and bh < 0.15 * h and (bh >= 0.008 * h or bw >= 0.015 * w)
         return sum(1 for b in pages[i].get('margin') or [] if printish(b)) >= 2
     clean = (not out['framed']) and len(full_w) >= 5 and all(tb.get(i) for i in full_w) \
             and sum(1 for i in full_w if marg_print(i)) <= 0.10 * len(full_w)
@@ -1268,7 +1277,8 @@ def decide(pages, wq=0.95):
                     ny = bl[3] + 2 if bl[3] <= bx[1] else (bl[1] - 2 - (b[3] - b[1]) if bl[1] >= bx[3] else None)
                     if ny is not None and lo_y <= hi_y:
                         cand = min(max(ny, lo_y), hi_y); mt, mbm = bx[1] - cand, cand + (b[3] - b[1]) - bx[3]
-                        if min(mt, mbm) < 0.6 * max(mt, mbm): p['stain_kept'] = True; continue
+                        # (up and down the eye forgives unequal margins more than a dark bar: الحروب الصليبية ص 426)
+                        if min(mt, mbm) < 0.35 * max(mt, mbm): p['stain_kept'] = True; continue
                         b = [b[0], round(cand, 1), b[2], round(cand + b[3] - b[1], 1)]; p['dodged'] = True
         b = [max(0, b[0]), max(0, b[1]), min(p['w'], b[2]), min(p['h'], b[3])]
         hm = 0.5 * mc                                 # half the margin at least, else the box grows (اللآلئ ج2 ص 40: 2 pt)
@@ -1509,6 +1519,16 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
             continue
         out = [b for b in mk.get('parts', []) if not inside(b, c, 1.0) and not near(b, known)]
         if out:
+            # only what the page needs moves the box or keeps the page whole (owner 2026-10-14): its text block's letters,
+            # notes, pictures and print in the margin; slivers of a scan line and stray specks outside are cut
+            mg_ = mk.get('margin') or []
+            needs = ([mk['text']] if mk.get('text') else []) + notes_of(mg_, p['w'], p['h']) + figures_of(mg_, p['w'], p['h']) \
+                    + printed_groups(mg_, p['w'], p['h'])
+            meets = lambda b, n: b[0] < n[2] + 1 and b[2] > n[0] - 1 and b[1] < n[3] + 1 and b[3] > n[1] - 1
+            cut = [b for b in out if not any(meets(b, n) for n in needs)]
+            if cut: p['cut_stray'] = (p.get('cut_stray') or []) + [[round(v, 1) for v in b] for b in cut]
+            out = [b for b in out if any(meets(b, n) for n in needs)]
+        if out:
             ob = [min(b[0] for b in out), min(b[1] for b in out), max(b[2] for b in out), max(b[3] for b in out)]
             dx = ob[0] - c[0] if ob[0] < c[0] else (ob[2] - c[2] if ob[2] > c[2] else 0)
             dy = ob[1] - c[1] if ob[1] < c[1] else (ob[3] - c[3] if ob[3] > c[3] else 0)
@@ -1599,14 +1619,17 @@ def append_contents(doc, page, data):
 def erase_stamp(doc, page, inv, p):
     """an uploader's stamp on white paper (owner 2026-10-09: «or even: erase it»): a white patch drawn over it after the
     page's own content — inside the page's turn, so it follows the page; the scan itself stays byte for byte"""
-    if not p.get('stamp') or p.get('paper', 0) < 245: return False
+    # (on near-white paper too, in the paper's own grey — owner 2026-10-14, خزانة الأدب ج 2 ص 18: a coloured stamp the box
+    # cut in half; on darker or coloured paper a patch would show, and the stamp stays outside the box as far as it can)
+    if not p.get('stamp') or p.get('paper', 0) < 225: return False
+    g = min(1.0, p.get('paper', 255) / 255)
     cmd = ''
     for st in p['stamp']:
         b = pad_box(st, p['w'])
         a_, b_ = pymupdf.Point(b[0], b[1]) * inv, pymupdf.Point(b[2], b[3]) * inv
         x0, y0, x1, y1 = min(a_.x, b_.x), min(a_.y, b_.y), max(a_.x, b_.x), max(a_.y, b_.y)
         cmd += f'{x0:.2f} {y0:.2f} {x1 - x0:.2f} {y1 - y0:.2f} re '
-    return append_contents(doc, page, f'q 1 g {cmd}f Q\n'.encode())
+    return append_contents(doc, page, f'q {g:.3f} g {cmd}f Q\n'.encode())
 
 def images_of(doc):
     return [[(x[0], x[2], x[3], len(doc.xref_stream_raw(x[0]) or b'')) for x in p.get_images(full=True)] for p in doc]
@@ -1764,7 +1787,11 @@ def sheet(src, rec, outdir, pages=None, px=480):
         sh.commit()
         bpix = tp.get_pixmap(matrix=pymupdf.Matrix(z0, z0), alpha=False)
         fb = os.path.join(outdir, f'p{i + 1:04d}-before.jpg'); bpix.save(fb, jpg_quality=72)
-        t = transformed(doc, i, p); page = t[0]
+        t = pymupdf.open(); t.insert_pdf(doc, from_page=i, to_page=i)     # what apply() draws: the stamp erased, then the turn
+        erase_stamp(t, t[0], ~t[0].transformation_matrix, p)
+        mv = p.get('move') or [0, 0]
+        if p.get('skew') or any(mv): rotate_contents(t, t[0], p.get('skew') or 0, mv[0], mv[1])
+        page = t[0]
         b = p.get('show') or p.get('crop') or [0, 0, page.rect.width, page.rect.height]; z = px / (b[2] - b[0])
         apix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), clip=pymupdf.Rect(b), alpha=False)
         fa = os.path.join(outdir, f'p{i + 1:04d}-after.jpg'); apix.save(fa, jpg_quality=72); t.close()
