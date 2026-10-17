@@ -10,7 +10,7 @@
 # skipped, not marked done, and come back in a later batch).
 # Usage: setsid nohup scripts/phone_watchdog.sh >> logs/phone-watchdog.log 2>&1 &   (one copy; stop: kill its PID)
 cd "$(dirname "$0")/.."
-PAT='^(python3 scripts/(crop_batch|inspect_files|ocr_clean)\.py|bash .*scripts/crop_library\.sh)'
+PAT='^(nice )?(python3 scripts/(crop_batch|crop_redo|inspect_files|ocr_clean)\.py|bash .*scripts/crop_library\.sh)'
 log() { echo "$(date '+%F %T') $*"; }
 answers() { nc -z -w5 "$1" 2221 2>/dev/null; }
 locate() { PHONE_HOST= timeout 120 python3 -c "import sys; sys.path.insert(0,'scripts'); import phone_host as p; print(p.find() or '')" 2>/dev/null; }

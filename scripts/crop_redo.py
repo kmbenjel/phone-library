@@ -11,7 +11,7 @@ crop-review-002/004: «you should be mature enough now to handle all this … Go
   4. logged in data/changes/changes.tsv (action «crop», reason «redo …»), the recipe kept, index-now.tsv size updated,
      data/crop/redo-done.tsv (resumable). The earlier sample sheets are kept in crop-sheets-v1/.
 Usage: python3 scripts/crop_redo.py --list-all OUT.tsv          (every book cropped and not undone, current paths)
-       python3 scripts/crop_redo.py LIST.tsv BATCH [--workers N]"""
+       python3 scripts/crop_redo.py LIST.tsv BATCH [--workers N] [--dry]   (--dry: everything but the phone write)"""
 import csv, hashlib, os, shutil, sys, time, ftplib
 from concurrent.futures import ProcessPoolExecutor, as_completed
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -71,6 +71,8 @@ def stage(path, n0, m0, m1):
     if cb.md5_file(work) != m0: os.remove(work); raise RuntimeError('the truncated phone file is not the original')
     return work, now
 
+DRY = False
+
 def finish(fu, meta, batch):
     path, n0, m0, m_old = meta
     try: r = fu.result()
@@ -84,6 +86,8 @@ def finish(fu, meta, batch):
         with open(new, 'rb') as f:
             if f.read(n0) != open(src, 'rb').read(n0): raise RuntimeError('the new file does not start with the original bytes')
         if m1 == m_old: mark('same as before'); print('SAME', path[:80], flush=True); return
+        if DRY:
+            print('DRY', r['decision'][:60], path[:70], '| would upload', n1, 'B (was', os.path.getsize(src), '+ old revision)', flush=True); return
         tmp = path + '.redo'
         with cb.Phone() as ph:
             if ph.md5(path) != m_old: raise RuntimeError('the phone file changed meanwhile')
@@ -139,5 +143,6 @@ def main(list_tsv, batch, workers=3):
 
 if __name__ == '__main__':
     a = sys.argv[1:]
+    if '--dry' in a: DRY = True; a.remove('--dry'); DONE = DONE + '.dry'
     if a and a[0] == '--list-all': list_all(a[1])
     else: main(a[0], a[1], int(a[a.index('--workers') + 1]) if '--workers' in a else 3)
