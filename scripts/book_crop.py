@@ -800,6 +800,29 @@ def whiten(a, z, rect):
     b[max(0, y0):max(0, y1), max(0, x0):max(0, x1)] = a[max(0, y0):max(0, y1), max(0, x0):max(0, x1)]
     return b
 
+def proj_signed(a, paper, lo=-4.0, hi=4.0, step=0.25, width=800):
+    """THE THIRD TILT MEASURE (owner 2026-10-18: طبقات الفقهاء «الأول فيه ميل», «الثالث والرابع مائلان» — pages 1.5–2.9°
+    tilted that the shear measure read level, its halves disagreeing): the page image turned by each angle, the sharpness of
+    its ink-row profile (the classic deskew); signed — the angle IS the turn (as rec['skew']). Returns (angle, sharpness:
+    the best profile over the median one)"""
+    from PIL import Image
+    im = Image.fromarray(a)
+    if im.width > width: im = im.resize((width, max(1, round(im.height * width / im.width))), Image.BILINEAR)
+    w, h = im.size; box = (int(w * .08), int(h * .05), int(w * .92), int(h * .95)); thr = max(60, min(200, paper - 50))
+    sc = lambda t: float(np.var((np.asarray(im.rotate(float(t), resample=Image.BILINEAR, fillcolor=255).crop(box)) < thr).sum(1)))
+    angs = np.arange(lo, hi + 1e-9, step); s = [sc(t) for t in angs]; k = int(np.argmax(s))
+    fine = np.arange(angs[k] - step, angs[k] + step + 1e-9, 0.025); f = [sc(t) for t in fine]; j = int(np.argmax(f))
+    return round(float(fine[j]), 3), round(max(f) / max(1e-9, float(np.median(s))), 2)
+
+def by_proj(a, mk, ang, gain, rec):
+    """a page the shear measure leaves level (its halves disagree, or it reads nothing) whose text lines line up sharply at
+    an angle ≥ 0.3° (sharpness ≥ 1.5): that angle is its turn; the turn is kept only if the turned page then reads ≤ 0.2°
+    by the same measure (checked where it is turned)"""
+    if abs(ang) >= SKEW_MIN or mk.get('dark', 1) > 0.35: return ang, gain
+    t, sh_ = proj_signed(a, mk.get('paper') or 255)
+    if abs(t) >= 0.3 and sh_ >= 1.5: rec['tilt_by_proj'] = t; return t, 1.1
+    return ang, gain
+
 def by_rules(mk, ang, gain, rec):
     """a page left level by the halves' test (an index: its halves read differently) that holds long straight rules all
     leaning one way (≥ 0.4°): the whole page's own reading, when it agrees with them (within 0.6°), is its tilt (owner
@@ -886,10 +909,30 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
             if 0.1 <= abs(ang) < 0.35:                   # small: measure again at twice the resolution
                 a2, z2 = gray(page, 1000); ang, gain = skew_of(marks(whiten(a2, z2, sh), z2, r.width, ex0)['xy'])
             ang, gain = by_rules(mk, ang, gain, rec)
+            ang, gain = by_proj(a, mk, ang, gain, rec)
             # a page whose printed frame or rule stands level while its content reads ≥ 1° (a photographed leaf in a
             # level frame: owner 2026-10-14, روضة المستبين ص 138 «أحدثت ميلا»): not turned — a 1° tilt would have kept
             # the rule from showing as one (it drifts beyond its 1 % band over half the page)
             if abs(ang) >= 1.0 and mk.get('level_frame'): rec['frame_level'] = round(ang, 3); ang = 0.0
+            if rec.get('tilt_by_proj') is not None:      # a projection turn: angles around its reading (it is coarse), the
+                best = None                              # one after which the page reads level by its own ink is kept
+                for k in list(range(-5, 6)):
+                    deg = round(rec['tilt_by_proj'] + 0.2 * k, 3)
+                    if deg * rec['tilt_by_proj'] <= 0: continue
+                    t = turned(doc, i, deg); a2, z2 = gray(t[0], 500); a2 = whiten(a2, z2, fwd_box(doc, i, {'skew': deg}, sh) if sh else None)
+                    mk2 = marks(a2, z2, r.width, [fwd_box(doc, i, {'skew': deg}, b) for b in ex0] if ex0 else None); t.close()
+                    if mk2['box'] is None or mk2['xy'] is None: continue
+                    lv = abs(skew_of(mk2['xy'], raw=True)[0])
+                    if best is None or lv < best[0]: best = (lv, deg, mk2)
+                if best:                                 # then ± 0.1° around the best
+                    for deg in (round(best[1] - 0.1, 3), round(best[1] + 0.1, 3)):
+                        t = turned(doc, i, deg); a2, z2 = gray(t[0], 500); a2 = whiten(a2, z2, fwd_box(doc, i, {'skew': deg}, sh) if sh else None)
+                        mk2 = marks(a2, z2, r.width, [fwd_box(doc, i, {'skew': deg}, b) for b in ex0] if ex0 else None); t.close()
+                        if mk2['box'] is None or mk2['xy'] is None: continue
+                        lv = abs(skew_of(mk2['xy'], raw=True)[0])
+                        if lv < best[0]: best = (lv, deg, mk2)
+                if best and best[0] <= 0.2: rec['skew'] = best[1]; mk = best[2]
+                ang = 0.0                                # (the generic loop below is not run for it)
             if abs(ang) >= SKEW_MIN and gain >= 1.02:
                 for deg in (-ang, ang):
                     t = turned(doc, i, deg); a2, z2 = gray(t[0], 500); a2 = whiten(a2, z2, fwd_box(doc, i, {'skew': deg}, sh) if sh else None)
@@ -1601,6 +1644,9 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
             if best and best[0] <= 0.35: p['skew'], mk, rl = best[1], best[2], best[2].get('rule_tilts')
         lbr = bool(p.get('skew') and p.get('tilt_by_rules') and len(rl) >= 2 and abs(float(np.median(rl))) <= 0.35)
         if lbr: p['level_by_rules'] = round(float(np.median(rl)), 3)
+        if not lbr and p.get('skew') and p.get('tilt_by_proj') is not None and mk.get('xy') is not None:   # turned by the
+            pl = abs(skew_of(mk['xy'], raw=True)[0])     # projection: it stays when the page now reads level by its own ink
+            if pl <= 0.2: lbr = True; p['level_by_proj'] = round(pl, 3)
         m0 = mk if lbr else (look(i, {k: v for k, v in p.items() if k != 'skew'}) if p.get('skew') else mk)
         ct = None if lbr else (m0['cols']() if m0.get('paper') else None)
         if lbr: pass
@@ -1769,6 +1815,16 @@ def frames(rec):
         for k in ('show', 'scale', 'bands', 'fit_whole'): p.pop(k, None)
         pw, ph = p['w'], p['h']; c = p.get('crop')
         if p['kind'] == 'rotated': p['fit_whole'] = True; continue    # a page turned by /Rotate: fitted whole (apply)
+        k_ = rec['pages'].index(p); n_ = len(rec['pages'])
+        own_cover = (k_ < 2 or k_ >= n_ - 4) and p['kind'] in ('cover', 'picture')
+        if own_cover and not c: c = [0.0, 0.0, pw, ph]
+        if p['kind'] == 'cover' and c or own_cover:   # A COVER FILLS THE FRAME, cut to the book's proportions (owner
+            cw, chh = c[2] - c[0], c[3] - c[1]        # 2026-10-18, دلائل الإعجاز ص 1: «الملاحظة على حالها … ولو نقص شيء لا
+            lim = 1.0 if own_cover else 0.08          # يؤثر من حواف الغلاف»; مواد البيان: «هل العرض مستو مع جميع الصفحات؟ يمكن
+            if cw / chh > A and (cw - chh * A) / cw <= lim:      # القص من الجوانب … فهو غلاف فقط»): the book's own covers (its
+                d_ = (cw - chh * A) / 2; c = [c[0] + d_, c[1], c[2] - d_, c[3]]   # first two and last four pages) always; a
+            elif cw / chh < A and (chh - cw / A) / chh <= lim:   # cover picture inside the book only when ≤ 4 % a side goes
+                d_ = (chh - cw / A) / 2; c = [c[0], c[1] + d_, c[2], c[3] - d_]   # (فهرسة ابن خير ص 380 «دون قصّ صورة الغلاف»)
         if c and abs(c[2] - c[0] - W) <= 1.0 and abs(c[3] - c[1] - H) <= 1.0:      # the book's box
             x, y, rw, rh = (c[0] + c[2]) / 2, (c[1] + c[3]) / 2, W, H
         else:
@@ -1782,7 +1838,7 @@ def frames(rec):
                 N = [max(0.0, N[0] - m), max(0.0, N[1] - m), min(pw, N[2] + m), min(ph, N[3] + m)]
             nw, nh = max(N[2] - N[0], 1.0), max(N[3] - N[1], 1.0)
             rw, rh = (nw, nw / A) if nw / nh > A else (nh * A, nh)
-            if rw < W and p['kind'] != 'cover': rw, rh = W, H   # a small part is not magnified — a cover is: it fills the page
+            if rw < W and p['kind'] != 'cover' and not own_cover: rw, rh = W, H   # a small part is not magnified — a cover is: it fills the page
             x, y = (N[0] + N[2]) / 2, (N[1] + N[3]) / 2
             if rw > pw + 0.5 or rh > ph + 0.5:         # beyond the page: rather up to 5 % larger, if all it holds still fits
                 fw_ = min(pw, ph * A); fh_ = fw_ / A
@@ -1816,34 +1872,54 @@ def append_contents(doc, page, data):
     return True
 
 def marks_to_erase(doc, i, p):
-    """NON-TEXT MARKS INSIDE THE FRAME, ON WHITE PAPER (owner 2026-10-18: خزانة الأدب ج 1 «ضع الإطار بحيث عيوب الطباعة أعلى
-    الصفحات تختفي»; صبح الأعشى ج 5 «عدم الجرأة على تجاوز سواد الطباعة»): the rules the book does not print (a photocopy's
-    rim, a scan line — along the frame's whole length), the lines, streaks and stains left out of the content, wherever they
-    show inside the frame without touching the content box — covered with the paper's own white, like a stamp (the scan
-    stays byte for byte). Boxes in the page's own coordinates"""
+    """A PHOTOCOPY'S RIM INSIDE THE FRAME, ON WHITE PAPER (owner 2026-10-18, صبح الأعشى ج 5 «عدم الجرأة على تجاوز سواد
+    الطباعة»): a rule the book does not print (rules_dropped) that is a thin band (≤ 2.5 % of the page across) beyond the
+    content, from it out to the frame's edge — covered with the paper's white (the scan stays byte for byte). NOTHING ELSE:
+    stains and loose lines are only kept out by the frame — a running head the first look took for a stain (نظم تنقيح فتح
+    الكريم ص 93: title, rule and page number as «blots») must never be painted over. Never on two opposite sides (a printed
+    frame). Boxes in the page's own coordinates"""
     if p.get('kind') != 'text' or p.get('paper', 0) < 235 or not p.get('crop') or not p.get('box'): return []
     deg = p.get('skew') or 0; mv = p.get('move') or [0, 0]; crop, box = p['crop'], p['box']
     unturn = lambda b: fwd_box(doc, i, {'skew': -deg}, b) if deg else b
     hit = lambda r, q_, e=0: r[2] > q_[0] - e and r[0] < q_[2] + e and r[3] > q_[1] - e and r[1] < q_[3] + e
     sh = lambda b, k=1: [b[0] + k * mv[0], b[1] + k * mv[1], b[2] + k * mv[0], b[3] + k * mv[1]]
-    cands = []                                        # in the reader's frame (turned and moved), like the crop and the box
-    for r_ in p.get('rules_dropped') or []:           # a rim runs the sheet's whole length, and beyond it (towards the
-        r_ = sh(r_); v = r_[3] - r_[1] >= r_[2] - r_[0]   # frame's edge) lies the bed, not the page
-        if v: long_ = [r_[0], crop[1], crop[2], crop[3]] if r_[0] >= box[2] else ([crop[0], crop[1], r_[2], crop[3]] if r_[2] <= box[0] else [r_[0], crop[1], r_[2], crop[3]])
-        else: long_ = [crop[0], crop[1], crop[2], r_[3]] if r_[3] <= box[1] else ([crop[0], r_[1], crop[2], crop[3]] if r_[1] >= box[3] else [crop[0], r_[1], crop[2], r_[3]])
-        cands.append(long_ if not hit(long_, box, -0.5) else r_)   # (the box was trimmed to 1 pt inside the rim)
-    cands += [sh(b) for b in p.get('lines') or []] + list(p.get('blots') or []) + list(p.get('edge') or [])
-    # never a printed frame: lines on two opposite sides of the content (a title page's border) are print, left alone
-    side = lambda b: ('L' if b[2] <= box[0] else 'R' if b[0] >= box[2] else 'T' if b[3] <= box[1] else 'B' if b[1] >= box[3] else 'I')
-    sides = {side(sh(b)) for b in (p.get('lines') or []) + (p.get('rules_dropped') or [])
-             if max(b[2] - b[0], b[3] - b[1]) >= 0.2 * min(p['w'], p['h'])}
+    rims, sides = [], set()
+    for r_ in p.get('rules_dropped') or []:
+        r_ = sh(r_); v = r_[3] - r_[1] >= r_[2] - r_[0]
+        if (r_[2] - r_[0] if v else r_[3] - r_[1]) > 0.025 * (p['w'] if v else p['h']): continue   # not a thin band
+        if v:
+            if r_[0] >= box[2]: long_ = [r_[0], crop[1], crop[2], crop[3]]; sides.add('R')
+            elif r_[2] <= box[0]: long_ = [crop[0], crop[1], r_[2], crop[3]]; sides.add('L')
+            else: continue
+        else:
+            if r_[3] <= box[1]: long_ = [crop[0], crop[1], crop[2], r_[3]]; sides.add('T')
+            elif r_[1] >= box[3]: long_ = [crop[0], r_[1], crop[2], crop[3]]; sides.add('B')
+            else: continue
+        others = [sh(x) for x in (p.get('lines') or []) + (p.get('rules') or [])] + list(p.get('blots') or []) + list(p.get('edge') or [])
+        if hit(long_, box, -0.5) or any(hit(long_, o) for o in others): continue   # print (or anything) out there: left
+        rims.append(long_)
     if {'L', 'R'} <= sides or {'T', 'B'} <= sides: return []
     out = []
-    for b in cands:
-        if not hit(b, crop) or hit(b, box, -0.5): continue
-        o = unturn(sh(b, -1)); e = 1.5                # back to the page's own coordinates
+    for b in rims:
+        if not hit(b, crop): continue
+        o = unturn(sh(b, -1)); e = 1.5
         out.append([o[0] - e, o[1] - e, o[2] + e, o[3] + e])
     return out
+
+def rect_minus(r, cuts):
+    """the parts of rect r outside every rect of cuts (a stamp's patch kept off anything printed)"""
+    parts = [r]
+    for c in cuts:
+        nxt = []
+        for q in parts:
+            if not (c[2] > q[0] and c[0] < q[2] and c[3] > q[1] and c[1] < q[3]): nxt.append(q); continue
+            if c[1] > q[1]: nxt.append([q[0], q[1], q[2], c[1]])
+            if c[3] < q[3]: nxt.append([q[0], c[3], q[2], q[3]])
+            y0, y1 = max(q[1], c[1]), min(q[3], c[3])
+            if c[0] > q[0]: nxt.append([q[0], y0, c[0], y1])
+            if c[2] < q[2]: nxt.append([c[2], y0, q[2], y1])
+        parts = [q for q in nxt if q[2] - q[0] > 0.5 and q[3] - q[1] > 0.5]
+    return parts
 
 def hide_stamp_annots(page):
     """AN UPLOADER'S STAMP MADE AS A PDF ANNOTATION (owner 2026-10-18, خزانة الأدب ج 2 ص 18: «فيمكن حذف ما بقي ظاهرا من
@@ -1860,15 +1936,34 @@ def erase_stamp(doc, page, inv, p):
     page's own content — inside the page's turn, so it follows the page; the scan itself stays byte for byte"""
     # (on near-white paper too, in the paper's own grey — owner 2026-10-14, خزانة الأدب ج 2 ص 18: a coloured stamp the box
     # cut in half; on darker or coloured paper a patch would show, and the stamp stays outside the box as far as it can)
+    # (a stamp is covered in THE COLOUR OF THE PAGE AROUND IT — the median of a ring 8 pt wide around the patch — on any
+    # paper: owner 2026-10-18, نظم تنقيح فتح الكريم «لو تستعمل أداة تجعل مكان الطابع مثل الخلفية»; the other marks only
+    # on white paper, in its white)
     er = marks_to_erase(doc, page.number, p)
-    if (not p.get('stamp') and not er) or p.get('paper', 0) < 225: return False
-    g = min(1.0, p.get('paper', 255) / 255)
+    printed = [x for x in (p.get('blots') or []) + (p.get('lines') or []) + (p.get('rules') or []) + (p.get('rules_dropped') or [])
+               + ([p['box']] if p.get('box') else [])]
+    stamps_ = [pad_box(st, p['w']) for st in p.get('stamp') or []]
+    sts = [q for st in stamps_ for q in rect_minus(st, [x for x in printed if not inside(x, st, 0)])]   # (off the print)
+    if not sts and not er: return False
+    z = 100 / 72; pix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), colorspace=pymupdf.csRGB, alpha=False)
+    img = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width * 3].reshape(pix.height, pix.width, 3)
+    def around(b):                                    # the page's own colour around a box
+        X0, Y0, X1, Y1 = [int(round(v * z)) for v in (b[0] - 8, b[1] - 8, b[2] + 8, b[3] + 8)]
+        X0, Y0 = max(0, X0), max(0, Y0); X1, Y1 = min(pix.width, X1), min(pix.height, Y1)
+        m = np.ones((max(0, Y1 - Y0), max(0, X1 - X0)), bool)
+        ix0, iy0 = int(b[0] * z) - X0, int(b[1] * z) - Y0; ix1, iy1 = int(b[2] * z) - X0, int(b[3] * z) - Y0
+        m[max(0, iy0):max(0, iy1), max(0, ix0):max(0, ix1)] = False
+        ring = img[Y0:Y1, X0:X1][m]
+        if len(ring) < 10: return (1.0, 1.0, 1.0)
+        bright = ring[ring.sum(1) >= np.percentile(ring.sum(1), 40)]   # the paper, not a stray letter beside it
+        return tuple(float(v) / 255 for v in np.median(bright, axis=0))
+    if p.get('paper', 0) < 225: er = []
     cmd = ''
-    for b in [pad_box(st, p['w']) for st in p.get('stamp') or []] + er:
+    for b, col in [(b, around(b)) for b in sts] + [(b, (min(1.0, p.get('paper', 255) / 255),) * 3) for b in er]:
         a_, b_ = pymupdf.Point(b[0], b[1]) * inv, pymupdf.Point(b[2], b[3]) * inv
         x0, y0, x1, y1 = min(a_.x, b_.x), min(a_.y, b_.y), max(a_.x, b_.x), max(a_.y, b_.y)
-        cmd += f'{x0:.2f} {y0:.2f} {x1 - x0:.2f} {y1 - y0:.2f} re '
-    return append_contents(doc, page, f'q {g:.3f} g {cmd}f Q\n'.encode())
+        cmd += f'{col[0]:.3f} {col[1]:.3f} {col[2]:.3f} rg {x0:.2f} {y0:.2f} {x1 - x0:.2f} {y1 - y0:.2f} re f '
+    return append_contents(doc, page, f'q {cmd}Q\n'.encode())
 
 def images_of(doc):
     return [[(x[0], x[2], x[3], len(doc.xref_stream_raw(x[0]) or b'')) for x in p.get_images(full=True)] for p in doc]
