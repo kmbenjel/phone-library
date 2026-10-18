@@ -108,17 +108,23 @@ def check(row, rec, pdf):
 def main():
     rows = [r for r in csv.reader(open(os.path.join(ROOT, 'data/improve/crop-regression.tsv'), encoding='utf-8'), delimiter='\t')
             if r and not r[0].startswith('#')]
-    fails = 0; recs = {}
+    # (one book's recipe in memory at a time, read again from the cache when needed: holding all of them made this process
+    # 1.3 GB, the memory pen overflowed beside its workers and the governor's brake killed the run six times, 2026-10-18)
+    fails = 0; recs = {}; cur = (None, None)
     import time
     for r in rows:
         pdf = local_copy(r[0])
         if pdf not in recs:
-            t0 = time.time(); recs[pdf] = recipe(pdf); print(f'   (analysed {os.path.basename(pdf)} in {time.time() - t0:.0f} s)', flush=True)
-        ok, why = check(r, recs[pdf], pdf)
+            cur = (None, None)
+            t0 = time.time(); cur = (pdf, recipe(pdf)); recs[pdf] = True; print(f'   (analysed {os.path.basename(pdf)} in {time.time() - t0:.0f} s)', flush=True)
+        elif cur[0] != pdf: cur = (pdf, recipe(pdf))
+        ok, why = check(r, cur[1], pdf)
         fails += not ok
         print(('PASS' if ok else 'FAIL'), r[0].rsplit('/', 1)[-1][:45], 'p.', r[1], r[2], r[3], '—', why, '|', r[4] if len(r) > 4 else '', flush=True)
     keep_flat = {(local_copy(r[0]), int(r[1])) for r in rows if r[2] == 'turn' and r[3] == 'no'}   # pages the owner/test says stay as they are
-    for pdf, rec in recs.items():                    # whole books: ONE page size (owner 2026-10-09: «فيجب اطّراده في جميع الكتب»)
+    cur = None
+    for pdf in recs:                                 # whole books: ONE page size (owner 2026-10-09: «فيجب اطّراده في جميع الكتب»)
+        rec = recipe(pdf)
         if rec.get('decision') not in ('crop', 'level'): continue   # — applied for real, every page's size read back — and no note cut
         out = pdf[:-4] + '.regress-out.pdf'
         try:
@@ -132,8 +138,8 @@ def main():
         if cut: ok = False; why += f' | marginal notes cut on pages {cut[:12]}'
         fails += not ok
         print(('PASS' if ok else 'FAIL'), os.path.basename(pdf), 'one page size:', why, flush=True)
-    for pdf, rec in recs.items():                    # whole books: no tilt kept after turning, none left that both measures see
-        rt = rec.get('residual_tilt') or []; ut = [x for x in rec.get('untreated_tilt') or [] if (pdf, x) not in keep_flat]
+    for pdf in recs:                                 # whole books: no tilt kept after turning, none left that both measures see
+        rec = recipe(pdf); rt = rec.get('residual_tilt') or []; ut = [x for x in rec.get('untreated_tilt') or [] if (pdf, x) not in keep_flat]
         if rt or ut: fails += 1
         print(('PASS' if not (rt or ut) else 'FAIL'), os.path.basename(pdf), 'pages still tilted after turning:', rt[:12],
               '| tilted (both measures) but not turned:', ut[:12], '| curved, brought below sight:', (rec.get('curved') or [])[:12],
