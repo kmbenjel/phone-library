@@ -895,8 +895,9 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
                     t = turned(doc, i, deg); a2, z2 = gray(t[0], 500); a2 = whiten(a2, z2, fwd_box(doc, i, {'skew': deg}, sh) if sh else None)
                     mk2 = marks(a2, z2, r.width, [fwd_box(doc, i, {'skew': deg}, b) for b in ex0] if ex0 else None); t.close()
                     # the turned page must still show the page's ink (a broken drawing would show none); its text block is
-                    # naturally narrower once level, so its size is not compared
-                    if mk2['box'] is None or mk2['xy'] is None or not (0.6 <= len(mk2['xy'][0]) / len(mk['xy'][0]) <= 1.6):
+                    # naturally narrower once level, so its size is not compared; MORE ink once level is no fault — a
+                    # table's slanted rules count as print only when straight (خريدة القصر ص 649: ×3.5, the turn refused)
+                    if mk2['box'] is None or mk2['xy'] is None or not (0.6 <= len(mk2['xy'][0]) / len(mk['xy'][0]) <= 5.0):
                         continue
                     left, _ = skew_of(mk2['xy'], raw=True)   # the plain whole-page angle must now read level
                     if abs(left) <= max(0.1, abs(ang) / 3):
@@ -1584,9 +1585,26 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         # columns' line starts read the same clear tilt (≥ 0.3°, within 0.15° of each other), the turns around it are tried
         # and the one leaving both columns' edges ≤ 0.15° is kept; else (columns disagree, a small tilt, one side
         # unreadable) the page is not turned — the whole-page measures are not trusted on such a page
-        m0 = look(i, {k: v for k, v in p.items() if k != 'skew'}) if p.get('skew') else mk
-        ct = m0['cols']() if m0.get('paper') else None
-        if ct is not None:
+        # A PAGE TURNED BY ITS RULES (a table — by_rules) whose rules stand straight once turned (≤ 0.35°): the turn stays;
+        # its columns of short entries are no measure of it (owner 2026-10-18, خريدة القصر ص 649 «الأخير ما زال مائلا»:
+        # the column test read the index as two disagreeing columns and undid a turn its own rules confirmed)
+        rl = mk.get('rule_tilts') or []
+        if p.get('skew') and p.get('tilt_by_rules') and len(rl) >= 2 and abs(float(np.median(rl))) > 0.35:
+            # the page's ink (entries and rules together) turned it short: the angles towards the rules' own reading are
+            # tried, and the one that leaves the rules straightest is kept (خريدة القصر ص 649: 1.52° read, 1.96° by its rules)
+            s0, best = p['skew'], None
+            for k in range(0, 9):
+                d = round(s0 + (k * 0.1 if s0 > 0 else -k * 0.1), 3); m2 = look(i, dict(p, skew=d)); r2 = m2.get('rule_tilts') or []
+                if len(r2) < 2: continue
+                v = abs(float(np.median(r2)))
+                if best is None or v < best[0]: best = (v, d, m2)
+            if best and best[0] <= 0.35: p['skew'], mk, rl = best[1], best[2], best[2].get('rule_tilts')
+        lbr = bool(p.get('skew') and p.get('tilt_by_rules') and len(rl) >= 2 and abs(float(np.median(rl))) <= 0.35)
+        if lbr: p['level_by_rules'] = round(float(np.median(rl)), 3)
+        m0 = mk if lbr else (look(i, {k: v for k, v in p.items() if k != 'skew'}) if p.get('skew') else mk)
+        ct = None if lbr else (m0['cols']() if m0.get('paper') else None)
+        if lbr: pass
+        elif ct is not None:
             tr, tl = ct
             # (within 15 % of the tilt, at least 0.15°, from 0.25° on — owner 2026-10-14, أنساب الأشراف ص 42: columns
             # reading 1.59° and 1.44° were left tilted for 0.0007° over a fixed 0.15°)
@@ -1633,7 +1651,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                     tries = []
                     for d0 in (-u, u):                # the direction that lowers the tilt, by the shear measure
                         m2 = look(i, dict(p, skew=round(d0, 3)))
-                        if m2['xy'] is None or not (0.6 <= len(m2['xy'][0]) / len(mk['xy'][0]) <= 1.6): continue
+                        if m2['xy'] is None or not (0.6 <= len(m2['xy'][0]) / len(mk['xy'][0]) <= 5.0): continue
                         tries.append((abs(skew_of(m2['xy'], raw=True)[0]), round(d0, 3)))
                     done = False
                     if tries:
@@ -1813,7 +1831,7 @@ def marks_to_erase(doc, i, p):
         r_ = sh(r_); v = r_[3] - r_[1] >= r_[2] - r_[0]   # frame's edge) lies the bed, not the page
         if v: long_ = [r_[0], crop[1], crop[2], crop[3]] if r_[0] >= box[2] else ([crop[0], crop[1], r_[2], crop[3]] if r_[2] <= box[0] else [r_[0], crop[1], r_[2], crop[3]])
         else: long_ = [crop[0], crop[1], crop[2], r_[3]] if r_[3] <= box[1] else ([crop[0], r_[1], crop[2], crop[3]] if r_[1] >= box[3] else [crop[0], r_[1], crop[2], r_[3]])
-        cands.append(long_ if not hit(long_, box, 1) else r_)
+        cands.append(long_ if not hit(long_, box, -0.5) else r_)   # (the box was trimmed to 1 pt inside the rim)
     cands += [sh(b) for b in p.get('lines') or []] + list(p.get('blots') or []) + list(p.get('edge') or [])
     # never a printed frame: lines on two opposite sides of the content (a title page's border) are print, left alone
     side = lambda b: ('L' if b[2] <= box[0] else 'R' if b[0] >= box[2] else 'T' if b[3] <= box[1] else 'B' if b[1] >= box[3] else 'I')
@@ -1822,7 +1840,7 @@ def marks_to_erase(doc, i, p):
     if {'L', 'R'} <= sides or {'T', 'B'} <= sides: return []
     out = []
     for b in cands:
-        if not hit(b, crop) or hit(b, box, 1): continue
+        if not hit(b, crop) or hit(b, box, -0.5): continue
         o = unturn(sh(b, -1)); e = 1.5                # back to the page's own coordinates
         out.append([o[0] - e, o[1] - e, o[2] + e, o[3] + e])
     return out
