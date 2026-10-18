@@ -60,14 +60,14 @@ def check(row, rec, pdf):
     if what == 'turn':                               # turned or not as expected — and a turned page reads level
         got = 'yes' if p.get('skew') else 'no'
         lvl, img = p.get('after_tilt'), p.get('after_tilt_image')     # both measures must read the turned page level
-        # (a two-column page is judged by its columns' line starts — the whole-page measures are fooled by the gutter)
+        # (a two-column page is judged by its columns' line starts — the whole-page measures are fooled by the gutter; a
+        # projection turn is verified level on the page's own ink, without them: اللآلئ ج 2 ص 469, 2.6° → 0.1°)
         ok = got == expect and (got == 'no' or (lvl is not None and img is not None and ((lvl <= bc.LEVEL and img <= bc.IMG_LEVEL)
              or (p.get('curved') and lvl <= bc.CURVED and img <= bc.CURVED) or (p.get('level_by_lines') is not None and max(lvl, img) <= 0.35)
              or (p.get('level_by_edge') is not None and lvl <= 0.2)
              or (p.get('level_by_columns') is not None and p['level_by_columns'] <= 0.15)
-             or (p.get('level_by_proj') is not None and p['level_by_proj'] <= 0.2)     # (a projection turn, verified level
-             #   on the page's own ink: book_crop.verify — اللآلئ ج 2 ص 469, 2.6° → 0.1°)
-             or p.get('reduced') is not None))) \
+             or p.get('reduced') is not None)
+             or (p.get('level_by_proj') is not None and p['level_by_proj'] <= 0.2))) \
              and (expect == 'no' or not p.get('untreated_tilt'))
         return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}){" curved" if p.get("curved") else ""}, untreated {p.get("untreated_tilt")}'
     if what == 'cropped':                              # cropped, not left whole (a book without print in its margins)
