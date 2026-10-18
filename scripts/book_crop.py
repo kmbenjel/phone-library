@@ -388,6 +388,29 @@ def marks(a, scale, width, exclude=None):
                 hi = max(objs[i - 1][0].stop if vert else objs[i - 1][1].stop for i in grp)
                 if hi - lo >= 0.15 * span and sum(hgt[i] if vert else wid[i] for i in grp) >= 0.3 * (hi - lo): lines.update(grp)
             k = j + 1
+    # a DOTTED line beside the text block: a column (row) of ≥ 8 tiny marks (≤ 0.5 % × 0.8 % of the page) within 0.6 % of
+    # one another, spanning ≥ 15 % of the page — a scanner's speckled edge (owner 2026-10-18, الحروب الصليبية ص 421 «الثانية
+    # سيئة»: dots at the sheet's edge chained onto the text widened it from 343 pt to 420, the page shown smaller)
+    # (the text block's edges at the 10th / 90th percentile here: a few dashes in the dotted column can be «large» marks and
+    # pull the 2nd / 98th percentile out to it)
+    bx0 = np.percentile([objs[i - 1][1].start for i in big], 10); bx1 = np.percentile([objs[i - 1][1].stop for i in big], 90)
+    by0 = np.percentile([objs[i - 1][0].start for i in big], 10); by1 = np.percentile([objs[i - 1][0].stop for i in big], 90)
+    for vert in (True, False):
+        pos = (lambda i: (objs[i - 1][1].start + objs[i - 1][1].stop) / 2) if vert else (lambda i: (objs[i - 1][0].start + objs[i - 1][0].stop) / 2)
+        lo_c, hi_c, span, tol = (bx0, bx1, H, 0.008 * Wd) if vert else (by0, by1, Wd, 0.008 * H)
+        cand = sorted((i for i in content if i not in lines and (pos(i) <= lo_c - g or pos(i) >= hi_c + g)
+                       and wid[i] <= 0.006 * Wd and hgt[i] <= 0.03 * H and (hgt[i] >= 2 * wid[i] or hgt[i] <= 0.008 * H if vert
+                                                                            else wid[i] >= 2 * hgt[i] or wid[i] <= 0.008 * Wd)), key=pos)
+        k = 0
+        while k < len(cand):
+            j = k
+            while j + 1 < len(cand) and pos(cand[j + 1]) - pos(cand[k]) <= tol: j += 1
+            grp = cand[k:j + 1]
+            if len(grp) >= 8:
+                lo = min(objs[i - 1][0].start if vert else objs[i - 1][1].start for i in grp)
+                hi = max(objs[i - 1][0].stop if vert else objs[i - 1][1].stop for i in grp)
+                if hi - lo >= 0.15 * span: lines.update(grp)
+            k = j + 1
     out['lines'] = [box_of(i) for i in sorted(lines)]
     with_lines = list(content)                        # the tilt is read on all the print, lines included (a footnote rule is
     content = [i for i in content if i not in lines] or content   # the straightest line of a page — الاتباع والمزاوجة ص 51)
