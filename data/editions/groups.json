@@ -595,8 +595,16 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 40574198,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 1673,
+     "kbpp": 24,
+     "px": 1727,
+     "colour": "أبيض وأسود",
+     "width_used": 0.8,
+     "text": false
+    },
+    "score": 81.0,
     "waqfeya": [
      "https://waqfeya.net/books/صحيح-البخاري-ط-الأوقاف-السعودية-6741e411b4124528b44ba63ae3c6e91d"
     ]
@@ -1584,8 +1592,16 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 49114065,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 1492,
+     "kbpp": 32,
+     "px": 1950,
+     "colour": "أبيض وأسود",
+     "width_used": 0.83,
+     "text": false
+    },
+    "score": 81.6,
     "waqfeya": [
      "https://waqfeya.net/books/صحيح-مسلم-ط-الأوقاف-السعودية-4d266cfa59bd4d45a999a65184679a5b"
     ]
@@ -3857,108 +3873,6 @@
   "note": null
  },
  {
-  "work": "منهاج السنه النبويه في",
-  "title": "منهاج السنة النبوية في نقض كلام الشيعة القدرية",
-  "author": "ابن تيمية",
-  "bytes": 186890633,
-  "editions": [
-   {
-    "folder": "منهاج السنة النبوية في نقض كلام الشيعة القدرية - ابن تيمية - ت محمد رشاد سالم - جامعة الإمام محمد بن سعود الإسلامية 1406 هـ 1986",
-    "cat": "العقيدة",
-    "edition": "ت محمد رشاد سالم - جامعة الإمام محمد بن سعود الإسلامية 1406 هـ 1986",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 90320522,
-    "quality": null,
-    "score": -1,
-    "waqfeya": [],
-    "same_edition": true,
-    "best_scan": false
-   },
-   {
-    "folder": "منهاج السنة النبوية في نقض كلام الشيعة القدرية - ابن تيمية",
-    "cat": "الفرق والردود",
-    "edition": "ت محمد رشاد سالم - ط جامعة الإمام محمد بن سعود الإسلامية - 1406 - 1986",
-    "researcher": "محمد رشاد سالم",
-    "publisher": "جامعة الإمام محمد بن سعود الإسلامية",
-    "files": 11,
-    "vols_edition": "9",
-    "complete": true,
-    "bytes": 96570111,
-    "quality": {
-     "files": 11,
-     "pages": 5347,
-     "kbpp": 18,
-     "px": 1938,
-     "colour": "أبيض وأسود",
-     "width_used": 0.71,
-     "text": false
-    },
-    "score": 79.2,
-    "waqfeya": [
-     "https://waqfeya.net/books/منهاج-السنة-النبوية-في-نقض-كلام-الشيعة-القدرية-9e12af62b302461a869992f3226d6f3f"
-    ],
-    "same_edition": true,
-    "best_scan": true
-   }
-  ],
-  "note": null
- },
- {
-  "work": "بيان تلبيس الجهميه في",
-  "title": "بيان تلبيس الجهمية في تأسيس بدعهم الكلامية",
-  "author": "ابن تيمية",
-  "bytes": 184099408,
-  "editions": [
-   {
-    "folder": "بيان تلبيس الجهمية في تأسيس بدعهم الكلامية - ابن تيمية",
-    "cat": "العقيدة",
-    "edition": "ط وزارة الشؤون الإسلامية والدعوة والإرشاد السعودية - مجمع الملك فهد لطباعة المصحف الشريف - 1426",
-    "researcher": "",
-    "publisher": "وزارة الشؤون الإسلامية والدعوة والإرشاد السعودية - مجمع الملك فهد لطباعة المصحف الشريف",
-    "files": 12,
-    "vols_edition": "10",
-    "complete": true,
-    "bytes": 98291390,
-    "quality": {
-     "files": 12,
-     "pages": 5910,
-     "kbpp": 16,
-     "px": 1841,
-     "colour": "أبيض وأسود",
-     "width_used": 0.72,
-     "text": false
-    },
-    "score": 79.4,
-    "waqfeya": [
-     "https://waqfeya.net/books/بيان-تلبيس-الجهمية-في-تأسيس-بدعهم-الكلامية-ط-الأوقاف-السعودية-98dc73040ad142a2948b445deb453376"
-    ],
-    "same_edition": true,
-    "best_scan": true
-   },
-   {
-    "folder": "بيان تلبيس الجهمية في تأسيس بدعهم الكلامية - ابن تيمية - ت يحيى بن محمد الهنيدي وآخرون - مجمع الملك فهد لطباعة المصحف الشريف",
-    "cat": "العقيدة",
-    "edition": "ت يحيى بن محمد الهنيدي وآخرون - مجمع الملك فهد لطباعة المصحف الشريف",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 85808018,
-    "quality": null,
-    "score": -1,
-    "waqfeya": [],
-    "same_edition": true,
-    "best_scan": false
-   }
-  ],
-  "note": null
- },
- {
   "work": "نصب الرايه لاحاديث الهدايه",
   "title": "نصب الراية لأحاديث الهداية",
   "author": "جمال الدين الزيلعي",
@@ -4564,8 +4478,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 60524623,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 636,
+     "kbpp": 95,
+     "px": 2146,
+     "colour": "أبيض وأسود",
+     "width_used": 0.61,
+     "text": false
+    },
+    "score": 62.2,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -6612,8 +6534,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 63283312,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 2979,
+     "kbpp": 20,
+     "px": 0,
+     "colour": "رمادي",
+     "width_used": 0.54,
+     "text": false
+    },
+    "score": 10.8,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -8678,8 +8608,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 30119809,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 550,
+     "kbpp": 54,
+     "px": 800,
+     "colour": "رمادي",
+     "width_used": 0.7,
+     "text": false
+    },
+    "score": 42.6,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -9622,8 +9560,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 51834643,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 524,
+     "kbpp": 98,
+     "px": 1203,
+     "colour": "رمادي",
+     "width_used": 0.65,
+     "text": false
+    },
+    "score": 56.0,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -10243,11 +10189,19 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 32415933,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 1185,
+     "kbpp": 27,
+     "px": 1726,
+     "colour": "أبيض وأسود",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 65.0,
     "waqfeya": [],
     "same_edition": true,
-    "best_scan": false
+    "best_scan": true
    },
    {
     "folder": "مجمل اللغة - ابن فارس (ت زهير عبد المحسن سلطان - مؤسسة الرسالة)",
@@ -10271,7 +10225,7 @@
     "score": 65.0,
     "waqfeya": [],
     "same_edition": true,
-    "best_scan": true
+    "best_scan": false
    }
   ],
   "note": null
@@ -10905,8 +10859,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 21467228,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 578,
+     "kbpp": 40,
+     "px": 2447,
+     "colour": "أبيض وأسود",
+     "width_used": 0.45,
+     "text": false
+    },
+    "score": 59.0,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -10987,8 +10949,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 29918662,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 266,
+     "kbpp": 112,
+     "px": 652,
+     "colour": "ملون",
+     "width_used": 0.68,
+     "text": false
+    },
+    "score": 36.9,
     "waqfeya": []
    },
    {
@@ -11529,8 +11499,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 4875189,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 290,
+     "kbpp": 16,
+     "px": 1954,
+     "colour": "أبيض وأسود",
+     "width_used": 0.76,
+     "text": false
+    },
+    "score": 65.2,
     "waqfeya": []
    }
   ],
@@ -11552,8 +11530,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 18675020,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 1025,
+     "kbpp": 18,
+     "px": 1307,
+     "colour": "أبيض وأسود",
+     "width_used": 0.78,
+     "text": false
+    },
+    "score": 62.3,
     "waqfeya": []
    },
    {
@@ -12393,8 +12379,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 32990533,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 194,
+     "kbpp": 170,
+     "px": 966,
+     "colour": "ملون",
+     "width_used": 0.59,
+     "text": false
+    },
+    "score": 45.9,
     "waqfeya": []
    }
   ],
@@ -12416,8 +12410,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 23686626,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 116,
+     "kbpp": 204,
+     "px": 1527,
+     "colour": "ملون",
+     "width_used": 0.84,
+     "text": false
+    },
+    "score": 65.7,
     "waqfeya": []
    },
    {
@@ -12485,8 +12487,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 5529162,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 388,
+     "kbpp": 14,
+     "px": 1637,
+     "colour": "أبيض وأسود",
+     "width_used": 1.0,
+     "text": false
+    },
+    "score": 70.0,
     "waqfeya": []
    }
   ],
@@ -13367,8 +13377,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 25494293,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 600,
+     "kbpp": 42,
+     "px": 2144,
+     "colour": "أبيض وأسود",
+     "width_used": 0.69,
+     "text": false
+    },
+    "score": 63.8,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -13950,8 +13968,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 17463167,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 659,
+     "kbpp": 26,
+     "px": 2123,
+     "colour": "أبيض وأسود",
+     "width_used": 0.72,
+     "text": false
+    },
+    "score": 64.4,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -14634,11 +14660,19 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 20800326,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 619,
+     "kbpp": 33,
+     "px": 2478,
+     "colour": "أبيض وأسود",
+     "width_used": 0.68,
+     "text": false
+    },
+    "score": 63.6,
     "waqfeya": [],
     "same_edition": true,
-    "best_scan": false
+    "best_scan": true
    },
    {
     "folder": "الرسالة القشيرية - القشيري (ط دار المعارف - القاهرة)",
@@ -14664,7 +14698,7 @@
      "https://waqfeya.net/books/الرسالة-القشيرية--ط-المعارف-9adc0529974747fb8b18e0ae7c3d757d"
     ],
     "same_edition": true,
-    "best_scan": true
+    "best_scan": false
    }
   ],
   "note": null
@@ -14707,8 +14741,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 14158730,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 596,
+     "kbpp": 23,
+     "px": 2480,
+     "colour": "أبيض وأسود",
+     "width_used": 0.63,
+     "text": false
+    },
+    "score": 62.6,
     "waqfeya": []
    }
   ],
@@ -14912,8 +14954,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 5429341,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 349,
+     "kbpp": 15,
+     "px": 2142,
+     "colour": "أبيض وأسود",
+     "width_used": 0.52,
+     "text": false
+    },
+    "score": 60.4,
     "waqfeya": []
    }
   ],
@@ -15109,8 +15159,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 12261106,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 496,
+     "kbpp": 24,
+     "px": 1396,
+     "colour": "أبيض وأسود",
+     "width_used": 0.85,
+     "text": false
+    },
+    "score": 66.9,
     "waqfeya": []
    },
    {
@@ -15123,8 +15181,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 8577281,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 424,
+     "kbpp": 20,
+     "px": 1292,
+     "colour": "أبيض وأسود",
+     "width_used": 0.71,
+     "text": false
+    },
+    "score": 60.3,
     "waqfeya": []
    }
   ],
@@ -15223,8 +15289,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 14671954,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 596,
+     "kbpp": 24,
+     "px": 2144,
+     "colour": "أبيض وأسود",
+     "width_used": 0.72,
+     "text": false
+    },
+    "score": 64.4,
     "waqfeya": []
    }
   ],
@@ -15534,8 +15608,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 16755565,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 496,
+     "kbpp": 33,
+     "px": 2480,
+     "colour": "أبيض وأسود",
+     "width_used": 0.53,
+     "text": false
+    },
+    "score": 60.6,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -15800,35 +15882,9 @@
  {
   "work": "ارشاد السالك الي افعال",
   "title": "إرشاد السالك إلى أفعال المناسك",
-  "author": "ابن فرحون",
+  "author": "برهان الدين ابن فرحون",
   "bytes": 26985912,
   "editions": [
-   {
-    "folder": "إرشاد السالك إلى أفعال المناسك - ابن فرحون",
-    "cat": "الفقه المالكي",
-    "edition": "ت محمد بن الهادي أبو الأجفان - 1423 - 2002",
-    "researcher": "محمد بن الهادي أبو الأجفان",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "2",
-    "complete": false,
-    "bytes": 14729893,
-    "quality": {
-     "files": 1,
-     "pages": 1019,
-     "kbpp": 14,
-     "px": 1913,
-     "colour": "أبيض وأسود",
-     "width_used": 0.76,
-     "text": false
-    },
-    "score": 65.2,
-    "waqfeya": [
-     "https://waqfeya.net/books/إرشاد-السالك-إلى-أفعال-المناسك-6e37a4963c2f4c4d8f077554048c03ff"
-    ],
-    "same_edition": true,
-    "best_scan": true
-   },
    {
     "folder": "إرشاد السالك إلى أفعال المناسك - برهان الدين ابن فرحون - دراسة وتحقيق محمد بن الهادي أبو الأجفان - بيت الحكمة تونس 1989",
     "cat": "الفقه المالكي",
@@ -15839,9 +15895,35 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 12256019,
+    "quality": {
+     "files": 1,
+     "pages": 778,
+     "kbpp": 15,
+     "px": 646,
+     "colour": "ملون",
+     "width_used": 0.55,
+     "text": false
+    },
+    "score": 34.1,
+    "waqfeya": [],
+    "same_edition": true,
+    "best_scan": true
+   },
+   {
+    "folder": "إرشاد السالك إلى أفعال المناسك - برهان الدين ابن فرحون - دراسة وتحقيق محمد بن الهادي أبو الأجفان - مكتبة العبيكان الرياض",
+    "cat": "الفقه المالكي",
+    "edition": "ت محمد بن الهادي أبو الأجفان - 1423 - 2002",
+    "researcher": "محمد بن الهادي أبو الأجفان",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "2",
+    "complete": false,
+    "bytes": 14729893,
     "quality": null,
     "score": -1,
-    "waqfeya": [],
+    "waqfeya": [
+     "https://waqfeya.net/books/إرشاد-السالك-إلى-أفعال-المناسك-6e37a4963c2f4c4d8f077554048c03ff"
+    ],
     "same_edition": true,
     "best_scan": false
    }
@@ -15916,8 +15998,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 10140567,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 358,
+     "kbpp": 28,
+     "px": 2144,
+     "colour": "أبيض وأسود",
+     "width_used": 0.63,
+     "text": false
+    },
+    "score": 62.6,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -16372,8 +16462,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 18324776,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 201,
+     "kbpp": 91,
+     "px": 800,
+     "colour": "ملون",
+     "width_used": 0.92,
+     "text": false
+    },
+    "score": 47.0,
     "waqfeya": []
    },
    {
@@ -17059,8 +17157,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 12017563,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 634,
+     "kbpp": 18,
+     "px": 1957,
+     "colour": "أبيض وأسود",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 65.0,
     "waqfeya": []
    },
    {
@@ -17130,8 +17236,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 14916424,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 613,
+     "kbpp": 24,
+     "px": null,
+     "colour": "",
+     "width_used": 0.67,
+     "text": false
+    },
+    "score": 13.4,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -18086,8 +18200,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 10452827,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 553,
+     "kbpp": 18,
+     "px": 1772,
+     "colour": "أبيض وأسود",
+     "width_used": 0.66,
+     "text": false
+    },
+    "score": 63.2,
     "waqfeya": []
    }
   ],
@@ -18622,8 +18744,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 9912076,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 462,
+     "kbpp": 21,
+     "px": 2546,
+     "colour": "أبيض وأسود",
+     "width_used": 0.65,
+     "text": false
+    },
+    "score": 63.0,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -18673,8 +18803,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 5007428,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 326,
+     "kbpp": 15,
+     "px": 1696,
+     "colour": "أبيض وأسود",
+     "width_used": 0.87,
+     "text": false
+    },
+    "score": 67.4,
     "waqfeya": [
      "https://waqfeya.net/books/ديوان-محمد-بن-الطلبة-اليعقوبي-الشنقيطي-المورتاني-043c17e6c3dc4490ac6366c78be00ba9"
     ]
@@ -18737,8 +18875,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 7450962,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 247,
+     "kbpp": 30,
+     "px": 2004,
+     "colour": "أبيض وأسود",
+     "width_used": 0.67,
+     "text": false
+    },
+    "score": 63.4,
     "waqfeya": [
      "https://waqfeya.net/books/ديوان-محمد-بن-الطلبة-اليعقوبي-الشنقيطي-المورتاني-043c17e6c3dc4490ac6366c78be00ba9"
     ],
@@ -19270,8 +19416,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 8807053,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 113,
+     "kbpp": 77,
+     "px": 650,
+     "colour": "ملون",
+     "width_used": null,
+     "text": false
+    },
+    "score": 37.2,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": true
@@ -19286,8 +19440,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 8807053,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 113,
+     "kbpp": 77,
+     "px": 650,
+     "colour": "ملون",
+     "width_used": null,
+     "text": false
+    },
+    "score": 37.2,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -19681,8 +19843,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 8331580,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 408,
+     "kbpp": 20,
+     "px": 1307,
+     "colour": "أبيض وأسود",
+     "width_used": 0.72,
+     "text": false
+    },
+    "score": 61.1,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -19962,8 +20132,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 7835466,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 660,
+     "kbpp": 11,
+     "px": 205,
+     "colour": "رمادي",
+     "width_used": 0.64,
+     "text": false
+    },
+    "score": 20.1,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -20039,8 +20217,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 6878176,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 342,
+     "kbpp": 20,
+     "px": 2237,
+     "colour": "أبيض وأسود",
+     "width_used": 0.72,
+     "text": false
+    },
+    "score": 64.4,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -20444,8 +20630,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 6041589,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 352,
+     "kbpp": 17,
+     "px": 1971,
+     "colour": "أبيض وأسود",
+     "width_used": 0.77,
+     "text": false
+    },
+    "score": 65.4,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -20552,8 +20746,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 5725914,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 403,
+     "kbpp": 14,
+     "px": 1795,
+     "colour": "أبيض وأسود",
+     "width_used": 0.73,
+     "text": false
+    },
+    "score": 64.6,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -20632,8 +20834,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 7516536,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 269,
+     "kbpp": 27,
+     "px": 1845,
+     "colour": "أبيض وأسود",
+     "width_used": 0.73,
+     "text": false
+    },
+    "score": 64.6,
     "waqfeya": []
    },
    {
@@ -20738,8 +20948,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 4874930,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 235,
+     "kbpp": 20,
+     "px": 1941,
+     "colour": "أبيض وأسود",
+     "width_used": 0.87,
+     "text": false
+    },
+    "score": 67.4,
     "waqfeya": [
      "https://waqfeya.net/books/ديوان-عنترة-تحقيق-ودراسة-05e31ec9e2f14903984ef2b4bfbcafa9"
     ]
@@ -20754,8 +20972,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 8457722,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 514,
+     "kbpp": 16,
+     "px": 1856,
+     "colour": "أبيض وأسود",
+     "width_used": 0.78,
+     "text": false
+    },
+    "score": 65.6,
     "waqfeya": [
      "https://waqfeya.net/books/ديوان-عنترة-تحقيق-ودراسة-05e31ec9e2f14903984ef2b4bfbcafa9"
     ]
@@ -20982,8 +21208,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 7042017,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 428,
+     "kbpp": 16,
+     "px": 327,
+     "colour": "رمادي",
+     "width_used": 0.65,
+     "text": false
+    },
+    "score": 24.7,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -21007,8 +21241,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 5665203,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 389,
+     "kbpp": 14,
+     "px": 1794,
+     "colour": "أبيض وأسود",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 65.0,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -21485,8 +21727,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 5866229,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 166,
+     "kbpp": 35,
+     "px": 2456,
+     "colour": "أبيض وأسود",
+     "width_used": 1.0,
+     "text": false
+    },
+    "score": 70.0,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -21979,8 +22229,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 3355563,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 204,
+     "kbpp": 16,
+     "px": 625,
+     "colour": "ملون",
+     "width_used": 0.55,
+     "text": false
+    },
+    "score": 33.3,
     "waqfeya": []
    },
    {
@@ -21993,8 +22251,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 6665550,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 108,
+     "kbpp": 61,
+     "px": 2144,
+     "colour": "أبيض وأسود",
+     "width_used": 0.77,
+     "text": false
+    },
+    "score": 65.4,
     "waqfeya": []
    }
   ],
@@ -22097,8 +22363,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 6701536,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 75,
+     "kbpp": 89,
+     "px": 972,
+     "colour": "ملون",
+     "width_used": 0.83,
+     "text": false
+    },
+    "score": 51.3,
     "waqfeya": []
    },
    {
@@ -22170,8 +22444,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 5637612,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 257,
+     "kbpp": 21,
+     "px": 1539,
+     "colour": "أبيض وأسود",
+     "width_used": 0.82,
+     "text": false
+    },
+    "score": 66.4,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -22388,7 +22670,7 @@
      "https://waqfeya.net/books/تاريخ-عثمان-بن-سعيد-الدارمي-عن-أبي-زكريا-يحي-بن-معين-d0cadfe9e404402f8a9a566a890ec202"
     ],
     "same_edition": true,
-    "best_scan": true
+    "best_scan": false
    },
    {
     "folder": "تاريخ عثمان بن سعيد الدارمي عن يحيى بن معين في تجريح الرواة وتعديلهم - ابن معين - ت أبو عمر محمد بن علي الأزهري - الفاروق الحديثة",
@@ -22400,13 +22682,21 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 4659611,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 246,
+     "kbpp": 18,
+     "px": 1933,
+     "colour": "أبيض وأسود",
+     "width_used": 0.79,
+     "text": false
+    },
+    "score": 80.8,
     "waqfeya": [
      "https://waqfeya.net/books/تاريخ-عثمان-بن-سعيد-الدارمي-عن-أبي-زكريا-يحيى-بن-معين-d15c63bf834146c4982d31003b13db5a"
     ],
     "same_edition": true,
-    "best_scan": false
+    "best_scan": true
    }
   ],
   "note": null
@@ -22451,13 +22741,21 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 4212776,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 291,
+     "kbpp": 14,
+     "px": 1683,
+     "colour": "أبيض وأسود",
+     "width_used": 0.88,
+     "text": false
+    },
+    "score": 82.6,
     "waqfeya": [
      "https://waqfeya.net/books/ديوان-النابغة-الذبياني-ط-دار-المعارف-212fcf89bc094398b391c8a42177e6af"
     ],
     "same_edition": true,
-    "best_scan": false
+    "best_scan": true
    },
    {
     "folder": "ديوان النابغة الذبياني - ط. الكتاب العربي",
@@ -22483,7 +22781,7 @@
      "https://waqfeya.net/books/ديوان-النابغة-الذبياني-ط-دار-المعارف-212fcf89bc094398b391c8a42177e6af"
     ],
     "same_edition": true,
-    "best_scan": true
+    "best_scan": false
    }
   ],
   "note": null
@@ -22581,8 +22879,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 4290559,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 165,
+     "kbpp": 26,
+     "px": 0,
+     "colour": "رمادي",
+     "width_used": 0.64,
+     "text": false
+    },
+    "score": 12.8,
     "waqfeya": []
    }
   ],
@@ -22801,8 +23107,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 5366554,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 374,
+     "kbpp": 14,
+     "px": 1289,
+     "colour": "أبيض وأسود",
+     "width_used": 0.76,
+     "text": false
+    },
+    "score": 61.2,
     "waqfeya": []
    }
   ],
@@ -23050,13 +23364,21 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 3042361,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 184,
+     "kbpp": 16,
+     "px": 1938,
+     "colour": "أبيض وأسود",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 80.0,
     "waqfeya": [
      "https://waqfeya.net/books/ديوان-أبي-القاسم-الشابي-ورسائله-8cdf4725a48042ba81cb5b1a68ba678b"
     ],
     "same_edition": true,
-    "best_scan": true
+    "best_scan": false
    },
    {
     "folder": "ديوان أبي القاسم الشابي ورسائله - أبو القاسم الشابي - قدم له وشرحه مجيد طراد - دار الكتاب العربي بيروت",
@@ -23068,13 +23390,21 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 4375465,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 310,
+     "kbpp": 14,
+     "px": 1937,
+     "colour": "أبيض وأسود",
+     "width_used": 0.76,
+     "text": false
+    },
+    "score": 80.2,
     "waqfeya": [
      "https://waqfeya.net/books/ديوان-أبي-القاسم-الشابي-ورسائله-8cdf4725a48042ba81cb5b1a68ba678b"
     ],
     "same_edition": true,
-    "best_scan": false
+    "best_scan": true
    }
   ],
   "note": null
@@ -23512,8 +23842,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 2405577,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 67,
+     "kbpp": 35,
+     "px": 683,
+     "colour": "ملون",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 39.4,
     "waqfeya": []
    },
    {
@@ -23614,8 +23952,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 2238416,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 147,
+     "kbpp": 15,
+     "px": 1564,
+     "colour": "أبيض وأسود",
+     "width_used": 0.64,
+     "text": false
+    },
+    "score": 62.8,
     "waqfeya": []
    },
    {
@@ -24000,8 +24346,16 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 3936444,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 196,
+     "kbpp": 20,
+     "px": 2146,
+     "colour": "أبيض وأسود",
+     "width_used": 0.54,
+     "text": false
+    },
+    "score": 75.8,
     "waqfeya": [
      "https://waqfeya.net/books/كتاب-البديع-5d5456533f224f1293d183c6dedeeb3f"
     ]
@@ -24025,8 +24379,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 2968602,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 211,
+     "kbpp": 14,
+     "px": 1759,
+     "colour": "أبيض وأسود",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 65.0,
     "waqfeya": [
      "https://waqfeya.net/books/ديوان-محمد-بن-الطلبة-اليعقوبي-الشنقيطي-المورتاني-043c17e6c3dc4490ac6366c78be00ba9"
     ]
@@ -24041,8 +24403,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 2946696,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 176,
+     "kbpp": 16,
+     "px": 1743,
+     "colour": "أبيض وأسود",
+     "width_used": 0.84,
+     "text": false
+    },
+    "score": 66.8,
     "waqfeya": [
      "https://waqfeya.net/books/ديوان-محمد-بن-الطلبة-اليعقوبي-الشنقيطي-المورتاني-043c17e6c3dc4490ac6366c78be00ba9"
     ]
@@ -24206,8 +24576,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 2020080,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 191,
+     "kbpp": 10,
+     "px": 1074,
+     "colour": "أبيض وأسود",
+     "width_used": 0.81,
+     "text": false
+    },
+    "score": 54.6,
     "waqfeya": []
    }
   ],
@@ -24412,7 +24790,7 @@
      "https://waqfeya.net/books/ديوان-الإمام-الشافعي-المسمى-الجوهر-النفيس-في-شعر-الإمام-محمد-بن-إدريس-ت-سليم-299eda9b4fb74aa188f924006008759f"
     ],
     "same_edition": true,
-    "best_scan": true
+    "best_scan": false
    },
    {
     "folder": "ديوان الإمام الشافعي المسمى الجوهر النفيس في شعر الإمام محمد بن إدريس - إعداد وتعليق وتقديم محمد إبراهيم سليم - مكتبة ابن سينا",
@@ -24424,13 +24802,21 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 2587331,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 160,
+     "kbpp": 16,
+     "px": 1722,
+     "colour": "أبيض وأسود",
+     "width_used": 0.81,
+     "text": false
+    },
+    "score": 81.2,
     "waqfeya": [
      "https://waqfeya.net/books/ديوان-الشافعي-ت-الزعبي-1bc0d14cdc0e4e2d83128c59590b47ae"
     ],
     "same_edition": true,
-    "best_scan": false
+    "best_scan": true
    }
   ],
   "note": null
@@ -24858,8 +25244,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 3342384,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 94,
+     "kbpp": 35,
+     "px": 1934,
+     "colour": "أبيض وأسود",
+     "width_used": 0.76,
+     "text": false
+    },
+    "score": 65.2,
     "waqfeya": [
      "https://waqfeya.net/books/مجموع-فيه-الأحاديث-العيدية-المسلسلة-لأبي-ظاهر-أحمد-بن-محمد-السلفي-21a3e2146a2b4da4ac328e0722ca0ec5"
     ]
@@ -24907,8 +25301,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 1943820,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 95,
+     "kbpp": 20,
+     "px": 2003,
+     "colour": "أبيض وأسود",
+     "width_used": 0.69,
+     "text": false
+    },
+    "score": 63.8,
     "waqfeya": [
      "https://waqfeya.net/books/ديوان-عنترة-تحقيق-ودراسة-05e31ec9e2f14903984ef2b4bfbcafa9"
     ]
@@ -24923,8 +25325,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 2725885,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 182,
+     "kbpp": 14,
+     "px": 1764,
+     "colour": "أبيض وأسود",
+     "width_used": 0.81,
+     "text": false
+    },
+    "score": 66.2,
     "waqfeya": [
      "https://waqfeya.net/books/ديوان-عنترة-تحقيق-ودراسة-05e31ec9e2f14903984ef2b4bfbcafa9"
     ]
@@ -25031,8 +25441,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 1829041,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 148,
+     "kbpp": 12,
+     "px": 1795,
+     "colour": "أبيض وأسود",
+     "width_used": 0.71,
+     "text": false
+    },
+    "score": 64.2,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -25080,8 +25498,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 2062519,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 174,
+     "kbpp": 11,
+     "px": null,
+     "colour": "",
+     "width_used": 0.78,
+     "text": false
+    },
+    "score": 15.6,
     "waqfeya": []
    }
   ],
@@ -25184,8 +25610,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 1370349,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 54,
+     "kbpp": 25,
+     "px": 1204,
+     "colour": "أبيض وأسود",
+     "width_used": 0.79,
+     "text": false
+    },
+    "score": 58.8,
     "waqfeya": []
    }
   ],
@@ -25325,8 +25759,16 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 1374058,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 143,
+     "kbpp": 9,
+     "px": 1763,
+     "colour": "أبيض وأسود",
+     "width_used": 0.78,
+     "text": false
+    },
+    "score": 80.6,
     "waqfeya": [
      "https://waqfeya.net/books/ديوان-جميل-بثينة-ط-صادر-f445b2493513439194e7c3565d8004b2"
     ]
@@ -25341,8 +25783,16 @@
     "vols_edition": "1",
     "complete": true,
     "bytes": 2732465,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 147,
+     "kbpp": 18,
+     "px": 1946,
+     "colour": "أبيض وأسود",
+     "width_used": 0.81,
+     "text": false
+    },
+    "score": 81.2,
     "waqfeya": [
      "https://waqfeya.net/books/ديوان-جميل-بثينة-ط-صادر-f445b2493513439194e7c3565d8004b2"
     ]
@@ -25874,8 +26324,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 2411781,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 206,
+     "kbpp": 11,
+     "px": 1767,
+     "colour": "أبيض وأسود",
+     "width_used": 0.85,
+     "text": false
+    },
+    "score": 67.0,
     "waqfeya": []
    }
   ],
@@ -25897,8 +26355,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 1306046,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 103,
+     "kbpp": 12,
+     "px": 1695,
+     "colour": "أبيض وأسود",
+     "width_used": 0.84,
+     "text": false
+    },
+    "score": 66.8,
     "waqfeya": [
      "https://waqfeya.net/books/ديوان-عنترة-تحقيق-ودراسة-05e31ec9e2f14903984ef2b4bfbcafa9"
     ]
@@ -25913,8 +26379,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 2211973,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 175,
+     "kbpp": 12,
+     "px": 1817,
+     "colour": "أبيض وأسود",
+     "width_used": 0.61,
+     "text": false
+    },
+    "score": 62.2,
     "waqfeya": []
    }
   ],
@@ -25993,11 +26467,19 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 1005520,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 92,
+     "kbpp": 10,
+     "px": 989,
+     "colour": "أبيض وأسود",
+     "width_used": 0.78,
+     "text": false
+    },
+    "score": 50.9,
     "waqfeya": [],
     "same_edition": true,
-    "best_scan": true
+    "best_scan": false
    },
    {
     "folder": "داعي الفلاح في أذكار المساء والصباح - السيوطي - ت أحمد عبد الله باجور - الدار المصرية اللبنانية القاهرة",
@@ -26009,11 +26491,19 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 2410310,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 211,
+     "kbpp": 11,
+     "px": 1247,
+     "colour": "أبيض وأسود",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 59.5,
     "waqfeya": [],
     "same_edition": true,
-    "best_scan": false
+    "best_scan": true
    }
   ],
   "note": null
@@ -26343,8 +26833,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 1704190,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 86,
+     "kbpp": 19,
+     "px": 1850,
+     "colour": "أبيض وأسود",
+     "width_used": 0.69,
+     "text": false
+    },
+    "score": 63.8,
     "waqfeya": []
    }
   ],
@@ -26392,8 +26890,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 1379042,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 145,
+     "kbpp": 9,
+     "px": 1224,
+     "colour": "أبيض وأسود",
+     "width_used": 0.71,
+     "text": false
+    },
+    "score": 57.9,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false
@@ -26439,8 +26945,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 633046,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 64,
+     "kbpp": 9,
+     "px": 1396,
+     "colour": "أبيض وأسود",
+     "width_used": 1.0,
+     "text": false
+    },
+    "score": 69.9,
     "waqfeya": []
    }
   ],
@@ -26519,8 +27033,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 1852058,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 71,
+     "kbpp": 26,
+     "px": 1783,
+     "colour": "أبيض وأسود",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 65.0,
     "waqfeya": []
    },
    {
@@ -26533,8 +27055,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 828375,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 86,
+     "kbpp": 9,
+     "px": 1166,
+     "colour": "أبيض وأسود",
+     "width_used": 0.73,
+     "text": false
+    },
+    "score": 56.2,
     "waqfeya": []
    }
   ],
@@ -27075,8 +27605,16 @@
     "vols_edition": "",
     "complete": false,
     "bytes": 480834,
-    "quality": null,
-    "score": -1,
+    "quality": {
+     "files": 1,
+     "pages": 10,
+     "kbpp": 48,
+     "px": 1979,
+     "colour": "أبيض وأسود",
+     "width_used": 0.65,
+     "text": false
+    },
+    "score": 63.0,
     "waqfeya": [],
     "same_edition": true,
     "best_scan": false

@@ -122,7 +122,7 @@ def main(list_tsv, batch, workers=3):
     paths = [cb.follow(l.strip()) for l in open(list_tsv, encoding='utf-8') if l.strip() and not l.startswith('#')]
     paths = [p for p in paths if not any(n in done for n in cb.names_of(p, back))]   # (done under any of its names)
     print(f'{len(paths)} books to redo', flush=True)
-    v1 = cb.SHEETS + '-v1'; os.makedirs(v1, exist_ok=True)
+    v1 = cb.SHEETS + '-v1'; os.makedirs(v1, exist_ok=True); later = []
     with ProcessPoolExecutor(workers) as ex:
         futs = {}
         for path in paths:
@@ -136,7 +136,7 @@ def main(list_tsv, batch, workers=3):
                 with open(DONE, 'a', encoding='utf-8') as f: f.write(f'{path}\t{m0}\tSKIP {e}\n')
                 print('SKIP', path, e, flush=True); continue
             except Exception as e:
-                if isinstance(e, OSError): print('RETRY LATER (phone away)', path, e, flush=True)
+                if isinstance(e, OSError): print('RETRY LATER (phone away)', path, e, flush=True); later.append(path)
                 else:
                     with open(DONE, 'a', encoding='utf-8') as f: f.write(f'{path}\t{m0}\tSKIP {e}\n')
                     print('SKIP', path, e, flush=True)
@@ -148,6 +148,9 @@ def main(list_tsv, batch, workers=3):
                                                                    # one staged ahead; a new book only with ≥ 3 GB free
                 for fu in as_completed(list(futs)): finish(fu, futs.pop(fu), batch); break
         for fu in as_completed(list(futs)): finish(fu, futs.pop(fu), batch)
+    if later:                                         # (books the phone missed: not done — the run ends «not finished», so
+        print(f'{len(later)} books left for later (phone away)', flush=True)   # run_resumable.sh runs it again for them)
+        sys.exit(3)
 
 if __name__ == '__main__':
     a = sys.argv[1:]

@@ -17,3 +17,7 @@ data/names/sheets/*.jpg
 data/names/copies/
 data/names/deep/
 data/crop/workers
+
+# build and OCR by-products (2026-10-18 deep check): large or rebuilt, not records
+tools/shamela-dump/*.class
+data/improve/ocr/

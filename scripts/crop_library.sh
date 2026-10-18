@@ -9,7 +9,8 @@ while :; do
     b=$(python3 scripts/crop_queue.py --size "${CROP_BATCH:-300}") || { echo "nothing left to crop"; break; }
     log="logs/crop-$b.log"
     echo "$(date -u '+%F %T') start $b" | tee -a "$log"
-    nice python3 scripts/crop_batch.py "data/crop/$b.txt" "crop-$b" --workers "${CROP_WORKERS:-4}" >> "$log" 2>&1
+    # (under run_resumable.sh: a batch the memory brake kills goes on where it stopped once memory is back — AGENTS.md §7.12)
+    scripts/run_resumable.sh "$log" -- nice python3 scripts/crop_batch.py "data/crop/$b.txt" "crop-$b" --workers "${CROP_WORKERS:-4}"
     NO_OPEN=1 scripts/refresh.sh >> "$log" 2>&1 || echo "refresh failed (see $log)"
     c=$(grep -c '^CROPPED' "$log"); s=$(grep -c '^skip' "$log"); f=$(grep -c 'FAIL' "$log")
     echo "- $(date -u '+%F %H:%M') — crop $b (library batches, scripts/crop_library.sh): $c cropped, $s left as they are, $f failures (logs/crop-$b.log); refresh." >> WORKLOG.md
