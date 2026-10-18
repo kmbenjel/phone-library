@@ -1577,6 +1577,10 @@ def decide(pages, wq=0.95):
         # الجرأة على تجاوز سواد الطباعة»): the book's box fits 95 % of the pages between their bands; on the others it
         # slides off the band as far as the content allows (≥ 4 pt left beside the text), the other side taking the rest
         al = p.get('allowed'); tb = p.get('text') or bx; mv_ = p.get('move') or [0, 0]
+        # (only a side that HAS a band limits the box: the page's own edge is no band — moved with the content it read as
+        # one, and a lone line moved 91 pt across was left 92 pt off-centre: فهرسة ابن خير ص 381)
+        if al: al = [al[0] if al[0] > 0.5 else -1e9, al[1] if al[1] > 0.5 else -1e9,
+                     al[2] if al[2] < p['w'] - 0.5 else 1e9, al[3] if al[3] < p['h'] - 0.5 else 1e9]
         if al and mv_ != [0, 0]: al = [al[0] + mv_[0], al[1] + mv_[1], al[2] + mv_[0], al[3] + mv_[1]]   # (moved with the content)
         if mv_ != [0, 0] and tb and tb is not bx: tb = [tb[0] + mv_[0], tb[1] + mv_[1], tb[2] + mv_[0], tb[3] + mv_[1]]
         if al and bx and tb and p['kind'] == 'text':
