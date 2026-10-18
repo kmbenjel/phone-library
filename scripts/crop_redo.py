@@ -117,7 +117,10 @@ def finish(fu, meta, batch):
 def main(list_tsv, batch, workers=3):
     table = crops(); _, back = cb.moves()
     done = {l.split('\t')[0] for l in open(DONE, encoding='utf-8')} if os.path.exists(DONE) else set()
-    paths = [l.strip() for l in open(list_tsv, encoding='utf-8') if l.strip() and not l.startswith('#') and l.strip() not in done]
+    # (each book at its CURRENT path — a rename or a move since the list was made, e.g. the naming pass, is followed
+    # through the change log; else the phone has no such file and the book would be skipped for good)
+    paths = [cb.follow(l.strip()) for l in open(list_tsv, encoding='utf-8') if l.strip() and not l.startswith('#')]
+    paths = [p for p in paths if not any(n in done for n in cb.names_of(p, back))]   # (done under any of its names)
     print(f'{len(paths)} books to redo', flush=True)
     v1 = cb.SHEETS + '-v1'; os.makedirs(v1, exist_ok=True)
     with ProcessPoolExecutor(workers) as ex:
