@@ -120,7 +120,7 @@ function card(b){
  const d=b.ed&&b.ed.death&&b.ed.death[0];
  const who=b.author?(b.author+(d?' (ت '+AR(d)+'هـ)':'')):'';
  const meta=[who,b.ed?'':(b.edition||[b.researcher&&('ت '+b.researcher),b.publisher].filter(Boolean).join(' - '))].filter(Boolean).join(' · ');
- const desc=b.ed&&b.ed.note?`<div class="desc">ملاحظة: ${esc(b.ed.note[0])}</div>`:'';
+ const desc=(b.ed&&b.ed.note?`<div class="desc">ملاحظة: ${esc(b.ed.note[0])}</div>`:'')+(b.sn?`<div class="desc">ملاحظة على المسح: ${esc(b.sn)}</div>`:'');
  const inc=b.inc&&b.inc.length?(n=>`<details class="inc"><summary>يضم ${n==1?'عملًا واحدًا':n==2?'عملين':n.toLocaleString('en-US')+(n<=10?' أعمال':' عملًا')}${b.inc.some(x=>x[2])?' · '+b.inc.filter(x=>x[2]).length.toLocaleString('en-US')+' منها في الشاملة ✓ (تُعدّ موجودة في المقارنة)':''}</summary><ol>`+b.inc.map(x=>'<li>'+esc(x[0])+(x[1]?' – '+esc(x[1]):'')+(x[2]?' ✓':'')+'</li>').join('')+'</ol></details>')(b.inc.length):'';
  const files=b.files.map(([f,s])=>`<li><a href="${href(b,f)}">${esc(f.replace(/\.pdf$/i,''))}</a><span class="sz">${gb(s)}</span></li>`).join('')+`<li class="path">المسار في الهاتف: Books/${esc(b.cat)}/${esc(b.folder)}/</li>`;
  const src=(b.waqfeya||[]).map(w=>`<a href="${esc(w.url)}">الوقفية</a>`).concat((b.archive||[]).slice(0,3).map(a=>`<a href="https://archive.org/details/${encodeURIComponent(a)}">archive.org</a>`)).join(' · ');

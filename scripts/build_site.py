@@ -20,6 +20,14 @@ if os.path.exists(CF):
     for b in catalog['books']:
         it = inc.get(f"{b['cat']}/{b['folder']}")
         if it: b['inc'] = [[x['t'], x['a'], 1 if x['sh'] else 0] for x in it]
+# defects of a scan itself that no fix can mend (owner 2026-10-18, الإعلام بمن حل مراكش ج 9: «إن كان من الأصل تنظر نسخة أو يبقى
+# على حاله مع التنبيه على ذلك في الفهرس»): data/editions/scan-notes.json {«section/folder»: note} → «ملاحظة» on the book's card
+SN = J('data/editions/scan-notes.json')
+if os.path.exists(SN):
+    sn = json.load(open(SN, encoding='utf-8'))
+    for b in catalog['books']:
+        n = sn.get(f"{b['cat']}/{b['folder']}")
+        if n: b['sn'] = n
 cat = json.dumps(catalog, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
 reports, sources = [], []
 WEB = os.environ.get('WEB') == '1'          # the online copy (benjelloun.dev/library): no change log (owner, 2026-10-05)
