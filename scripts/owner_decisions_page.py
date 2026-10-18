@@ -2,6 +2,8 @@
 data/names/owner-actions.tsv that needs his word — copies to compare, page fixes, stray covers, removals, replacements —
 with the book's current path, what was found, «أوافق» and a comment (review_server.py; report «decisions»).
 Rows the agent can do alone (pieces to find, additions to look for) are listed after, for information.
+Pictures for a row: site/decisions/<n>-<action>-*.jpg («before» in the name = قبل). Rows the owner commented on and that were then done leave the page (data/names/review-closed.tsv, report «decisions»;
+owner 2026-10-18); a new question about one of them is a new row (action «ask»).
 The page is in Arabic (owner 2026-10-11): the «ar» column of owner-actions.tsv; write it for every new row.
 Usage: python3 scripts/owner_decisions_page.py   → site/decisions.html"""
 import csv, html, os, re
@@ -37,8 +39,14 @@ def main():
         rid = f"{n}-{r['action']}"
         box = (f'<div class="review" data-n="{E(rid)}"><label><input type="checkbox" class="chk"> أوافق</label>'
                f'<textarea class="cmt" rows="2" placeholder="قرارك أو تعليقك"></textarea><span class="st"></span></div>') if ask else ''
+        pics = sorted(f for f in os.listdir(J('site', 'decisions')) if f.startswith(rid + '-')) if os.path.isdir(J('site', 'decisions')) else []
+        figs = ''.join(f'<figure><img src="decisions/{E(f)}" alt="" loading="lazy"><figcaption>{"قبل" if "before" in f else "بعد"}</figcaption></figure>' for f in pics)
         return (f'<article><div class="tag">{E(AR.get(r["action"], r["action"]))}</div><h2>الكتاب {E(n)}</h2>'
-                f'<div class="path">{E(now(n))}</div><p>{E(r.get("ar") or r["what"])}</p>{box}</article>')
+                f'<div class="path">{E(now(n))}</div><p>{E(r.get("ar") or r["what"])}</p>'
+                f'{f"<div class=pics>{figs}</div>" if figs else ""}{box}</article>')
+    closed = {l.split('\t')[1] for l in open(J('data', 'names', 'review-closed.tsv'), encoding='utf-8')
+              if l.startswith('decisions\t')} if os.path.exists(J('data', 'names', 'review-closed.tsv')) else set()
+    rows = [r for r in rows if f"{r['n']}-{r['action']}" not in closed]   # answered by the owner and done (owner 2026-10-18)
     need = [r for r in rows if r['action'] in NEED]
     info = [r for r in rows if r['action'] in INFO]
     order = list(NEED)
@@ -53,6 +61,7 @@ main{{max-width:1000px;margin:auto}} h1{{font-size:1.4rem}} h2{{font-size:1rem;m
 .path{{font-size:.85rem;word-break:break-word}} .tag{{color:var(--tag);font-weight:bold;font-size:.9rem}}
 article{{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:12px 0}}
 .review{{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}} .review textarea{{flex:1;min-width:240px;font:inherit;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:6px}}
+.pics{{display:flex;gap:10px;overflow-x:auto;margin:6px 0}} .pics img{{height:360px;border:1px solid var(--line)}} .pics figure{{margin:0;text-align:center}}
 .warn{{background:#fff3cd;color:#5c4400;padding:8px 12px;border-radius:8px}}
 </style></head><body><main><h1>قراراتك المعلقة</h1>
 <p class="lead">{len(need)} أمرا ينتظر كلمتك (علّم «أوافق» أو اكتب قرارك)، ثم {len(info)} أمرا أقوم به وحدي للعلم. لا شيء يطبق على الهاتف قبل موافقتك.</p>

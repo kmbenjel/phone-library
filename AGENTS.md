@@ -75,7 +75,11 @@ Read this file first. Keep it current when you change a convention.
    files the Waqfeya record links (its `links`), then run `scripts/additions_audit.py` — it keeps a file only if
    the record links it (or it follows the record's own pattern: link typos, `NN_IDp` prefaces), drops other books
    of the bundle, byte-identical copies of files already in the library, and double uploads.
-5. After every edit: run `scripts/refresh.sh` (re-index → catalog → reports → site), WITHOUT `--publish` — the
+5. **The file's page numbers follow the printed ones** (owner 2026-10-18: «عند وجود صفحة فارغة أو الغلاف الخارجي وذلك يخالف
+   بين الترقيمين تحذف الصفحة»; «يتوافق الترقيم ولا يضيع شيء»): a blank page or the outer cover that puts the PDF's numbering
+   out of step with the print is dropped — `scripts/drop_pages.py` (an incremental update: the original bytes stay, undo =
+   truncate; a non-blank page only with `--cover`), logged as «pages». Check the printed number of a few text pages after.
+6. After every edit: run `scripts/refresh.sh` (re-index → catalog → reports → site), WITHOUT `--publish` — the
    indexes stay on the laptop until the owner asks for them on the phone. It ends by opening the main index
    (`site/00 - الفهرس العام.html`) in Brave on the laptop (`scripts/open_index.sh`) for the owner to check:
    do this after every edit, also when only the indexes changed. Then add a WORKLOG line.
@@ -253,6 +257,8 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `quality_report.py`, `fix_pdf.py`, `improve_copies.py`, `front_pages.py` | scan problems (margins, spreads, low resolution, bloat) → lossless fixed copies into `Books/نسخ محسنة للاستبدال/` |
 | `fix_at_scale.py` | fixed copies at scale, batch by batch: copies made (`improve_copies.py` with `MAX_KEPT=0.9`: a crop still showing > 90 % of the page is not uploaded — `data/improve/noop.tsv`), then substituted (original → «نسخ مستبعدة/__المستبدل», copy → its place, original deleted) and the index kept current. Lossy recompression only for gray/bitonal scans and never for a colour edition the owner likes (the Shakir Tabari stays in colour). Check crops with `pdftoppm -cropbox` (without it the full page is drawn) |
 | `book_crop.py` | crop + levelling of scanned books (the method after the 2026-10-07 revert; full description in its docstring): ONE box size per file, placed on each page so its text block is centred (short pages take their full neighbours' place, odd pages are centred on their own content); stains, edge streaks, scanner edge noise, sheet edges, corner marks and dust stay outside, printed rules and frames inside; tilted pages levelled; second look at 1,000 px; the narrowest box that leaves ≤ 5 % of the pages whole (`plan()`). LOSSLESS: only the CropBox and, for tilted/moved pages, a «q … cm» / «Q» pair around the content change — image streams untouched. `analyse`, `apply`, `sheet`; `review_page()` builds the Arabic approval page. Needs numpy + scipy. Nothing reaches the phone without the owner's approval of a sample page |
+| `drop_pages.py` | drops the blank pages / outer cover that put the file's numbering out of step with the print (§3.5), reversibly |
+| `crop_fixes_page.py`, `crop_minitest.py` | the crop-fixes review page (verdicts in `data/crop/fixes-verdicts.tsv`, rounds, closed items leave it); the quick bench: each marked page ±20 pages of the owner's marked books through book_crop |
 | `same_scan.py` | are two phone files the same scan? identical raw image streams page by page (`--sets "A1\|A2" "B1"` for copies split differently: pages of each set missing from the other) — proof for the duplicate-editions rule |
 | `excerpt.py` | citations («book | volume | pages») → one bookmarked PDF for the phone, or Brave tabs at the right pages |
 | `name_compose.py`, `names_from_reading.py`, `title_read_fix.py` | names under §4 (no parentheses/commas/«ط»/«=»; city after the publisher; year from the cover or old prints; printed roles; one shared part per set; ≤ 240 bytes); a title-page reading → its name; field corrections of earlier readings («n \| field=value») |

@@ -380,6 +380,21 @@ def marks(a, scale, width, exclude=None):
             if k + 1 == len(v) or v[k + 1] > x + 1: out_.append((s0, x)); s0 = None
         return out_
     out['rules'] = [pt(a_, iy0, b_ + 1, iy1) for a_, b_ in runs(rule_x)] + [pt(ix0, a_, ix1, b_ + 1) for a_, b_ in runs(rule_y)]
+    def rule_angle(a_, b_, vert):                     # the rule's own slope, read on its ink: one position per row (column),
+        sub = faint[iy0:iy1, a_:b_ + 1] if vert else faint[a_:b_ + 1, ix0:ix1].T   # fitted by a line, outliers (a
+        rows = np.nonzero(sub.any(1))[0]              # neighbouring letter) dropped once
+        if len(rows) < 0.3 * sub.shape[0] or len(rows) < 20: return None
+        pos = np.array([np.nonzero(sub[r_])[0].mean() for r_ in rows])
+        k, c = np.polyfit(rows, pos, 1); ok = np.abs(pos - (k * rows + c)) <= 2
+        if ok.sum() >= 20: k = np.polyfit(rows[ok], pos[ok], 1)[0]
+        return float(np.degrees(np.arctan(k)))
+    # a printed frame standing level: level rules on two opposite sides of the text block (owner 2026-10-14, روضة المستبين
+    # ص 138: a photographed leaf inside a level frame is not turned) — a frame tilted with its page is no such frame
+    # (owner 2026-10-18, إرشاد الساري ص 217 «الجديد مائل»: the guard used to stop on any rule, tilted or not)
+    lv = lambda a_, b_, vert: (lambda g_: g_ is not None and abs(g_) <= 0.35)(rule_angle(a_, b_, vert))
+    sides = {('L' if b_ < cx0 else 'R') for a_, b_ in runs(rule_x) if lv(a_, b_, True)} | \
+            {('T' if b_ < cy0 else 'B') for a_, b_ in runs(rule_y) if lv(a_, b_, False)}
+    out['level_frame'] = {'L', 'R'} <= sides or {'T', 'B'} <= sides
     keep = np.zeros(n + 1, bool); keep[content] = True
     ys, xs = np.nonzero(keep[lab])
     out['box'] = pt(xs.min(), ys.min(), xs.max() + 1, ys.max() + 1)   # rules join the box in decide(), when the book prints them
@@ -679,7 +694,7 @@ def cover_rect(page, px=360):
     cover when: it fills 25–97 % of the page; it is solid (≥ 85 % of its rectangle) and one piece (the trimming left ≤ 5 % of
     it out — a big logo or a block of letters trims down to a part of itself); and beside it lies only what reaches the
     sheet's edge (the scanner bed, a sheet under the cover) — ink standing free beside it is print (a title page with lines
-    outside its frame). Returns the rectangle in pt, 0.5 % outside its edges (never cutting into it), or None"""
+    outside its frame). Returns the rectangle in pt, its sides moved in past a slanted or rounded edge (≤ 3 %), or None"""
     z = px / page.rect.width
     pix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), colorspace=pymupdf.csRGB, alpha=False)
     a = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width * 3].reshape(pix.height, pix.width, 3).astype(np.int16)
@@ -713,9 +728,20 @@ def cover_rect(page, px=360):
             sz = np.bincount(ol.ravel())                # print is many small marks; a sheet under the cover is one big piece
             small = [j for j in range(1, k + 1) if j not in border and sz[j] < 0.003 * H * W]
             if small and sz[small].sum() > 0.002 * H * W: continue
-        dx, dy = 0.005 * (x1 - x0), 0.005 * (y1 - y0)   # a hair outside its edge: never cut into the cover (فهرسة ابن خير
-        return [round(max(0, x0 - dx) / z, 2), round(max(0, y0 - dy) / z, 2),          # ص 380 «دون قصّ صورة الغلاف»)
-                round(min(W, x1 + dx) / z, 2), round(min(H, y1 + dy) / z, 2)]
+        y0_, y1_, x0_, x1_ = y0, y1, x0, x1
+        # nothing from outside the cover may show, a hair of its edge may go (owner 2026-10-18, دلائل الإعجاز ص 1: «شيء من
+        # خارج الغلاف ما زال ظاهرا بالأسفل … ولو نقص شيء لا يؤثر من حواف الغلاف»): each side moves in while its edge row
+        # (column) is not wholly cover — a slanted or rounded edge — by at most 3 % of the cover; never a real cut into it
+        # (فهرسة ابن خير ص 380 «دون قصّ صورة الغلاف»: the cover image is shown whole but for that hair)
+        my, mx = int(0.03 * (y1 - y0)) + 1, int(0.03 * (x1 - x0)) + 1
+        for _ in range(max(my, mx)):
+            moved = False
+            if y1 - y0 > 10 and m[y0, x0:x1].mean() < 0.98 and y0 < y0_ + my: y0 += 1; moved = True
+            if y1 - y0 > 10 and m[y1 - 1, x0:x1].mean() < 0.98 and y1 > y1_ - my: y1 -= 1; moved = True
+            if x1 - x0 > 10 and m[y0:y1, x0].mean() < 0.98 and x0 < x0_ + mx: x0 += 1; moved = True
+            if x1 - x0 > 10 and m[y0:y1, x1 - 1].mean() < 0.98 and x1 > x1_ - mx: x1 -= 1; moved = True
+            if not moved: break
+        return [round(x0 / z, 2), round(y0 / z, 2), round(x1 / z, 2), round(y1 / z, 2)]
     return None
 
 def colour_stamps(page, px=500):
@@ -786,7 +812,7 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
             # a page whose printed frame or rule stands level while its content reads ≥ 1° (a photographed leaf in a
             # level frame: owner 2026-10-14, روضة المستبين ص 138 «أحدثت ميلا»): not turned — a 1° tilt would have kept
             # the rule from showing as one (it drifts beyond its 1 % band over half the page)
-            if abs(ang) >= 1.0 and mk.get('rules'): rec['frame_level'] = round(ang, 3); ang = 0.0
+            if abs(ang) >= 1.0 and mk.get('level_frame'): rec['frame_level'] = round(ang, 3); ang = 0.0
             if abs(ang) >= SKEW_MIN and gain >= 1.02:
                 for deg in (-ang, ang):
                     t = turned(doc, i, deg); a2, z2 = gray(t[0], 500)
@@ -1470,7 +1496,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                 if abs(r_) >= 0.4 and g_ >= 1.02:
                     es = [e for e in mk['edges']() if e is not None and abs(e - r_) <= 0.2]
                     if es: u, g = r_, g_; p['tilt_by_edge'] = round(min(es, key=lambda e: abs(e - r_)), 3)
-            if abs(u) >= 1.0 and mk.get('rules'): p['frame_level'] = round(u, 3); u = 0.0   # a level frame: not turned
+            if abs(u) >= 1.0 and mk.get('level_frame'): p['frame_level'] = round(u, 3); u = 0.0   # a level frame: not turned
             if abs(u) >= SKEW_MIN and g >= 1.02:
                 if mk['proj'](-3.0, 3.0, 0.25) < SKEW_MIN - 0.05: p['tilt_disputed'] = round(u, 3)   # the image shows no tilt
                 else:

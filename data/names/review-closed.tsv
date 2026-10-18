@@ -1,0 +1,14 @@
+# Review-page items closed after the owner's comment (owner 2026-10-18: «احذف ما علقت عليه اللهم إلا إن جئت باستفسار جديد حوله»; «وبشكل مستمر»). The page builders skip these ids.
+report	id	date	outcome
+decisions	764-compare	2026-10-18	both stay: 235 (مطبعة المدني, 417 pp.) and 764 (2nd enlarged edition, الخانجي 1990, 432 pp.) are two editions
+decisions	778-compare	2026-10-18	both stay: مكتبة النهضة المصرية 1950 and المكتبة العصرية (2 vols) are two printings by different publishers
+decisions	805-compare	2026-10-18	both stay: دار الجيل (one file) and دار الفكر (6 vols) are two printings by different publishers of Harun's edition
+decisions	781-compare	2026-10-18	both stay: 781 is بيت الحكمة تونس 1989, the other file is مكتبة العبيكان الرياض 1423/2002 (both vols, 1019 pp.) — another edition; named by plan 322
+crop-fixes	9da5c530d977	2026-10-18	approved (checked, no remark): the cover alone fills the page
+decisions	45-fix	2026-10-18	done: the blank first page dropped (pages-001, reversible) — the title page is p. 1 and p. 7 reads ٦ as printed; the owner's rule written in AGENTS.md §3
+decisions	714-fix	2026-10-18	done: the five white pages before the title dropped (pages-001, reversible) — nothing lost, p. 3 reads (٣) as printed
+decisions	777-compare	2026-10-18	done: the single file deleted (plan 323) — the same scan as the 12-file set but one cover image; the set stays
+decisions	774-compare	2026-10-18	done: the single file deleted (plan 323) — the same scan as the 10-file set (only volume covers differ); the set stays
+decisions	414-fix	2026-10-18	done and shown: rebuilt from its spread images (plan 324); a new question about the missing pp. 212–213 → 414-ask
+decisions	416-fix	2026-10-18	done: re-rendered from its text layer in an embedded font (plan 324), the fontless file kept aside
+decisions	724-fix	2026-10-18	answered: the fix is the library copy; the set-aside file is the old one — new question about deleting the safety copies → 724-ask
