@@ -5,8 +5,9 @@ EVERY crop job runs in ONE memory pen, the user slice crop.slice (systemd-run --
   * THE PEN'S SIZE follows what the owner uses: MemoryHigh = free memory + what the pen holds − 2.5 GB kept free (2–10 GB),
     MemoryMax 1.5 GB above. When he opens more (browsers, VS Code, Antigravity…), the pen shrinks: the crop jobs are reclaimed
     and swapped (they slow down) — never his session. When he closes things, it grows.
-  * WORKERS (data/crop/workers, read by every crop tool before each new book) = the pen's size / 1.3 GB, 1–6 (8 cores, 2 kept
-    for the owner); fewer at once, more only after 2 minutes. A book starts only with ≥ 3 GB free and room in the pen
+  * WORKERS (data/crop/workers, read by every crop tool before each new book) = (the pen's size − 1.5 GB for the job's own
+    process) / 2.2 GB, 1–6 (8 cores, 2 kept for the owner); fewer at once, more only after 2 minutes — and none more for 20
+    minutes after a brake. A book starts only with ≥ 3 GB free and room in the pen
     (crop_batch.room()).
   * free < 2 GB (the owner's own apps press): Brave/Chrome are closed the normal way if nobody has touched the laptop for 10
     minutes and no sound plays (tabs come back on reopening). Never VS Code, Antigravity or anything else.
@@ -17,7 +18,10 @@ import glob, os, signal, subprocess, sys, time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FILE = os.path.join(ROOT, 'data', 'crop', 'workers')
 MAX, LOW, CRIT = int(os.environ.get('MAX_WORKERS', 6)), 2.0, 1.0
-SLICE, KEEP, PER, FLOOR, CEIL = 'crop.slice', 2.5, 1.3, 2.0, 10.0          # GB
+SLICE, KEEP, PER, FLOOR, CEIL = 'crop.slice', 2.5, 2.2, 2.0, 10.0          # GB
+# (PER: an analysis worker holds 1.7–2.5 GB, its job's own process ~1.5 GB more — PARENT; with 1.3 GB a worker the count
+# climbed 1 → 2 → 3 every two minutes into the brake, four kills in an hour, 2026-10-18 23:00–23:45)
+PARENT, HOLD = 1.5, 1200                                                    # GB; s without a climb after a brake
 CG = f'/sys/fs/cgroup/user.slice/user-{os.getuid()}.slice/user@{os.getuid()}.service/{SLICE}'
 log = lambda *a: print(time.strftime('%F %T'), *a, flush=True)
 
@@ -91,19 +95,20 @@ def put(n, why):
 
 if __name__ == '__main__':
     log(f'governor up: pen {SLICE} sized from free memory (keep {KEEP} GB), ≤ {MAX} workers, brake < {CRIT} GB (pid {os.getpid()})')
-    pen = None; up_since = None; closed_at = 0; low_since = None
+    pen = None; up_since = None; closed_at = 0; low_since = None; braked = 0
     while True:
         f = free_gb(); now = time.time(); ps = pressure(); held = pen_gb()
         if f < CRIT or ps >= 20:                      # the brake first
-            brake(); put(max(1, get() - 2), f'{f:.1f} GB free, pressure {ps:.0f} % (critical)'); up_since = None
+            brake(); put(max(1, get() - 2), f'{f:.1f} GB free, pressure {ps:.0f} % (critical)'); up_since = None; braked = now
             time.sleep(5); continue
         want = round(min(CEIL, max(FLOOR, f + held - KEEP)) * 4) / 4      # in quarters of a GB
         if pen is None or abs(want - pen) >= 0.25:
             size_pen(want)
             if pen is None or abs(want - pen) >= 1: log(f'pen {pen} → {want} GB (free {f:.1f} GB, the jobs hold {held:.1f} GB)')
             pen = want
-        target = max(1, min(MAX, int(pen / PER))); n = get()
+        target = max(1, min(MAX, int((pen - PARENT) / PER))); n = get()
         if target < n: put(target, f'pen {pen} GB'); up_since = None
+        elif target > n and now - braked < HOLD: up_since = None        # «reduce the workers at that point for a while»
         elif target > n:
             up_since = up_since or now
             if now - up_since >= 120: put(n + 1, f'pen {pen} GB for 2 min'); up_since = now

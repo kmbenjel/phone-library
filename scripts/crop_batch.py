@@ -194,7 +194,7 @@ def room(need=3.0):
     try:                                              # and room in the pen (crop.slice, sized by scripts/mem_governor.py)
         cg = f'/sys/fs/cgroup/user.slice/user-{os.getuid()}.slice/user@{os.getuid()}.service/crop.slice'
         hi = open(cg + '/memory.high').read().strip()
-        if hi != 'max' and int(open(cg + '/memory.current').read()) > int(hi) - 1.3 * 2 ** 30: return False
+        if hi != 'max' and int(open(cg + '/memory.current').read()) > int(hi) - 2.2 * 2 ** 30: return False   # (a book ≈ 2.2 GB)
     except (OSError, ValueError): pass
     return True
 

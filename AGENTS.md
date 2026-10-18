@@ -325,7 +325,7 @@ file whose improved copy is not in `index-now.tsv`. Nothing goes in the repo roo
    (`systemd-run --user --slice=crop.slice --unit=NAME --nice=10 --working-directory=$PWD scripts/run_resumable.sh LOG -- CMD`,
    no memory properties of its own): the governor sizes the pen every few seconds from what the owner uses (free memory + what the
    pen holds − 2.5 GB, 2–10 GB) — when he opens more (browsers, VS Code, Antigravity), the jobs are reclaimed and swapped, never
-   his session; the worker count follows the pen (1.3 GB per book). `run_resumable.sh` reruns a killed job once memory is back.
+   his session; the worker count follows the pen (2.2 GB per book, 1.5 GB kept for the job's own process; no climb for 20 minutes after a brake — owner: «reduce the workers at that point for a while»). `run_resumable.sh` reruns a killed job once memory is back.
    Never a per-unit `MemoryHigh` above the pen — a unit throttled at a high MemoryHigh reclaims
    hard, the user slice's memory pressure rises and systemd-oomd kills by reclaim, GNOME Shell first: on 2026-10-18 03:05 a
    bench with MemoryHigh=6G (raised by the agent) and 3 analyses beside the owner's browsers closed his session again.
