@@ -65,6 +65,8 @@ def check(row, rec, pdf):
              or (p.get('curved') and lvl <= bc.CURVED and img <= bc.CURVED) or (p.get('level_by_lines') is not None and max(lvl, img) <= 0.35)
              or (p.get('level_by_edge') is not None and lvl <= 0.2)
              or (p.get('level_by_columns') is not None and p['level_by_columns'] <= 0.15)
+             or (p.get('level_by_proj') is not None and p['level_by_proj'] <= 0.2)     # (a projection turn, verified level
+             #   on the page's own ink: book_crop.verify — اللآلئ ج 2 ص 469, 2.6° → 0.1°)
              or p.get('reduced') is not None))) \
              and (expect == 'no' or not p.get('untreated_tilt'))
         return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}){" curved" if p.get("curved") else ""}, untreated {p.get("untreated_tilt")}'
