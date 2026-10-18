@@ -696,3 +696,210 @@
 {"time": "2026-10-14 08:00:11", "report": "plan-320b", "n": "2", "checked": false, "comment": "x"}
 {"time": "2026-10-14 08:01:04", "report": "plan-320b", "n": "2", "checked": false, "comment": "لم أفه"}
 {"time": "2026-10-14 08:01:05", "report": "plan-320b", "n": "2", "checked": false, "comment": "لم أفهم"}
+{"time": "2026-10-18 00:43:58", "report": "decisions", "n": "764-compare", "checked": true, "comment": "f"}
+{"time": "2026-10-18 00:43:59", "report": "decisions", "n": "764-compare", "checked": true, "comment": ""}
+{"time": "2026-10-18 00:44:12", "report": "decisions", "n": "774-compare", "checked": true, "comment": ""}
+{"time": "2026-10-18 00:44:17", "report": "decisions", "n": "777-compare", "checked": true, "comment": ""}
+{"time": "2026-10-18 00:44:19", "report": "decisions", "n": "778-compare", "checked": true, "comment": ""}
+{"time": "2026-10-18 00:44:29", "report": "decisions", "n": "781-compare", "checked": true, "comment": ""}
+{"time": "2026-10-18 00:44:43", "report": "decisions", "n": "781-compare", "checked": true, "comment": ""}
+{"time": "2026-10-18 00:44:49", "report": "decisions", "n": "805-compare", "checked": true, "comment": ""}
+{"time": "2026-10-18 00:45:12", "report": "decisions", "n": "45-fix", "checked": false, "comment": ""}
+{"time": "2026-10-18 00:45:31", "report": "decisions", "n": "45-fix", "checked": false, "comment": "هذه قاعدة، عند وجود صفحة فارغة أو الغلاف الخارجي وذ"}
+{"time": "2026-10-18 00:45:34", "report": "decisions", "n": "45-fix", "checked": false, "comment": "هذه قاعدة، عند وجود صفحة فارغة أو الغلاف الخارجي وذلك يخا"}
+{"time": "2026-10-18 00:45:39", "report": "decisions", "n": "45-fix", "checked": false, "comment": "هذه قاعدة، عند وجود صفحة فارغة أو الغلاف الخارجي وذلك يخالف بين الترقيمين تح"}
+{"time": "2026-10-18 00:45:44", "report": "decisions", "n": "45-fix", "checked": false, "comment": "هذه قاعدة، عند وجود صفحة فارغة أو الغلاف الخارجي وذلك يخالف بين الترقيمين تحذف الصفحة"}
+{"time": "2026-10-18 00:45:45", "report": "decisions", "n": "45-fix", "checked": true, "comment": "هذه قاعدة، عند وجود صفحة فارغة أو الغلاف الخارجي وذلك يخالف بين الترقيمين تحذف الصفحة"}
+{"time": "2026-10-18 00:46:09", "report": "decisions", "n": "414-fix", "checked": true, "comment": ""}
+{"time": "2026-10-18 00:46:13", "report": "decisions", "n": "414-fix", "checked": true, "comment": "أرني"}
+{"time": "2026-10-18 00:46:38", "report": "decisions", "n": "416-fix", "checked": true, "comment": ""}
+{"time": "2026-10-18 00:46:45", "report": "decisions", "n": "714-fix", "checked": true, "comment": ""}
+{"time": "2026-10-18 00:46:49", "report": "decisions", "n": "714-fix", "checked": true, "comment": "ب"}
+{"time": "2026-10-18 00:46:52", "report": "decisions", "n": "714-fix", "checked": true, "comment": ""}
+{"time": "2026-10-18 00:46:56", "report": "decisions", "n": "714-fix", "checked": true, "comment": "على"}
+{"time": "2026-10-18 00:46:56", "report": "decisions", "n": "714-fix", "checked": false, "comment": "على"}
+{"time": "2026-10-18 00:47:13", "report": "decisions", "n": "714-fix", "checked": false, "comment": "على ماذا أوافق؟ أصلح الأمر بحيث يتوافق الترقيم ولا يضيع شيء"}
+{"time": "2026-10-18 00:47:16", "report": "decisions", "n": "714-fix", "checked": true, "comment": "على ماذا أوافق؟ أصلح الأمر بحيث يتوافق الترقيم ولا يضيع شيء"}
+{"time": "2026-10-18 00:47:21", "report": "decisions", "n": "714-fix", "checked": false, "comment": "على ماذا أوافق؟ أصلح الأمر بحيث يتوافق الترقيم ولا يضيع شيء"}
+{"time": "2026-10-18 00:48:03", "report": "decisions", "n": "724-fix", "checked": false, "comment": "إذا كانت النسخة مستبعدة فلم الإصلاح فيها؟ فسر لي"}
+{"time": "2026-10-18 00:50:43", "report": "crop-fixes", "n": "00597fea27cf", "checked": false, "comment": "تقلي"}
+{"time": "2026-10-18 00:50:53", "report": "crop-fixes", "n": "00597fea27cf", "checked": false, "comment": "تقليل الهوامش أكثر لهذا الكتاب و"}
+{"time": "2026-10-18 00:50:56", "report": "crop-fixes", "n": "00597fea27cf", "checked": false, "comment": "تقليل الهوامش أكثر لهذا الكتاب ولما كان "}
+{"time": "2026-10-18 00:50:58", "report": "crop-fixes", "n": "00597fea27cf", "checked": false, "comment": "تقليل الهوامش أكثر لهذا الكتاب ولما كان أ"}
+{"time": "2026-10-18 00:51:01", "report": "crop-fixes", "n": "00597fea27cf", "checked": false, "comment": "تقليل الهوامش أكثر لهذا الكتاب ولما ك"}
+{"time": "2026-10-18 00:51:11", "report": "crop-fixes", "n": "00597fea27cf", "checked": false, "comment": "تقليل الهوامش"}
+{"time": "2026-10-18 00:51:14", "report": "crop-fixes", "n": "00597fea27cf", "checked": false, "comment": ""}
+{"time": "2026-10-18 00:51:16", "report": "crop-fixes", "n": "00597fea27cf", "checked": true, "comment": ""}
+{"time": "2026-10-18 00:51:19", "report": "crop-fixes", "n": "00597fea27cf", "checked": true, "comment": ""}
+{"time": "2026-10-18 00:51:24", "report": "crop-fixes", "n": "00597fea27cf", "checked": true, "comment": ""}
+{"time": "2026-10-18 00:51:42", "report": "crop-fixes", "n": "00597fea27cf", "checked": true, "comment": "ضع الإطار بحيث عيوب الطباعة أعلى الصفحات تختفي، وأرني"}
+{"time": "2026-10-18 00:52:48", "report": "crop-fixes", "n": "064846139175", "checked": true, "comment": ""}
+{"time": "2026-10-18 00:52:55", "report": "crop-fixes", "n": "064846139175", "checked": true, "comment": "الأخير ما زال مائلا\nو"}
+{"time": "2026-10-18 00:53:00", "report": "crop-fixes", "n": "064846139175", "checked": true, "comment": "الأخير ما زال مائلا\nوابحث عن طبعة أفضل "}
+{"time": "2026-10-18 00:53:02", "report": "crop-fixes", "n": "064846139175", "checked": true, "comment": "الأخير ما زال مائلا\nوابحث عن طبعة أفضل إن "}
+{"time": "2026-10-18 00:53:07", "report": "crop-fixes", "n": "064846139175", "checked": true, "comment": "الأخير ما زال مائلا\nوابحث عن طبعة أفضل إن وجدتها وإلا ف"}
+{"time": "2026-10-18 00:53:11", "report": "crop-fixes", "n": "064846139175", "checked": true, "comment": "الأخير ما زال مائلا\nوابحث عن طبعة أفضل إن وجدتها وإلا"}
+{"time": "2026-10-18 00:53:16", "report": "crop-fixes", "n": "064846139175", "checked": true, "comment": "الأخير ما زال مائلا"}
+{"time": "2026-10-18 00:53:17", "report": "crop-fixes", "n": "064846139175", "checked": true, "comment": "الأخير ما زال مائلا و"}
+{"time": "2026-10-18 00:53:19", "report": "crop-fixes", "n": "064846139175", "checked": true, "comment": "الأخير ما زال مائلا وي"}
+{"time": "2026-10-18 00:53:23", "report": "crop-fixes", "n": "064846139175", "checked": true, "comment": "الأخير ما زال مائلا وأيمان الصفحات "}
+{"time": "2026-10-18 00:53:26", "report": "crop-fixes", "n": "064846139175", "checked": true, "comment": "الأخير ما زال مائلا وأيمان الصفحات فيها "}
+{"time": "2026-10-18 00:53:31", "report": "crop-fixes", "n": "064846139175", "checked": true, "comment": "الأخير ما زال مائلا وأيمان الصفحات مداخلة لل"}
+{"time": "2026-10-18 00:53:34", "report": "crop-fixes", "n": "064846139175", "checked": true, "comment": "الأخير ما زال مائلا وأيمان الصفحات مداخلة للحافة"}
+{"time": "2026-10-18 00:54:04", "report": "crop-fixes", "n": "29b9db6c6baa", "checked": false, "comment": "الم"}
+{"time": "2026-10-18 00:54:23", "report": "crop-fixes", "n": "29b9db6c6baa", "checked": false, "comment": "الملاحظة على حالها، الثانية غير "}
+{"time": "2026-10-18 00:54:49", "report": "crop-fixes", "n": "29b9db6c6baa", "checked": false, "comment": "الملاحظة على حالها، الثانية غير موسطة، والأولى والثانية المشكل فيهما نابع من عدم الجرأة على تجاوز عيو"}
+{"time": "2026-10-18 00:54:50", "report": "crop-fixes", "n": "29b9db6c6baa", "checked": false, "comment": "الملاحظة على حالها، الثانية غير موسطة، والأولى والثانية المشكل فيهما نابع من عدم الجرأة على تجاوز "}
+{"time": "2026-10-18 00:54:54", "report": "crop-fixes", "n": "29b9db6c6baa", "checked": false, "comment": "الملاحظة على حالها، الثانية غير موسطة، والأولى والثانية المشكل فيهما نابع من عدم الجرأة على تجاوز سواد الطباعة"}
+{"time": "2026-10-18 00:54:56", "report": "crop-fixes", "n": "29b9db6c6baa", "checked": true, "comment": "الملاحظة على حالها، الثانية غير موسطة، والأولى والثانية المشكل فيهما نابع من عدم الجرأة على تجاوز سواد الطباعة"}
+{"time": "2026-10-18 00:55:25", "report": "crop-fixes", "n": "35fbe344b8c6", "checked": false, "comment": ""}
+{"time": "2026-10-18 00:55:35", "report": "crop-fixes", "n": "35fbe344b8c6", "checked": false, "comment": "سواد الطباعة منعك من إصلاح الثا"}
+{"time": "2026-10-18 00:55:37", "report": "crop-fixes", "n": "35fbe344b8c6", "checked": false, "comment": "سواد الطباعة منعك من إصلاح الثانية "}
+{"time": "2026-10-18 00:55:38", "report": "crop-fixes", "n": "35fbe344b8c6", "checked": false, "comment": "سواد الطباعة منعك من إصلاح الثانية"}
+{"time": "2026-10-18 00:55:46", "report": "crop-fixes", "n": "35fbe344b8c6", "checked": false, "comment": "سواد الطباعة منعك من إصلاح الثانية، الباقي ممتاز"}
+{"time": "2026-10-18 00:56:06", "report": "crop-fixes", "n": "35fbe344b8c6", "checked": false, "comment": "سواد الطباعة منعك من إصلاح الثانية، الباقي ممتاز، لا بد من تحسين الخواريزمية بعد نجاح المحاولات مع المش"}
+{"time": "2026-10-18 00:56:08", "report": "crop-fixes", "n": "35fbe344b8c6", "checked": false, "comment": "سواد الطباعة منعك من إصلاح الثانية، الباقي ممتاز، لا بد من تحسين الخواريزمية بعد نجاح المحاولات مع ا"}
+{"time": "2026-10-18 00:56:12", "report": "crop-fixes", "n": "35fbe344b8c6", "checked": false, "comment": "سواد الطباعة منعك من إصلاح الثانية، الباقي ممتاز، لا بد من تحسين الخواريزمية بعد نجاح المحاولات مع ما لا يزال مشكلا"}
+{"time": "2026-10-18 00:56:13", "report": "crop-fixes", "n": "35fbe344b8c6", "checked": true, "comment": "سواد الطباعة منعك من إصلاح الثانية، الباقي ممتاز، لا بد من تحسين الخواريزمية بعد نجاح المحاولات مع ما لا يزال مشكلا"}
+{"time": "2026-10-18 00:56:26", "report": "crop-fixes", "n": "52072388499d", "checked": true, "comment": ""}
+{"time": "2026-10-18 00:56:42", "report": "crop-fixes", "n": "52072388499d", "checked": true, "comment": "رائع"}
+{"time": "2026-10-18 00:57:18", "report": "crop-fixes", "n": "5b214426d112", "checked": false, "comment": "في الأولى القديم أ"}
+{"time": "2026-10-18 00:57:19", "report": "crop-fixes", "n": "5b214426d112", "checked": false, "comment": "في الأولى القديم أصلح"}
+{"time": "2026-10-18 00:57:20", "report": "crop-fixes", "n": "5b214426d112", "checked": false, "comment": "في الأولى القديم أصلح\n"}
+{"time": "2026-10-18 00:57:28", "report": "crop-fixes", "n": "5b214426d112", "checked": false, "comment": "في الأولى القديم أصلح والجديد مائل\n\n"}
+{"time": "2026-10-18 00:57:41", "report": "crop-fixes", "n": "5b214426d112", "checked": false, "comment": "في الأولى القديم أصلح والجديد مائل\n\n"}
+{"time": "2026-10-18 00:57:45", "report": "crop-fixes", "n": "5b214426d112", "checked": false, "comment": "في الأولى القديم أصلح والجديد مائل\nفي الأخيرة \n"}
+{"time": "2026-10-18 00:57:46", "report": "crop-fixes", "n": "5b214426d112", "checked": false, "comment": "في الأولى القديم أصلح والجديد مائل\nفي الأخيرة ح\n"}
+{"time": "2026-10-18 00:57:52", "report": "crop-fixes", "n": "5b214426d112", "checked": false, "comment": "في الأولى القديم أصلح والجديد مائل\nفي الأخيرة الصفحة مشمولة\n"}
+{"time": "2026-10-18 00:58:02", "report": "crop-fixes", "n": "5b214426d112", "checked": false, "comment": "في الأولى القديم أصلح والجديد مائل\nالأخيرة مقبولة\n"}
+{"time": "2026-10-18 00:58:10", "report": "crop-fixes", "n": "5b214426d112", "checked": false, "comment": "في الأولى القديم أصلح والجديد مائل\n"}
+{"time": "2026-10-18 00:58:27", "report": "crop-fixes", "n": "68600214e7de", "checked": false, "comment": "سواد من الطابع ما زال "}
+{"time": "2026-10-18 00:58:38", "report": "crop-fixes", "n": "68600214e7de", "checked": false, "comment": "سواد من الطابع ما زال ظاهرا في الصفحة، فيمكن تبييض ذلك السواد"}
+{"time": "2026-10-18 00:58:44", "report": "crop-fixes", "n": "68600214e7de", "checked": false, "comment": "سواد من الطابع ما زال ظاهرا في الصفحة، فيمكن تبييض ذلك السواد ما دام ق"}
+{"time": "2026-10-18 00:58:46", "report": "crop-fixes", "n": "68600214e7de", "checked": false, "comment": "سواد من الطابع ما زال ظاهرا في الصفحة، فيمكن تبييض ذلك السواد"}
+{"time": "2026-10-18 00:58:47", "report": "crop-fixes", "n": "68600214e7de", "checked": true, "comment": "سواد من الطابع ما زال ظاهرا في الصفحة، فيمكن تبييض ذلك السواد"}
+{"time": "2026-10-18 00:58:57", "report": "crop-fixes", "n": "68600214e7de", "checked": true, "comment": "سواد من الطابع ما زال ظاهرا في الصفحة، فيمكن ح"}
+{"time": "2026-10-18 00:59:03", "report": "crop-fixes", "n": "68600214e7de", "checked": true, "comment": "سواد من الطابع ما زال ظاهرا في الصفحة، فيمكن حذف ما بقي ظاهرا من الطابع"}
+{"time": "2026-10-18 00:59:27", "report": "crop-fixes", "n": "8ec1fd8095ad", "checked": false, "comment": ""}
+{"time": "2026-10-18 00:59:37", "report": "crop-fixes", "n": "8ec1fd8095ad", "checked": false, "comment": "شيء من خارج الغلاف ما زال ظاهرا بالأسفل "}
+{"time": "2026-10-18 01:00:00", "report": "crop-fixes", "n": "8ec1fd8095ad", "checked": false, "comment": "شيء من خارج الغلاف ما زال ظاهرا بالأسفل، فيمكن إصلاح ذلك ولو نقص شيء "}
+{"time": "2026-10-18 01:00:08", "report": "crop-fixes", "n": "8ec1fd8095ad", "checked": false, "comment": "شيء من خارج الغلاف ما زال ظاهرا بالأسفل، فيمكن إصلاح ذلك ولو نقص شيء لا يؤثر من صورة الغلاف نفسها"}
+{"time": "2026-10-18 01:00:19", "report": "crop-fixes", "n": "8ec1fd8095ad", "checked": false, "comment": "شيء من خارج الغلاف ما زال ظاهرا بالأسفل، فيمكن إصلاح ذلك ولو نقص شيء لا يؤثر من حواف الغلاف"}
+{"time": "2026-10-18 01:00:23", "report": "crop-fixes", "n": "8ec1fd8095ad", "checked": true, "comment": "شيء من خارج الغلاف ما زال ظاهرا بالأسفل، فيمكن إصلاح ذلك ولو نقص شيء لا يؤثر من حواف الغلاف"}
+{"time": "2026-10-18 01:00:44", "report": "crop-fixes", "n": "9da5c530d977", "checked": true, "comment": ""}
+{"time": "2026-10-18 01:01:28", "report": "crop-fixes", "n": "d2e6995099bc", "checked": false, "comment": ""}
+{"time": "2026-10-18 01:01:32", "report": "crop-fixes", "n": "d2e6995099bc", "checked": false, "comment": "لم يصل"}
+{"time": "2026-10-18 01:01:38", "report": "crop-fixes", "n": "d2e6995099bc", "checked": false, "comment": "المشكل على حاله"}
+{"time": "2026-10-18 05:35:44", "report": "crop-fixes", "n": "00597fea27cf#2", "checked": true, "comment": ""}
+{"time": "2026-10-18 05:36:01", "report": "crop-fixes", "n": "5b214426d112#2", "checked": true, "comment": ""}
+{"time": "2026-10-18 05:36:05", "report": "crop-fixes", "n": "68600214e7de#2", "checked": true, "comment": ""}
+{"time": "2026-10-18 05:36:28", "report": "crop-fixes", "n": "8ec1fd8095ad#2", "checked": false, "comment": "1: الملاحظة على حالها"}
+{"time": "2026-10-18 05:36:32", "report": "crop-fixes", "n": "8ec1fd8095ad#2", "checked": false, "comment": "الغلاف: الملاحظة على حالها"}
+{"time": "2026-10-18 05:36:54", "report": "crop-fixes", "n": "8ec1fd8095ad#2", "checked": false, "comment": "الغلاف: الملاحظة على حالها!"}
+{"time": "2026-10-18 05:37:07", "report": "crop-fixes", "n": "8ec1fd8095ad#2", "checked": false, "comment": "الغلاف: الملاحظة على حالها! يعاد الإصلاح"}
+{"time": "2026-10-18 05:37:09", "report": "crop-fixes", "n": "8ec1fd8095ad#2", "checked": true, "comment": "الغلاف: الملاحظة على حالها! يعاد الإصلاح"}
+{"time": "2026-10-18 05:37:20", "report": "crop-fixes", "n": "d2e6995099bc#2", "checked": true, "comment": ""}
+{"time": "2026-10-18 05:37:51", "report": "crop-fixes", "n": "d2e6995099bc#2", "checked": true, "comment": "لكن هل العرض مستو مع جميع الصفحات؟ يمكن القص من الجوانب لذلك الغرض"}
+{"time": "2026-10-18 05:37:58", "report": "crop-fixes", "n": "d2e6995099bc#2", "checked": true, "comment": "لكن هل العرض مستو مع جميع الصفحات؟ يمكن القص من الجوانب لذلك الغرض فهو غلاف فقط على كل حال"}
+{"time": "2026-10-18 05:38:05", "report": "crop-fixes", "n": "d319e06e78d0", "checked": true, "comment": ""}
+{"time": "2026-10-18 05:38:35", "report": "crop-fixes", "n": "e27411fc9a16", "checked": false, "comment": ""}
+{"time": "2026-10-18 05:38:54", "report": "crop-fixes", "n": "e27411fc9a16", "checked": false, "comment": "الأول يمكن تحسينه و"}
+{"time": "2026-10-18 05:38:58", "report": "crop-fixes", "n": "e27411fc9a16", "checked": false, "comment": "الأول يمكن تحسينه وتجاهل الطابع\n"}
+{"time": "2026-10-18 05:39:19", "report": "crop-fixes", "n": "e27411fc9a16", "checked": false, "comment": "الأول يمكن تحسينه وتجاهل الطابع "}
+{"time": "2026-10-18 05:39:23", "report": "crop-fixes", "n": "e27411fc9a16", "checked": false, "comment": "الأول يمكن تحسينه وتجاهل الطابع و"}
+{"time": "2026-10-18 05:39:35", "report": "crop-fixes", "n": "e27411fc9a16", "checked": false, "comment": "الأول يمكن تحسينه وتجاهل الطابع، وكذا الأخير وفيه طابعات"}
+{"time": "2026-10-18 05:39:38", "report": "crop-fixes", "n": "e27411fc9a16", "checked": false, "comment": "الأول يمكن تحسينه وتجاهل الطابع، وكذا الأخير وفيه طابعان"}
+{"time": "2026-10-18 05:39:41", "report": "crop-fixes", "n": "e27411fc9a16", "checked": false, "comment": "الأول يمكن تحسينه وتجاهل الطابع، وكذا الأخير وفيه طابعان، "}
+{"time": "2026-10-18 05:39:46", "report": "crop-fixes", "n": "e27411fc9a16", "checked": false, "comment": "الأول يمكن تحسينه وتجاهل الطابع، وكذا الأخير وفيه طابعان، لو تص"}
+{"time": "2026-10-18 05:39:47", "report": "crop-fixes", "n": "e27411fc9a16", "checked": false, "comment": "الأول يمكن تحسينه وتجاهل الطابع، وكذا الأخير وفيه طابعان، لو تصلح "}
+{"time": "2026-10-18 05:39:52", "report": "crop-fixes", "n": "e27411fc9a16", "checked": false, "comment": "الأول يمكن تحسينه وتجاهل الطابع، وكذا الأخير وفيه طابعان، لو تستعمل أداة "}
+{"time": "2026-10-18 05:39:54", "report": "crop-fixes", "n": "e27411fc9a16", "checked": false, "comment": "الأول يمكن تحسينه وتجاهل الطابع، وكذا الأخير وفيه طابعان، لو تستعمل أداة تج"}
+{"time": "2026-10-18 05:39:55", "report": "crop-fixes", "n": "e27411fc9a16", "checked": false, "comment": "الأول يمكن تحسينه وتجاهل الطابع، وكذا الأخير وفيه طابعان، لو تستعمل أداة تجعل"}
+{"time": "2026-10-18 05:40:02", "report": "crop-fixes", "n": "e27411fc9a16", "checked": false, "comment": "الأول يمكن تحسينه وتجاهل الطابع، وكذا الأخير وفيه طابعان، لو تستعمل أداة تجعل مكان الطابع مثل الخلفية\n"}
+{"time": "2026-10-18 05:40:11", "report": "crop-fixes", "n": "e27411fc9a16", "checked": false, "comment": "الأول يمكن تحسينه وتجاهل الطابع، وكذا الأخير وفيه طابعان، لو تستعمل أداة تجعل مكان الطابع مثل الخلفية\nوما بين ذلك مائل"}
+{"time": "2026-10-18 05:40:14", "report": "crop-fixes", "n": "e27411fc9a16", "checked": true, "comment": "الأول يمكن تحسينه وتجاهل الطابع، وكذا الأخير وفيه طابعان، لو تستعمل أداة تجعل مكان الطابع مثل الخلفية\nوما بين ذلك مائل"}
+{"time": "2026-10-18 05:40:30", "report": "crop-fixes", "n": "f134344a7421", "checked": false, "comment": "رائع"}
+{"time": "2026-10-18 05:40:31", "report": "crop-fixes", "n": "f134344a7421", "checked": true, "comment": "رائع"}
+{"time": "2026-10-18 05:41:08", "report": "crop-fixes", "n": "fbf39d55c6f7", "checked": false, "comment": "الأول"}
+{"time": "2026-10-18 05:41:11", "report": "crop-fixes", "n": "fbf39d55c6f7", "checked": false, "comment": "الأول فيه ميل"}
+{"time": "2026-10-18 05:41:20", "report": "crop-fixes", "n": "fbf39d55c6f7", "checked": false, "comment": "الأول فيه ميل\n"}
+{"time": "2026-10-18 05:41:50", "report": "crop-fixes", "n": "0e655bcab0be", "checked": true, "comment": ""}
+{"time": "2026-10-18 05:42:13", "report": "crop-fixes", "n": "1120ebd46313", "checked": false, "comment": "الثاني لم ينصلح"}
+{"time": "2026-10-18 05:43:03", "report": "crop-fixes", "n": "1ab3b838b6d1", "checked": false, "comment": "الثالث والرابط مائلان"}
+{"time": "2026-10-18 05:43:31", "report": "crop-fixes", "n": "1d12000b2925", "checked": false, "comment": "ممتاز"}
+{"time": "2026-10-18 05:43:55", "report": "crop-fixes", "n": "2a8c4bfeff47", "checked": true, "comment": ""}
+{"time": "2026-10-18 05:44:04", "report": "crop-fixes", "n": "2af978d37d97", "checked": true, "comment": ""}
+{"time": "2026-10-18 05:44:35", "report": "crop-fixes", "n": "2b47002d18ab", "checked": true, "comment": ""}
+{"time": "2026-10-18 05:44:47", "report": "crop-fixes", "n": "2b47002d18ab", "checked": true, "comment": "القديم أحسن في 1 و"}
+{"time": "2026-10-18 05:44:48", "report": "crop-fixes", "n": "2b47002d18ab", "checked": true, "comment": "القديم أحسن في 1 و "}
+{"time": "2026-10-18 05:44:54", "report": "crop-fixes", "n": "2b47002d18ab", "checked": true, "comment": "القديم أحسن في 1 و 4\n"}
+{"time": "2026-10-18 05:45:22", "report": "crop-fixes", "n": "2b47002d18ab", "checked": true, "comment": "القديم أحسن في 1 و 4\n3 "}
+{"time": "2026-10-18 05:45:45", "report": "crop-fixes", "n": "2b47002d18ab", "checked": true, "comment": "القديم أحسن في 1 و 4\n3 : لم يصلح تماما"}
+{"time": "2026-10-18 05:46:04", "report": "crop-fixes", "n": "2b47002d18ab", "checked": true, "comment": "القديم أحسن في 1 و 4\n3 : لم يصلح تماما فالشريط باق"}
+{"time": "2026-10-18 05:46:14", "report": "crop-fixes", "n": "3103a9db389b", "checked": true, "comment": ""}
+{"time": "2026-10-18 05:46:38", "report": "crop-fixes", "n": "43b1158bc5be", "checked": false, "comment": "جميل"}
+{"time": "2026-10-18 05:47:37", "report": "crop-fixes", "n": "43b1158bc5be", "checked": false, "comment": "جميل لكن جزء من الكتابة مأكول عن اليمين في الأخيرة"}
+{"time": "2026-10-18 05:48:10", "report": "crop-fixes", "n": "43b1158bc5be", "checked": false, "comment": "جميل لكن جزء من الكتابة مأكول عن اليمين في الأخيرة، إن كان من الأصل تنظر نسخة أو يبقى على حاله مع التنبيه على ذلك في الفهرس"}
+{"time": "2026-10-18 05:48:35", "report": "crop-fixes", "n": "4a0fc25a3d64", "checked": true, "comment": ""}
+{"time": "2026-10-18 05:49:31", "report": "crop-fixes", "n": "51cfa6854fda", "checked": false, "comment": "احفظه لكي تفرق\n"}
+{"time": "2026-10-18 05:49:37", "report": "crop-fixes", "n": "51cfa6854fda", "checked": false, "comment": "احفظه لكي تفرق\nوالأ"}
+{"time": "2026-10-18 05:49:44", "report": "crop-fixes", "n": "51cfa6854fda", "checked": false, "comment": "احفظه لكي تفرق\nوالأخيرة مائلة بخلاف القديم"}
+{"time": "2026-10-18 05:49:54", "report": "crop-fixes", "n": "51cfa6854fda", "checked": false, "comment": "احفظه لكي تفرق\nوالأخيرة مائلة بخلاف القديم، كيف طرا؟"}
+{"time": "2026-10-18 05:50:04", "report": "crop-fixes", "n": "54dce4c59b22", "checked": true, "comment": ""}
+{"time": "2026-10-18 05:50:25", "report": "crop-fixes", "n": "55d35c02e3e0", "checked": true, "comment": ""}
+{"time": "2026-10-18 05:50:43", "report": "crop-fixes", "n": "816413b0e765", "checked": false, "comment": "لا بأس"}
+{"time": "2026-10-18 05:50:44", "report": "crop-fixes", "n": "816413b0e765", "checked": false, "comment": "لا بأس."}
+{"time": "2026-10-18 05:51:15", "report": "crop-fixes", "n": "83dfc7786870", "checked": true, "comment": ""}
+{"time": "2026-10-18 05:51:54", "report": "crop-fixes", "n": "ae39a500653d", "checked": true, "comment": ""}
+{"time": "2026-10-18 05:52:19", "report": "crop-fixes", "n": "ae39a500653d", "checked": true, "comment": ""}
+{"time": "2026-10-18 05:52:34", "report": "crop-fixes", "n": "ae39a500653d", "checked": true, "comment": "هل أشكلت عليك مواضع محددة ترى نظري فيها ضروريا؟"}
+{"time": "2026-10-18 07:12:16", "report": "crop-questions", "n": "e27411-50", "checked": false, "comment": "في الحافة، ولك أن تملأها بنفس الخلفية"}
+{"time": "2026-10-18 07:13:56", "report": "crop-questions", "n": "51cfa6-665", "checked": false, "comment": "جيد"}
+{"time": "2026-10-18 07:14:44", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": ""}
+{"time": "2026-10-18 07:14:46", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": ""}
+{"time": "2026-10-18 07:14:47", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "ف"}
+{"time": "2026-10-18 07:14:55", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "إن وجدت "}
+{"time": "2026-10-18 07:15:02", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "إن وجدت مصورة أخرى متقنة فحسن"}
+{"time": "2026-10-18 07:15:03", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "إن وجدت مصورة أخرى متقنة فحسن\n"}
+{"time": "2026-10-18 07:15:33", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "إن وجدت مصورة أخرى متقنة فحسن\nهنا اليمين"}
+{"time": "2026-10-18 07:15:34", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "إن وجدت مصورة أخرى متقنة فحسن\nهنا اليمين كله أ"}
+{"time": "2026-10-18 07:15:36", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "إن وجدت مصورة أخرى متقنة فحسن\nهنا اليمين كله "}
+{"time": "2026-10-18 07:15:40", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "إن وجدت مصورة أخرى متقنة فحسن\nهنا اليمين كله أسود "}
+{"time": "2026-10-18 07:15:50", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "إن وجدت مصورة أخرى متقنة فحسن\nهنا اليمين كله أسود سنتيمتر إلى سنتيمين، يمكن"}
+{"time": "2026-10-18 07:15:54", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "إن وجدت مصورة أخرى متقنة فحسن\nهنا اليمين كله أسود سنتيمتر إلى سنتيمين، يمكن قص م"}
+{"time": "2026-10-18 07:15:59", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "إن وجدت مصورة أخرى متقنة فحسن\nهنا اليمين كله أسود سنتيمتر إلى سنتيمين، يمكن قص معظم"}
+{"time": "2026-10-18 07:16:01", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "إن وجدت مصورة أخرى متقنة فحسن\nهنا اليمين كله أسود سنتيمتر إلى سنتيمين، يمكن قص معظم السواء و"}
+{"time": "2026-10-18 07:16:16", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "إن وجدت مصورة أخرى متقنة فحسن\nهنا اليمين كله أسود سنتيمتر إلى سنتيمين، يمكن قص معظم السواء والأخذ من الهامش اليساري"}
+{"time": "2026-10-18 07:16:19", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "إن وجدت مصورة أخرى متقنة فحسن\nهنا اليمين كله أسود سنتيمتر إلى سنتيمين، يمكن قص معظم السواء والأخذ من الهامش اليساري ل"}
+{"time": "2026-10-18 07:16:23", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "إن وجدت مصورة أخرى متقنة فحسن\nهنا اليمين كله أسود سنتيمتر إلى سنتيمين، يمكن قص معظم السواء والأخذ من الهامش اليساري لت"}
+{"time": "2026-10-18 07:16:24", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "إن وجدت مصورة أخرى متقنة فحسن\nهنا اليمين كله أسود سنتيمتر إلى سنتيمين، يمكن قص معظم السواء والأخذ من الهامش اليساري لتر"}
+{"time": "2026-10-18 07:16:27", "report": "crop-questions", "n": "064846-649", "checked": false, "comment": "إن وجدت مصورة أخرى متقنة فحسن\nهنا اليمين كله أسود سنتيمتر إلى سنتيمين، يمكن قص معظم السواء والأخذ من الهامش اليساري لترقيع أفضل"}
+{"time": "2026-10-18 07:17:06", "report": "crop-questions", "n": "e27411-93", "checked": false, "comment": "لا يمس "}
+{"time": "2026-10-18 07:17:09", "report": "crop-questions", "n": "e27411-93", "checked": false, "comment": "لا يمس الرقم"}
+{"time": "2026-10-18 07:17:10", "report": "crop-questions", "n": "e27411-93", "checked": false, "comment": "لا يمس الرقم\n"}
+{"time": "2026-10-18 07:17:16", "report": "crop-questions", "n": "e27411-93", "checked": false, "comment": "لا يمس الرقم\nيمكن"}
+{"time": "2026-10-18 07:17:19", "report": "crop-questions", "n": "e27411-93", "checked": false, "comment": "لا يمس الرقم\nيمكن إزالة "}
+{"time": "2026-10-18 07:17:21", "report": "crop-questions", "n": "e27411-93", "checked": false, "comment": "لا يمس الرقم\nيمكن إزالة بقية "}
+{"time": "2026-10-18 07:17:38", "report": "crop-questions", "n": "e27411-93", "checked": false, "comment": "لا يمس الرقم\nيمكن إزالة بقية الطابع وكذا البياض المضاف، أريد أن تملأ بما يشبه الو"}
+{"time": "2026-10-18 07:17:40", "report": "crop-questions", "n": "e27411-93", "checked": false, "comment": "لا يمس الرقم\nيمكن إزالة بقية الطابع وكذا البياض المضاف، أريد أن تملأ بما يشبه الورقة تماما"}
+{"time": "2026-10-18 07:18:59", "report": "crop-questions", "n": "1120eb-27", "checked": false, "comment": ""}
+{"time": "2026-10-18 07:19:12", "report": "crop-questions", "n": "1120eb-27", "checked": false, "comment": "1"}
+{"time": "2026-10-18 08:32:57", "report": "crop-fixes", "n": "064846139175#3", "checked": true, "comment": ""}
+{"time": "2026-10-18 08:33:37", "report": "crop-fixes", "n": "29b9db6c6baa#2", "checked": false, "comment": "1 لا جديد فيها، أرنيها مصلحة"}
+{"time": "2026-10-18 08:33:42", "report": "crop-fixes", "n": "29b9db6c6baa#2", "checked": false, "comment": "1 لا جديد فيها، أرنيها مصلحة الآن"}
+{"time": "2026-10-18 08:33:45", "report": "crop-fixes", "n": "29b9db6c6baa#2", "checked": false, "comment": "1 لا جديد فيها، أرنيها مصلحة حالا"}
+{"time": "2026-10-18 08:33:55", "report": "crop-fixes", "n": "35fbe344b8c6#2", "checked": true, "comment": ""}
+{"time": "2026-10-18 08:34:01", "report": "crop-fixes", "n": "8ec1fd8095ad#3", "checked": true, "comment": ""}
+{"time": "2026-10-18 08:34:19", "report": "crop-fixes", "n": "d2e6995099bc#3", "checked": true, "comment": ""}
+{"time": "2026-10-18 08:34:56", "report": "crop-fixes", "n": "e27411fc9a16#3", "checked": false, "comment": "الـ"}
+{"time": "2026-10-18 08:35:04", "report": "crop-fixes", "n": "e27411fc9a16#3", "checked": false, "comment": "الأخير "}
+{"time": "2026-10-18 08:35:11", "report": "crop-fixes", "n": "e27411fc9a16#3", "checked": false, "comment": "الأخيرة غير متقنة بالمرة"}
+{"time": "2026-10-18 08:35:35", "report": "crop-fixes", "n": "e27411fc9a16#3", "checked": false, "comment": "الأخيرة غير متقنة بالمرة، أرني حالا"}
+{"time": "2026-10-18 08:35:37", "report": "crop-fixes", "n": "e27411fc9a16#3", "checked": true, "comment": "الأخيرة غير متقنة بالمرة، أرني حالا"}
+{"time": "2026-10-18 08:36:20", "report": "crop-fixes", "n": "fbf39d55c6f7#2", "checked": true, "comment": ""}
+{"time": "2026-10-18 08:36:27", "report": "crop-fixes", "n": "16b15400af27", "checked": true, "comment": ""}
+{"time": "2026-10-18 08:36:47", "report": "crop-fixes", "n": "1ab3b838b6d1#2", "checked": true, "comment": ""}
+{"time": "2026-10-18 08:37:48", "report": "crop-fixes", "n": "2b47002d18ab#2", "checked": false, "comment": "الثانية سيئة"}
+{"time": "2026-10-18 08:37:49", "report": "crop-fixes", "n": "2b47002d18ab#2", "checked": true, "comment": "الثانية سيئة"}
+{"time": "2026-10-18 09:05:04", "report": "crop-fixes", "n": "2b47002d18ab#3", "checked": true, "comment": ""}
+{"time": "2026-10-18 09:05:45", "report": "crop-fixes", "n": "29b9db6c6baa#2", "checked": true, "comment": "1 لا جديد فيها، أرنيها مصلحة حالا"}
