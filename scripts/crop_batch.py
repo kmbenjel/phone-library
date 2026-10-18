@@ -114,21 +114,35 @@ def analyse(path, src, jobs=1):
     n = os.path.getsize(src)
     with open(src, 'rb') as a, open(dst, 'rb') as b:
         if a.read() != b.read(n): raise RuntimeError('the output does not start with the original bytes')
-    # sample pages for the owner's review (owner 2026-10-09: «you can show interesting samples rather than whole books»):
-    # before/after images of up to 4 telling pages (a turn, a kept note, a page shrunk to the book's size, a short page
-    # placed by its page number…) for 1 book in 20 and every book with a page shrunk or a note kept
+    # THE DOUBTFUL PAGES for the owner's review (owner 2026-10-18: «show me what would be better reviewed manually»; the review
+    # page shows only them — «hope my remarks will be rare»): every page the method itself is unsure of, in every book —
+    # a tilt measured differently by its measures or left untreated, a stain kept inside to keep the margins balanced, a
+    # page left whole or shown larger, a stamp covered, a page on the scanner bed filled beyond its edge. Up to 6 a book
     try:
-        P = rec['pages']; sp = []
-        for why, cond in (('note', lambda p: p.get('notes')), ('scaled', lambda p: p.get('scale') and abs(p['scale'] - 1) > 1e-3),
-                          ('skew', lambda p: p.get('skew')), ('folio', lambda p: p.get('anchored_x') == 'folio')):
-            L = [i for i, p in enumerate(P) if cond(p)]
-            if L: sp.append((max(L, key=lambda i: abs(P[i].get('skew') or 0)) if why == 'skew' else L[len(L) // 2], why))
-        text = [i for i, p in enumerate(P) if p.get('crop') and p['kind'] == 'text']
-        if text and rec.get('decision') == 'crop': sp.append((text[len(text) // 2], 'mid'))
-        if sp and (int(hashlib.md5(path.encode()).hexdigest(), 16) % 20 == 0 or rec.get('scaled') or any(p.get('notes') for p in rec['pages'])):
-            d = os.path.join(SHEETS, hashlib.md5(path.encode()).hexdigest()[:12])
-            bc.sheet(src, rec, d, sp[:4]); json.dump({'path': path, 'decision': rec.get('decision'), 'reasons': rec.get('reasons'),
-                                                    'gain': rec.get('gain')}, open(os.path.join(d, 'book.json'), 'w'), ensure_ascii=False)
+        P = rec['pages']; untreated = {k - 1 for k in rec.get('untreated_tilt') or []}; whole = {k - 1 for k in rec.get('whole') or []}
+        flags = []
+        for i, p in enumerate(P):
+            why = ('tilt' if p.get('unsure_tilt') or p.get('tilt_disputed') or i in untreated else
+                   'whole' if i in whole or (p['kind'] == 'text' and not p.get('crop') and rec.get('decision') == 'crop') else
+                   'stain' if p.get('stain_kept') else
+                   'stamp' if p.get('stamp') else
+                   'sheet' if p.get('sheet_fill') and p.get('crop') else
+                   'larger' if (p.get('enlarged') or 1) >= 1.05 else None)
+            if why: flags.append((i, why))
+        order = {'tilt': 0, 'whole': 1, 'stain': 2, 'stamp': 3, 'larger': 4, 'sheet': 5}
+        seen, sp = set(), []
+        for i, why in sorted(flags, key=lambda x: (order[x[1]], x[0])):   # each kind of doubt first, then more of them
+            if why in seen: continue
+            seen.add(why); sp.append((i, why))
+        for i, why in sorted(flags, key=lambda x: (order[x[1]], x[0])):
+            if len(sp) >= 6: break
+            if (i, why) not in sp: sp.append((i, why))
+        d = os.path.join(SHEETS, hashlib.md5(path.encode()).hexdigest()[:12])
+        if sp:
+            bc.sheet(src, rec, d, sorted(sp)[:6])
+        json.dump({'path': path, 'decision': rec.get('decision'), 'reasons': rec.get('reasons'), 'gain': rec.get('gain'),
+                   'doubts': {w: sum(1 for _, x in flags if x == w) for w in order}, 'shown': sorted(sp)[:6]},
+                  open(os.path.join(d, 'book.json'), 'w') if os.makedirs(d, exist_ok=True) is None else None, ensure_ascii=False)
     except Exception as e: print('SHEET FAIL', path[:60], repr(e)[:120], flush=True)
     out.update(dst=dst, info=info, recipe={'pages': [{k: p.get(k) for k in ('crop', 'show', 'scale', 'bands', 'fit_whole', 'skew', 'move', 'enlarged',
                                                                'curved', 'notes', 'anchored_x', 'anchored_y') if p.get(k)}
