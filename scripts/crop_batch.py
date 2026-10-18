@@ -176,7 +176,13 @@ def free_gb():
 def room(need=3.0):
     """a new book starts only with ≥ 3 GB free, whatever the worker count (2026-10-18 03:05: the owner's session was closed
     by systemd-oomd while a bench ran 3 analyses beside his browsers — free memory had fallen to 0.8 GB)"""
-    return free_gb() >= need
+    if free_gb() < need: return False
+    try:                                              # and room in the pen (crop.slice, sized by scripts/mem_governor.py)
+        cg = f'/sys/fs/cgroup/user.slice/user-{os.getuid()}.slice/user@{os.getuid()}.service/crop.slice'
+        hi = open(cg + '/memory.high').read().strip()
+        if hi != 'max' and int(open(cg + '/memory.current').read()) > int(hi) - 1.3 * 2 ** 30: return False
+    except (OSError, ValueError): pass
+    return True
 
 def main(list_tsv, batch, workers=4, jobs=1):
     paths = [l.strip().removeprefix('Books/') for l in open(list_tsv, encoding='utf-8') if l.strip() and not l.startswith('#')]

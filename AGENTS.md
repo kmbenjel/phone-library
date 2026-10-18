@@ -317,8 +317,12 @@ file whose improved copy is not in `index-now.tsv`. Nothing goes in the repo roo
    free memory < 2 GB → it closes Brave/Chrome the normal way if nobody has touched the laptop for 10 min and no sound plays,
    then, if still short, one worker fewer; < 1 GB or memory pressure ≥ 20 % → the EMERGENCY BRAKE: the largest crop process is
    killed at once, then two workers fewer; > 4.5 GB for 10 min → one more. **A book starts only with ≥ 3 GB free**
-   (`crop_batch.room()`, in every crop tool, the bench included). Long jobs run through `scripts/run_resumable.sh` (it reruns a
-   killed job once memory is back) in a unit with `MemoryMax=6G` and NO `MemoryHigh` — a unit throttled at MemoryHigh reclaims
+   (`crop_batch.room()`, in every crop tool, the bench included). **Every crop job runs in ONE memory pen, `crop.slice`**
+   (`systemd-run --user --slice=crop.slice --unit=NAME --nice=10 --working-directory=$PWD scripts/run_resumable.sh LOG -- CMD`,
+   no memory properties of its own): the governor sizes the pen every few seconds from what the owner uses (free memory + what the
+   pen holds − 2.5 GB, 2–10 GB) — when he opens more (browsers, VS Code, Antigravity), the jobs are reclaimed and swapped, never
+   his session; the worker count follows the pen (1.3 GB per book). `run_resumable.sh` reruns a killed job once memory is back.
+   Never a per-unit `MemoryHigh` above the pen — a unit throttled at a high MemoryHigh reclaims
    hard, the user slice's memory pressure rises and systemd-oomd kills by reclaim, GNOME Shell first: on 2026-10-18 03:05 a
    bench with MemoryHigh=6G (raised by the agent) and 3 analyses beside the owner's browsers closed his session again.
 11. **Stopping a job:** `kill <pid>` with the PID from `pgrep -f "[n]ame"` in a separate command — a `pkill -f name`

@@ -1,19 +1,24 @@
 """Memory governor for the long crop jobs (owner 2026-10-18: «you can add workers but when ram is about to be full you can
 close browsers if no activity is done using them and if it was not sufficient you reduce the workers at that point for a
-while»). Every 20 s it reads the free memory (MemAvailable) and keeps the number of crop workers in data/crop/workers
-(read by crop_redo.py, crop_batch.py and crop_regress.py before each new book):
-  * free < LOW (2 GB): if Brave/Chrome run, nobody has touched the laptop for 10 min and no sound is playing, the browsers
-    are closed the normal way (SIGTERM to the main process: tabs come back on reopening); a minute later, if memory is still
-    low, one worker fewer (never below 1);
-  * free < CRIT (1 GB) or memory pressure ≥ 20 %: the EMERGENCY BRAKE — the largest crop process is killed at once (the
-    jobs are resumable: run them through scripts/run_resumable.sh), then two workers fewer;
-  * free > HIGH (4.5 GB) for 10 minutes: one worker more, up to MAX (6; the laptop has 8 cores — 2 stay for the owner).
-A worker already busy finishes its book; the change applies to the next book. Logs every action to
-logs/mem-governor.log. Run as a user unit: systemd-run --user --unit=mem-governor python3 scripts/mem_governor.py"""
+while»; then «probably you can manage better, using swap, etc. do your best in that matter»; «I use antigravity a lot as well»).
+EVERY crop job runs in ONE memory pen, the user slice crop.slice (systemd-run --user --slice=crop.slice …). Every 5–20 s:
+  * THE PEN'S SIZE follows what the owner uses: MemoryHigh = free memory + what the pen holds − 2.5 GB kept free (2–10 GB),
+    MemoryMax 1.5 GB above. When he opens more (browsers, VS Code, Antigravity…), the pen shrinks: the crop jobs are reclaimed
+    and swapped (they slow down) — never his session. When he closes things, it grows.
+  * WORKERS (data/crop/workers, read by every crop tool before each new book) = the pen's size / 1.3 GB, 1–6 (8 cores, 2 kept
+    for the owner); fewer at once, more only after 2 minutes. A book starts only with ≥ 3 GB free and room in the pen
+    (crop_batch.room()).
+  * free < 2 GB (the owner's own apps press): Brave/Chrome are closed the normal way if nobody has touched the laptop for 10
+    minutes and no sound plays (tabs come back on reopening). Never VS Code, Antigravity or anything else.
+  * free < 1 GB or memory pressure ≥ 20 %: the EMERGENCY BRAKE — the largest crop process is killed at once (the jobs are
+    resumable; scripts/run_resumable.sh restarts them when memory is back).
+Logs to logs/mem-governor.log. Run: systemd-run --user --unit=mem-governor python3 scripts/mem_governor.py"""
 import glob, os, signal, subprocess, sys, time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FILE = os.path.join(ROOT, 'data', 'crop', 'workers')
-MAX, LOW, CRIT, HIGH = int(os.environ.get('MAX_WORKERS', 6)), 2.0, 1.0, 4.5
+MAX, LOW, CRIT = int(os.environ.get('MAX_WORKERS', 6)), 2.0, 1.0
+SLICE, KEEP, PER, FLOOR, CEIL = 'crop.slice', 2.5, 1.3, 2.0, 10.0          # GB
+CG = f'/sys/fs/cgroup/user.slice/user-{os.getuid()}.slice/user@{os.getuid()}.service/{SLICE}'
 log = lambda *a: print(time.strftime('%F %T'), *a, flush=True)
 
 def free_gb():
@@ -67,6 +72,15 @@ def brake():
         except OSError: pass
     return best
 
+def pen_gb():
+    try: return int(open(os.path.join(CG, 'memory.current')).read()) / 1073741824
+    except (OSError, ValueError): return 0.0
+
+def size_pen(gb):
+    hi, mx = int(gb * 1024), int((gb + 1.5) * 1024)
+    subprocess.run(['systemctl', '--user', 'set-property', '--runtime', SLICE, f'MemoryHigh={hi}M', f'MemoryMax={mx}M'],
+                   capture_output=True, timeout=20)
+
 def get():
     try: return max(1, min(MAX, int(open(FILE).read().strip())))
     except (OSError, ValueError): return MAX
@@ -76,32 +90,33 @@ def put(n, why):
     if n != old: log(f'workers {old} → {n}: {why}')
 
 if __name__ == '__main__':
-    if not os.path.exists(FILE): put(MAX, 'start')
-    log(f'governor up: max {MAX} workers, low {LOW} GB, critical {CRIT} GB (pid {os.getpid()})')
-    low_since = high_since = None; closed_at = 0
+    log(f'governor up: pen {SLICE} sized from free memory (keep {KEEP} GB), ≤ {MAX} workers, brake < {CRIT} GB (pid {os.getpid()})')
+    pen = None; up_since = None; closed_at = 0; low_since = None
     while True:
-        f = free_gb(); n = get(); now = time.time(); ps = pressure()
-        if f < CRIT or ps >= 20:                      # the brake first, then fewer workers
-            brake(); put(max(1, n - 2), f'{f:.1f} GB free, pressure {ps:.0f} % (critical)'); low_since = now; high_since = None
+        f = free_gb(); now = time.time(); ps = pressure(); held = pen_gb()
+        if f < CRIT or ps >= 20:                      # the brake first
+            brake(); put(max(1, get() - 2), f'{f:.1f} GB free, pressure {ps:.0f} % (critical)'); up_since = None
             time.sleep(5); continue
-        if f < CRIT:
-            put(max(1, n - 2), f'{f:.1f} GB free (critical)'); low_since = now; high_since = None
-        elif f < LOW:
-            high_since = None
+        want = round(min(CEIL, max(FLOOR, f + held - KEEP)) * 4) / 4      # in quarters of a GB
+        if pen is None or abs(want - pen) >= 0.25:
+            size_pen(want)
+            if pen is None or abs(want - pen) >= 1: log(f'pen {pen} → {want} GB (free {f:.1f} GB, the jobs hold {held:.1f} GB)')
+            pen = want
+        target = max(1, min(MAX, int(pen / PER))); n = get()
+        if target < n: put(target, f'pen {pen} GB'); up_since = None
+        elif target > n:
+            up_since = up_since or now
+            if now - up_since >= 120: put(n + 1, f'pen {pen} GB for 2 min'); up_since = now
+        else: up_since = None
+        if f < LOW:                                   # the owner's own apps press: idle browsers go (his rule)
+            low_since = low_since or now
             br = browsers()
-            if br and now - closed_at > 600:
+            if br and now - closed_at > 600 and now - low_since >= 30:
                 im, snd = idle_min(), sound_playing()
                 if im >= 10 and not snd:
                     for pid, exe in br:
                         try: os.kill(pid, signal.SIGTERM); log(f'{f:.1f} GB free, idle {im:.0f} min: closed {os.path.basename(exe)} (pid {pid})')
                         except OSError: pass
-                    closed_at = now; low_since = now; time.sleep(60); continue
-            if low_since and now - low_since >= 60: put(max(1, n - 1), f'{f:.1f} GB free'); low_since = now
-            elif not low_since: low_since = now
-        else:
-            low_since = None
-            if f > HIGH and n < MAX:
-                high_since = high_since or now
-                if now - high_since >= 600: put(n + 1, f'{f:.1f} GB free for 10 min'); high_since = now
-            else: high_since = None
+                    closed_at = now
+        else: low_since = None
         time.sleep(5 if f < LOW + 1 else 20)            # closer watch when memory runs short
