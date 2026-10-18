@@ -209,6 +209,15 @@ def marks(a, scale, width, exclude=None):
     pt = lambda x0, y0, x1, y1: [(x0 + c0) / scale, (y0 + r0) / scale, (x1 + c0) / scale, (y1 + r0) / scale]
     box_of = lambda i: pt(objs[i - 1][1].start, objs[i - 1][0].start, objs[i - 1][1].stop, objs[i - 1][0].stop)
     out['specks'] = [box_of(i) for i in sorted(isolated)]
+    # marks lying in a scanner band (their centre beyond the allowed area by more than 1 % of the width) are the band, not
+    # the page: they no longer count as content (owner 2026-10-18, خريدة القصر ص 649: «اليمين كله أسود سنتيمتر إلى
+    # سنتيمترين، يمكن قص معظم السواد» — the band's marks held the frame out to the sheet's edge)
+    if True:
+        lim = [allowed[0] * scale - c0 - 0.01 * Wd, allowed[1] * scale - r0 - 0.01 * H, allowed[2] * scale - c0 + 0.01 * Wd, allowed[3] * scale - r0 + 0.01 * H]
+        inband = {i for i in pre if not (lim[0] <= (objs[i - 1][1].start + objs[i - 1][1].stop) / 2 <= lim[2]
+                                         and lim[1] <= (objs[i - 1][0].start + objs[i - 1][0].stop) / 2 <= lim[3])}
+        if inband and len(inband) < 0.3 * len(pre):
+            out['edge'] += [box_of(i) for i in sorted(inband)]; pre = [i for i in pre if i not in inband]
     if not pre: return out
     # THE SHEET'S BORDER ZONE (owner 2026-10-10, القوافي للتنوخي pp. 77, 87, 89, 95: the photographed edges of the other
     # pages — a band of thin lines —, copier bars, broken border lines kept the frame wide and off-centre): from each side
@@ -1723,12 +1732,21 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
             nts = notes_of(mk.get('margin') or [], p['w'], p['h'])   # marginal notes seen at 1,000 px: kept, like the text
             if nts: p['notes'] = [[round(v, 1) for v in b] for b in nts]
             figs = figures_of(mk.get('margin') or [], p['w'], p['h'])   # a picture or plate beside the text: whole
+            alc = p.get('allowed')                    # nothing the frame must hold lies in a scanner band (خريدة القصر ص 649)
+            if alc and t:
+                cl = lambda b: [max(b[0], alc[0] - 0.01 * p['w']), max(b[1], alc[1] - 0.01 * p['h']), min(b[2], alc[2] + 0.01 * p['w']), min(b[3], alc[3] + 0.01 * p['h'])]
+                enters = lambda b: b[2] > alc[2] + 0.01 * p['w'] or b[0] < alc[0] - 0.01 * p['w'] or b[3] > alc[3] + 0.01 * p['h'] or b[1] < alc[1] - 0.01 * p['h']
+                figs = [b for b in figs if not enters(b)]   # a «picture» running into the band is the band itself
+                t = cl(t); nts = [cl(b) for b in nts]
             tn = union([t] + nts + figs)
             # a cut letter lies next to the text block (within the gap that makes text); a pen stroke or speck further out
             # that happens to cross the box edge is margin, cut like the rest (2026-10-09: اللآلئ ج1 p. 8 stayed whole)
+            al_ = p.get('allowed')                    # (a mark whose centre lies in a scanner band is the band — خريدة القصر ص 649)
+            inal = lambda b: not al_ or (al_[0] - 0.01 * p['w'] <= (b[0] + b[2]) / 2 <= al_[2] + 0.01 * p['w']
+                                         and al_[1] - 0.01 * p['h'] <= (b[1] + b[3]) / 2 <= al_[3] + 0.01 * p['h'])
             cross = [b for b in mk.get('parts', []) if not inside(b, c, 1.0) and b[0] < c[2] and b[2] > c[0] and b[1] < c[3] and b[3] > c[1]
                      and not near(b, known) and b[2] >= t[0] - gx_ and b[0] <= t[2] + gx_ and b[3] >= t[1] - gy_ and b[1] <= t[3] + gy_
-                     and not thin_line(b, p['w'], p['h'])]
+                     and not thin_line(b, p['w'], p['h']) and inal(b)]
             need = ([tn] if not inside(tn, c, 1.0) else []) + cross
             if need:
                 u = union(need + [tn])
@@ -1759,7 +1777,10 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
             p['cut_margin'] = [b for b in mk.get('margin') or [] if not inside(b, p['crop'], 1.0)]
             if any(not inside(b, p['crop'], 1.0) for b in nts): p['notes_cut'] = True     # must never happen (checked)
             continue
-        out = [b for b in mk.get('parts', []) if not inside(b, c, 1.0) and not near(b, known)]
+        al_ = p.get('allowed')
+        out = [b for b in mk.get('parts', []) if not inside(b, c, 1.0) and not near(b, known)
+               and (not al_ or (al_[0] - 0.01 * p['w'] <= (b[0] + b[2]) / 2 <= al_[2] + 0.01 * p['w']
+                                and al_[1] - 0.01 * p['h'] <= (b[1] + b[3]) / 2 <= al_[3] + 0.01 * p['h']))]
         if out:
             # only what the page needs moves the box or keeps the page whole (owner 2026-10-14): its text block's letters,
             # notes, pictures and print in the margin; slivers of a scan line and stray specks outside are cut
@@ -1940,13 +1961,21 @@ def erase_stamp(doc, page, inv, p):
     # paper: owner 2026-10-18, نظم تنقيح فتح الكريم «لو تستعمل أداة تجعل مكان الطابع مثل الخلفية»; the other marks only
     # on white paper, in its white)
     er = marks_to_erase(doc, page.number, p)
-    printed = [x for x in (p.get('blots') or []) + (p.get('lines') or []) + (p.get('rules') or []) + (p.get('rules_dropped') or [])
+    printed = [x for x in (p.get('blots') or []) + (p.get('lines') or []) + (p.get('rules') or [])
                + ([p['box']] if p.get('box') else [])]
-    stamps_ = [pad_box(st, p['w']) for st in p.get('stamp') or []]
-    sts = [q for st in stamps_ for q in rect_minus(st, [x for x in printed if not inside(x, st, 0)])]   # (off the print)
-    if not sts and not er and not (p.get('sheet_fill') and p.get('kind') == 'text'): return False
+    def to_rule(b):                                   # a stamp's box ends above a printed rule running through its lower
+        X0, Y0, X1, Y1 = [int(round(v * z)) for v in b]   # part (نظم تنقيح فتح الكريم ص 93: the box reached 20 pt below the
+        X0, Y0 = max(0, X0), max(0, Y0); X1, Y1 = min(pix.width, X1), min(pix.height, Y1)   # stamp, onto the head's rule)
+        if X1 - X0 < 10 or Y1 - Y0 < 10: return b
+        dark = (img[Y0:Y1, X0:X1].sum(2) < 3 * 128).mean(1)
+        for k in range(int(0.6 * (Y1 - Y0)), Y1 - Y0):
+            if dark[k] >= 0.4: return [b[0], b[1], b[2], (Y0 + k) / z - 2]
+        return b
+    if not p.get('stamp') and not er and not (p.get('sheet_fill') and p.get('kind') == 'text'): return False
     z = 100 / 72; pix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), colorspace=pymupdf.csRGB, alpha=False)
     img = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width * 3].reshape(pix.height, pix.width, 3)
+    stamps_ = [to_rule(pad_box(st, p['w'])) for st in p.get('stamp') or []]
+    sts = [q for st in stamps_ for q in rect_minus(st, [x for x in printed if not inside(x, st, 0)])]   # (off the print)
     def around(b):                                    # the page's own colour around a box
         X0, Y0, X1, Y1 = [int(round(v * z)) for v in (b[0] - 8, b[1] - 8, b[2] + 8, b[3] + 8)]
         X0, Y0 = max(0, X0), max(0, Y0); X1, Y1 = min(pix.width, X1), min(pix.height, Y1)
@@ -1984,7 +2013,8 @@ def erase_stamp(doc, page, inv, p):
         x0, y0, x1, y1 = min(a_.x, b_.x), min(a_.y, b_.y), max(a_.x, b_.x), max(a_.y, b_.y)
         cmd += f'{col[0]:.3f} {col[1]:.3f} {col[2]:.3f} rg {x0:.2f} {y0:.2f} {x1 - x0:.2f} {y1 - y0:.2f} re f '
     rim = col_s or (min(1.0, p.get('paper', 255) / 255),) * 3   # (a page on a bed: its rims in its own colour, not the bed's)
-    for b, col in [(b, around(b)) for b in sts] + [(b, rim) for b in er]:
+    for b, col in [(b, col_s or around(b)) for b in sts] + [(b, rim) for b in er]:   # (on a bed: the page's own colour —
+                                                      # «أريد أن تملأ بما يشبه الورقة تماما»)
         a_, b_ = pymupdf.Point(b[0], b[1]) * inv, pymupdf.Point(b[2], b[3]) * inv
         x0, y0, x1, y1 = min(a_.x, b_.x), min(a_.y, b_.y), max(a_.x, b_.x), max(a_.y, b_.y)
         cmd += f'{col[0]:.3f} {col[1]:.3f} {col[2]:.3f} rg {x0:.2f} {y0:.2f} {x1 - x0:.2f} {y1 - y0:.2f} re f '
