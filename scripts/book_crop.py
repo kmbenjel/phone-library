@@ -895,7 +895,7 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
         if st: rec['stamp'] = st
         ex0 = [pad_box(b, r.width) for b in st] if st else None
         sh = sheet_rect(page)                         # a grey sheet on a light bed: measured inside its edges
-        if sh: rec['sheet'] = sh
+        if sh: rec['sheet'] = sh; rec['sheet_fill'] = sh   # (kept to fill beyond its edge even if not used for measuring)
         a, z = gray(page, 500); a = whiten(a, z, sh)
         mk = marks(a, z, r.width, ex0)
         if sh and mk.get('text') and not inside([mk['text'][0] - 0.01 * r.width, mk['text'][1] - 0.01 * r.height,
@@ -1944,7 +1944,7 @@ def erase_stamp(doc, page, inv, p):
                + ([p['box']] if p.get('box') else [])]
     stamps_ = [pad_box(st, p['w']) for st in p.get('stamp') or []]
     sts = [q for st in stamps_ for q in rect_minus(st, [x for x in printed if not inside(x, st, 0)])]   # (off the print)
-    if not sts and not er: return False
+    if not sts and not er and not (p.get('sheet_fill') and p.get('kind') == 'text'): return False
     z = 100 / 72; pix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), colorspace=pymupdf.csRGB, alpha=False)
     img = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width * 3].reshape(pix.height, pix.width, 3)
     def around(b):                                    # the page's own colour around a box
@@ -1958,11 +1958,39 @@ def erase_stamp(doc, page, inv, p):
         bright = ring[ring.sum(1) >= np.percentile(ring.sum(1), 40)]   # the paper, not a stray letter beside it
         return tuple(float(v) / 255 for v in np.median(bright, axis=0))
     if p.get('paper', 0) < 225: er = []
+    # BEYOND THE SHEET'S EDGE (owner 2026-10-18, نظم تنقيح فتح الكريم ص 50: «في الحافة، ولك أن تملأها بنفس الخلفية» — the
+    # grey page photographed a little askew on a white bed: its slanted edge inside the frame read as a tilt): the page
+    # outside the sheet's inner rectangle is filled with the sheet's own colour, never over the content or anything printed
+    fills = []; col_s = None
+    if p.get('sheet_fill') and p.get('kind') == 'text':
+        S = p['sheet_fill']; W_, H_ = p['w'], p['h']
+        X0, Y0, X1, Y1 = [int(round(v * z)) for v in S]
+        ring = np.concatenate([img[Y0:Y0 + 8, X0:X1].reshape(-1, 3), img[Y1 - 8:Y1, X0:X1].reshape(-1, 3),
+                               img[Y0:Y1, X0:X0 + 8].reshape(-1, 3), img[Y0:Y1, X1 - 8:X1].reshape(-1, 3)])
+        if len(ring) > 50:
+            ring = ring[ring.sum(1) >= np.percentile(ring.sum(1), 40)]
+            col_s = tuple(float(v) / 255 for v in np.median(ring, axis=0))
+            strips = [[0, 0, W_, S[1]], [0, S[3], W_, H_], [0, S[1], S[0], S[3]], [S[2], S[1], W_, S[3]]]
+            inS = lambda x: x[2] > S[0] + 2 and x[0] < S[2] - 2 and x[3] > S[1] + 2 and x[1] < S[3] - 2
+            keep_off = [x for x in (p.get('blots') or []) + (p.get('lines') or []) + (p.get('rules') or []) if inS(x)] \
+                       + ([p['box']] if p.get('box') else []) + [st for st in stamps_]   # (a rule or mark beyond the sheet's
+                                                                   # inner edge is the sheet's own edge or the bed, not print)
+            for st in strips:
+                for q in rect_minus(st, [[x[0] - 2, x[1] - 2, x[2] + 2, x[3] + 2] for x in keep_off]):
+                    fills.append((q, col_s))
     cmd = ''
-    for b, col in [(b, around(b)) for b in sts] + [(b, (min(1.0, p.get('paper', 255) / 255),) * 3) for b in er]:
+    for b, col in fills:                              # (first: the stamps' patches go over them)
         a_, b_ = pymupdf.Point(b[0], b[1]) * inv, pymupdf.Point(b[2], b[3]) * inv
         x0, y0, x1, y1 = min(a_.x, b_.x), min(a_.y, b_.y), max(a_.x, b_.x), max(a_.y, b_.y)
         cmd += f'{col[0]:.3f} {col[1]:.3f} {col[2]:.3f} rg {x0:.2f} {y0:.2f} {x1 - x0:.2f} {y1 - y0:.2f} re f '
+    rim = col_s or (min(1.0, p.get('paper', 255) / 255),) * 3   # (a page on a bed: its rims in its own colour, not the bed's)
+    for b, col in [(b, around(b)) for b in sts] + [(b, rim) for b in er]:
+        a_, b_ = pymupdf.Point(b[0], b[1]) * inv, pymupdf.Point(b[2], b[3]) * inv
+        x0, y0, x1, y1 = min(a_.x, b_.x), min(a_.y, b_.y), max(a_.x, b_.x), max(a_.y, b_.y)
+        cmd += f'{col[0]:.3f} {col[1]:.3f} {col[2]:.3f} rg {x0:.2f} {y0:.2f} {x1 - x0:.2f} {y1 - y0:.2f} re f '
+    # the page's own drawing may end with a clip still active (its image's area): it is closed first («q … Q» around
+    # it), so the patches can reach beyond the photographed page (نظم تنقيح فتح الكريم ص 4 و88: the fill was clipped away)
+    wrap_contents(doc, page, b'q\n')
     return append_contents(doc, page, f'q {cmd}Q\n'.encode())
 
 def images_of(doc):
