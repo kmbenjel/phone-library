@@ -37,6 +37,8 @@ def recipe(pdf):
     me = hashlib.md5(open(os.path.join(ROOT, 'scripts/book_crop.py'), 'rb').read()).hexdigest()[:10]
     key = os.path.join(CACHE, os.path.basename(pdf)[:-4] + f'.{me}.json')
     if os.path.exists(key): return json.load(open(key))
+    import crop_batch as cb, time
+    while not cb.room(): time.sleep(30)               # a book starts only with ≥ 3 GB free (2026-10-18 03:05)
     try: jobs = int(open(os.path.join(ROOT, 'data', 'crop', 'workers')).read().strip())   # the memory governor's number
     except (OSError, ValueError): jobs = int(os.environ.get('JOBS', 3))
     rec = bc.plan(pdf, max(1, jobs)); json.dump(rec, open(key, 'w'), ensure_ascii=False); return rec

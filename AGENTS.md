@@ -315,7 +315,11 @@ file whose improved copy is not in `index-now.tsv`. Nothing goes in the repo roo
    **More workers, governed (owner 2026-10-18):** the crop jobs (crop_redo, crop_batch, crop_regress) take as many books at
    once as `data/crop/workers` says (read before each book), set by `scripts/mem_governor.py` (unit `mem-governor`): up to 6;
    free memory < 2 GB → it closes Brave/Chrome the normal way if nobody has touched the laptop for 10 min and no sound plays,
-   then, if still short, one worker fewer; < 1 GB → two fewer; > 4.5 GB for 10 min → one more. Such a job runs in a unit with
-   `MemoryHigh=9G MemoryMax=10G`.
+   then, if still short, one worker fewer; < 1 GB or memory pressure ≥ 20 % → the EMERGENCY BRAKE: the largest crop process is
+   killed at once, then two workers fewer; > 4.5 GB for 10 min → one more. **A book starts only with ≥ 3 GB free**
+   (`crop_batch.room()`, in every crop tool, the bench included). Long jobs run through `scripts/run_resumable.sh` (it reruns a
+   killed job once memory is back) in a unit with `MemoryMax=6G` and NO `MemoryHigh` — a unit throttled at MemoryHigh reclaims
+   hard, the user slice's memory pressure rises and systemd-oomd kills by reclaim, GNOME Shell first: on 2026-10-18 03:05 a
+   bench with MemoryHigh=6G (raised by the agent) and 3 analyses beside the owner's browsers closed his session again.
 11. **Stopping a job:** `kill <pid>` with the PID from `pgrep -f "[n]ame"` in a separate command — a `pkill -f name`
    in the same command line that restarts the job kills the shell itself.

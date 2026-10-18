@@ -1755,7 +1755,10 @@ def frames(rec):
             x, y, rw, rh = (c[0] + c[2]) / 2, (c[1] + c[3]) / 2, W, H
         else:
             if c: N = c                                # a box grown for this page, or cut short by the page's edge
-            else:                                       # a page left whole, a picture: all it holds, with the book's margin
+            elif p['kind'] == 'picture':               # a picture (a cover photographed edge to edge, a plate): the whole
+                N = [0.0, 0.0, pw, ph]                 # page, centred (owner 2026-10-18, مواد البيان: «لا تحافظ على مقاس
+                                                       # الأوراق ولا شمول الغلاف» — framed on a measured part, its foot was cut)
+            else:                                       # a page left whole: all it holds, with the book's margin
                 parts = [b for b in (p.get('box'), p.get('content_box'), p.get('verify')) if b]
                 N = union(parts) if parts else [0.0, 0.0, pw, ph]
                 N = [max(0.0, N[0] - m), max(0.0, N[1] - m), min(pw, N[2] + m), min(ph, N[3] + m)]
@@ -1824,6 +1827,16 @@ def marks_to_erase(doc, i, p):
         out.append([o[0] - e, o[1] - e, o[2] + e, o[3] + e])
     return out
 
+def hide_stamp_annots(page):
+    """AN UPLOADER'S STAMP MADE AS A PDF ANNOTATION (owner 2026-10-18, خزانة الأدب ج 2 ص 18: «فيمكن حذف ما بقي ظاهرا من
+    الطابع» — the «dar-alkotob» octagon is a Stamp annotation over the page, so no patch beneath it can cover it): stamp and
+    watermark annotations are set hidden (their flag only — the annotation stays in the file, the scan is untouched)"""
+    n = 0
+    for a in page.annots() or []:
+        if a.type[1] in ('Stamp', 'Watermark') and not a.flags & pymupdf.PDF_ANNOT_IS_HIDDEN:
+            a.set_flags(a.flags | pymupdf.PDF_ANNOT_IS_HIDDEN); n += 1
+    return n
+
 def erase_stamp(doc, page, inv, p):
     """an uploader's stamp on white paper (owner 2026-10-09: «or even: erase it»): a white patch drawn over it after the
     page's own content — inside the page's turn, so it follows the page; the scan itself stays byte for byte"""
@@ -1857,6 +1870,7 @@ def apply(src, rec, dst):
     W, H = rec['size']
     for i, p in enumerate(rec['pages']):
         page = doc[i]
+        if hide_stamp_annots(page): page = doc[i]       # (an annotation stamp hidden: the page read afresh)
         inv = ~page.transformation_matrix                # the page's coordinates → PDF coordinates (before any change)
         mb = raw_box(doc, page.xref, 'MediaBox')
         if p.get('fit_whole'):                           # a page turned by /Rotate: all of it, fitted (unrotated coordinates)
@@ -1996,10 +2010,11 @@ def sheet(src, rec, outdir, pages=None, px=480):
         bpix = tp.get_pixmap(matrix=pymupdf.Matrix(z0, z0), alpha=False)
         fb = os.path.join(outdir, f'p{i + 1:04d}-before.jpg'); bpix.save(fb, jpg_quality=72)
         t = pymupdf.open(); t.insert_pdf(doc, from_page=i, to_page=i)     # what apply() draws: the stamp erased, then the turn
-        erase_stamp(t, t[0], ~t[0].transformation_matrix, p)
+        hide_stamp_annots(t[0]); erase_stamp(t, t[0], ~t[0].transformation_matrix, p)
         mv = p.get('move') or [0, 0]
         if p.get('skew') or any(mv): rotate_contents(t, t[0], p.get('skew') or 0, mv[0], mv[1])
-        page = t[0]
+        t = pymupdf.open('pdf', t.tobytes())          # drawn from the finished page (a page object kept in memory does not
+        page = t[0]                                   # show the patches appended to it: خزانة الأدب ج 2 ص 18, 2026-10-18)
         b = p.get('show') or p.get('crop') or [0, 0, page.rect.width, page.rect.height]; z = px / (b[2] - b[0])
         apix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), clip=pymupdf.Rect(b), alpha=False)
         fa = os.path.join(outdir, f'p{i + 1:04d}-after.jpg'); apix.save(fa, jpg_quality=72); t.close()

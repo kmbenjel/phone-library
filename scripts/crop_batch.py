@@ -168,6 +168,16 @@ def governed(default):
     try: return max(1, int(open(WORKERS_FILE).read().strip()))
     except (OSError, ValueError): return default
 
+def free_gb():
+    for l in open('/proc/meminfo'):
+        if l.startswith('MemAvailable:'): return int(l.split()[1]) / 1048576
+    return 99.0
+
+def room(need=3.0):
+    """a new book starts only with ≥ 3 GB free, whatever the worker count (2026-10-18 03:05: the owner's session was closed
+    by systemd-oomd while a bench ran 3 analyses beside his browsers — free memory had fallen to 0.8 GB)"""
+    return free_gb() >= need
+
 def main(list_tsv, batch, workers=4, jobs=1):
     paths = [l.strip().removeprefix('Books/') for l in open(list_tsv, encoding='utf-8') if l.strip() and not l.startswith('#')]
     done = {l.split('\t')[0] for l in open(DONE, encoding='utf-8')} if os.path.exists(DONE) else set()
@@ -204,8 +214,9 @@ def main(list_tsv, batch, workers=4, jobs=1):
             if src != work: subprocess.run(['cp', src, work], check=True)
             if staged: os.remove(src)
             futs[ex.submit(analyse, path, work, jobs)] = (path, m0)
-            while len(futs) >= min(workers, governed(workers)) + (1 if workers > 1 else 0):   # (books in flight: the
-                                                                   # governed number, and one staged ahead)
+            while futs and (len(futs) >= min(workers, governed(workers)) + (1 if workers > 1 else 0) or not room()):
+                                                                   # (books in flight: the governed number and one staged
+                                                                   # ahead — and a new one only with ≥ 3 GB free)
                 for fu in as_completed(list(futs)): finish(fu, futs.pop(fu), batch); break
         for fu in as_completed(list(futs)): finish(fu, futs.pop(fu), batch)
 

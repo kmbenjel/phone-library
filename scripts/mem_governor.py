@@ -5,7 +5,8 @@ while»). Every 20 s it reads the free memory (MemAvailable) and keeps the numbe
   * free < LOW (2 GB): if Brave/Chrome run, nobody has touched the laptop for 10 min and no sound is playing, the browsers
     are closed the normal way (SIGTERM to the main process: tabs come back on reopening); a minute later, if memory is still
     low, one worker fewer (never below 1);
-  * free < CRIT (1 GB): two workers fewer at once;
+  * free < CRIT (1 GB) or memory pressure ≥ 20 %: the EMERGENCY BRAKE — the largest crop process is killed at once (the
+    jobs are resumable: run them through scripts/run_resumable.sh), then two workers fewer;
   * free > HIGH (4.5 GB) for 10 minutes: one worker more, up to MAX (6; the laptop has 8 cores — 2 stay for the owner).
 A worker already busy finishes its book; the change applies to the next book. Logs every action to
 logs/mem-governor.log. Run as a user unit: systemd-run --user --unit=mem-governor python3 scripts/mem_governor.py"""
@@ -42,6 +43,30 @@ def browsers():
         if exe.endswith(('/brave', '/chrome')) and not any(c.startswith(b'--type=') for c in cmd): out.append((int(pid), exe))
     return out
 
+JOBS = ('crop_redo.py', 'crop_batch.py', 'crop_regress.py', 'crop_minitest.py', 'crop414.py', 'crop762.py')
+
+def pressure():
+    """the memory pressure (PSI «full avg10», %): the share of time every task waited on memory — what systemd-oomd watches"""
+    try: return float(open('/proc/pressure/memory').read().split('full ')[1].split()[0].split('=')[1])
+    except (OSError, IndexError, ValueError): return 0.0
+
+def brake():
+    """EMERGENCY BRAKE (2026-10-18 03:05: systemd-oomd closed the owner's whole session while a crop bench filled the
+    memory): the largest crop process (an analysis worker) is killed at once — the jobs are resumable, the session is not"""
+    best = None
+    for pid in os.listdir('/proc'):
+        if not pid.isdigit(): continue
+        try:
+            cmd = open(f'/proc/{pid}/cmdline', 'rb').read().decode(errors='ignore')
+            if not any(j in cmd for j in JOBS): continue
+            rss = int(next(l for l in open(f'/proc/{pid}/status') if l.startswith('VmRSS:')).split()[1])
+        except (OSError, StopIteration, ValueError): continue
+        if not best or rss > best[1]: best = (int(pid), rss, cmd.replace('\0', ' ')[:80])
+    if best:
+        try: os.kill(best[0], signal.SIGKILL); log(f'BRAKE: killed pid {best[0]} ({best[1] // 1024} MB) {best[2]}')
+        except OSError: pass
+    return best
+
 def get():
     try: return max(1, min(MAX, int(open(FILE).read().strip())))
     except (OSError, ValueError): return MAX
@@ -55,7 +80,10 @@ if __name__ == '__main__':
     log(f'governor up: max {MAX} workers, low {LOW} GB, critical {CRIT} GB (pid {os.getpid()})')
     low_since = high_since = None; closed_at = 0
     while True:
-        f = free_gb(); n = get(); now = time.time()
+        f = free_gb(); n = get(); now = time.time(); ps = pressure()
+        if f < CRIT or ps >= 20:                      # the brake first, then fewer workers
+            brake(); put(max(1, n - 2), f'{f:.1f} GB free, pressure {ps:.0f} % (critical)'); low_since = now; high_since = None
+            time.sleep(5); continue
         if f < CRIT:
             put(max(1, n - 2), f'{f:.1f} GB free (critical)'); low_since = now; high_since = None
         elif f < LOW:
@@ -76,4 +104,4 @@ if __name__ == '__main__':
                 high_since = high_since or now
                 if now - high_since >= 600: put(n + 1, f'{f:.1f} GB free for 10 min'); high_since = now
             else: high_since = None
-        time.sleep(20)
+        time.sleep(5 if f < LOW + 1 else 20)            # closer watch when memory runs short

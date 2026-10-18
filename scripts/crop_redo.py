@@ -141,7 +141,8 @@ def main(list_tsv, batch, workers=3):
             sh = os.path.join(cb.SHEETS, hashlib.md5(path.encode()).hexdigest()[:12])
             if os.path.isdir(sh) and not os.path.exists(os.path.join(v1, os.path.basename(sh))): shutil.move(sh, v1)
             futs[ex.submit(cb.analyse, path, work, 1)] = (path, n0, m0, now)
-            while len(futs) >= min(workers, cb.governed(workers)) + 1:   # the memory governor's number, one staged ahead
+            while futs and (len(futs) >= min(workers, cb.governed(workers)) + 1 or not cb.room()):   # the governor's number,
+                                                                   # one staged ahead; a new book only with ≥ 3 GB free
                 for fu in as_completed(list(futs)): finish(fu, futs.pop(fu), batch); break
         for fu in as_completed(list(futs)): finish(fu, futs.pop(fu), batch)
 
