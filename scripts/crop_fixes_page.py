@@ -1,7 +1,7 @@
 """One review page for the corrected crop method (2026-10-18): every page the owner marked in crop-review-002/004 —
 the scan, the old crop, the new crop (the latest test run: crop-minitest r4, else r3) — with his remark and the verdict.
 Comments go to data/names/review-comments.jsonl (report «crop-fixes»). → site/crop-fixes.html (+ site/crop-fixes/)
-Verdicts and rounds: data/crop/fixes-verdicts.tsv; a book the owner approved, or whose remark was settled, leaves the page
+Verdicts and rounds: data/crop/fixes-verdicts.tsv (state «wip» = his comment is being worked on: hidden until new images); a book the owner approved, or whose remark was settled, leaves the page
 (data/names/review-closed.tsv, owner 2026-10-18); after a comment that needs work, the next round shows the new images
 with his comment above and a fresh box (id «<hash>#<round>»). Images: the latest crop-minitest run that has the book.
 Usage: python3 scripts/crop_fixes_page.py"""
@@ -21,14 +21,14 @@ for l in open(J('data', 'names', 'review-comments.jsonl'), encoding='utf-8'):
     r = json.loads(l)
     if r.get('report') == 'crop-fixes': SAID[r['n']] = r.get('comment', '')
 RUNS = sorted((d for d in os.listdir(M) if d[1:].isdigit()), key=lambda d: -int(d[1:])) if os.path.isdir(M) else []
-STATE = {'ok': ('أُصلح', '#1b7f3b'), 'part': ('أُصلح جزئيا', '#9a6b00'), 'no': ('لم يُصلح بعد', '#b3261e')}
+STATE = {'wip': ('قيد العمل', '#6b655c'), 'ok': ('أُصلح', '#1b7f3b'), 'part': ('أُصلح جزئيا', '#9a6b00'), 'no': ('لم يُصلح بعد', '#b3261e')}
 out = J('site', 'crop-fixes'); os.makedirs(out, exist_ok=True); cards = []; n_ok = 0
 for l in open(J('data', 'crop', 'owner-marked-2026-10-14.tsv'), encoding='utf-8'):
     if l.startswith('#') or not l.strip(): continue
     h, rep, path, remark = l.rstrip('\n').split('\t')[:4]
     st, verdict, rnd = V.get(h, ('part', '', 1))
     rid = h if rnd == 1 else f'{h}#{rnd}'                # a new round after his comment: a fresh box, his words shown above
-    if rid in CLOSED: continue
+    if rid in CLOSED or st == 'wip': continue          # (wip: his comment is being worked on — back with new images)
     run = next((r for r in RUNS if os.path.exists(os.path.join(M, r, h, 'map.json'))), None)
     mp = json.load(open(os.path.join(M, run, h, 'map.json')))['marked'] if run else {}
     figs = []

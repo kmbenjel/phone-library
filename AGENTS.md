@@ -238,6 +238,7 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `phone_watchdog.sh` | runs detached (`setsid nohup … >> logs/phone-watchdog.log &`): pauses (SIGSTOP) crop_library/crop_batch/inspect_files/ocr_clean while the FTP port is silent, resumes when it is back on the same address; another address → stays paused, written to data/phone/new-address.txt |
 | `publish.py` | uploads `site/`, `reports/`, data tables and this guide to the phone (copy, never deletes) — only when the owner asks |
 | `publish_web.sh` | copies `site/0*.html` to the GitHub Pages copy (benjelloun.dev/library), commits only changes, pushes (`NO_WEB=1` skips) |
+| `mem_governor.py` | the crop jobs' worker count by free memory: closes idle browsers first, then fewer workers (§7.12) |
 | `phone_keepalive.py` | logs in + NOOP every 2 min so the phone's FTP app never goes idle and sleeps (owner 2026-10-12: «the phone said it will go into sleep mode for lack of use»); follows the address; `setsid nohup python3 scripts/phone_keepalive.py >> logs/phone-keepalive.log 2>&1 &` — relaunch after a laptop restart |
 | `resources_report.sh` | a few lines every 5 min (load, memory, disk, temperature, battery, top processes, phone up/away, crop batch progress) printed into a terminal the owner has open: `setsid nohup scripts/resources_report.sh /dev/pts/N &`; stops when that terminal closes |
 | `reporter_follow.sh` | keeps resources_report.sh printing in whatever GNOME Terminal the owner has open (checks every 30 s); `setsid nohup scripts/reporter_follow.sh >/dev/null 2>&1 &` — relaunch after a restart |
@@ -311,5 +312,10 @@ file whose improved copy is not in `index-now.tsv`. Nothing goes in the repo roo
    out and systemd-oomd closed the owner's whole GNOME session — every job and his desktop with it). Heavy jobs (book_crop analyses,
    OCR, inspection) run as capped user services, ≤ 3 workers: `systemd-run --user --unit=NAME --property=MemoryHigh=3G
    --property=MemoryMax=4G --nice=10 --working-directory=$PWD CMD` (linger is on, so they survive a session end too).
+   **More workers, governed (owner 2026-10-18):** the crop jobs (crop_redo, crop_batch, crop_regress) take as many books at
+   once as `data/crop/workers` says (read before each book), set by `scripts/mem_governor.py` (unit `mem-governor`): up to 6;
+   free memory < 2 GB → it closes Brave/Chrome the normal way if nobody has touched the laptop for 10 min and no sound plays,
+   then, if still short, one worker fewer; < 1 GB → two fewer; > 4.5 GB for 10 min → one more. Such a job runs in a unit with
+   `MemoryHigh=9G MemoryMax=10G`.
 11. **Stopping a job:** `kill <pid>` with the PID from `pgrep -f "[n]ame"` in a separate command — a `pkill -f name`
    in the same command line that restarts the job kills the shell itself.

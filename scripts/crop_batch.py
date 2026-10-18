@@ -160,6 +160,14 @@ class Inline:
         except Exception as e: f.set_exception(e)
         return f
 
+WORKERS_FILE = J('data', 'crop', 'workers')
+
+def governed(default):
+    """the number of books analysed at once, as scripts/mem_governor.py sets it (data/crop/workers; owner 2026-10-18: more
+    workers, fewer when memory runs short) — read before each new book; without the file, the number given"""
+    try: return max(1, int(open(WORKERS_FILE).read().strip()))
+    except (OSError, ValueError): return default
+
 def main(list_tsv, batch, workers=4, jobs=1):
     paths = [l.strip().removeprefix('Books/') for l in open(list_tsv, encoding='utf-8') if l.strip() and not l.startswith('#')]
     done = {l.split('\t')[0] for l in open(DONE, encoding='utf-8')} if os.path.exists(DONE) else set()
@@ -196,7 +204,8 @@ def main(list_tsv, batch, workers=4, jobs=1):
             if src != work: subprocess.run(['cp', src, work], check=True)
             if staged: os.remove(src)
             futs[ex.submit(analyse, path, work, jobs)] = (path, m0)
-            while len(futs) >= workers * 2:           # keep the pool fed, the staging small
+            while len(futs) >= min(workers, governed(workers)) + (1 if workers > 1 else 0):   # (books in flight: the
+                                                                   # governed number, and one staged ahead)
                 for fu in as_completed(list(futs)): finish(fu, futs.pop(fu), batch); break
         for fu in as_completed(list(futs)): finish(fu, futs.pop(fu), batch)
 
