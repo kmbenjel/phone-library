@@ -115,11 +115,15 @@ def finish(fu, meta, batch):
             if p and os.path.exists(p): os.remove(p)
 
 def main(list_tsv, batch, workers=3):
-    table = crops(); _, back = cb.moves()
+    table = crops(); fwd, back = cb.moves()
+    def follow(p):                                    # (the moves read once: cb.follow reads the change log every call)
+        seen = set()
+        while p in fwd and p not in seen: seen.add(p); p = fwd[p]
+        return p
     done = {l.split('\t')[0] for l in open(DONE, encoding='utf-8')} if os.path.exists(DONE) else set()
     # (each book at its CURRENT path — a rename or a move since the list was made, e.g. the naming pass, is followed
     # through the change log; else the phone has no such file and the book would be skipped for good)
-    paths = [cb.follow(l.strip()) for l in open(list_tsv, encoding='utf-8') if l.strip() and not l.startswith('#')]
+    paths = [follow(l.strip()) for l in open(list_tsv, encoding='utf-8') if l.strip() and not l.startswith('#')]
     paths = [p for p in paths if not any(n in done for n in cb.names_of(p, back))]   # (done under any of its names)
     print(f'{len(paths)} books to redo', flush=True)
     v1 = cb.SHEETS + '-v1'; os.makedirs(v1, exist_ok=True); later = []
