@@ -828,7 +828,7 @@ def whiten(a, z, rect):
     b[max(0, y0):max(0, y1), max(0, x0):max(0, x1)] = a[max(0, y0):max(0, y1), max(0, x0):max(0, x1)]
     return b
 
-def dot_fields(page):
+def dot_fields(page, a500=None):
     """A SHADOW PRINTED AS DOTS ON A BITONAL SCAN (owner 2026-10-18, صبح الأعشى ج 5 ص 47: «عدم الجرأة على تجاوز سواد
     الطباعة», then «لا جديد فيها»): a 1-bit scanner renders the grey of a photocopy's edge, a sheet's shadow or a curled
     corner as a field of loose dots; measured at a lower resolution they merge into blots and «text» that held the frame
@@ -842,6 +842,11 @@ def dot_fields(page):
     info = [x for x in page.get_image_info() if x.get('bpc') == 1]
     ar = lambda x: abs((x['bbox'][2] - x['bbox'][0]) * (x['bbox'][3] - x['bbox'][1]))
     if not info or sum(ar(x) for x in info) < 0.5 * page.rect.width * page.rect.height: return []
+    # a quick look first, on the page 500 px wide as the first look renders it (a500): dots show there as faint grey away
+    # from any letter — clean pages hold 200–1,500 such pixels, shaded ones 3,000–10,000 (صبح الأعشى ج 5): 0.6 s a page saved
+    if a500 is not None:
+        fz = (a500 >= 170) & (a500 <= 245) & ~ndimage.binary_dilation(a500 < 150, iterations=3)
+        if int(fz.sum()) < 2000: return []
     z = min(max(max((x['width'] * x['height'] / max(1e-6, ar(x))) ** 0.5 for x in info), 2.0), 300 / 72)
     pix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), colorspace=pymupdf.csGRAY, alpha=False)
     b = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width] < 128
@@ -981,11 +986,12 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
         if cs: st += cs; rec['colour_stamp'] = cs
         if st: rec['stamp'] = st
         ex0 = [pad_box(b, r.width) for b in st] if st else None
-        dots = dot_fields(page)                       # a shadow printed as dots (bitonal scans): not measured, covered later
+        a, z = gray(page, 500)
+        dots = dot_fields(page, a)                    # a shadow printed as dots (bitonal scans): not measured, covered later
         if dots: rec['dots'] = dots; ex0 = (ex0 or []) + dots
         sh = sheet_rect(page)                         # a grey sheet on a light bed: measured inside its edges
         if sh: rec['sheet'] = sh; rec['sheet_fill'] = sh   # (kept to fill beyond its edge even if not used for measuring)
-        a, z = gray(page, 500); a = whiten(a, z, sh)
+        a = whiten(a, z, sh)
         mk = marks(a, z, r.width, ex0)
         if sh and mk.get('text') and not inside([mk['text'][0] - 0.01 * r.width, mk['text'][1] - 0.01 * r.height,
                                                 mk['text'][2] + 0.01 * r.width, mk['text'][3] + 0.01 * r.height], sh):
