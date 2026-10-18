@@ -11,6 +11,14 @@ from build_catalog import split_folder
 J = lambda p: os.path.join(ROOT, p)
 LINK = re.compile(r'archive\.org/(?:details|download|stream)/([^/\s]+)/(.+?)\s*$')
 RAW = re.compile(r'^(\d+)_([^/]*)\.pdf$', re.I)
+# an archive.org item's own file names, letters then the volume (2026-10-18 deep check: 158 files in 38 sets, «trm01.pdf»,
+# «trm01p.pdf» the preface of 01, «shmiradat0.pdf» the front) — the same treatment as «NN_ID.pdf» / «NN_IDp.pdf»
+RAW2 = re.compile(r'^[A-Za-z][A-Za-z_-]*?(\d{1,3})([a-z]?)\.pdf$')
+def raw(n):
+    m = RAW.match(n)
+    if m: return m.group(1), m.group(2)
+    m = RAW2.match(n)
+    return (m.group(1), m.group(2) or '0') if m else None
 
 def main(index, out):
     now = [(p, int(s)) for p, s in csv.reader(open(index), delimiter='\t')]
@@ -29,18 +37,18 @@ def main(index, out):
     taken = {f: set(v) for f, v in names.items()}
     for p, s in now:
         folder, n = p.rsplit('/', 1)
-        m = RAW.match(n)
+        m = raw(n)
         if not m or p.startswith('فهارس الويب/'): continue
         pr = prov.get(p, {})
         item, orig = pr.get('archive_id', ''), pr.get('orig_name', '') or n
         hit = links.get((item, orig)) or links.get((item, orig[:-4]))
         t, a, _ = split_folder(folder.split('/', 1)[1])
         short = clean(short_title(t, a))
-        others = [o for o in names[folder] if not RAW.match(o)]
+        others = [o for o in names[folder] if not raw(o)]
         width = max([len(mm.group(1)) for o in names[folder] for mm in [re.match(r'^(\d{2,3})[ _-]', o)] if mm] or [2])
-        multi = sum(1 for o in names[folder] if re.match(r'^\d{1,3}_', o)) > 1 or any(re.match(r'^\d+ - ', o) for o in others)
+        multi = sum(1 for o in names[folder] if raw(o) and len(raw(o)[0]) <= 3) > 1 or any(re.match(r'^\d+ - ', o) for o in others)
         new = None
-        vol, rest = m.group(1), m.group(2)
+        vol, rest = m
         if len(vol) >= 4:                                   # "<archive id>_<title words>.pdf": the book itself
             new = f'{fit(clean(t), 180)}.pdf' if len(names[folder]) == 1 else None
             how = 'single book file, named after its folder title'
