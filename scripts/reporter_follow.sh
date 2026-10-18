@@ -6,7 +6,7 @@ cd "$(dirname "$0")/.."
 while :; do
   for p in $(pgrep -x zsh; pgrep -x bash); do
     t=$(ps -o tty= -p "$p" 2>/dev/null | tr -d ' '); [[ $t == pts/* ]] || continue
-    par=$(ps -o cmd= -p "$(ps -o ppid= -p "$p")" 2>/dev/null)
+    par=$(ps -o cmd= -p "$(ps -o ppid= -p "$p" | tr -d ' ')" 2>/dev/null)   # (ps refuses a pid with a leading space)
     [[ $par == *gnome-terminal-server* ]] || continue
     pgrep -f "resources_report.sh /dev/$t " >/dev/null || setsid nohup scripts/resources_report.sh "/dev/$t" 300 >/dev/null 2>&1 &
   done

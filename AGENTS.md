@@ -239,7 +239,7 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `publish.py` | uploads `site/`, `reports/`, data tables and this guide to the phone (copy, never deletes) — only when the owner asks |
 | `publish_web.sh` | copies `site/0*.html` to the GitHub Pages copy (benjelloun.dev/library), commits only changes, pushes (`NO_WEB=1` skips) |
 | `watch_comments.py` | one line per settled owner comment on the review pages (and lasting phone up/away): an agent watches it and acts on each comment as it comes |
-| `start_services.sh` | after a reboot or a lost session: starts the governor, phone keep-alive and watchdog, review server again (each skipped if it runs) |
+| `start_services.sh` | after a reboot or a lost session: starts the governor, phone keep-alive and watchdog, review server, the terminal reporter and the two inhibitors (lid closed, idle) again — each skipped if it runs. Run it from a terminal of the owner's session |
 | `run_resumable.sh` | runs a resumable crop job in the pen until it ends on its own; after a kill it waits for memory and goes on (§7.12) |
 | `mem_governor.py` | the crop jobs' worker count by free memory: closes idle browsers first, then fewer workers (§7.12) |
 | `phone_keepalive.py` | logs in + NOOP every 2 min so the phone's FTP app never goes idle and sleeps (owner 2026-10-12: «the phone said it will go into sleep mode for lack of use»); follows the address; `setsid nohup python3 scripts/phone_keepalive.py >> logs/phone-keepalive.log 2>&1 &` — relaunch after a laptop restart |
