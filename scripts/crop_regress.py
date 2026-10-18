@@ -19,9 +19,11 @@ def local_copy(path):
     if os.path.exists(out): return out
     idx = [l.split('\t')[0] for l in open(os.path.join(ROOT, 'data/phone/index-now.tsv'), encoding='utf-8')]
     hits = [p for p in idx if N(p) == N(path)]
-    if not hits:                                     # renamed since the case was written: followed through the change log
-        import crop_batch as cb
-        hits = [p for p in idx if N(p) == N(cb.follow(path))]
+    if not hits:                                     # renamed since the case was written: followed through the change log,
+        import crop_batch as cb                      # only to the first name of its chain that is on the phone (the log
+        fwd, _ = cb.moves(); have = {N(p): p for p in idx}; q, seen = path, set()   # also holds the crop's own swaps)
+        while N(q) not in have and q in fwd and q not in seen: seen.add(q); q = fwd[q]
+        hits = [have[N(q)]] if N(q) in have else []
     if len(hits) != 1 or not hits[0].endswith('.pdf'): raise SystemExit(f'not on the phone (index-now): {path}')
     subprocess.run(['flock', '/tmp/phone-ftp.lock', 'rclone', 'copyto', '--retries', '3', 'phone:Books/' + hits[0], out], check=True)
     # a book already cropped on the phone: its original bytes are the first <original size> bytes (the crop is an appended

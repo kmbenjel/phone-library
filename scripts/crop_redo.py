@@ -116,10 +116,11 @@ def finish(fu, meta, batch):
 
 def main(list_tsv, batch, workers=3):
     table = crops(); fwd, back = cb.moves()
-    def follow(p):                                    # (the moves read once: cb.follow reads the change log every call)
-        seen = set()
-        while p in fwd and p not in seen: seen.add(p); p = fwd[p]
-        return p
+    idx = {l.split('\t')[0] for l in open(J('data', 'phone', 'index-now.tsv'), encoding='utf-8') if l.strip()}
+    def follow(p):                                    # ONLY a path no longer on the phone is followed, to the first path
+        seen = set()                                  # of its chain that is (the log also holds the crop's own swaps:
+        while p not in idx and p in fwd and p not in seen: seen.add(p); p = fwd[p]   # original → «نسخ مستبعدة/__المستبدل»
+        return p                                      # — followed blindly, 739 books led to their set-aside originals)
     done = {l.split('\t')[0] for l in open(DONE, encoding='utf-8')} if os.path.exists(DONE) else set()
     # (each book at its CURRENT path — a rename or a move since the list was made, e.g. the naming pass, is followed
     # through the change log; else the phone has no such file and the book would be skipped for good)
