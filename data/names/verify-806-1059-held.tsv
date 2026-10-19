@@ -1,0 +1,65 @@
+# Readings 806–1059 checked against the title pages, 2026-10-19 (item, reading n, what is wrong). 122 clean ones applied as plan 332; these are held until their readings are corrected (title_read_fix.py).
+007	814	bare year «1351» kept, publisher «المطبعة التونسية تونس» dropped (rule: the year gives way first)
+018	830	role «كتب حواشيه … ووضع فهارسه العامة …» got a «ت» in front
+020	833	unverified: the stored first pages are blank
+022	835	«1912» added, only «1330 هجرية» printed
+023	837	unverified: stored pages are the introduction; year 1963 (not an old print) and no publisher
+026	842	role words: «منقحة» belongs to «الطبعة الثانية منقحة», not to the role
+028	846	unverified: stored pages are marbled endpapers
+030	850	title «ومعه جزء فيه قراءات النبي لأبي عمر حفص بن عمر الدوري»; the author field doubles المعصراوي (he is «إعداد وتحقيق»)
+031	851	wrong author: «تأليف العلامة السمنودي شيخ عموم المقارئ» (إبراهيم شحاتة السمنودي); سعيد يوسف السمنودي is «حققه وقدم له ووضع حواشيه»
+032	852	title typo «وزيادتهم» — printed «وزياداتهم»
+033	853	title cut inside the verse «يوم يكشف عن ساق» and «على الصابوني والغزالي»
+036	856	roles wrong and names doubled: «جمع وتحقيق علي بن محمد العمران — ويليه مؤلفات الإمام ابن قيم الجوزية إعداد محمد عزير شمس — دار عطاءات العلم»
+038	859	title is a catalogue form; printed «جذوة المقتبس في تاريخ علماء الأندلس»
+045	867	author order «ابن الجوزي أبو الفرج عبد الرحمن بن علي» → «أبو الفرج ابن الجوزي»; title page الجزء الأول (pages?)
+053	875	publisher «دار النشر» invented (the imprint names only the author «ح عبد الله محمد سفيان الحكمي» and الرياض)
+054	876	title misread: printed «ورد ذل السؤال بالكتب والشفاعة», not «بالكسب»
+056	878	printed role «ضبطه وصححه» (not tahqiq) became «ت»
+060	884	printed role «قدمه ونشره» became «ت»; «نشر إلكتروني المشهد الموريتاني» is the forum that uploaded it (its «مع تحيات» page), not a publisher
+079	903	printed role «شرح وتعليق» became «ت»
+081	905	printed role «شرحه وقدم له» became «ت»
+061-078,082	885-902,906	one set: «موسوعة روائع الشعر العربي» (دار الراتب الجامعية، 10 vols on its cover) — gather the 18 themes and its front in one series folder, each «<theme> في الشعر العربي - <author>.pdf», not 18 loose singles; 082 «الواجهة والمقدمة» is a label
+083	907	printed role «علق عليه وخرج أحاديثه» became «ت»
+086	910	printed role «مراجعة وتدقيق» became «ت»
+092	916	editor misread: printed «عبد العزيز بن صالح المحمود الشافعي»
+093	917	printed role «اعتنى بها» became «ت»
+095	919	publisher as printed «شركة مكتبة ومطبعة مصطفى البابي الحلبي وأولاده بمصر»; «القاهرة» not printed; old print: «1366 هـ 1947»
+100	924	publisher misread: cover and imprint «شركة دار المشاريع» (not «دار المنافع»); «تونس» is where the author lived, not the city of print
+103	927	printed role «اعتنى به وقدم له وخرج أحاديثه» became «ت»; the cover shows «دار العاصمة», the name says «دار الصميعي» — check the imprint
+104	928	publisher printed «غراس للنشر والتوزيع» الكويت (not «دار غراس»)
+105	929	editor misread: printed «عبد العزيز بن صالح المحمود الشافعي»
+112	936	the cover reads «دار المعراج» (not «دار المنهاج الرياض») — check the imprint; «تقديم أبي الفضل محمد بن عبد الله القونوي» omitted
+122	946	the editor «تحقيق وتعليق وتقديم حميد لحمر» and the publisher «دار الغرب الإسلامي» are missing; «- شرح» appended; the author already in the title
+117	941	printed role «جمع وإعداد وتعليق» became «ت»
+118	942	printed role «اعتنى بنشرها» became «ت»
+133	960	printed role «اعتنى بإخراجه وعلق على مسائله» became «ت»
+134	962	editor misread: printed «مازن سعد الزبيبي» (not «الربيعي»); «تقديم محمد خير هيكل» omitted
+131	958	printed role «ضبط نصه واعتنى به» became «ت»
+136	964	title cut: «… الدينار والدرهم والصاع والمد»; printed role «تخريج ودراسة» became «ت»; publisher «المجمع الثقافي أبو ظبي» missing
+143	971	printed role «باعتناء» became «ت»
+144	972	printed role «اعتنى بها» became «ت»; publisher «دار الآثار صنعاء» missing
+147	975	printed role «اعتنى بنشرها وقدم لها» became «ت»
+150	978	author printed «محمد بن عوض بن غالب الحيدري» — the name says «الحميري»
+151	979	title misread: printed «والمختلفين فرضا» (not «والمؤتلفين»)
+152	980	printed roles «خرج أحاديثه عمرو عبد المنعم سليم — علق عليه حسن زكريا فليفل» became «ت»
+155	983	printed role «أعده للنشر» became «ت»
+159	988	publisher as the owner wrote it before: «وزارة الأوقاف والشؤون الإسلامية المغرب» — «مطبعة فضالة المحمدية» is the printer; year «1427 هـ 2006» (cover) not «2006»
+164	996	the author aside «ابن رشد الجد» became its own segment — author «ابن رشد الجد»
+170	1005	«- واجهة طقم - تاريخ وتراجم الأندلس»: genre and set-front words in the name (the front of the «المكتبة الأندلسية» set: a label «الواجهة» in that set folder)
+172	1007	«- واجهة طقم» in the name
+171	1006	issue 82 of «عالم المعرفة» (الكويت 1984): belongs in that series folder as «082 - تشكيل العقل الحديث - كرين برينتون - ترجمة شوقي جلال - مراجعة صدقي حطاب.pdf»; «ت شوقي جلال ترجمة وصدقي حطاب مراجعة - مترجم» is garbled
+195	1042	printed role «جمع وإعداد» became «ت»
+198	1047	printed role «شرحه وكتب هوامشه وقدم له» became «ت»
+199	1048	a 2025 journal article: «مجلة ابن خلدون للدراسات والأبحاث المجلد 5 العدد 11 2025 - مستل»
+196	1044	unverified: the stored pages are a library binding
+197	1046	publisher «دار قتيبة» (1411/1991) missing
+202	1057	title garbled with authors; printed «البديعيات الخمس في مدح النبي المختار والصحابة الكرام — مجموعة عن نسخ خط قديمة — طبعت بمطبعة المعارف … بمصر سنة 1897» (an old print: publisher and year belong in the name)
+178	1016	the compiler is the author: «اختيار وترتيب محمد ياسين الفاداني» (Ibn Hajar is the subject); publisher «دار البشائر الإسلامية» dropped
+038,170,180	859,1005,1019	volumes of one series «المكتبة الأندلسية» (دار الكتاب المصري ودار الكتاب اللبناني): جذوة المقتبس = vols 7–8, المعجم في أصحاب الصدفي = vol 16, plus the set front — a series folder
+183	1024	title cut at «والإنكار» (meaningless); الحداد is the author of the companion «المنارة على التجارة» (ومعه), not an editor
+186	1028	unverified: the stored pages are the text, no title page
+188	1030	printed role «اعتنى به» became «ت»
+193	1038	author repeats the title; an offprint: «مجلة الأحمدية العدد 10 المحرم 1423 هـ مارس 2002 - مستل»
+200	1051	see the sample: «محمد الزهري الغمراوي» commentator (not «الأزهري», not «ت»); publisher «المكتبة الشعبية بيروت»
+201	1055	an offprint: «مستل» missing
