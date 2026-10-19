@@ -3,7 +3,11 @@ moves marked, a filter box, a comment per row and «I approve the plan» at the 
 data/names/review-comments.jsonl, report «plan-NNN»; row ids = line numbers in the plan).
 A plan rebuilt after an earlier review shows, per row, the earlier proposal and the owner's comment on it
 (--prev plans/MMM-x.tsv: rows matched by their source path; comments of report «plan-MMM»), «unchanged» or «changed».
-Usage: python3 scripts/plan_review_page.py plans/NNN-name.tsv [--prev plans/MMM-name.tsv]   → site/plan-NNN.html"""
+Several plans on one page (owner 2026-10-19: «what have I not checked in the browser?» — the plans applied since his last
+review): each plan under its own heading (Arabic line from data/review/plan-titles-ar.tsv «NNN<TAB>text»), deletions
+(rows «path<TAB>reason») shown as such, row ids «NNN:k», report «plan-<first>-<last>».
+Usage: python3 scripts/plan_review_page.py plans/NNN-name.tsv [--prev plans/MMM-name.tsv]   → site/plan-NNN.html
+       python3 scripts/plan_review_page.py plans/NNN-a.tsv plans/MMM-b.tsv …                 → site/plan-NNN-MMM.html"""
 import csv, html, json, os, re, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -39,19 +43,38 @@ def previous(prev):
     seen = max([int(k) for k, v in com.items() if k.isdigit()] or [0])        # rows the owner reached
     return {a: v + (k <= seen,) for k, (a, v) in enumerate(out.items(), 1)}, pn
 
-def main(plan, prev=None):
-    name = os.path.basename(plan).removesuffix('.tsv'); num = name.split('-')[0]
-    rows = [l.rstrip('\n').split('\t') for l in open(plan, encoding='utf-8') if l.strip()]
-    E, trs, moved = html.escape, [], 0
+def plan_titles():
+    f = os.path.join(ROOT, 'data', 'review', 'plan-titles-ar.tsv')
+    return dict(l.rstrip('\n').split('\t', 1) for l in open(f, encoding='utf-8') if '\t' in l) if os.path.exists(f) else {}
+
+def main(plans, prev=None):
+    multi = len(plans) > 1
+    names = [os.path.basename(p).removesuffix('.tsv') for p in plans]
+    nums = [n.split('-')[0] for n in names]
+    num = f'{nums[0]}-{nums[-1]}' if multi else nums[0]
+    logged = {r[5] for r in csv.reader(open(os.path.join(ROOT, 'data', 'changes', 'changes.tsv'), encoding='utf-8'), delimiter='\t') if len(r) > 5}
+    rows = []                                           # (plan number, plan name, row id, from, to or '' for a deletion, reason)
+    for p, name, pnum in zip(plans, names, nums):
+        for k, r in enumerate((l.rstrip('\n').split('\t') for l in open(p, encoding='utf-8') if l.strip()), 1):
+            a, b, why = r[:3] if len(r) >= 3 else (r[0], '', r[1] if len(r) > 1 else '')
+            rows.append((pnum, name, f'{pnum}:{k}' if multi else str(k), a, b, why))
+    applied = all(n in logged for n in names)
+    titles = plan_titles()
+    E, trs, moved, dels = html.escape, [], 0, 0
     old, pn = previous(prev)
-    applied = any(r[5:6] == [name] for r in csv.reader(open(os.path.join(ROOT, 'data', 'changes', 'changes.tsv'), encoding='utf-8'), delimiter='\t'))
     n_seen = n_changed = 0
-    for k, (a, b, why) in enumerate(rows, 1):
-        ca, cb = a.split('/')[1], b.split('/')[1]
-        oa, ob = a.split('/', 2)[2], b.split('/', 2)[2]
+    for i, (pnum, name, k, a, b, why) in enumerate(rows):
+        if multi and (i == 0 or rows[i - 1][0] != pnum):
+            n = sum(r[0] == pnum for r in rows)
+            trs.append(f'<tr class="plan"><td colspan="3"><h2>الخطة {E(pnum)}: {E(titles.get(pnum, name))}</h2>'
+                       f'<span class="cat">{n} صفا — {"طُبّقت على الهاتف" if name in logged else "لم تطبق"}</span></td></tr>')
+        ca = a.split('/')[1]
+        cb = b.split('/')[1] if b else ca
+        oa = a.split('/', 2)[2]
+        ob = b.split('/', 2)[2] if b else 'يُحذف'
         sec = f'<span class="sec">{E(ca)} ← {E(cb)}</span>' if ca != cb else f'<span class="cat">{E(ca)}</span>'
-        moved += ca != cb
-        flag = ' other' if 'other-' in why else ''
+        moved += ca != cb; dels += not b
+        flag = (' other' if 'other-' in why else '') + ('' if b else ' del')
         hist = ''
         if a in old:
             ob13, cm, seen = old[a]
@@ -77,9 +100,10 @@ table{{width:100%;border-collapse:collapse;background:var(--card)}} td{{border-t
 .why{{font-size:.85rem}} td.review{{width:28%}} textarea{{width:100%;font:inherit;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px}}
 .bar{{position:sticky;top:0;background:var(--bg);padding:8px 0;display:flex;gap:14px;flex-wrap:wrap;align-items:center;z-index:1}}
 input[type=search]{{font:inherit;padding:4px 8px;min-width:240px}} .warn{{background:#fff3cd;color:#5c4400;padding:8px 12px;border-radius:8px}}
-</style></head><body><main><h1>خطة {E(num)}: تسمية الكتب المفردة من صفحات عناوينها</h1>
+.del .new{{color:#b91c1c}} tr.plan h2{{font-size:1.1rem;margin:.6em 0 .1em}}
+</style></head><body><main><h1>{f"الخطط {E(nums[0])}–{E(nums[-1])}: ما طُبّق على الهاتف بعد آخر مراجعة لك" if multi else f"خطة {E(num)}: تسمية الكتب المفردة من صفحات عناوينها"}</h1>
 <p class="lead">القواعد بعد ملاحظاتك: المدينة بعد الناشر («مطبعة حجازي بالقاهرة»)، السنة إن كانت على الغلاف أو كانت الطبعة قديمة، الأسماء كاملة أو بالكنية واللقب المشهورين، الدور كما طُبع إن لم يكن تحقيقا («صححه وعلق عليه»، «تنسيق»، «قدم لها»)، لا «ويليه» ولا «في» من عندي. ما طلبتَ حذفه أو استبداله بالكتاب كاملا ليس في هذه الخطة.</p>
-<p class="lead">{len(rows)} صفا؛ منها {moved} تنتقل إلى قسم آخر (بالبرتقالي). {"طُبّقت على الهاتف، ويمكن التراجع عنها؛ علّق على ما تريد تصحيحه وأصلحه هو ومثيلاته. " if applied else "لم يُطبق شيء على الهاتف. "}{f"راجعتَ {n_seen} منها في الخطة {E(pn)}، تغيّر منها {n_changed} بعد ملاحظاتك؛ الباقي جديد عليك. " if pn else ""}{"" if applied else "علّق على أي صف، ثم علّم الموافقة إن رضيت بالباقي."}</p>
+<p class="lead">{len(rows)} صفا{f" في {len(plans)} خطة" if multi else ""}؛ منها {moved} تنتقل إلى قسم آخر (بالبرتقالي){f" و{dels} حذف (بالأحمر)" if dels else ""}.{"طُبّقت على الهاتف، ويمكن التراجع عنها؛ علّق على ما تريد تصحيحه وأصلحه هو ومثيلاته. " if applied else "لم يُطبق شيء على الهاتف. "}{f"راجعتَ {n_seen} منها في الخطة {E(pn)}، تغيّر منها {n_changed} بعد ملاحظاتك؛ الباقي جديد عليك. " if pn else ""}{"" if applied else "علّق على أي صف، ثم علّم الموافقة إن رضيت بالباقي."}</p>
 <p class="warn" id="noserver" hidden>لحفظ التعليقات افتح الصفحة من الخادم المحلي: http://127.0.0.1:8765/plan-{E(num)}.html</p>
 <div class="bar"><span class="review" data-n="approve"><label><input type="checkbox" class="chk"> أوافق على الخطة (مع ما علقت عليه)</label><span class="st"></span></span>
 <input type="search" id="q" placeholder="تصفية: كلمة أو قسم"><label><input type="checkbox" id="onlymoved"> الأقسام المنقولة فقط</label>
@@ -118,4 +142,5 @@ load();
 
 if __name__ == '__main__':
     a = sys.argv[1:]
-    main(a[0], a[a.index('--prev') + 1] if '--prev' in a else None)
+    prev = a[a.index('--prev') + 1] if '--prev' in a else None
+    main([x for x in a if x.endswith('.tsv') and x != prev], prev)

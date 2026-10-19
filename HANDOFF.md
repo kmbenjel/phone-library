@@ -3,6 +3,28 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-19 21:45 — owner's answers on the six open decisions; phone FTP app off since 21:17 (Claude)
+- Owner: «1 نعم / 2 جيد، لكن أبق التعازي أيضا / 3 إن كان مخطوطا حقا، قد تكون وقفت على صور من المخطوط فقط من التقديم /
+  4 اعتن / 5 نعم / 6 الذي تعرفه مناسبا، وكمل الكتب والسلسلات الناقصة».
+- Ready, NOT applied (phone FTP refused from 21:17): plans/352-wadih-two-editions.tsv (الرسالة/الرشد split — the «نسخة
+  أخرى» labels were mixed: 01 أخرى/02/03 = الرشد, 01 مجلد1/02 أخرى/03 أخرى/04/05 = الرسالة), plans/353-poetry-encyclopedia-folder.tsv
+  (19 files of archive.org WAQ61022 = complete «موسوعة روائع الشعر العربي» → one series folder, booklets un-numbered),
+  plans/355-not-books-delete.tsv (delete_files.py: 1091, 1162, بحر المذهب 07 placeholder — vol. 7 of the إحياء التراث
+  edition is missing at Waqfeya and every upload; the العلمية edition is complete), data/queue/354-taj-tashil.tsv (file:///
+  scratchpad: تاج التراجم دار القلم from waq9934 via alfirdwsiy2018_gmail_0779_201809; التسهيل 4 vols archive.org Tashil_Massalek).
+- Still to do with the phone: almtoon (read the 15 books' title pages, name/move; articles+condolences → one folder
+  «مقالات وفوائد عبد الله بن محمد سفيان الحكمي - موقع المتون العلمية»; delete m-37 and the weaker copy of the المكثرين poem);
+  Binder1/10/11/12 of «تاج التراجم»: owner asks to check the WHOLE file is a manuscript, not manuscript plates in a printed
+  edition's introduction, then name «… - مخطوط» and move (Binder1 = إرشاد المهتدين للسيوطي, 10 = الصواعق المحرقة للهيتمي,
+  11 = المشتبه للذهبي?, 12 = أدلة الحنفية, title unread); معالم السنن «05 (الفهارس العامة)» 19 KB: the Halab edition is 4 vols with
+  an index in each (ms4 ends with «فهرس الجزء الرابع») — look at the file: a cover → «00 - الواجهة», else delete;
+  waq1338/02_1338.pdf (التنبيه والإيقاظ, القدسي) downloaded to scratchpad — put beside «ذيل تذكرة الحفاظ للذهبي.pdf» (01_1338)
+  in one folder after reading 01's title page; المكتبة الأندلسية: «التاريخ/المكتبة الأندلسية - فرانشيسكو قوديرة…» is in fact the
+  الإبياري series (archive.org MakAnd, Waqfeya 66a88e0287c55ca3e12f3b79, 18 vols, complete) → rename; loose copies of its books
+  (859 جذوة, 1019 المعجم, بغية الملتمس - ابن عميرة, الصلة - ابن بشكوال, التكملة - ابن الأبار, فهرسة ابن خير ت الإبياري,
+  1005 the واجهة) → same_scan, keep the best. 1190/1271 (other «المكتبة الأندلسية» series) stay single books.
+- New: scripts/plan_review_page.py takes several plans → site/plan-322-351.html (opened in Brave for the owner).
+
 ## 2026-10-19 16:40 — state before a session reset (Claude)
 - RUNNING (do not restart, do not touch book_crop.py while it runs — see memory regression-cache-key): systemd user unit
   `crop-start-redo-i` (scratch/start_redo_2026-10-18i.sh): the crop regression (logs/crop-regress-2026-10-18j.log) →
