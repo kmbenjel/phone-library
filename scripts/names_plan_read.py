@@ -73,7 +73,11 @@ def main(out, held_out):
         if sec and sec not in sections: hold(r, f'section «{sec}» is not in the library'); continue
         dest_cat = sec or cat
         new = name_of(r) + '.pdf'
-        if key(new.removesuffix('.pdf')) in plain[dest_cat]: hold(r, 'the name is taken in the section'); continue
+        # the book's own current name is not «taken»: «X (ت فلان - دار)» → «X - ت فلان - دار» compares equal once the
+        # parentheses go (2026-10-19: رسائل علمية وأدبية held against itself)
+        own = key(src.split('/')[-1].removesuffix('.pdf')) if len(src.split('/')) == 2 and cat == dest_cat else None
+        if key(new.removesuffix('.pdf')) in plain[dest_cat] and key(new.removesuffix('.pdf')) != own:
+            hold(r, 'the name is taken in the section'); continue
         if len(src.split('/')) == 2 and src == f'{dest_cat}/{new}': c['already right'] += 1; continue
         plain[dest_cat].add(key(new.removesuffix('.pdf')))
         why = f"title page read (book {n}, {r['verdict']})" + (f'; section {cat} → {dest_cat}' if dest_cat != cat else '')
