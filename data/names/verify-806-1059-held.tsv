@@ -1,11 +1,11 @@
 # Readings 806–1059 checked against the title pages, 2026-10-19 (item, reading n, what is wrong). 122 clean ones applied as plan 332; 51 corrected by hand names (name-override.tsv) and applied as plan 333 (marked «done 333»); the rest still held.
 007	814	bare year «1351» kept, publisher «المطبعة التونسية تونس» dropped (rule: the year gives way first)	done 333
 018	830	role «كتب حواشيه … ووضع فهارسه العامة …» got a «ت» in front	done 333
-020	833	unverified: the stored first pages are blank
+020	833	unverified: the stored first pages are blank	done 334 (file read)
 022	835	«1912» added, only «1330 هجرية» printed	done 333
-023	837	unverified: stored pages are the introduction; year 1963 (not an old print) and no publisher
+023	837	unverified: stored pages are the introduction; year 1963 (not an old print) and no publisher	done 334 (file read)
 026	842	role words: «منقحة» belongs to «الطبعة الثانية منقحة», not to the role	done 333
-028	846	unverified: stored pages are marbled endpapers
+028	846	unverified: stored pages are marbled endpapers	done 334 (file read)
 030	850	title «ومعه جزء فيه قراءات النبي لأبي عمر حفص بن عمر الدوري»; the author field doubles المعصراوي (he is «إعداد وتحقيق»)	done 333
 031	851	wrong author: «تأليف العلامة السمنودي شيخ عموم المقارئ» (إبراهيم شحاتة السمنودي); سعيد يوسف السمنودي is «حققه وقدم له ووضع حواشيه»	done 333
 032	852	title typo «وزيادتهم» — printed «وزياداتهم»	done 333
@@ -26,10 +26,10 @@
 093	917	printed role «اعتنى بها» became «ت»	done 333
 095	919	publisher as printed «شركة مكتبة ومطبعة مصطفى البابي الحلبي وأولاده بمصر»; «القاهرة» not printed; old print: «1366 هـ 1947»	done 333
 100	924	publisher misread: cover and imprint «شركة دار المشاريع» (not «دار المنافع»); «تونس» is where the author lived, not the city of print	done 333
-103	927	printed role «اعتنى به وقدم له وخرج أحاديثه» became «ت»; the cover shows «دار العاصمة», the name says «دار الصميعي» — check the imprint
+103	927	printed role «اعتنى به وقدم له وخرج أحاديثه» became «ت»; the cover shows «دار العاصمة», the name says «دار الصميعي» — check the imprint	done 334 (file read)
 104	928	publisher printed «غراس للنشر والتوزيع» الكويت (not «دار غراس»)	done 333
 105	929	editor misread: printed «عبد العزيز بن صالح المحمود الشافعي»	done 333
-112	936	the cover reads «دار المعراج» (not «دار المنهاج الرياض») — check the imprint; «تقديم أبي الفضل محمد بن عبد الله القونوي» omitted
+112	936	the cover reads «دار المعراج» (not «دار المنهاج الرياض») — check the imprint; «تقديم أبي الفضل محمد بن عبد الله القونوي» omitted	done 334 (file read)
 122	946	the editor «تحقيق وتعليق وتقديم حميد لحمر» and the publisher «دار الغرب الإسلامي» are missing; «- شرح» appended; the author already in the title	done 333
 117	941	printed role «جمع وإعداد وتعليق» became «ت»	done 333
 118	942	printed role «اعتنى بنشرها» became «ت»	done 333
@@ -52,7 +52,7 @@
 195	1042	printed role «جمع وإعداد» became «ت»	done 333
 198	1047	printed role «شرحه وكتب هوامشه وقدم له» became «ت»	done 333
 199	1048	a 2025 journal article: «مجلة ابن خلدون للدراسات والأبحاث المجلد 5 العدد 11 2025 - مستل»	done 333
-196	1044	unverified: the stored pages are a library binding
+196	1044	unverified: the stored pages are a library binding	done 334 (file read)
 197	1046	publisher «دار قتيبة» (1411/1991) missing	done 333
 202	1057	title garbled with authors; printed «البديعيات الخمس في مدح النبي المختار والصحابة الكرام — مجموعة عن نسخ خط قديمة — طبعت بمطبعة المعارف … بمصر سنة 1897» (an old print: publisher and year belong in the name)	done 333
 178	1016	the compiler is the author: «اختيار وترتيب محمد ياسين الفاداني» (Ibn Hajar is the subject); publisher «دار البشائر الإسلامية» dropped	done 333
