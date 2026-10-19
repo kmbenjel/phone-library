@@ -3,6 +3,32 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-19 16:40 — state before a session reset (Claude)
+- RUNNING (do not restart, do not touch book_crop.py while it runs — see memory regression-cache-key): systemd user unit
+  `crop-start-redo-i` (scratch/start_redo_2026-10-18i.sh): the crop regression (logs/crop-regress-2026-10-18j.log) →
+  0 failures → crop_redo of the 1,122 books (data/crop/redo-list-2026-10-17.tsv, crop-redo-001, run_resumable) →
+  crop_library. Regression at 16:40 UTC: 15 of 31 books passed, 0 FAIL; one worker, ~25–90 min a book (the governor gives
+  1–2 workers; memory is tight beside the owner's browsers). A FAIL line or «STOP» in logs/crop-start-redo-2026-10-18.log
+  needs a look (book_crop fix → stop the unit FIRST, then edit, then a new scratch chain script).
+- Services (each skipped by scripts/start_services.sh if running): mem-governor, phone keep-alive, watchdog, review
+  server, reporter-follow, lid and idle inhibitors. Watch owner comments with `python3 scripts/watch_comments.py`.
+- NAMING PASS (title pages read by eye, data/names/title-read.tsv): books 0–1431 of data/names/sheets/books.tsv are done
+  through plan 351 (plans 335–351 today: ~560 renamed, 6 copies of kept editions deleted, شرح ابن قاسم fetched).
+  Next: books 1432–1539 already have sheets (data/names/sheets/s0716…s0769.jpg + .txt with Shamela/Waqfeya candidates):
+  read them → `python3 scripts/title_read_add.py < readings` («n | verdict | title | author | editor | publisher | city |
+  year | kind | section | note»; printed roles as «role: name» in the editor field) → `python3 scripts/names_plan_read.py
+  PLAN HELD` → keep only that batch's rows → apply_plan --dry-run, apply → index_update → WORKLOG → commit. Held books:
+  `python3 scripts/deep_sheets.py N…` (pages 2–9 + last 3) → `title_read_fix.py` («n | field=value», a note with
+  «read further (pages …» settles earlier doubts). Next batch: `read_status.py`, then title_sheets.py on unread singles
+  (2,052 singles + ~1,190 sets left). Held lists: data/names/verify-806-1059-held.tsv, verify-1060-1177-held.tsv.
+- NOT RUN since plan 335: scripts/refresh.sh (indexes, site, Brave) — deferred because a refresh beside the crop analysis
+  trips the memory brake. Run it when the regression is between books or done.
+- Owner decisions open: الواضح في أصول الفقه (two editions in one folder); متون موقع المتون (39 ephemera, raw names);
+  تاج التراجم (four Binder manuscripts, raw names); بحر المذهب vol. 7 blank; سنن أبي داود index = a title page only;
+  book 1091 (a newspaper review page) and 1162 (a 3-page web leaflet): keep or remove; series folders for the poetry
+  encyclopedia (885–902, 906) and المكتبة الأندلسية (859, 1005, 1019, 1190, 1271); الشرح by centuries for big sections
+  after the naming pass.
+
 ## 2026-10-17 19:20 — gate (b) running after the laptop died at 15:42 (battery) with 56 PASS / 6 FAIL
 - Failures fixed: lines kept in the tilt measure (الاتباع ص 51/68, اللآلئ ص 387 were left unturned); covers 0.5 % outside
   their edge (فهرسة ابن خير ص 380); parity offsets from needed content (أسرار البلاغة ص 187); content may move beyond the
