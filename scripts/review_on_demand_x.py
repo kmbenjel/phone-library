@@ -119,6 +119,7 @@ def main():
             proposed_name = os.path.basename(row_info[1])
             cached_filename = safe_cache_filename(report, k, proposed_name)
             dst = os.path.join(CACHE_DIR, cached_filename)
+            os.makedirs(CACHE_DIR, exist_ok=True)      # another process's atexit cleanup may have removed it (2026-10-20)
 
             print(f"[Triggered {report} row {k}/{total}] Downloading: {proposed_name}\n  Source on phone: {src}", flush=True)
             if not os.path.exists(dst) or os.path.getsize(dst) == 0:
