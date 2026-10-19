@@ -91,7 +91,9 @@ def name_auto(r):
     elif m and (ROLE_WORD.search(m.group(1)) or TAHQIQ.search(m.group(1))): role, ed = m.group(1).strip(), m.group(2).strip()
     place = pub + (f'، {city}' if city else '')
     edition = (f'ت {ed}' + (f' - {place}' if place else '')) if ed else (f'ط {place}' if place else '')
-    extra = [kind] if kind and kind not in ('نظم', 'متن', 'ترجمة') else []
+    # only what the EDITION is goes after it — a manuscript, a thesis, an offprint or excerpt, a lithograph; never the
+    # book's genre («شرح», «منظومة», «جزء حديثي», «فتاوى» …: readings 806–1059 had them, names ended «- شرح»)
+    extra = [kind] if kind and re.match(r'^(مخطوط|رسالة (ماجستير|دكتوراه|جامعية|علمية)|مستل|مقتبس|طبعة حجرية)', kind) else []
     # the author is left out only when the title holds his whole name (not one word of it: «رحلة التجاني» keeps
     # «أبو محمد عبد الله التجاني» — owner: «تقصير كبير»)
     drop = au and norm(au).strip() and f' {norm(au)} ' in f' {norm(t)} '                   # whole words: «الجكني» is not in «الجكنية»

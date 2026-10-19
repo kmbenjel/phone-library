@@ -188,6 +188,7 @@ def compose(title, author='', edition='', limit=LIMIT, year='', kinds_extra=(), 
     ed_opts = []
     for k in sorted({len(names), min(2, len(names)), min(1, len(names)), 0}, reverse=True):
         for pp, cc, yy in ((pub, city, year), (pub, city, ''), (pub, '', year), (pub, '', ''), ('', '', year), ('', '', '')):
+            if pub and yy and not pp: continue           # a print's year belongs to its printer: never alone once the
             generic = re.match(r'^(وزارة|المجلس|الهيئة|جامعة|مجمع|مركز|الأمانة|دار المعارف|المكتب)', pp or '')
             # owner 2026-10-10: when the whole title and the publisher cannot both fit, the publisher goes first; the
             # (first) editor stays — so a publisher weighs less than any word of the title, an editor more
