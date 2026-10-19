@@ -14,6 +14,13 @@ J = lambda *p: os.path.join(ROOT, *p)
 N = lambda s: unicodedata.normalize('NFC', s)
 AR = re.compile(r'[ء-ي]+')
 FRONT = re.compile(r'المقدمة|الواجهة|الفهارس|ملحق|صور المخطوط|مقدمة|تقديم')
+# the verbal nouns of patterns VII, VIII and X (انفعال، افتعال، استفعال, and افتعال after ص ض ط / ز: اصطلاح، ازدياد) always
+# begin with a hamzat al-wasl — «الإعتكاف», «الإرتياب», «للإقتداء» are errors whatever Shamela's titles hold (2026-10-19:
+# 53 paths the Shamela-based check above had missed); pattern IV (إفعال: إتقان، إنفاق، إنتاج) does not match
+_C = r'[^\sاأإآ]'
+WASL = re.compile(r'(?<![ء-ي])(?:ال|وال|بال|فال|كال|لل|و|ف|ب)?إ(?:ست' + _C + _C + r'ا|' + _C + r'ت' + _C + r'ا|ن' + _C + _C
+                  + r'ا|[صضط]ط' + _C + r'ا|زد' + _C + r'ا)')
+PRESENTATION = re.compile(r'[ﭐ-﷿ﹰ-﻿]')     # copied from a PDF's text: not found by search, sorts apart
 
 def audit(index):
     cats = {l.rstrip('\r\n').split('\t')[1].strip() for l in open(J('data/mappings/shamela-to-phone.tsv'), encoding='utf-8')
@@ -54,7 +61,8 @@ def audit(index):
                 alt = w[:len(pre) - 1] + 'ا' + w[len(pre):]
                 if sham[alt] >= 2 and sham[w] == 0: bad[w] = alt
     for p, s in rows:
-        if any(w in bad for w in AR.findall(p)): res['hamza on a hamzat al-wasl'].append((p, s))
+        if any(w in bad for w in AR.findall(p)) or WASL.search(p): res['hamza on a hamzat al-wasl'].append((p, s))
+        if PRESENTATION.search(p): res['Arabic presentation forms (ﺟﻬﺎﺩ for جهاد)'].append((p, s))
     return res, bad
 
 if __name__ == '__main__':
