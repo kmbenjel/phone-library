@@ -194,8 +194,12 @@ def compose(title, author='', edition='', limit=LIMIT, year='', kinds_extra=(), 
             # (first) editor stays — so a publisher weighs less than any word of the title, an editor more
             sc = (40 if k >= 1 else 0) + (2.5 if k >= 2 else 0) + 0.3 * max(0, k - 2) + (0.5 if pp else 0) + ((0.2 if generic else 0.1) if cc else 0)
             sc += 0.3 if yy else 0                       # the year gives way first
-            e = edition_text(names[:k], pp, cc, other, yy, role)
-            ed_opts.append((sc + (6 if other else 0), e))
+            # a long printed role («اعتنى به وأشرف على طباعته») is cut at its «و» joints before the editor goes
+            # (2026-10-19: the editor was dropped whole while «اعتنى به» left room for him)
+            parts = (role or 'ت').split(' و')
+            for j in range(len(parts), 0, -1):
+                e = edition_text(names[:k], pp, cc, other, yy, ' و'.join(parts[:j]))
+                ed_opts.append((sc + (6 if other else 0) + (0.2 if j == len(parts) else 0), e))
     ed_opts = list(dict.fromkeys(ed_opts))
     best = None
     for n in range(len(segs), 0, -1):                       # the first n joined titles
