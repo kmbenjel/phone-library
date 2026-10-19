@@ -162,6 +162,11 @@ def wscore(text, seg):
     n = len(text.split())
     return 10 * min(n, 2) + 2 * max(0, min(n, hn) - 2) + 0.6 * max(0, n - max(hn, 2))
 
+# an author's dates in brackets — «(1413 هـ)», «(بعد 666 هـ)», «(ت 717 هـ)», «(840 - 909 هـ)», «(المتوفى 717 هـ)»: not an
+# edition word (2026-10-19: readings that kept them put «- 1413 هـ» at the end of names, as if the print's year)
+DEATH = re.compile(r'^(?:ت\.?|المتوفى|المتوفي|توفي)?\s*(?:بعد|قبل|نحو|حوالي)?\s*\d{1,4}(?:\s*[-–]\s*\d{1,4})?\s*(?:هـ|ه)?'
+                   r'(?:\s*/\s*\d{3,4}\s*م?)?$')
+
 def compose(title, author='', edition='', limit=LIMIT, year='', kinds_extra=(), role='ت'):
     """the name that carries the most information within `limit` bytes: every combination of the title's cut, its joined
     titles («ويليه، ومعه، =»), its subtitle, the editors and the publisher is weighed; nothing is cut when all fits"""
@@ -172,6 +177,7 @@ def compose(title, author='', edition='', limit=LIMIT, year='', kinds_extra=(), 
     author = TASHKEEL.sub('', one_name(author))
     for x in re.findall(r'\(([^()]*)\)', author):        # «اليوسي (مخطوط)», «David Werner (Hesperian 2025)»: edition words
         x = tidy(x)
+        if DEATH.match(x): continue                       # «التويجري (1413 هـ)»: his death year, never the print's
         if x and norm(x) not in norm(edition): kinds.append(x)
     author = tidy(re.sub(r'\([^()]*\)', ' ', author))
     parts = JOIN.split(t)
