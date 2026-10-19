@@ -85,6 +85,7 @@ def main(lst, per=2):
     n0 = sum(1 for _ in open(reg, encoding='utf-8')) if os.path.exists(reg) else 0
     done_books = {l.split('\t')[1] for l in open(reg, encoding='utf-8')} if os.path.exists(reg) else set()
     todo, missing = [], []
+    first = 1 + max([int(m.group(1)) for f in os.listdir(OUT) for m in [re.match(r'^s(\d{4})\.jpg$', f)] if m] or [-1])
     for b in books:
         if b in done_books: continue
         fs = sorted(files_of.get(b, []))
@@ -100,7 +101,9 @@ def main(lst, per=2):
     with open(reg, 'a', encoding='utf-8') as R:
         for s in range(0, len(todo), per):
             group = todo[s:s + per]; rows, txt = [], []
-            sheet_no = (n0 + s) // per
+            # after the last sheet already written: (n0 + s) // per reused it when a batch ended on an odd book and
+            # overwrote it (2026-10-19: s0642, books 1283–1284, replaced by 1285–1286)
+            sheet_no = first + s // per
             for j, (b, f, k) in enumerate(group):
                 n = n0 + s + j
                 ims = []
