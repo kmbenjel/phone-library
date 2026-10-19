@@ -13,6 +13,11 @@ import name_compose
 from textnorm import norm
 J = lambda *p: os.path.join(ROOT, *p)
 N = lambda s: unicodedata.normalize('NFC', s)
+def key(name):
+    """what makes two names the same: textnorm.norm keeps Arabic letters and digits only, so every English name was «2»
+    («Biology 2e» = «Chemistry 2e»: 9 OpenStax books held as taken, 2026-10-19) — a name without Arabic letters compares whole"""
+    return norm(name) if re.search(r'[\u0621-\u064a]', name) else N(name).casefold()
+
 DOUBT = re.compile(r'check|not legible|too faint|read further|read the file|read the inner|dark cover|stylised|small print')
 
 def shortened(r):
@@ -35,7 +40,7 @@ def main(out, held_out):
     plain = collections.defaultdict(set)
     for p in idx:
         parts = N(p).split('/')
-        if len(parts) == 2: plain[parts[0]].add(norm(parts[1].removesuffix('.pdf')))
+        if len(parts) == 2: plain[parts[0]].add(key(parts[1].removesuffix('.pdf')))
     sheet = {l.split('\t')[0]: l.rstrip('\n').split('\t') for l in open(J('data', 'names', 'sheets', 'books.tsv'), encoding='utf-8')}
     last = {}
     for r in csv.DictReader(open(J('data', 'names', 'title-read.tsv'), encoding='utf-8'), delimiter='\t'): last[r['n']] = r
@@ -63,9 +68,9 @@ def main(out, held_out):
         if sec and sec not in sections: hold(r, f'section «{sec}» is not in the library'); continue
         dest_cat = sec or cat
         new = name_of(r) + '.pdf'
-        if norm(new.removesuffix('.pdf')) in plain[dest_cat]: hold(r, 'the name is taken in the section'); continue
+        if key(new.removesuffix('.pdf')) in plain[dest_cat]: hold(r, 'the name is taken in the section'); continue
         if len(src.split('/')) == 2 and src == f'{dest_cat}/{new}': c['already right'] += 1; continue
-        plain[dest_cat].add(norm(new.removesuffix('.pdf')))
+        plain[dest_cat].add(key(new.removesuffix('.pdf')))
         why = f"title page read (book {n}, {r['verdict']})" + (f'; section {cat} → {dest_cat}' if dest_cat != cat else '')
         if n not in overrides() and shortened(r): why += '; shortened (check against the cover)'
         rows.append((f'Books/{raw[src]}', f'Books/{dest_cat}/{new}', why))
