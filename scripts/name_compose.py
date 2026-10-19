@@ -65,8 +65,26 @@ def cuts(seg):
             # a «و…» word is not left hanging without its complement («وتفسير | لمسلم بن خالد»)
             if len(k) > 1 and n.startswith('ل') and norm(k[-1]).startswith('و') and len(norm(k[-1])) > 3: k.pop()
             while len(k) > 1 and norm(k[-1]) in WEAK_END: k.pop()
+            k = whole_clause(k)
             if k and ' '.join(k) not in out: out.append(' '.join(k))
     return out
+
+# a «و…» clause naming a relation or an effect needs what follows it (owner 2026-10-19 on «… شرح عمدة الأحكام وأثر ذلك»:
+# «لا يمكن أن تكون الجملة مقصوصة هكذا أبدا»): such a clause is kept whole or dropped whole, never cut after its first words
+RELATION = {norm(w) for w in 'أثر أثره أثرها أثرهم آثار آثاره آثارها دور دوره دورها دورهم موقف موقفه موقفها منهج منهجه منهجها '
+            'جهود جهوده جهودها علاقة علاقته علاقتها صلة صلته صلتها أهمية أهميته أهميتها تطبيق تطبيقه تطبيقاته تطبيقاتها '
+            'انعكاس انعكاسه انعكاساته مكانة مكانته مكانتها مدى'.split()}
+POINTER = {norm(w) for w in 'ذلك ذلكم هذا هذه هذين تلك عليه عليها فيه فيها منه منها به بها له لها'.split()}
+
+def whole_clause(k):
+    for j in range(len(k) - 1, max(0, len(k) - 4), -1):
+        t = norm(k[j])
+        if t.startswith('و') and t[1:] in RELATION:
+            return k[:j]
+    if len(k) > 2 and norm(k[-1]) in POINTER:                  # «… وأثر ذلك», «… وما يتعلق به»: back to the last «و…»
+        for j in range(len(k) - 2, max(0, len(k) - 5), -1):
+            if norm(k[j]).startswith('و') and len(norm(k[j])) > 2: return k[:j]
+    return k
 
 def editors_short(ed):
     """«ت أ و ب و ج - الناشر» → editors cut to the first two"""
@@ -196,10 +214,15 @@ def compose(title, author='', edition='', limit=LIMIT, year='', kinds_extra=(), 
             sc += 0.3 if yy else 0                       # the year gives way first
             # a long printed role («اعتنى به وأشرف على طباعته») is cut at its «و» joints before the editor goes
             # (2026-10-19: the editor was dropped whole while «اعتنى به» left room for him)
-            parts = (role or 'ت').split(' و')
-            for j in range(len(parts), 0, -1):
-                e = edition_text(names[:k], pp, cc, other, yy, ' و'.join(parts[:j]))
-                ed_opts.append((sc + (6 if other else 0) + (0.2 if j == len(parts) else 0), e))
+            # — only to keep the editor (the role as printed weighs more than a few title words); a role that includes the
+            # tahqiq becomes «ت», never its first part («قدم له وحققه وعلق عليه» → «قدم له» would hide the tahqiq)
+            role0 = role or 'ت'; parts = role0.split(' و')
+            ropts = [(role0, 3)]
+            if len(parts) > 1:
+                ropts += [('ت', 0)] if re.search(r'حقق|تحقيق', role0) else [(' و'.join(parts[:j]), 0) for j in range(len(parts) - 1, 0, -1)]
+            for rl, bonus in ropts:
+                e = edition_text(names[:k], pp, cc, other, yy, rl)
+                ed_opts.append((sc + (6 if other else 0) + bonus, e))
     ed_opts = list(dict.fromkeys(ed_opts))
     best = None
     for n in range(len(segs), 0, -1):                       # the first n joined titles
