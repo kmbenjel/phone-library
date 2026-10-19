@@ -53,7 +53,19 @@ def find_plan_file(report):
         return matches[0]
     return None
 
+def review_list(report):
+    """data/review/<report>.tsv of doubts_page.py (owner 2026-10-20): its data rows «section<TAB>path<TAB>why<TAB>images»"""
+    f = os.path.join(ROOT, 'data', 'review', f'{report}.tsv')
+    return f if not report.startswith('plan-') and os.path.exists(f) else None
+
 def get_plan_row(report, k):
+    rl = review_list(report)
+    if rl:
+        rows = [l.rstrip('\n').split('\t') for l in open(rl, encoding='utf-8') if l.strip() and not l.startswith('#')]
+        if 1 <= k <= len(rows):
+            p = 'Books/' + rows[k - 1][1]
+            return [p, p], len(rows), rl
+        return None, len(rows), rl
     plan_file = find_plan_file(report)
     if not plan_file or not os.path.exists(plan_file):
         return None, 0, plan_file
@@ -143,6 +155,11 @@ def main():
                 print(f"[{report} Row {k}] Opening in Brave...", flush=True)
                 file_url = f"file://{os.path.abspath(dst)}"
                 env = dict(os.environ)
+                # the VS Code snap's GTK/GSettings variables make Brave abort at startup (2026-10-19)
+                for v in ('GSETTINGS_SCHEMA_DIR', 'GTK_PATH', 'GTK_EXE_PREFIX', 'GIO_MODULE_DIR', 'GTK_IM_MODULE_FILE',
+                          'GDK_PIXBUF_MODULEDIR', 'GDK_PIXBUF_MODULE_FILE', 'LOCPATH'):
+                    env.pop(v, None)
+                if 'XDG_DATA_DIRS_VSCODE_SNAP_ORIG' in env: env['XDG_DATA_DIRS'] = env['XDG_DATA_DIRS_VSCODE_SNAP_ORIG']
                 p = subprocess.Popen([
                     'brave-browser',
                     f'--user-data-dir={tmp_profile}',
@@ -189,11 +206,13 @@ def main():
                         continue
 
                     report = d.get('report', '')
-                    if report.startswith('plan-'):
+                    if report.startswith('plan-') or review_list(report):
                         cmt = d.get('comment', '').strip().lower()
                         # If comment starts with x or is x
                         if cmt == 'x' or cmt.startswith('x'):
                             n_str = str(d.get('n', ''))
+                            m = re.match(r'^(\d+[a-z]?):(\d+)$', n_str)     # a page of several plans: «331:5»
+                            if m: report, n_str = f'plan-{m.group(1)}', m.group(2)
                             if n_str.isdigit():
                                 k = int(n_str)
                                 t = threading.Thread(target=open_book_worker, args=(report, k), daemon=True)
