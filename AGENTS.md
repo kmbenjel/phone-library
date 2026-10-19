@@ -213,7 +213,7 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `report_manzumat.py` | report 06: the teaching poems of each science (`data/mappings/manzumat-canon.tsv`) with their text and commentaries on the phone, Waqfeya offers for the missing; all other poems by section (replaces the old static «خزانة المنظومات» page) |
 | `report_people.py` | reports 07 (authors by century of death; Shamela death year / Waqfeya century) and 08 (editors and their editions, from the «(ت …)» of the names) |
 | `report_fixed.py` | report 09 «النسخ المحسنة»: every book whose scan had defects and was fixed (crop/split lossless, recompress lossy, repairs), from the change log + quality.tsv + provenance + edition cards; candidates to publish first (old prints, known source, whole set fixed), a ready «وصف النشر» per book; `data/fixed/fixed-copies.tsv` one row per file (owner, 2026-10-06) |
-| `name_audit.py` | §4 name audit: raw archive names, >200-byte names, forbidden chars, non-PDF/tiny files, unknown categories → `data/phone/name-audit.tsv` |
+| `name_audit.py` | §4 name audit as the rules stand (2026-10-18): categories, > 240 bytes, forbidden chars, parentheses, commas, «ط», raw archive names, uploader words, tiny/non-PDF files, 99 for indexes, one-file folders, a volume number used twice, a hamza on a hamzat al-wasl (by the local Shamela's spellings) → `data/phone/name-audit.tsv` |
 | `raw_names_plan.py` | names files still called `NN_<id>.pdf` from the Waqfeya record that links them → plan + review list |
 | `check_magic.py`, `check_pdf_tail.py` | is every ".pdf" a real, complete PDF? |
 | `delete_files.py` | logged deletion (owner-approved only), removes emptied folders |
