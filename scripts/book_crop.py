@@ -185,6 +185,21 @@ def marks(a, scale, width, exclude=None):
             k_ = np.polyfit(rows_, cxs, 1)[0]
             if np.abs(cxs - np.polyval(np.polyfit(rows_, cxs, 1), rows_)).max() <= 3: vang.append(float(np.degrees(np.arctan(k_))))
     out['rule_tilts'] = vang
+    # long straight rules across the page (a running head's rule, a table's rows): each one's own slope — a level one
+    # vetoes a projection turn (owner's regression, سؤالات أبي داود ص 177: a two-column index of short entries read 1.2° by
+    # the projection; its head rule reads 0.19°)
+    hang = []
+    for i, s in enumerate(objs, 1):
+        if wid[i] >= 0.3 * Wd and hgt[i] <= 0.05 * H and area[i] <= 0.25 * hgt[i] * wid[i] + 3 * wid[i]:
+            ys_, xs_ = np.nonzero(lab[s] == i)
+            if len(xs_) < 30: continue
+            cols_ = np.unique(xs_)
+            if len(cols_) < 0.8 * wid[i]: continue
+            cys = np.array([ys_[xs_ == c_].mean() for c_ in cols_]); fit = np.polyfit(cols_, cys, 1)
+            if np.abs(cys - np.polyval(fit, cols_)).max() <= 3:
+                hang.append([float(np.degrees(np.arctan(fit[0]))), (s[1].start + c0) / scale, (s[0].start + r0) / scale,
+                             (s[1].stop + c0) / scale, (s[0].stop + r0) / scale])
+    out['hrules'] = hang
     sp = SPECK * unit
     small = (hgt <= sp) & (wid <= sp); small[0] = False
     # marks closer than M to each other fall in one group (dilation by M/2 on each)
@@ -912,7 +927,14 @@ def by_proj(a, mk, ang, gain, rec):
     by the same measure (checked where it is turned)"""
     if abs(ang) >= SKEW_MIN or mk.get('dark', 1) > 0.35: return ang, gain
     t, sh_ = proj_signed(a, mk.get('paper') or 255)
-    if abs(t) >= 0.3 and sh_ >= 1.5: rec['tilt_by_proj'] = t; return t, 1.1
+    if abs(t) >= 0.3 and sh_ >= 1.5:
+        # a long straight printed rule over the text block that reads level (≤ 0.2°): the page is level — the projection
+        # was fooled by the layout (columns of short lines). A scanner's or a sheet's line is not over the text block
+        tb = mk.get('text') or mk.get('box')
+        if tb and any(abs(h[0]) <= 0.2 and h[1] >= tb[0] - 0.02 * (tb[2] - tb[0]) and h[3] <= tb[2] + 0.02 * (tb[2] - tb[0])
+                      and h[2] >= tb[1] - 0.03 * (tb[3] - tb[1]) and h[4] <= tb[3] + 0.03 * (tb[3] - tb[1]) for h in mk.get('hrules') or []):
+            rec['proj_level_rule'] = round(t, 2); return ang, gain
+        rec['tilt_by_proj'] = t; return t, 1.1
     return ang, gain
 
 def by_rules(mk, ang, gain, rec):
