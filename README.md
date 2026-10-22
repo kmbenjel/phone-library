@@ -223,6 +223,6 @@ phone-library/
 
 ---
 
-## 📄 License
+## 📄 License & Credits
 
-Engineered with precision by [Khalid Benjelloun](https://benjelloun.dev). Web index accessible at [benjelloun.dev/library](https://benjelloun.dev/library).
+Built and orchestrated by [Khalid Benjelloun](https://benjelloun.dev) with [Google Antigravity](https://github.com/google) and multi-agent workflows. Web index accessible at [benjelloun.dev/library](https://benjelloun.dev/library).
