@@ -6,8 +6,8 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![Computer Vision](https://img.shields.io/badge/Computer%20Vision-PyMuPDF%20%7C%20Pillow-ff69b4?style=for-the-badge)](https://pymupdf.readthedocs.io/)
-[![Corpus](https://img.shields.io/badge/Corpus-8%2C500%2B%20Volumes-orange?style=for-the-badge)](https://benjelloun.dev/library)
-[![Storage](https://img.shields.io/badge/Storage-34%2B%20GB%20Android%20FTP-green?style=for-the-badge&logo=android&logoColor=white)](https://benjelloun.dev/library)
+[![Corpus](https://img.shields.io/badge/Corpus-16%2C700%2B%20Volumes-orange?style=for-the-badge)](https://benjelloun.dev/library)
+[![Storage](https://img.shields.io/badge/Storage-174%2B%20GB%20Android%20FTP-green?style=for-the-badge&logo=android&logoColor=white)](https://benjelloun.dev/library)
 [![Catalog](https://img.shields.io/badge/Reconciliation-Shamela%20%7C%20Waqfeya%20%7C%20Archive-8A2BE2?style=for-the-badge)](https://benjelloun.dev/library)
 
 [**🌐 Live Catalog & Web Index (benjelloun.dev/library)**](https://benjelloun.dev/library)
@@ -18,7 +18,7 @@
 
 ## 📌 Executive Summary
 
-**Phone Library** is a production-grade autonomous curation and document-processing pipeline designed to manage, verify, normalize, and optimize a massive collection of classical Arabic and Islamic heritage PDF volumes (**8,500+ books, 34+ GB**).
+**Phone Library** is a production-grade autonomous curation and document-processing pipeline designed to manage, verify, normalize, and optimize a massive collection of classical Arabic and Islamic heritage PDF volumes (**16,700+ volumes, 174+ GB** across 6,100+ titles).
 
 The system solves a unique hardware-architecture challenge: **the primary digital collection lives on an Android smartphone's internal storage**, while all compute-heavy computer vision, OCR analysis, deduplication, catalog cross-referencing, and web indexing run autonomously on a **Linux workstation** communicating with the device over high-speed local FTP.
 
@@ -31,7 +31,7 @@ Every file alteration, rename, crop, or edition upgrade is strictly governed by 
 ```mermaid
 flowchart TB
     subgraph StorageLayer ["📱 Physical Storage Layer (Android Phone)"]
-        PhoneStorage["Internal Storage: Books/<category>/<book>/<volume>.pdf\n(Source of Truth: 8,500+ Volumes / 34+ GB)"]
+        PhoneStorage["Internal Storage: Books/<category>/<book>/<volume>.pdf\n(Source of Truth: 16,700+ Volumes / 174+ GB)"]
         FTPServer["Android FTP Server (High-Speed Local WiFi Transport)"]
         PhoneStorage <--> FTPServer
     end
@@ -217,7 +217,7 @@ phone-library/
 
 | 🔍 Interactive Review Interface (Port 8765) | 📱 Android Phone Internal Storage Integration |
 |:---:|:---:|
-| ![Review Page Placeholder](https://placehold.co/500x700/1e293b/f59e0b?text=Plan+Review+Dashboard) <br> *Visual side-by-side approval dashboard before atomic moves* | ![Mobile Storage Placeholder](https://placehold.co/500x700/1e293b/8b5cf6?text=Android+FTP+File+Sync) <br> *34+ GB organized directly on mobile storage over FTP* |
+| ![Review Page Placeholder](https://placehold.co/500x700/1e293b/f59e0b?text=Plan+Review+Dashboard) <br> *Visual side-by-side approval dashboard before atomic moves* | ![Mobile Storage Placeholder](https://placehold.co/500x700/1e293b/8b5cf6?text=Android+FTP+File+Sync) <br> *174+ GB organized directly on mobile storage over FTP* |
 
 </div>
 
