@@ -3,6 +3,26 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-25 23:45 — the Turner was NOT exact: fix tested in the scratchpad; the 25b regression to be replaced (Claude, max)
+Found after the /clear: the render check the last session left running (eq_render, finished 22:12, after its commit) showed
+19 of 7,160 Turner renders ≠ fresh turned() renders (816413b0e765, ae39a500653d p1, d20f1fe41833 p1), and the plan check
+(eq_plan, 40 page extracts old vs new code) 39 identical + fbf39d55c6f7 p. 9 (split book) with marks a pixel off — so the
+commit's and WORKLOG 22:00's «renders byte-identical» was wrong. Cause (MuPDF 1.28.2 source, image.c): an image less than
+90 % shown (CropBox/clip/group cut) is decoded in part; MuPDF keeps decoded images, and a part request with no tile of its
+own takes the WHOLE tile if one is kept → a Turner view after a whole-decode view drew from the whole image where a fresh
+document decodes the part (sub-pixel shift). Fix (scratchpad copy, only the Turner block changed):
+/tmp/claude-1000/-home-k-projects-phone-library/9365be8c-b77d-4867-b935-e76269705419/scratchpad/fix/book_crop.py —
+a view is drawn by the Turner only when every image is ≥ 92 % shown inside the page ∩ clips ∩ groups (whole_shown) on a
+page without soft masks / patterns / shadings / Type3 / text clips and with consistent image listings (odd_drawing);
+otherwise a fresh turned() document (the old path). Tests (scratchpad probe/, units turner-eq-*): every page of the 3
+risky books + the split book, every 5th page of the rest, 25 views each incl. big moves/turns → 0 differences so far.
+NEXT: when the tests pass → probe/eq_plan_fix.py 0/2 and 1/2 (the 40 extracts with the fix; expect 40/40 = out-old) →
+`systemctl --user stop crop-regress-2026-10-25b` → cp the fix over scripts/book_crop.py → commit → launch
+`systemd-run --user --slice=crop.slice --unit=crop-regress-2026-10-26 --nice=10 --working-directory=$PWD --setenv=PATH="$PATH" scratch/regress_2026-10-26.sh`.
+Also (uncommitted until then): crop_regress.check — an owner-turn page now passes only if its shear reading after the turn
+is below the turn itself (a wrong-way turn leaves ~2×); خزانة 01 p. 26 in the 25b cache: −0.675 → 0.175 ✓ (pp. 164/307
+were turned by the new ruler rule, not the owner's list).
+
 ## 2026-10-25 22:00 — crop revisit coded (commit 9c26546); THE ONE REGRESSION RUNNING (Claude, max effort)
 RUNNING: user unit crop-regress-2026-10-25b (scratch/regress_2026-10-25b.sh, marker data/crop/.regress-2026-10-25b) →
 logs/crop-regress-2026-10-25b.log, then by itself the diff → logs/crop-regress-diff-2026-10-25b.log (scratch/crop_recipe_diff_2026-10-25.py:

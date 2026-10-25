@@ -78,7 +78,9 @@ def check(row, rec, pdf):
              or p.get('reduced') is not None)
              or (p.get('level_by_proj') is not None and p['level_by_proj'] <= 0.2)
              or (p.get('level_by_rules') is not None and abs(p['level_by_rules']) <= 0.35)
-             or p.get('owner_turn') is not None)) \
+             # (the owner's turn: the page's shear reading after it below the turn itself — a turn the wrong way leaves
+             # about twice the tilt)
+             or (p.get('owner_turn') is not None and lvl is not None and lvl < abs(p['skew'])))) \
              and (expect == 'no' or not p.get('untreated_tilt'))
         return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}){" curved" if p.get("curved") else ""}{" — turned by the owner's verdict" if p.get("owner_turn") is not None else ""}, untreated {p.get("untreated_tilt")}'
     if what == 'cropped':                              # cropped, not left whole (a book without print in its margins)
