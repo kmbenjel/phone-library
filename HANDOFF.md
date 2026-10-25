@@ -3,6 +3,12 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-25 15:30 — crop gate rerunning; names 1432–1539 done (Claude)
+- RUNNING: user unit crop-regress-2026-10-25 (scratch/regress_2026-10-25.sh, marker data/crop/.regress-2026-10-25) → logs/crop-regress-2026-10-25.log. Do NOT edit book_crop.py while it runs (cache key). Regression only: if 0 failures (after the owner's verdicts on site/crop-tilt-001.html — «اترك» → add a «turn no» case to data/improve/crop-regression.tsv; «أدر» → a method fix), start the redo of the 1,122 books by hand (crop_redo.py data/crop/redo-list-2026-10-17.tsv crop-redo-001, as scratch/start_redo_2026-10-18i.sh did).
+- Fixes in book_crop.py today: see WORKLOG 15:30. Probe scripts used: scratchpad only.
+- Names: plans 379–381 applied; next batch: read_status.py then title_sheets.py on unread singles. Still: names cut mid-phrase (scratch/bad_cuts_2026_10_20.py, 544) — the composer drops title words before editors (13 hand overrides today show the pattern: fix name_compose so the title's last clause is never cut while an editor/publisher remains).
+- refresh.sh NOT run since 08:24 (it would run beside the regression): run it when the regression ends.
+
 ## 2026-10-25 09:15 — owner's doubts-001 comments handled; page doubts-002 open for him (Claude, before a /clear)
 - Laptop restarted 2026-10-25 ~02:00: services relaunched with scripts/start_services.sh + review-x-opener (user unit). The owner
   wants the lid/idle inhibitors ON (2026-10-25 «yes I want them back»; on 10-23 he had asked Antigravity to stop them «for now»).

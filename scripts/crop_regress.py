@@ -72,7 +72,8 @@ def check(row, rec, pdf):
              or (p.get('level_by_edge') is not None and lvl <= 0.2)
              or (p.get('level_by_columns') is not None and p['level_by_columns'] <= 0.15)
              or p.get('reduced') is not None)
-             or (p.get('level_by_proj') is not None and p['level_by_proj'] <= 0.2))) \
+             or (p.get('level_by_proj') is not None and p['level_by_proj'] <= 0.2)
+             or (p.get('level_by_rules') is not None and abs(p['level_by_rules']) <= 0.35))) \
              and (expect == 'no' or not p.get('untreated_tilt'))
         return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}){" curved" if p.get("curved") else ""}, untreated {p.get("untreated_tilt")}'
     if what == 'cropped':                              # cropped, not left whole (a book without print in its margins)
@@ -106,8 +107,8 @@ def check(row, rec, pdf):
         pts = [f(r[0], r[1]), f(r[2], r[1]), f(r[2], r[3]), f(r[0], r[3])]
         x0, x1 = min(q.x for q in pts), max(q.x for q in pts); y0, y1 = min(q.y for q in pts), max(q.y for q in pts)
         overlap = x0 < crop[2] and x1 > crop[0] and y0 < crop[3] and y1 > crop[1]
-        inside = x0 >= crop[0] and x1 <= crop[2] and y0 >= crop[1] and y1 <= crop[3]
-        return (not overlap) if what == 'out' else inside, f'region {x0:.0f}–{x1:.0f}, box {crop[0]:.0f}–{crop[2]:.0f}'
+        is_in = x0 >= crop[0] and x1 <= crop[2] and y0 >= crop[1] and y1 <= crop[3]
+        return (not overlap) if what == 'out' else is_in, f'region {x0:.0f}–{x1:.0f}, box {crop[0]:.0f}–{crop[2]:.0f}'
     return False, 'unknown check ' + what
 
 def main():

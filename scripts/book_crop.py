@@ -165,6 +165,7 @@ def marks(a, scale, width, exclude=None):
     r0, r1, c0, c1 = bands(mask)
     m = mask[r0:r1, c0:c1]
     allowed = [c0 / scale, r0 / scale, c1 / scale, r1 / scale]; out['allowed'] = allowed
+    out['xy0'] = (c0, r0)                           # (xy is measured from the bands' inner corner, in pixels)
     if m.size == 0: return out
     lab, n = ndimage.label(m, structure=np.ones((3, 3), bool))
     if n == 0: return out
@@ -836,6 +837,21 @@ def sheet_rect(page, px=360):
     dx, dy = 0.012 * W, 0.012 * H
     return [round((x0 + dx) / z, 2), round((y0 + dy) / z, 2), round((x1 - dx) / z, 2), round((y1 - dy) / z, 2)]
 
+def banded(al, w, h):
+    """scanner bands at a side of the page: the area inside them (al, pt) falls short of the page's edge by > 1 %"""
+    return bool(al) and (al[0] > 0.01 * w or al[1] > 0.01 * h or al[2] < 0.99 * w or al[3] < 0.99 * h)
+
+def ink_ratio(mk0, mk1, z, al0=None, al1=None):
+    """the turned page's content ink (mk1) over the page's own (mk0), both measured at z pixels per pt — a turn must not lose
+    the page's print. With scanner bands, both are counted inside the area within them (al0; al1 = that area turned): once
+    turned, the bands slant, are no longer read as bands and count as ink (2026-10-25, خريدة القصر ص 375: a 1.7° tilt left
+    as it was — the turned page showed 6× the ink; 13 pages of that volume)"""
+    def n(mk, al):
+        if al is None: return len(mk['xy'][0])
+        x, y = mk['xy']; ox, oy = mk.get('xy0') or (0, 0); x, y = x + ox, y + oy
+        return int(((x >= al[0] * z) & (x <= al[2] * z) & (y >= al[1] * z) & (y <= al[3] * z)).sum())
+    return n(mk1, al1) / max(1, n(mk0, al0))
+
 def whiten(a, z, rect):
     """the gray image with everything outside rect (pt) set to white: what lies beyond a sheet's edge is not measured"""
     if not rect: return a
@@ -1030,7 +1046,8 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
             # a page whose printed frame or rule stands level while its content reads ≥ 1° (a photographed leaf in a
             # level frame: owner 2026-10-14, روضة المستبين ص 138 «أحدثت ميلا»): not turned — a 1° tilt would have kept
             # the rule from showing as one (it drifts beyond its 1 % band over half the page)
-            if abs(ang) >= 1.0 and mk.get('level_frame'): rec['frame_level'] = round(ang, 3); ang = 0.0
+            if abs(ang) >= 1.0 and mk.get('level_frame'):
+                rec['frame_level'] = round(ang, 3); ang = 0.0; rec.pop('tilt_by_proj', None)
             if rec.get('tilt_by_proj') is not None:      # a projection turn: angles around its reading (it is coarse), the
                 best = None                              # one after which the page reads level by its own ink is kept
                 for k in list(range(-5, 6)):
@@ -1056,8 +1073,11 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
                     mk2 = marks(a2, z2, r.width, fwd_boxes(doc, i, {'skew': deg}, ex0) if ex0 else None); t.close()
                     # the turned page must still show the page's ink (a broken drawing would show none); its text block is
                     # naturally narrower once level, so its size is not compared; MORE ink once level is no fault — a
-                    # table's slanted rules count as print only when straight (خريدة القصر ص 649: ×3.5, the turn refused)
-                    if mk2['box'] is None or mk2['xy'] is None or not (0.6 <= len(mk2['xy'][0]) / len(mk['xy'][0]) <= 5.0):
+                    # table's slanted rules count as print only when straight (خريدة القصر ص 649: ×3.5, the turn refused);
+                    # with scanner bands, counted inside them (ink_ratio)
+                    bd = banded(al0, r.width, r.height)
+                    if mk2['box'] is None or mk2['xy'] is None or not (0.6 <= ink_ratio(mk, mk2, z2, al0 if bd else None,
+                                                                                         fwd_inner(doc, i, {'skew': deg}, al0) if bd else None) <= 5.0):
                         continue
                     left, _ = skew_of(mk2['xy'], raw=True)   # the plain whole-page angle must now read level
                     if abs(left) <= max(0.1, abs(ang) / 3):
@@ -1125,12 +1145,13 @@ def stamps_of(path, jobs=1, px=400):
         with ProcessPoolExecutor(jobs) as ex:
             for part in ex.map(_stamp_chunk, [(path, idx[k::jobs], px) for k in range(jobs)]): found += part
     else: found = _stamp_chunk((path, idx, px))
+    out = corner_signatures(found)
     band = [f for f in found if f[6]]
-    if not band: return {}
+    if not band: return out
     C = np.array([[f[1][0], f[1][1], f[1][2], f[1][3], f[2], f[3]] for f in band], float)
     cxs, cys = (C[:, 0] + C[:, 2]) / 2, (C[:, 1] + C[:, 3]) / 2; bw, bh = C[:, 2] - C[:, 0], C[:, 3] - C[:, 1]
     T = np.array([f[4] for f in band], float); pg = np.array([f[0] for f in band])
-    out, used, refs = {}, np.zeros(len(band), bool), []
+    used, refs = np.zeros(len(band), bool), []
     for k in range(len(band)):
         if used[k]: continue
         g = (~used) & (np.abs(cxs - cxs[k]) <= 0.025 * C[:, 4]) & (np.abs(cys - cys[k]) <= 0.025 * C[:, 5]) & \
@@ -1157,6 +1178,35 @@ def stamps_of(path, jobs=1, px=400):
                        and c[0] >= b[0] - 0.2 * w_ and c[2] <= b[2] + 0.2 * w_:
                         box = union([box, list(c)])
                 out.setdefault(f[0], []).append([round(float(v), 1) for v in box]); break
+    return out
+
+def corner_signatures(found):
+    """A SIGNATURE IN A FOOT CORNER (owner 2026-10-14, روضة المستبين ج 1 ص 16: «أزل الطابع في 1 لتتسق الصفحات كلها» — an
+    uploader's calligraphic signature at the foot of pages 8–18, about 13 % of the page tall, a little off from page to
+    page: too tall, too rare and too unsteady for the footer rule of stamps_of): the same picture (grey image correlation
+    ≥ 0.8, size ± 10 %) in the bottom 30 % of the page and its outer 30 % on either side, 5–25 % of the width wide and
+    4–20 % of the height tall, on at least 4 pages. A printed ornament repeats too, but at a chapter's head (روضة المستبين's
+    arches, left alone) or as a frame's corners — the same piece at the mirrored corner of the same page (روضة المستبين
+    ص 17، 49، 63، 97: a chapter page's frame): a group with such a twin on half its pages is print, not a signature.
+    `found`: _stamp_chunk's candidates → {page index: [boxes (pt)]}"""
+    def corner(f):
+        b, W, H = f[1], f[2], f[3]; w, h = b[2] - b[0], b[3] - b[1]; cx, cy = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
+        return 0.05 * W <= w <= 0.25 * W and 0.04 * H <= h <= 0.2 * H and (cx <= 0.3 * W or cx >= 0.7 * W) and cy >= 0.7 * H
+    def twin(f, page):                                # the same size at the mirrored place of its page
+        b, W, H = f[1], f[2], f[3]; w, h = b[2] - b[0], b[3] - b[1]; mx, cy = W - (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
+        return any(abs((c[1][0] + c[1][2]) / 2 - mx) <= 0.03 * W and abs((c[1][1] + c[1][3]) / 2 - cy) <= 0.03 * H
+                   and abs((c[1][2] - c[1][0]) / w - 1) <= 0.15 and abs((c[1][3] - c[1][1]) / h - 1) <= 0.15 for c in page)
+    cand = [f for f in found if corner(f)]; used = [False] * len(cand); out = {}
+    on = {}
+    for f in cand: on.setdefault(f[0], []).append(f)
+    for k, fk in enumerate(cand):
+        if used[k]: continue
+        wk, hk = fk[1][2] - fk[1][0], fk[1][3] - fk[1][1]
+        grp = [j for j, f in enumerate(cand) if not used[j] and abs((f[1][2] - f[1][0]) / wk - 1) <= 0.1
+               and abs((f[1][3] - f[1][1]) / hk - 1) <= 0.1 and float((fk[5] * f[5]).mean()) >= 0.8]
+        for j in grp: used[j] = True
+        if len({cand[j][0] for j in grp}) < 4 or sum(twin(cand[j], on[cand[j][0]]) for j in grp) >= 0.5 * len(grp): continue
+        for j in grp: out.setdefault(cand[j][0], []).append([round(float(v), 1) for v in cand[j][1]])
     return out
 
 def _stamp_chunk(args):
@@ -1692,7 +1742,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         t = transformed(doc, i, q); page = t[0]; a, z = gray(page, px); st = rec['pages'][i].get('stamp')
         if rec['pages'][i].get('sheet'): a = whiten(a, z, fwd_box(doc, i, q, rec['pages'][i]['sheet']))
         ex = [pad_box(b, page.rect.width) for b in st or []] + (rec['pages'][i].get('dots') or [])
-        mk = marks(a, z, page.rect.width, fwd_boxes(doc, i, q, ex) if ex else None); t.close()
+        mk = marks(a, z, page.rect.width, fwd_boxes(doc, i, q, ex) if ex else None); t.close(); mk['z'] = z
         mk['proj'] = lambda lo=-0.5, hi=0.5, step=0.05: proj_tilt(a, mk['paper'], lo, hi, step)
         mk['lines'] = lambda: baseline_tilt(a, mk['paper']) if mk.get('paper') else None
         mk['edges'] = lambda: edge_tilt(a, mk['paper']) if mk.get('paper') else [None, None]
@@ -1712,13 +1762,14 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
             ev(d0 - 0.05 * k); ev(d0 + 0.05 * k)
         d, (r, im, m2) = min(tried.items(), key=lambda kv: (max(kv[1][0], kv[1][1]), kv[1][0]))
         if not (r <= LEVEL and im <= IMG_LEVEL):      # none level by both: among the turns the two read ≤ 0.35°, the one
-            cl = []                                   # whose lines read most level, line by line (baseline_tilt)
-            for dd, v in tried.items():
-                if max(v[0], v[1]) <= 0.35:
-                    b = v[2]['lines'](); cl.append((abs(b) if b is not None else 9, dd, v))
-            if cl and min(cl)[0] <= 0.15: _, d, (r, im, m2) = min(cl)
+            cl = []                                   # whose lines read most level, line by line (baseline_tilt); of
+            for dd, v in tried.items():               # several alike (it reads in steps of 0.14°), the one the shear
+                if max(v[0], v[1]) <= 0.35:           # measure reads most level (until 2026-10-25: the smallest angle —
+                    b = v[2]['lines'](); cl.append((round(abs(b), 3) if b is not None else 9, v[0], dd, v))   # 0.125° for
+            if cl and min(cl, key=lambda c: c[:3])[0] <= 0.15:                                               # a 0.325° tilt)
+                _, _, d, (r, im, m2) = min(cl, key=lambda c: c[:3])
         return d, r, im, m2
-    def keep(p, d, r, im, before, m2=None):           # level, or a curved page brought below sight, or (a clear tilt,
+    def keep(p, d, r, im, before, m2=None, m0=None):  # level, or a curved page brought below sight, or (a clear tilt,
         if p.get('tilt_by_edge') is not None:            # a page found by its lines' edge: level by the two usual measures,
             if r <= LEVEL and im <= IMG_LEVEL: p['level_by_edge'] = 0.0; return True   # or its edge standing straight with
             es = [e for e in (m2['edges']() if m2 is not None else []) if e is not None]   # the whole page level
@@ -1730,6 +1781,22 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                                                                                                     # image measure near 0.3°)
             b = m2['lines']()
             if b is not None and abs(b) <= 0.15: p['level_by_lines'] = round(b, 3); return True
+        # A SMALL TILT A RULER CONFIRMS (2026-10-25: 33 pages of 8 regression books, 0.2–0.7°, left tilted — once turned the
+        # shear measure read them level, the coarse image measure 0.22–0.3°; معجم تيمور ص 75, مشتبهات القرآن ص 58): a ruler of
+        # the page's own — its lines' baselines, or their aligned edge — that read the tilt on the page as it was (≥ 0.2°: one
+        # pixel over a line's third is 0.14° at 1,000 px; within 0.25° of the turn and in its direction: the baselines' angle
+        # has the turn's sign, the edge's the opposite) and reads ≤ 0.15° once turned, the shear measure level and the image
+        # ≤ 0.3°: two measures agree that the page was tilted and is now level
+        if m0 is not None and m2 is not None and r <= LEVEL and im <= 0.3 + 1e-6:
+            b0 = m0['lines']()
+            if b0 is not None and abs(b0) >= SKEW_MIN and b0 * d > 0 and abs(abs(b0) - abs(d)) <= 0.25:
+                b1 = m2['lines']()
+                if b1 is not None and abs(b1) <= 0.15: p['level_by_lines'] = round(b1, 3); return True
+            e0, e1 = m0['edges'](), m2['edges']()
+            for s in (0, 1):
+                if e0[s] is not None and e1[s] is not None and abs(e0[s]) >= SKEW_MIN and e0[s] * d < 0 \
+                   and abs(abs(e0[s]) - abs(d)) <= 0.25 and abs(e1[s]) <= 0.15:
+                    p['level_by_edge'] = round(e1[s], 3); return True
         # A BIG TILT NO SINGLE TURN LEVELS (a warped leaf; owner 2026-10-14, أحكام القرآن ص 250 «لم تقوم», 4–6°): a turn that
         # leaves both measures ≤ 20 % of the tilt (at most 0.4° left from 2°) is far better than the page as it was
         if abs(before) >= 1.5 and max(r, im) <= max(0.4, 0.2 * abs(before)): p['reduced'] = round(max(r, im), 3); return True
@@ -1797,7 +1864,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                 mk = m0
         elif p.get('skew'):
             before = p['skew']; d, r, im, m2 = best_turn(i, p, before)
-            if keep(p, d, r, im, before, m2): p['skew'], mk = d, m2; p['after_tilt'] = round(r, 3); p['after_tilt_image'] = im
+            if keep(p, d, r, im, before, m2, m0): p['skew'], mk = d, m2; p['after_tilt'] = round(r, 3); p['after_tilt_image'] = im
             else:
                 p.pop('skew', None); p['unsure_tilt'] = True; mk = look(i, p)
         elif mk['xy'] is not None and ct is None:
@@ -1816,15 +1883,17 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
             if abs(u) >= SKEW_MIN and g >= 1.02:
                 if mk['proj'](-3.0, 3.0, 0.25) < SKEW_MIN - 0.05: p['tilt_disputed'] = round(u, 3)   # the image shows no tilt
                 else:
-                    tries = []
+                    tries = []; al0 = p.get('allowed'); bd = banded(al0, p['w'], p['h'])
                     for d0 in (-u, u):                # the direction that lowers the tilt, by the shear measure
                         m2 = look(i, dict(p, skew=round(d0, 3)))
-                        if m2['xy'] is None or not (0.6 <= len(m2['xy'][0]) / len(mk['xy'][0]) <= 5.0): continue
+                        if m2['xy'] is None or not (0.6 <= ink_ratio(mk, m2, mk['z'], al0 if bd else None,
+                                                                     fwd_inner(doc, i, dict(p, skew=round(d0, 3)), al0) if bd else None) <= 5.0):
+                            continue
                         tries.append((abs(skew_of(m2['xy'], raw=True)[0]), round(d0, 3)))
                     done = False
                     if tries:
                         d, r, im, m2 = best_turn(i, p, min(tries)[1])
-                        if keep(p, d, r, im, u, m2):
+                        if keep(p, d, r, im, u, m2, mk):
                             p['skew'] = d; p['after_tilt'] = round(r, 3); p['after_tilt_image'] = im; p['turned_in_check'] = True
                             mk = m2; done = True
                     if not done:                      # (a page found by its edge alone whose turn is not certified: the
@@ -1923,7 +1992,12 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                             and not (p.get('curved') and p.get('after_tilt', 9) <= CURVED and p.get('after_tilt_image', 9) <= CURVED)
                             and not (p.get('level_by_lines') is not None and max(p.get('after_tilt', 9), p.get('after_tilt_image', 9)) <= 0.35)
                             and not (p.get('level_by_edge') is not None and p.get('after_tilt', 9) <= 0.2)
-                            and not (p.get('level_by_columns') is not None and p['level_by_columns'] <= 0.15)]
+                            and not (p.get('level_by_columns') is not None and p['level_by_columns'] <= 0.15)
+                            # (a turn certified by the page's straight rules or by its own ink: no after-turn reading is
+                            # taken for it — these were listed as «still tilted» until 2026-10-25: 2,348 pages of the
+                            # regression's 31 books)
+                            and not (p.get('level_by_rules') is not None and abs(p['level_by_rules']) <= 0.35)
+                            and not (p.get('level_by_proj') is not None and p['level_by_proj'] <= 0.2)]
     rec['level_by_lines'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('level_by_lines') is not None and p.get('skew')]
     rec['curved'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('curved')]
     rec['enlarged'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('enlarged')]
