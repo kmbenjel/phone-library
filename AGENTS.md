@@ -80,9 +80,10 @@ Read this file first. Keep it current when you change a convention.
    out of step with the print is dropped — `scripts/drop_pages.py` (an incremental update: the original bytes stay, undo =
    truncate; a non-blank page only with `--cover`), logged as «pages». Check the printed number of a few text pages after.
 6. After every edit: run `scripts/refresh.sh` (re-index → catalog → reports → site), WITHOUT `--publish` — the
-   indexes stay on the laptop until the owner asks for them on the phone. It ends by opening the main index
-   (`site/00 - الفهرس العام.html`) in Brave on the laptop (`scripts/open_index.sh`) for the owner to check:
-   do this after every edit, also when only the indexes changed. Then add a WORKLOG line.
+   indexes stay on the laptop until the owner asks for them on the phone. It does NOT open the index in Brave
+   (owner 2026-10-25: «don't auto open indexes» — every refresh left another 41 MB tab, Brave reached 7 GB); `OPEN=1
+   scripts/refresh.sh` or `scripts/open_index.sh` opens it when he asks. Do this after every edit, also when only the
+   indexes changed. Then add a WORKLOG line.
 
 ## 4. Naming conventions
 
@@ -187,7 +188,7 @@ Single-volume books are stored as plain files in the category folder without the
 ## 6. Scripts (all in `scripts/`, Python 3, stdlib only)
 
 **One command after any edit:** `scripts/refresh.sh` (re-index → provenance → catalog → comparisons → reports →
-HTML → opens the main index in Brave). `--publish` also uploads to `Books/فهارس الويب/` — only when the owner asks.
+HTML; the index is not opened in Brave unless `OPEN=1`). `--publish` also uploads to `Books/فهارس الويب/` — only when the owner asks.
 Reports are written twice: `site/*.html` (Arabic, offline) and `reports/*.md` (for agents); when published, the
 Markdown copies are in `فهارس الويب/md/` and the data tables in `فهارس الويب/data/`.
 
@@ -245,7 +246,7 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `phone_keepalive.py` | logs in + NOOP every 2 min so the phone's FTP app never goes idle and sleeps (owner 2026-10-12: «the phone said it will go into sleep mode for lack of use»); follows the address; `setsid nohup python3 scripts/phone_keepalive.py >> logs/phone-keepalive.log 2>&1 &` — relaunch after a laptop restart |
 | `resources_report.sh` | a few lines every 5 min (load, memory, disk, temperature, battery, top processes, phone up/away, crop batch progress) printed into a terminal the owner has open: `setsid nohup scripts/resources_report.sh /dev/pts/N &`; stops when that terminal closes |
 | `reporter_follow.sh` | keeps resources_report.sh printing in whatever GNOME Terminal the owner has open (checks every 30 s); `setsid nohup scripts/reporter_follow.sh >/dev/null 2>&1 &` — relaunch after a restart |
-| `open_index.sh` | opens `site/00 - الفهرس العام.html` in Brave on the laptop (`NO_OPEN=1` skips) |
+| `open_index.sh` | opens `site/00 - الفهرس العام.html` in Brave on the laptop — only on request (refresh.sh calls it with `OPEN=1`) |
 | `refresh.sh` | everything above in order |
 | `fetch_queue.py` | THE download/upload pipeline (§7): parallel aria2c, verify, one serialized phone connection, resumable; `file:///…` = a file already downloaded and read; falls back to the item's own storage servers when archive.org's redirect lands on a failing node (HTTP 500) |
 | `waq_queue.py` | Waqfeya records → `fetch_queue.py` lines (only the files each record links; skips what the phone already has) |

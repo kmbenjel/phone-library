@@ -33,4 +33,4 @@ python3 scripts/build_selection.py   # selection page catalogue (publish it with
 # Indexes stay on the laptop for now (owner, 2026-10-05): publish to the phone only when the owner asks.
 if [ "${1:-}" = "--publish" ]; then echo "6/6 publish"; python3 scripts/publish.py; else echo "6/6 (kept local; --publish uploads to the phone)"; fi
 scripts/publish_web.sh || echo "web: publish failed (see above)"   # online copy: https://benjelloun.dev/library (owner, 2026-10-05)
-scripts/open_index.sh || true
+[ "${OPEN:-}" = 1 ] && scripts/open_index.sh || true   # not opened by default (owner 2026-10-25: «don't auto open indexes» — each refresh left a 41 MB tab open in Brave); OPEN=1 opens it
