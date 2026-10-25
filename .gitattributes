@@ -1,0 +1,7 @@
+# Mark generated static HTML catalogs and review pages as generated so GitHub Linguist classifies phone-library as Python
+site/** linguist-generated=true
+site-web/** linguist-generated=true
+selection/*.html linguist-generated=true
+templates/*.html linguist-documentation=true
+data/** linguist-generated=true
+plans/** linguist-generated=true

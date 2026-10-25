@@ -5,6 +5,7 @@
 **Large-Scale Autonomous Digital Library & Computer-Vision Document Processing Pipeline**
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![CI](https://img.shields.io/github/actions/workflow/status/kmbenjel/phone-library/ci.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI%20Pipeline)](https://github.com/kmbenjel/phone-library/actions/workflows/ci.yml)
 [![Computer Vision](https://img.shields.io/badge/Computer%20Vision-PyMuPDF%20%7C%20Pillow-ff69b4?style=for-the-badge)](https://pymupdf.readthedocs.io/)
 [![Corpus](https://img.shields.io/badge/Corpus-16%2C700%2B%20Volumes-orange?style=for-the-badge)](https://benjelloun.dev/library)
 [![Storage](https://img.shields.io/badge/Storage-174%2B%20GB%20Android%20FTP-green?style=for-the-badge&logo=android&logoColor=white)](https://benjelloun.dev/library)
@@ -200,14 +201,11 @@ phone-library/
 
 ## 📸 Intelligent Cropping, Web Index & Mobile Reader Showcase
 
-> [!NOTE]
-> Below are placeholder slots for visual captures, side-by-side computer-vision crop comparisons, and the live catalog web reader.
-
 <div align="center">
 
-| 📖 Before & After CV Cropping | 🌐 Live Web & Mobile Catalog |
+| 📖 Before & After Computer-Vision Cropping | 🌐 Live Web & Mobile Catalog (`benjelloun.dev/library`) |
 |:---:|:---:|
-| ![Crop Comparison Placeholder](https://placehold.co/500x700/1e293b/38bdf8?text=CV+Crop+Before+%26+After) <br> *Intelligent margin trimming & footnote boundary preservation* | ![Web Catalog Placeholder](https://placehold.co/500x700/1e293b/10b981?text=benjelloun.dev/library+Reader) <br> *Fast search, instant filters, and cross-category navigation* |
+| ![Before and After CV Cropping](./docs/showcase/cv-crop-before-after.png) <br> *Per-page bounding-box detection (`scripts/book_crop.py` + `crop_regress.py`): strips dark scanner borders while preserving marginalia, footnotes, and header seals with 100% lossless text retention.* | ![Live Web Catalog and Reader](./docs/showcase/web-catalog-reader.png) <br> *Static bilingual index (`scripts/build_site.py`) indexing 16,743 PDF volumes (174+ GB) across 6,162 titles and 39 classical disciplines with instant client-side filtering and mobile reader links.* |
 
 </div>
 
@@ -215,9 +213,9 @@ phone-library/
 
 <div align="center">
 
-| 🔍 Interactive Review Interface (Port 8765) | 📱 Android Phone Internal Storage Integration |
+| 🔍 Interactive Plan Review & Crop Verification Dashboard | 🏛️ Multi-Catalog Reconciliation & Android FTP Sync |
 |:---:|:---:|
-| ![Review Page Placeholder](https://placehold.co/500x700/1e293b/f59e0b?text=Plan+Review+Dashboard) <br> *Visual side-by-side approval dashboard before atomic moves* | ![Mobile Storage Placeholder](https://placehold.co/500x700/1e293b/8b5cf6?text=Android+FTP+File+Sync) <br> *174+ GB organized directly on mobile storage over FTP* |
+| ![Interactive Review Dashboard](./docs/showcase/review-dashboard.png) <br> *Human-in-the-loop visual approval interface (`scripts/review_server.py`) displaying side-by-side title/cover inspection, page-count verification, and transactional `plans/NNN-*.tsv` batch governance before atomic execution.* | ![Shamela Reconciliation and Android Sync](./docs/showcase/shamela-reconciliation.png) <br> *Cross-referencing engine matching mobile PDF holdings against Al-Maktaba Al-Shamela (8,598 books), Waqfeya, and Archive.org metadata, synchronized directly with Android internal storage over local FTP.* |
 
 </div>
 
