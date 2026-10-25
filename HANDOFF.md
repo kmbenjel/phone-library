@@ -3,6 +3,49 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-25 21:15 — NEXT: the crop method revisit (owner chose max effort); state before a /clear (Claude)
+State now: nothing runs but the services (mem-governor, phone-keepalive, phone-watchdog, review-server, review-x-opener,
+reporter-follow). Crop regression (book_crop md5 5d6113b97c, logs/crop-regress-2026-10-25.log) FINISHED: 6 failures =
+exactly the 14 pages the owner ruled «turn» (data/crop/owner-turns.tsv; site/crop-tilt-001.html closed); every page case
+passes. refresh.sh ran (fff0ed3, web published). All owner review pages answered (doubts-002/003 closed; C = leave the
+756 separate introductions apart — memory separate-introductions-stay). Plan 382 deleted the 39 originals set aside by
+plans 371/375 (owner: «remove the trace»).
+
+THE OWNER'S ORDER (2026-10-25 evening), with the effort he will switch to:
+1. (max) CROP METHOD REVISIT — then ONE regression run:
+   a. SPEED. Profile first (cProfile on analyse_pages + verify of ~20 pages). Prime suspect: every measured turn renders
+      through turned() → a NEW one-page document (insert_pdf copies the page image) → the image is decoded again for
+      each angle (best_turn tries up to 11; analyse_pages more). Exact-preserving idea: render the turned page from the
+      ORIGINAL doc (MuPDF's store then caches the decoded image) and prove pixel/measure equivalence on sample pages
+      before switching; memoize look(i, q) per (i, skew, move). Avoid approximations (low-res search) unless proven
+      equal. Outlier: 3103a9db389b (رسوم دار الخلافة, 296 pages) took 14,353 s (10,453 s on 10-18) — 48 s/page,
+      ~15–40× the others (1–4 s/page): profile it first.
+   b. MEMORY: one analysis reached 3.7 GB with 1 worker and tripped the governor's brake twice (18:10, 19:03) — check
+      MuPDF store size (pymupdf.TOOLS.store_maxsize), xy arrays kept in best_turn's tried dict, leaks across pages.
+   c. SMALL-TILT RULE: the owner approved all 14 undecided pages (0.2–0.68°, image measure stuck at 0.22–0.35° after
+      the turn) → the method is too timid. Candidate: both measures saw the tilt (the untreated condition), the shear
+      measure reads ≤ LEVEL after the turn, the image measure improves (not ≤ 0.2 required), no ruler contradicts.
+      Check against every «turn no» case of data/improve/crop-regression.tsv (index pages, verse) and look at a sample.
+   d. OWNER TURNS as data inside book_crop: plan(path, jobs, owner_turns={page: |tilt|}) → in verify a listed page the
+      method leaves untreated is turned by −u (u signed, measured at run time; the owner saw −u) and marked owner_turn;
+      callers (crop_batch.analyse, crop_redo, crop_regress.recipe) look the book up in data/crop/owner-turns.tsv by its
+      phone path (NFC, renames followed); crop_regress: cache key + hash of the book's turns, and the 'turn' check accepts
+      owner_turn. Add the 14 pages as «turn yes» cases (note: the owner's verdict).
+   e. After the run: a DIFF of the new recipes against the 5d6113b97c cache (skew, crop box per page) — every change must
+      be explained before the redo. Ask the owner for the image of خزانة الأدب vol. 1's cover (he saw problems there on
+      the OLD 2026-10-10 crop — «وجدت الغلاف هكذا»; the image never arrived): make it a regression case.
+2. (xhigh, may run beside the regression) NAME COMPOSER: name_compose cuts the title before dropping editors/publisher
+   (13 hand overrides today; 544 names cut mid-phrase, scratch/bad_cuts_2026_10_20.py) — the title's last clause is never
+   cut while an editor/publisher remains; then re-compose read books, clear commas/«ط»/parentheses where the data is in
+   hand (name_audit: 12,575 parentheses — mostly volume labels, 558 commas, 248 repeated volume numbers, 115 one-file
+   folders, 36 files < 20 KB).
+3. (xhigh) PILOT REDO of ~10 books (crop_redo.py data/crop/redo-list-2026-10-17.tsv, as scratch/start_redo_2026-10-18i.sh
+   did) → owner reviews site/crop-doubts.html (incl. خزانة vol. 1) → the full redo of the 1,122 books (unattended).
+4. (medium) reading pass: 3,249 books never read + 376 sheets unread (read_status.py); repeated volume numbers.
+Gotchas today: systemd-run units lack ~/.local/bin in PATH (rclone not found) → pass --setenv=PATH="$PATH";
+mem_governor now survives a systemctl timeout (it had crashed at 08:43, brake off until 16:10); refresh.sh no longer
+opens Brave (owner) — OPEN=1 to open.
+
 ## 2026-10-25 15:30 — crop gate rerunning; names 1432–1539 done (Claude)
 - RUNNING: user unit crop-regress-2026-10-25 (scratch/regress_2026-10-25.sh, marker data/crop/.regress-2026-10-25) → logs/crop-regress-2026-10-25.log. Do NOT edit book_crop.py while it runs (cache key). Regression only: if 0 failures (after the owner's verdicts on site/crop-tilt-001.html — «اترك» → add a «turn no» case to data/improve/crop-regression.tsv; «أدر» → a method fix), start the redo of the 1,122 books by hand (crop_redo.py data/crop/redo-list-2026-10-17.tsv crop-redo-001, as scratch/start_redo_2026-10-18i.sh did).
 - Owner's verdicts on crop-tilt-001: ALL 14 pages «turn» → data/crop/owner-turns.tsv (path, page, measured tilt). NEXT (xhigh, after the regression ends): apply them OUTSIDE book_crop.py (a recipe post-step in crop_batch.analyse / crop_redo and crop_regress.recipe: skew = −measured, best_turn around it, marked owner_turn, not counted as untreated) and let crop_regress accept those pages; then the regression gate counts them as decided.
