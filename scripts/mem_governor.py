@@ -82,8 +82,11 @@ def pen_gb():
 
 def size_pen(gb):
     hi, mx = int(gb * 1024), int((gb + 1.5) * 1024)
-    subprocess.run(['systemctl', '--user', 'set-property', '--runtime', SLICE, f'MemoryHigh={hi}M', f'MemoryMax={mx}M'],
-                   capture_output=True, timeout=20)
+    try:                                              # (a busy systemd can take > 20 s: the call timed out on 2026-10-25
+        subprocess.run(['systemctl', '--user', 'set-property', '--runtime', SLICE, f'MemoryHigh={hi}M', f'MemoryMax={mx}M'],
+                       capture_output=True, timeout=20)  # and the exception killed the governor — its brake off for hours)
+    except subprocess.TimeoutExpired:
+        print(time.strftime('%F %T'), f'pen resize to {gb:.2f} GB timed out — tried again next round', flush=True)
 
 def get():
     try: return max(1, min(MAX, int(open(FILE).read().strip())))

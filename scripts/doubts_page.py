@@ -26,7 +26,7 @@ def main(report):
         for i, p in enumerate([x for x in imgs.split(',') if x][:4], 1):
             dst = f'{k}-{i}{os.path.splitext(p)[1] or ".jpg"}'
             shutil.copyfile(os.path.join(ROOT, p) if not os.path.isabs(p) else p, os.path.join(imgdir, dst))
-            pics.append(f'<img loading="lazy" src="{E(report)}/{E(dst)}" alt="">')
+            pics.append(f'<a href="{E(report)}/{E(dst)}" target="_blank"><img loading="lazy" src="{E(report)}/{E(dst)}" alt=""></a>')   # (a click shows it full size)
         folder, name = os.path.split(path)
         out.append(f'''<article data-n="{k}"><div class="head"><span class="k">{k}</span><div><div class="name">{E(name)}</div>
 <div class="mut">{E(folder)}</div><div class="why">{E(why)}</div></div></div>
