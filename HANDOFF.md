@@ -3,6 +3,21 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-25 09:15 — owner's doubts-001 comments handled; page doubts-002 open for him (Claude, before a /clear)
+- Laptop restarted 2026-10-25 ~02:00: services relaunched with scripts/start_services.sh + review-x-opener (user unit). The owner
+  wants the lid/idle inhibitors ON (2026-10-25 «yes I want them back»; on 10-23 he had asked Antigravity to stop them «for now»).
+- Antigravity (10-20..10-25): fixed crop_regress.py NameError and book_crop.py level-frame veto (uncommitted, still in the work
+  tree — commit them with the crop work); reran the regression (10-21/22): page cases pass except one on خريدة القصر; the
+  whole-book audit flags residual_tilt in 30–31 books (its diagnosis: level_by_rules / level_by_proj pages not exempted in the
+  residual_tilt check, book_crop.py ~L1923) and untreated_tilt in 11 — NOT verified by Claude yet; the crop chain
+  (crop-start-redo-i) is stopped («STOP: the regression did not pass»), its marker data/crop/.start-redo-2026-10-18i exists:
+  a new chain script is needed after the gate passes. Also: Antigravity added «scratch/» to .gitignore (commit one-offs with -f).
+- Done today: plans 370–378 (WORKLOG 09:10). Review page: http://127.0.0.1:8765/doubts-002.html (report «doubts-002»): A = 3
+  unresolvable (no upload has the missing pages), B = 39 changes to check, C = a decision: join the 756 separate
+  introductions (665 sets) into their vol. 1? Watch his comments: python3 scripts/watch_comments.py.
+- Still to do: names cut mid-phrase (scratch/bad_cuts_2026_10_20.py lists 544; fix with name_compose's whole_clause rule +
+  readings); naming pass books 1432–1539 (sheets ready); crop gate; refresh.sh started as unit refresh-2026-10-25.
+
 ## 2026-10-19 22:45 — the owner's six decisions done (plans 352–360); refresh running capped (Claude)
 - Owner: «1 نعم / 2 جيد، لكن أبق التعازي أيضا / 3 إن كان مخطوطا حقا، قد تكون وقفت على صور من المخطوط فقط من التقديم /
   4 اعتن / 5 نعم / 6 الذي تعرفه مناسبا، وكمل الكتب والسلسلات الناقصة». All applied: see the WORKLOG line of 22:40.
