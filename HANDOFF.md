@@ -3,6 +3,31 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-25 22:00 — crop revisit coded (commit 9c26546); THE ONE REGRESSION RUNNING (Claude, max effort)
+RUNNING: user unit crop-regress-2026-10-25b (scratch/regress_2026-10-25b.sh, marker data/crop/.regress-2026-10-25b) →
+logs/crop-regress-2026-10-25b.log, then by itself the diff → logs/crop-regress-diff-2026-10-25b.log (scratch/crop_recipe_diff_2026-10-25.py:
+every changed page sorted by cause — owner turn / level first / image ≤ 0.35 / OTHER). Do NOT edit book_crop.py while it runs
+(cache key ef238679a3). Equivalence tests beside it (scratchpad, units crop-eq-plan-old/new, crop-eq-render).
+Findings and changes (all in book_crop.py's comments):
+- 1a SPEED: the 14,353 s outlier (3103a9db389b) was the memory pen squeezing the job while the governor was down
+  (08:43–16:10) — alone the book takes 355 s (1.2 s/page). Profile: marks() 41 %, the two projection measures 34 %,
+  renders 11 %. Exact changes (old vs new recipes byte-identical on page extracts, renders byte-identical): Turner (one
+  turned copy per page — images decoded once), each view measured once in verify (memo per page), by_proj stops at the
+  coarse stage when the peak is 0°, vectorised group lookup in marks(). ~20–35 % faster.
+- 1b MEMORY: stamps_of kept two small images for EVERY ink group (every word): 3.6 GB for 83dfc7786870 (1,531 pages),
+  1.7 GB for 51cfa6854fda — the brakes of 18:10 and 19:03. Now only candidates a test reads keep them (results identical
+  on all 31 regression books). After the run: read the per-book «memory peak» in the log → maybe lower the governor's
+  2.2 GB per book (more workers).
+- 1c: best_turn BUG — the least-of-the-two key let an unlevel angle beat a level one by a float hair (الحروب الصليبية
+  ص 407); now a turn level by both measures is taken first. The ruler-certified small tilt allows the image measure up to
+  0.35° (was 0.3°). On the 15 untreated pages: 7 turned by these rules, 7 by the owner's turns, فهرسة 355 stays (its
+  «turn no» case holds: the shear measure still reads 0.2° after the turn).
+- 1d: owner turns in book_crop.plan(…, owner_turns) ← crop_batch.owner_turns(path) (data/crop/owner-turns.tsv, renames
+  followed) in crop_batch.analyse / crop_redo / crop_regress (cache key tag); 14 «turn yes» cases added.
+- 1e NEXT: when the run ends, read the diff: every OTHER page explained before the pilot redo. Asked the owner again for
+  the خزانة الأدب vol. 1 cover image (old 2026-10-10 crop).
+Then items 2–4 below (the owner switches the effort).
+
 ## 2026-10-25 21:15 — NEXT: the crop method revisit (owner chose max effort); state before a /clear (Claude)
 State now: nothing runs but the services (mem-governor, phone-keepalive, phone-watchdog, review-server, review-x-opener,
 reporter-follow). Crop regression (book_crop md5 5d6113b97c, logs/crop-regress-2026-10-25.log) FINISHED: 6 failures =
