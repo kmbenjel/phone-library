@@ -16,7 +16,7 @@ Per file (a PDF on the phone, path relative to Books/):
 Usage: python3 scripts/crop_batch.py LIST.tsv BATCH_NAME [--workers N] [--jobs J]   (LIST: one phone path per line, under
        Books/; --workers 1 --jobs 8: one book at a time, its pages shared among 8 processes)
        python3 scripts/crop_batch.py --undo PATH                         (restore one file to its original bytes)"""
-import csv, hashlib, io, json, os, subprocess, sys, tempfile, time, ftplib, fcntl
+import csv, hashlib, io, json, os, subprocess, sys, tempfile, time, ftplib, fcntl, unicodedata
 from concurrent.futures import ProcessPoolExecutor, as_completed
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
@@ -43,6 +43,26 @@ def follow(path):
     fwd, _ = moves(); seen = set()
     while path in fwd and path not in seen: seen.add(path); path = fwd[path]
     return path
+
+OWNER_TURNS = J('data', 'crop', 'owner-turns.tsv')
+
+def owner_turns(path):
+    """the pages of this book the owner ruled «turn» (data/crop/owner-turns.tsv: path, page, measured tilt, verdict — his
+    verdicts on site/crop-tilt-001.html, 2026-10-25) → {page (1-based, as in the recipe): |tilt|}, for book_crop.plan. The
+    list's paths and `path` are each followed to the name the file has now (logged moves, only while the name is not on
+    the phone — the log also holds the crop's own swaps), Unicode-normalised"""
+    if not os.path.exists(OWNER_TURNS): return {}
+    N = lambda x: unicodedata.normalize('NFC', x.removeprefix('Books/'))
+    rows = [l.rstrip('\n').split('\t') for l in open(OWNER_TURNS, encoding='utf-8') if l.strip() and not l.startswith('#')]
+    if not rows: return {}
+    fwd = {N(a): N(b) for a, b in moves()[0].items()}
+    idx = {N(l.split('\t')[0]) for l in open(J('data', 'phone', 'index-now.tsv'), encoding='utf-8') if l.strip()}
+    def now(x):
+        x, seen = N(x), set()
+        while x not in idx and x in fwd and x not in seen: seen.add(x); x = fwd[x]
+        return x
+    me = now(path)
+    return {int(r[1]): float(r[2]) for r in rows if now(r[0]) == me}
 
 def names_of(path, back):
     """the file's earlier names (its logged moves, followed backwards)"""
@@ -101,7 +121,7 @@ def analyse(path, src, jobs=1):
     """CPU part, in a worker process: plan + apply to a copy; returns what the phone step needs (jobs > 1: the book's pages
     shared out among that many processes — one urgent book with all processors)"""
     import book_crop as bc
-    rec = bc.plan(src, jobs)
+    rec = bc.plan(src, jobs, owner_turns=owner_turns(path))
     out = {'path': path, 'src': src, 'decision': rec.get('decision'), 'gain': rec.get('gain'),
            'turned': sum(1 for p in rec['pages'] if p.get('skew')), 'whole': len(rec.get('whole') or []),
            'residual': rec.get('residual_tilt') or [], 'untreated': rec.get('untreated_tilt') or [],

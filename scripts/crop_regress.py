@@ -38,15 +38,19 @@ def local_copy(path):
             os.remove(out); raise SystemExit(f'original bytes not recovered for {path}')
     return out
 
+PATHS = {}                                            # local copy → the phone path it was fetched for (its owner's turns)
+
 def recipe(pdf):
-    me = hashlib.md5(open(os.path.join(ROOT, 'scripts/book_crop.py'), 'rb').read()).hexdigest()[:10]
-    key = os.path.join(CACHE, os.path.basename(pdf)[:-4] + f'.{me}.json')
-    if os.path.exists(key): return json.load(open(key))
     import crop_batch as cb, time
+    me = hashlib.md5(open(os.path.join(ROOT, 'scripts/book_crop.py'), 'rb').read()).hexdigest()[:10]
+    ot = cb.owner_turns(PATHS[pdf]) if pdf in PATHS else {}   # the owner's turns are part of what is tested: in the key
+    tag = '.' + hashlib.md5(json.dumps(sorted(ot.items())).encode()).hexdigest()[:6] if ot else ''
+    key = os.path.join(CACHE, os.path.basename(pdf)[:-4] + f'.{me}{tag}.json')
+    if os.path.exists(key): return json.load(open(key))
     while not cb.room(): time.sleep(30)               # a book starts only with ≥ 3 GB free (2026-10-18 03:05)
     try: jobs = int(open(os.path.join(ROOT, 'data', 'crop', 'workers')).read().strip())   # the memory governor's number
     except (OSError, ValueError): jobs = int(os.environ.get('JOBS', 3))
-    rec = bc.plan(pdf, max(1, jobs)); json.dump(rec, open(key, 'w'), ensure_ascii=False); return rec
+    rec = bc.plan(pdf, max(1, jobs), owner_turns=ot); json.dump(rec, open(key, 'w'), ensure_ascii=False); return rec
 
 def forward(page, p):
     """maps original-page points to the reader's frame (turned, moved), like the content transform"""
@@ -73,9 +77,10 @@ def check(row, rec, pdf):
              or (p.get('level_by_columns') is not None and p['level_by_columns'] <= 0.15)
              or p.get('reduced') is not None)
              or (p.get('level_by_proj') is not None and p['level_by_proj'] <= 0.2)
-             or (p.get('level_by_rules') is not None and abs(p['level_by_rules']) <= 0.35))) \
+             or (p.get('level_by_rules') is not None and abs(p['level_by_rules']) <= 0.35)
+             or p.get('owner_turn') is not None)) \
              and (expect == 'no' or not p.get('untreated_tilt'))
-        return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}){" curved" if p.get("curved") else ""}, untreated {p.get("untreated_tilt")}'
+        return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}){" curved" if p.get("curved") else ""}{" — turned by the owner's verdict" if p.get("owner_turn") is not None else ""}, untreated {p.get("untreated_tilt")}'
     if what == 'cropped':                              # cropped, not left whole (a book without print in its margins)
         got = 'yes' if p.get('crop') else 'no'
         return got == expect, f'crop {p.get("crop")}, enlarged {p.get("enlarged")}, book clean margins {rec.get("clean_margins")}'
@@ -111,6 +116,12 @@ def check(row, rec, pdf):
         return (not overlap) if what == 'out' else is_in, f'region {x0:.0f}–{x1:.0f}, box {crop[0]:.0f}–{crop[2]:.0f}'
     return False, 'unknown check ' + what
 
+def mem():
+    """this process's memory peak since the last reset, and the largest worker's so far (MB)"""
+    import resource
+    hwm = next((int(l.split()[1]) // 1024 for l in open('/proc/self/status') if l.startswith('VmHWM')), 0)
+    return f'{hwm} MB, workers up to {resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss // 1024} MB'
+
 def main():
     rows = [r for r in csv.reader(open(os.path.join(ROOT, 'data/improve/crop-regression.tsv'), encoding='utf-8'), delimiter='\t')
             if r and not r[0].startswith('#')]
@@ -119,10 +130,13 @@ def main():
     fails = 0; recs = {}; cur = (None, None)
     import time
     for r in rows:
-        pdf = local_copy(r[0])
+        pdf = local_copy(r[0]); PATHS.setdefault(pdf, r[0])
         if pdf not in recs:
             cur = (None, None)
-            t0 = time.time(); cur = (pdf, recipe(pdf)); recs[pdf] = True; print(f'   (analysed {os.path.basename(pdf)} in {time.time() - t0:.0f} s)', flush=True)
+            try: open('/proc/self/clear_refs', 'w').write('5')   # (this process's memory peak, book by book)
+            except OSError: pass
+            t0 = time.time(); cur = (pdf, recipe(pdf)); recs[pdf] = True
+            print(f'   (analysed {os.path.basename(pdf)} in {time.time() - t0:.0f} s; memory peak {mem()})', flush=True)
         elif cur[0] != pdf: cur = (pdf, recipe(pdf))
         ok, why = check(r, cur[1], pdf)
         fails += not ok

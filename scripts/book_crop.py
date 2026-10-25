@@ -205,9 +205,8 @@ def marks(a, scale, width, exclude=None):
     small = (hgt <= sp) & (wid <= sp); small[0] = False
     # marks closer than M to each other fall in one group (dilation by M/2 on each)
     grp, _ = ndimage.label(ndimage.binary_dilation(m, iterations=max(1, int(M * unit / 2))), structure=np.ones((3, 3), bool))
-    gid = np.zeros(n + 1, np.int64)
-    for i, s in enumerate(objs, 1):
-        gid[i] = grp[s][lab[s] == i][0]
+    gid = np.zeros(n + 1, np.int64)                  # (a mark lies wholly in one group: every pixel of it gives the group)
+    gid[lab[m]] = grp[m]
     members = {}
     for i in range(1, n + 1): members.setdefault(int(gid[i]), []).append(i)
     isolated = {ids[0] for ids in members.values() if len(ids) == 1 and small[ids[0]]}
@@ -654,15 +653,20 @@ def raw_box(doc, x, key):
         t, par = doc.xref_get_key(x, 'Parent'); x = int(par.split()[0]) if t == 'xref' else 0
     return None
 
-def rotate_contents(doc, page, deg, dx=0.0, dy=0.0):
-    """LOSSLESS deskew / move: the page's content is drawn turned by deg degrees about the page centre, then moved by
-    (dx, dy) pt (page coordinates: dy > 0 = down) — one «q … cm» stream before the existing content and one «Q» after it;
-    images and text layer are untouched (they turn and move together)"""
+def turn_cm(doc, page, deg, dx=0.0, dy=0.0):
+    """the «q … cm» line that draws the page's content turned by deg degrees about the page centre, then moved by (dx, dy)
+    pt (page coordinates: dy > 0 = down)"""
     import math
     mb = raw_box(doc, page.xref, 'MediaBox'); cx, cy = (mb[0] + mb[2]) / 2, (mb[1] + mb[3]) / 2
     t = math.radians(deg); c, s = math.cos(t), math.sin(t)
     e, f = cx - c * cx + s * cy + dx, cy - s * cx - c * cy - dy
-    return wrap_contents(doc, page, f'q {c:.6f} {s:.6f} {-s:.6f} {c:.6f} {e:.4f} {f:.4f} cm\n'.encode())
+    return f'q {c:.6f} {s:.6f} {-s:.6f} {c:.6f} {e:.4f} {f:.4f} cm\n'.encode()
+
+def rotate_contents(doc, page, deg, dx=0.0, dy=0.0):
+    """LOSSLESS deskew / move: the page's content is drawn turned by deg degrees about the page centre, then moved by
+    (dx, dy) pt (page coordinates: dy > 0 = down) — one «q … cm» stream before the existing content and one «Q» after it;
+    images and text layer are untouched (they turn and move together)"""
+    return wrap_contents(doc, page, turn_cm(doc, page, deg, dx, dy))
 
 def wrap_contents(doc, page, pre):
     """one new stream `pre` (opening with «q») before the page's existing content and one «Q» after it"""
@@ -683,6 +687,29 @@ def turned(doc, i, deg, dx=0.0, dy=0.0):
     t = pymupdf.open(); t.insert_pdf(doc, from_page=i, to_page=i)
     if deg or dx or dy: rotate_contents(t, t[0], deg, dx, dy)
     return t
+
+class Turner:
+    """turned() for many angles of ONE page (2026-10-25, speed): a single one-page document whose «q … cm» stream is
+    rewritten for each angle, so MuPDF decodes the page's image once instead of once per angle (JBIG2 and colour scans
+    render 3× faster). Each document it shows holds exactly the bytes turned() would make — renders checked byte for
+    byte on 41 books. page(deg, dx, dy) → the page, valid until the next call"""
+    def __init__(self, doc, i):
+        self.t = pymupdf.open(); self.t.insert_pdf(doc, from_page=i, to_page=i)
+        self.plain = self.t.xref_get_key(self.t[0].xref, 'Contents')   # the content as turned() leaves it unturned
+        self.xa = None; self.wrapped = None
+    def page(self, deg, dx=0.0, dy=0.0):
+        t = self.t; pg = t[0]
+        if not (deg or dx or dy):                    # unturned: the page's own content, as turned() leaves it
+            if self.xa is not None: t.xref_set_key(pg.xref, 'Contents', self.plain[1])
+            return t[0]
+        pre = turn_cm(t, pg, deg, dx, dy)
+        if self.xa is None:
+            if not wrap_contents(t, pg, pre): return t[0]   # no content stream to turn (turned() leaves it so too)
+            self.wrapped = t.xref_get_key(pg.xref, 'Contents')[1]; self.xa = int(self.wrapped.strip('[] ').split()[0])
+        else:
+            t.update_stream(self.xa, pre); t.xref_set_key(pg.xref, 'Contents', self.wrapped)
+        return t[0]
+    def close(self): self.t.close()
 
 def inside(b, box, tol=0.5):
     return b[0] >= box[0] - tol and b[1] >= box[1] - tol and b[2] <= box[2] + tol and b[3] <= box[3] + tol
@@ -923,17 +950,19 @@ def fwd_boxes(doc, i, p, bs):
         out.append([min(q.x for q in pts), min(q.y for q in pts), max(q.x for q in pts), max(q.y for q in pts)])
     return out
 
-def proj_signed(a, paper, lo=-4.0, hi=4.0, step=0.25, width=800):
+def proj_signed(a, paper, lo=-4.0, hi=4.0, step=0.25, width=800, need=None):
     """THE THIRD TILT MEASURE (owner 2026-10-18: طبقات الفقهاء «الأول فيه ميل», «الثالث والرابع مائلان» — pages 1.5–2.9°
     tilted that the shear measure read level, its halves disagreeing): the page image turned by each angle, the sharpness of
     its ink-row profile (the classic deskew); signed — the angle IS the turn (as rec['skew']). Returns (angle, sharpness:
-    the best profile over the median one)"""
+    the best profile over the median one); with `need`, (None, None) as soon as the coarse peak shows the angle stays below
+    it (the fine search keeps within one step of that peak — 2026-10-25, speed: most pages peak at 0°)"""
     from PIL import Image
     im = Image.fromarray(a)
     if im.width > width: im = im.resize((width, max(1, round(im.height * width / im.width))), Image.BILINEAR)
     w, h = im.size; box = (int(w * .08), int(h * .05), int(w * .92), int(h * .95)); thr = max(60, min(200, paper - 50))
     sc = lambda t: float(np.var((np.asarray(im.rotate(float(t), resample=Image.BILINEAR, fillcolor=255).crop(box)) < thr).sum(1)))
     angs = np.arange(lo, hi + 1e-9, step); s = [sc(t) for t in angs]; k = int(np.argmax(s))
+    if need is not None and abs(float(angs[k])) + step < need - 1e-6: return None, None
     fine = np.arange(angs[k] - step, angs[k] + step + 1e-9, 0.025); f = [sc(t) for t in fine]; j = int(np.argmax(f))
     return round(float(fine[j]), 3), round(max(f) / max(1e-9, float(np.median(s))), 2)
 
@@ -942,8 +971,8 @@ def by_proj(a, mk, ang, gain, rec):
     an angle ≥ 0.3° (sharpness ≥ 1.5): that angle is its turn; the turn is kept only if the turned page then reads ≤ 0.2°
     by the same measure (checked where it is turned)"""
     if abs(ang) >= SKEW_MIN or mk.get('dark', 1) > 0.35: return ang, gain
-    t, sh_ = proj_signed(a, mk.get('paper') or 255)
-    if abs(t) >= 0.3 and sh_ >= 1.5:
+    t, sh_ = proj_signed(a, mk.get('paper') or 255, need=0.3)
+    if t is not None and abs(t) >= 0.3 and sh_ >= 1.5:
         # a long straight printed rule over the text block that reads level (≤ 0.2°): the page is level — the projection
         # was fooled by the layout (columns of short lines). A scanner's or a sheet's line is not over the text block
         tb = mk.get('text') or mk.get('box')
@@ -1036,6 +1065,8 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
             rec.pop('sheet', None); sh = None              # its text reaches the «sheet's» edge: no sheet — measured whole
             a, z = gray(page, 500); mk = marks(a, z, r.width, ex0)
         if sh and mk.get('allowed'): mk['allowed'] = [max(mk['allowed'][0], sh[0]), max(mk['allowed'][1], sh[1]), min(mk['allowed'][2], sh[2]), min(mk['allowed'][3], sh[3])]
+        tu_ = []                                       # (the page turned for several angles: one Turner)
+        tu = lambda: tu_[0] if tu_ else (tu_.append(Turner(doc, i)) or tu_[0])
         if mk['box'] is not None and mk['dark'] <= 0.35:     # a tilted text page: turn it level (the sign is checked)
             al0 = mk.get('allowed')                      # (its scanner bands, read before the turn: a turned image's
             ang, gain = skew_of(mk['xy'])                #  blank corners hide them)
@@ -1053,15 +1084,15 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
                 for k in list(range(-5, 6)):
                     deg = round(rec['tilt_by_proj'] + 0.2 * k, 3)
                     if deg * rec['tilt_by_proj'] <= 0: continue
-                    t = turned(doc, i, deg); a2, z2 = gray(t[0], 500); a2 = whiten(a2, z2, fwd_box(doc, i, {'skew': deg}, sh) if sh else None)
-                    mk2 = marks(a2, z2, r.width, fwd_boxes(doc, i, {'skew': deg}, ex0) if ex0 else None); t.close()
+                    a2, z2 = gray(tu().page(deg), 500); a2 = whiten(a2, z2, fwd_box(doc, i, {'skew': deg}, sh) if sh else None)
+                    mk2 = marks(a2, z2, r.width, fwd_boxes(doc, i, {'skew': deg}, ex0) if ex0 else None)
                     if mk2['box'] is None or mk2['xy'] is None: continue
                     lv = abs(skew_of(mk2['xy'], raw=True)[0])
                     if best is None or lv < best[0]: best = (lv, deg, mk2)
                 if best:                                 # then ± 0.1° around the best
                     for deg in (round(best[1] - 0.1, 3), round(best[1] + 0.1, 3)):
-                        t = turned(doc, i, deg); a2, z2 = gray(t[0], 500); a2 = whiten(a2, z2, fwd_box(doc, i, {'skew': deg}, sh) if sh else None)
-                        mk2 = marks(a2, z2, r.width, fwd_boxes(doc, i, {'skew': deg}, ex0) if ex0 else None); t.close()
+                        a2, z2 = gray(tu().page(deg), 500); a2 = whiten(a2, z2, fwd_box(doc, i, {'skew': deg}, sh) if sh else None)
+                        mk2 = marks(a2, z2, r.width, fwd_boxes(doc, i, {'skew': deg}, ex0) if ex0 else None)
                         if mk2['box'] is None or mk2['xy'] is None: continue
                         lv = abs(skew_of(mk2['xy'], raw=True)[0])
                         if lv < best[0]: best = (lv, deg, mk2)
@@ -1069,8 +1100,8 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
                 ang = 0.0                                # (the generic loop below is not run for it)
             if abs(ang) >= SKEW_MIN and gain >= 1.02:
                 for deg in (-ang, ang):
-                    t = turned(doc, i, deg); a2, z2 = gray(t[0], 500); a2 = whiten(a2, z2, fwd_box(doc, i, {'skew': deg}, sh) if sh else None)
-                    mk2 = marks(a2, z2, r.width, fwd_boxes(doc, i, {'skew': deg}, ex0) if ex0 else None); t.close()
+                    a2, z2 = gray(tu().page(deg), 500); a2 = whiten(a2, z2, fwd_box(doc, i, {'skew': deg}, sh) if sh else None)
+                    mk2 = marks(a2, z2, r.width, fwd_boxes(doc, i, {'skew': deg}, ex0) if ex0 else None)
                     # the turned page must still show the page's ink (a broken drawing would show none); its text block is
                     # naturally narrower once level, so its size is not compared; MORE ink once level is no fault — a
                     # table's slanted rules count as print only when straight (خريدة القصر ص 649: ×3.5, the turn refused);
@@ -1086,6 +1117,7 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
                             a_ = fwd_inner(doc, i, {'skew': deg}, al0)
                             mk['allowed'] = [max(mk['allowed'][0], a_[0]), max(mk['allowed'][1], a_[1]), min(mk['allowed'][2], a_[2]), min(mk['allowed'][3], a_[3])]
                         break
+        if tu_: tu_[0].close()
         mk.pop('xy', None); mk.pop('parts', None)
         if sh and mk.get('allowed'):                   # (the sheet's edges bound the box, on the turned page too)
             sh_ = fwd_box(doc, i, {'skew': rec.get('skew') or 0}, sh)
@@ -1138,7 +1170,11 @@ def stamps_of(path, jobs=1, px=400):
     page number in the outer corner alternates sides). Then THE SAME STAMP ELSEWHERE (owner, ص 2: «you could have removed
     the stamp in p2 and centered the text»): on any page, a group of the stamp's proportions (± 15 %), at least 0.8 of its
     size, whose grey image matches the stamp's (correlation ≥ 0.7) — with the small line set right under it (a date).
-    Returns {page index: [boxes (pt)]}"""
+    Returns {page index: [boxes (pt)]}
+    (MEMORY, 2026-10-25: every group of ink is a candidate — a word, at 400 px — and its two small images used to be kept
+    for all of them: 3.6 GB for a book of 1,531 pages, the memory brake twice. Now only a candidate a test reads keeps
+    them: the band candidates both, a foot-corner candidate its grey image; the grey image of any other candidate is made
+    again, page by page, only when a stamp was found and the candidate has its proportions — the same result)"""
     doc = pymupdf.open(path); n = doc.page_count; doc.close()
     idx = list(range(n)); found = []
     if jobs > 1:
@@ -1166,6 +1202,18 @@ def stamps_of(path, jobs=1, px=400):
         G = np.mean([band[j][5] for j in same], axis=0); G = (G - G.mean()) / (G.std() + 1e-6)
         refs.append((G, float(np.median(bw[same] / bh[same])), float(np.median(bw[same]))))
         used[g] = True
+    want = {}                                         # the candidates of a stamp's proportions without their grey image
+    for f in found:
+        b = f[1]; w_, h_ = b[2] - b[0], b[3] - b[1]
+        if f[5] is None and any(abs((w_ / max(h_, 1e-6)) / asp - 1) <= 0.15 and w_ >= 0.8 * sw for _, asp, sw in refs):
+            want.setdefault(f[0], {})[f[7]] = b
+    if want:
+        gs, pgs = {}, sorted(want)
+        if jobs > 1:
+            with ProcessPoolExecutor(jobs) as ex:
+                for part in ex.map(_stamp_more, [(path, {q: want[q] for q in pgs[k::jobs]}, px) for k in range(jobs)]): gs.update(part)
+        else: gs = _stamp_more((path, want, px))
+        found = [f[:5] + (gs[(f[0], f[7])],) + f[6:] if (f[0], f[7]) in gs else f for f in found]
     for f in found:                                   # the same stamp at another size or place (a title page)
         b = f[1]; w_, h_ = b[2] - b[0], b[3] - b[1]
         if any(inside(b, q, 2.0) for q in out.get(f[0], [])): continue
@@ -1189,9 +1237,7 @@ def corner_signatures(found):
     arches, left alone) or as a frame's corners — the same piece at the mirrored corner of the same page (روضة المستبين
     ص 17، 49، 63، 97: a chapter page's frame): a group with such a twin on half its pages is print, not a signature.
     `found`: _stamp_chunk's candidates → {page index: [boxes (pt)]}"""
-    def corner(f):
-        b, W, H = f[1], f[2], f[3]; w, h = b[2] - b[0], b[3] - b[1]; cx, cy = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
-        return 0.05 * W <= w <= 0.25 * W and 0.04 * H <= h <= 0.2 * H and (cx <= 0.3 * W or cx >= 0.7 * W) and cy >= 0.7 * H
+    corner = lambda f: in_corner(f[1], f[2], f[3])
     def twin(f, page):                                # the same size at the mirrored place of its page
         b, W, H = f[1], f[2], f[3]; w, h = b[2] - b[0], b[3] - b[1]; mx, cy = W - (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
         return any(abs((c[1][0] + c[1][2]) / 2 - mx) <= 0.03 * W and abs((c[1][1] + c[1][3]) / 2 - cy) <= 0.03 * H
@@ -1209,26 +1255,58 @@ def corner_signatures(found):
         for j in grp: out.setdefault(cand[j][0], []).append([round(float(v), 1) for v in cand[j][1]])
     return out
 
-def _stamp_chunk(args):
+def in_corner(b, W, H):
+    """a candidate for a signature in a foot corner (corner_signatures): its box b (pt) on a page W × H (pt)"""
+    w, h = b[2] - b[0], b[3] - b[1]; cx, cy = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
+    return 0.05 * W <= w <= 0.25 * W and 0.04 * H <= h <= 0.2 * H and (cx <= 0.3 * W or cx >= 0.7 * W) and cy >= 0.7 * H
+
+def _stamp_groups(page, px):
+    """the groups of ink of one page that may be a stamp (stamps_of), in order: (number, box (pt), band, ink mask)"""
+    a, z = gray(page, px); paper = float(np.percentile(a, 90))
+    if paper < 150: return []
+    m = a < paper - 50; H, W = m.shape; out = []
+    lab, k = ndimage.label(ndimage.binary_dilation(m, iterations=max(1, int(0.003 * W))))
+    for j, s in enumerate(ndimage.find_objects(lab), 1):
+        y0, y1, x0, x1 = s[0].start, s[0].stop, s[1].start, s[1].stop
+        if not (0.03 * W <= x1 - x0 <= 0.45 * W and 0.008 * H <= y1 - y0 <= 0.2 * H): continue
+        band = (y1 <= 0.12 * H or y0 >= 0.82 * H) and x1 - x0 <= 0.35 * W and y1 - y0 <= 0.08 * H and abs((x0 + x1) / 2 - W / 2) >= 0.12 * W
+        out.append((j, (x0 / z, y0 / z, x1 / z, y1 / z), band, m[y0:y1, x0:x1] & (lab[y0:y1, x0:x1] == j)))
+    return out
+
+def _stamp_shape(ink):
+    """a group's shape, scaled to 48 × 16 (the band rule compares shapes)"""
+    from PIL import Image
+    return np.asarray(Image.fromarray(ink.astype(np.uint8) * 255).resize((48, 16), Image.BILINEAR), np.float32) / 255
+
+def _stamp_grey(ink):
+    """a group's grey image, 64 × 36, blurred and normalised (correlated with a stamp's)"""
     from PIL import Image, ImageFilter
+    g = np.asarray(Image.fromarray(ink.astype(np.uint8) * 255).resize((64, 36), Image.BOX).filter(ImageFilter.GaussianBlur(1.2)), np.float32)
+    return (g - g.mean()) / (g.std() + 1e-6)
+
+def _stamp_chunk(args):
+    """the candidates of some pages: (page, box, page width, height, shape (band only), grey image (band and foot
+    corner only), band, number on its page)"""
     path, idx, px = args
     doc = pymupdf.open(path); out = []
     for i in idx:
         page = doc[i]
         if page.rotation: continue
-        a, z = gray(page, px); paper = float(np.percentile(a, 90))
-        if paper < 150: continue
-        m = a < paper - 50; H, W = m.shape
-        lab, k = ndimage.label(ndimage.binary_dilation(m, iterations=max(1, int(0.003 * W))))
-        for j, s in enumerate(ndimage.find_objects(lab), 1):
-            y0, y1, x0, x1 = s[0].start, s[0].stop, s[1].start, s[1].stop
-            if not (0.03 * W <= x1 - x0 <= 0.45 * W and 0.008 * H <= y1 - y0 <= 0.2 * H): continue
-            ink = (m[y0:y1, x0:x1] & (lab[y0:y1, x0:x1] == j)).astype(np.uint8) * 255
-            t = np.asarray(Image.fromarray(ink).resize((48, 16), Image.BILINEAR), np.float32) / 255
-            g = np.asarray(Image.fromarray(ink).resize((64, 36), Image.BOX).filter(ImageFilter.GaussianBlur(1.2)), np.float32)
-            g = (g - g.mean()) / (g.std() + 1e-6)
-            band = (y1 <= 0.12 * H or y0 >= 0.82 * H) and x1 - x0 <= 0.35 * W and y1 - y0 <= 0.08 * H and abs((x0 + x1) / 2 - W / 2) >= 0.12 * W
-            out.append((i, (x0 / z, y0 / z, x1 / z, y1 / z), page.rect.width, page.rect.height, t, g, band))
+        W, H = page.rect.width, page.rect.height
+        for j, b, band, ink in _stamp_groups(page, px):
+            out.append((i, b, W, H, _stamp_shape(ink) if band else None, _stamp_grey(ink) if band or in_corner(b, W, H) else None, band, j))
+    doc.close()
+    return out
+
+def _stamp_more(args):
+    """the grey images of chosen candidates, made again from their pages: {page: {number: box}} → {(page, number): grey}"""
+    path, want, px = args
+    doc = pymupdf.open(path); out = {}
+    for i in sorted(want):
+        for j, b, band, ink in _stamp_groups(doc[i], px):
+            if j in want[i]:
+                if b != want[i][j]: raise RuntimeError(f'stamps_of: page {i + 1} read differently the second time')
+                out[(i, j)] = _stamp_grey(ink)
     doc.close()
     return out
 
@@ -1289,9 +1367,10 @@ def analyse(path):
     """kept for the old callers: the measured pages and the decision at the narrowest box"""
     return decide(analyse_pages(path))
 
-def plan(path, jobs=1):
+def plan(path, jobs=1, owner_turns=None):
     """the whole method: measure every page once, then the narrowest box that works — the width of 95 % of the pages,
-    else 98 %, else all; each tried with the second check (a book is cropped only if few pages stay whole)"""
+    else 98 %, else all; each tried with the second check (a book is cropped only if few pages stay whole).
+    owner_turns: {page (1-based, as in the recipe): |tilt|} — pages the owner ruled «turn» (verify)"""
     import copy, shutil
     d = pymupdf.open(path); n0 = d.page_count
     spreads = n0 and sum(1 for pg in d if not pg.rotation and pg.rect.width > 1.15 * pg.rect.height) >= 0.5 * n0
@@ -1307,7 +1386,7 @@ def plan(path, jobs=1):
         if gut:
             tmp = path[:-4] + '.split.pdf'; shutil.copyfile(path, tmp)
             dd = pymupdf.open(tmp); split_pages(dd, gut); dd.save(tmp, incremental=True, encryption=pymupdf.PDF_ENCRYPT_KEEP); dd.close()
-            try: rec = plan(tmp, jobs)
+            try: rec = plan(tmp, jobs, owner_turns)
             finally: os.remove(tmp)
             rec['split'] = {str(k): v for k, v in gut.items()}; rec['split_from'] = n0
             return rec
@@ -1318,13 +1397,13 @@ def plan(path, jobs=1):
         rec = decide(copy.deepcopy(pages), wq); rec['stamp_pages'] = len(stamps)
         if rec.get('decision') == 'level': break
         if rec.get('decision') != 'crop': continue
-        rec = verify(path, rec, jobs=jobs)
+        rec = verify(path, rec, jobs=jobs, owner_turns=owner_turns)
         if rec.get('decision') == 'crop': rec['width_quantile'] = wq; return frames(rec)
     if rec.get('decision') == 'level' or (rec.get('skewed') and 'do not fit one box' in (rec.get('decision') or '')):
-        r2 = level(path, pages, rec.get('decision'), jobs); r2['stamp_pages'] = len(stamps); return r2
+        r2 = level(path, pages, rec.get('decision'), jobs, owner_turns); r2['stamp_pages'] = len(stamps); return r2
     return rec
 
-def level(path, pages, why, jobs=1):
+def level(path, pages, why, jobs=1, owner_turns=None):
     """LEVEL ONLY (owner 2026-10-09): a good scan whose margins are already close to a crop's and whose only flaw is tilted
     pages («agree, as far as the margins are not too far from the desired results in the cropped books»), or a book whose
     pages no one box holds: its tilted pages are turned level — checked by the second look like any turn, tilts the first
@@ -1335,7 +1414,7 @@ def level(path, pages, why, jobs=1):
     rec = {'pages': pages, 'n': len(pages), 'measured': sum(1 for p in pages if p['kind'] == 'text'), 'decision': 'level',
            'level_why': why}
     for p in pages: p['crop'] = [0.0, 0.0, p['w'], p['h']] if p['kind'] == 'text' else None
-    rec = verify(path, rec, tilt_only=True, jobs=jobs)
+    rec = verify(path, rec, tilt_only=True, jobs=jobs, owner_turns=owner_turns)
     rec['skewed'] = sum(1 for p in pages if p.get('skew'))
     if not rec['skewed']:
         rec['decision'] = 'skip: a good scan, the tilts the first look saw were not confirmed'; return rec
@@ -1725,28 +1804,39 @@ def transformed(doc, i, p):
     mv = p.get('move') or [0, 0]
     return turned(doc, i, p.get('skew') or 0, mv[0], mv[1])
 
-def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None):
+def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None, owner_turns=None):
     """second look at twice the resolution: every mark found outside a page's box must be one the first look left out on
     purpose (a stain, edge noise — the same place, give or take 3 pt) or an isolated speck; anything else is content:
     the box may move up to 2 % to take it in, else the page stays whole"""
     if jobs > 1 and only is None:                     # pages shared out among `jobs` processes, then summed up here
         idx = list(range(len(rec['pages']))); mv = []
         with ProcessPoolExecutor(jobs) as ex:
-            for part, moved_c in ex.map(_verify_chunk, [(path, rec, px, tilt_only, idx[k::jobs]) for k in range(jobs)]):
+            for part, moved_c in ex.map(_verify_chunk, [(path, rec, px, tilt_only, idx[k::jobs], owner_turns) for k in range(jobs)]):
                 for i, pg in part.items(): rec['pages'][i] = pg
                 mv += moved_c
-        return verify(path, rec, px, tilt_only, only=set(), moved_in=sorted(mv))
+        return verify(path, rec, px, tilt_only, only=set(), moved_in=sorted(mv), owner_turns=owner_turns)
     doc = pymupdf.open(path); moved = list(moved_in or [])
     near = lambda b, regions: any(b[0] < r[2] + 3 and b[2] > r[0] - 3 and b[1] < r[3] + 3 and b[3] > r[1] - 3 for r in regions)
-    def look(i, q):                                   # the page as the reader will see it, measured at px
-        t = transformed(doc, i, q); page = t[0]; a, z = gray(page, px); st = rec['pages'][i].get('stamp')
-        if rec['pages'][i].get('sheet'): a = whiten(a, z, fwd_box(doc, i, q, rec['pages'][i]['sheet']))
+    cur = {'i': None, 'tu': None, 'looks': {}}       # the page being checked: its Turner and its looks by (turn, move) —
+    def look(i, q):                                   # the same view is never measured twice (2026-10-25, speed: the
+        if cur['i'] != i:                             # first look's angle came back in best_turn, the trial turns of an
+            if cur['tu']: cur['tu'].close()           # untouched page in it too)
+            cur.update(i=i, tu=Turner(doc, i), looks={})
+        mv = q.get('move') or [0, 0]; key = (q.get('skew') or 0, mv[0], mv[1])
+        if key in cur['looks']: return cur['looks'][key]
+        page = cur['tu'].page(*key); a, z = gray(page, px); st = rec['pages'][i].get('stamp')   # the page as the reader
+        if rec['pages'][i].get('sheet'): a = whiten(a, z, fwd_box(doc, i, q, rec['pages'][i]['sheet']))   # will see it, at px
         ex = [pad_box(b, page.rect.width) for b in st or []] + (rec['pages'][i].get('dots') or [])
-        mk = marks(a, z, page.rect.width, fwd_boxes(doc, i, q, ex) if ex else None); t.close(); mk['z'] = z
-        mk['proj'] = lambda lo=-0.5, hi=0.5, step=0.05: proj_tilt(a, mk['paper'], lo, hi, step)
-        mk['lines'] = lambda: baseline_tilt(a, mk['paper']) if mk.get('paper') else None
-        mk['edges'] = lambda: edge_tilt(a, mk['paper']) if mk.get('paper') else [None, None]
-        mk['cols'] = lambda: columns_tilt(a, mk['paper']) if mk.get('paper') else None
+        mk = marks(a, z, page.rect.width, fwd_boxes(doc, i, q, ex) if ex else None); mk['z'] = z
+        memo = {}
+        def once(k, f):                               # each measure of this view taken once
+            if k not in memo: memo[k] = f()
+            return memo[k]
+        mk['proj'] = lambda lo=-0.5, hi=0.5, step=0.05: once(('proj', lo, hi, step), lambda: proj_tilt(a, mk['paper'], lo, hi, step))
+        mk['lines'] = lambda: once('lines', lambda: baseline_tilt(a, mk['paper']) if mk.get('paper') else None)
+        mk['edges'] = lambda: once('edges', lambda: edge_tilt(a, mk['paper']) if mk.get('paper') else [None, None])
+        mk['cols'] = lambda: once('cols', lambda: columns_tilt(a, mk['paper']) if mk.get('paper') else None)
+        cur['looks'][key] = mk
         return mk
     def best_turn(i, p, d0):                          # the turn near d0 that leaves the least tilt by BOTH measures:
         tried = {}                                    # d0 first; if not level, 10 more angles around it in 0.05° steps
@@ -1760,7 +1850,13 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         if r <= LEVEL and im <= IMG_LEVEL: return round(d0, 3), r, im, m2
         for k in range(1, 6):
             ev(d0 - 0.05 * k); ev(d0 + 0.05 * k)
-        d, (r, im, m2) = min(tried.items(), key=lambda kv: (max(kv[1][0], kv[1][1]), kv[1][0]))
+        # a turn level by BOTH measures is taken before any other, whatever the others read (2026-10-25, الحروب الصليبية ص 407:
+        # 0.35° read 0.025° / 0.175° — level — but 0.25° won the least-of-the-two by 0.17499… against 0.175, its shear reading
+        # 0.175° above the limit, and the page was left untreated)
+        key = lambda kv: (max(kv[1][0], kv[1][1]), kv[1][0])
+        lv = [kv for kv in tried.items() if kv[1][0] <= LEVEL and kv[1][1] <= IMG_LEVEL]
+        d, (r, im, m2) = min(lv or tried.items(), key=key)
+        if lv and min(tried.items(), key=key)[0] != d: p['level_first'] = True
         if not (r <= LEVEL and im <= IMG_LEVEL):      # none level by both: among the turns the two read ≤ 0.35°, the one
             cl = []                                   # whose lines read most level, line by line (baseline_tilt); of
             for dd, v in tried.items():               # several alike (it reads in steps of 0.14°), the one the shear
@@ -1786,17 +1882,24 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         # the page's own — its lines' baselines, or their aligned edge — that read the tilt on the page as it was (≥ 0.2°: one
         # pixel over a line's third is 0.14° at 1,000 px; within 0.25° of the turn and in its direction: the baselines' angle
         # has the turn's sign, the edge's the opposite) and reads ≤ 0.15° once turned, the shear measure level and the image
-        # ≤ 0.3°: two measures agree that the page was tilted and is now level
-        if m0 is not None and m2 is not None and r <= LEVEL and im <= 0.3 + 1e-6:
+        # ≤ 0.35°: two measures agree that the page was tilted and is now level (the image measure's floor on such pages is
+        # 0.22–0.35° whatever the turn — the owner approved all 14 pages held back by a 0.3° limit, crop-tilt-001, 2026-10-25;
+        # 0.35° is the bound the method allows such certified turns elsewhere)
+        if m0 is not None and m2 is not None and r <= LEVEL and im <= 0.35 + 1e-6:
             b0 = m0['lines']()
             if b0 is not None and abs(b0) >= SKEW_MIN and b0 * d > 0 and abs(abs(b0) - abs(d)) <= 0.25:
                 b1 = m2['lines']()
-                if b1 is not None and abs(b1) <= 0.15: p['level_by_lines'] = round(b1, 3); return True
+                if b1 is not None and abs(b1) <= 0.15:
+                    p['level_by_lines'] = round(b1, 3)
+                    if im > 0.3 + 1e-6: p['image_loose'] = im
+                    return True
             e0, e1 = m0['edges'](), m2['edges']()
             for s in (0, 1):
                 if e0[s] is not None and e1[s] is not None and abs(e0[s]) >= SKEW_MIN and e0[s] * d < 0 \
                    and abs(abs(e0[s]) - abs(d)) <= 0.25 and abs(e1[s]) <= 0.15:
-                    p['level_by_edge'] = round(e1[s], 3); return True
+                    p['level_by_edge'] = round(e1[s], 3)
+                    if im > 0.3 + 1e-6: p['image_loose'] = im
+                    return True
         # A BIG TILT NO SINGLE TURN LEVELS (a warped leaf; owner 2026-10-14, أحكام القرآن ص 250 «لم تقوم», 4–6°): a turn that
         # leaves both measures ≤ 20 % of the tilt (at most 0.4° left from 2°) is far better than the page as it was
         if abs(before) >= 1.5 and max(r, im) <= max(0.4, 0.2 * abs(before)): p['reduced'] = round(max(r, im), 3); return True
@@ -1899,6 +2002,21 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                     if not done:                      # (a page found by its edge alone whose turn is not certified: the
                         if p.get('tilt_by_edge') is not None: p['tilt_disputed'] = round(u, 3)   # measures disagree)
                         else: p['untreated_tilt'] = round(u, 3)
+        # THE OWNER'S TURN (data/crop/owner-turns.tsv, owner 2026-10-25 on crop-tilt-001: «أجيز هذا وجميع ما سبق»): a page he
+        # ruled «turn» after seeing it turned by its measured tilt, which the measures above leave as it is, is turned by
+        # that tilt — u measured here, on the page as it is (sign and size); the readings after it are kept for the record
+        ot = (owner_turns or {}).get(i + 1)
+        if ot is not None and not p.get('skew'):
+            m0_ = look(i, {k: v for k, v in p.items() if k != 'skew'})
+            u = p.get('untreated_tilt') or p.get('tilt_disputed') or 0.0
+            if not u and m0_['xy'] is not None: u = skew_of(m0_['xy'])[0] or skew_of(m0_['xy'], raw=True)[0]
+            if u:
+                d = round(-u, 3); m2 = look(i, dict(p, skew=d))
+                for k in ('untreated_tilt', 'tilt_disputed', 'unsure_tilt'): p.pop(k, None)
+                p['skew'] = d; p['owner_turn'] = round(float(ot), 3); mk = m2
+                if abs(abs(u) - float(ot)) > 0.05: p['owner_turn_measured'] = round(u, 3)   # (not the tilt he saw: shown)
+                if m2['xy'] is not None:
+                    p['after_tilt'] = round(abs(skew_of(m2['xy'], raw=True)[0]), 3); p['after_tilt_image'] = m2['proj']()
         if tilt_only or not p.get('crop'): continue
         c = p['crop']; known = (p.get('blots') or []) + (p.get('edge') or []) + (p.get('rules_dropped') or []) + (p.get('lines') or []) + (p.get('cut_stray') or [])
         if rec.get('clean_margins') and mk.get('text'):
@@ -1984,6 +2102,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
             else:
                 p['crop'] = None; p['verify'] = ob; moved.append(i); continue
         p['cut_specks'] = [x for x in mk['specks'] if not inside(x, p['crop'], 0)]
+    if cur['tu']: cur['tu'].close()
     doc.close()
     rec['whole'] = sorted(set(rec.get('whole', [])) | set(moved)); rec['verify_whole'] = moved
     rec['blot_pages'] = sum(1 for p in rec['pages'] if p.get('crop') and p.get('blots'))
@@ -1997,7 +2116,8 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                             # taken for it — these were listed as «still tilted» until 2026-10-25: 2,348 pages of the
                             # regression's 31 books)
                             and not (p.get('level_by_rules') is not None and abs(p['level_by_rules']) <= 0.35)
-                            and not (p.get('level_by_proj') is not None and p['level_by_proj'] <= 0.2)]
+                            and not (p.get('level_by_proj') is not None and p['level_by_proj'] <= 0.2)
+                            and p.get('owner_turn') is None]          # (the owner saw that turn and asked for it)
     rec['level_by_lines'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('level_by_lines') is not None and p.get('skew')]
     rec['curved'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('curved')]
     rec['enlarged'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('enlarged')]
@@ -2063,8 +2183,8 @@ def frames(rec):
     return rec
 
 def _verify_chunk(args):
-    path, rec, px, tilt_only, idx = args
-    r = verify(path, rec, px, tilt_only, only=set(idx))
+    path, rec, px, tilt_only, idx, owner_turns = args
+    r = verify(path, rec, px, tilt_only, only=set(idx), owner_turns=owner_turns)
     return {i: r['pages'][i] for i in idx}, r['verify_whole']
 
 def append_contents(doc, page, data):
