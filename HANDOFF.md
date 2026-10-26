@@ -31,12 +31,20 @@ NEW FINDING — THE PROJECTION PATH OVER-TURNS (pre-existing in every version; n
 - The line measure of guard G (line_leans, and <T>/proj/fastleans.py, its 20–50× faster chunk-shear copy) SNAPS to ±0.025 /
   ±0.225° (p. 68: every turn from −0.30 to −0.10 reads +0.225) — fine for guard G's coarse 0.3/0.5° test, useless for small
   tilts. Printed rules alone mislead (خزانة 01's short head segment at y 142 pt does not follow the text).
-DECISION FOR THE NEXT SESSION: when basesurvey ends, read basestats.py. If over/needless turns (≥ 0.2° left) are common
-beyond خزانة 01 → HOLD THE PILOT (its خزانة 01 would carry them) and design FIX Q: projection turns set (and checked) by
-basefit when a page has ≥ 6 readable lines, else as now; bench it (fbp.py-style on خزانة 01 00597fea27cf — its pages.pkl
-is in the 1b7990ba… bench), then regression 26i with fix P + Q, then the pilot. If rare/limited to one book → the pilot
-after 26h as planned (crop_redo can redo a book later), fix Q before the FULL redo. Tell the owner either way, plus:
-site/crop-tilt-002.html (the two-angle question, not yet announced) and site/plan-383.html (still unannounced).
+BASESURVEY ENDED 23:37 (8,704 pages: 7,856 turned + 848 unturned sampled; <T>/proj/basesurvey.tsv). On the pages where
+the ruler is reliable (the lines' angles within an IQR < 0.3°): turns by the OTHER paths leave ≥ 0.2° on 1.1 % (2,866
+pages, residual median 0.035°); PROJECTION turns on 9.6 % (126 of 1,317, median 0.079°; ≥ 0.3° on 2.5 %) — in 19 of the 27
+books that have such pages (9da5c530d977 46 %, 35fbe344b8c6 خزانة ج 4 25 %, 8ec1fd8095ad 15 %, 00597fea27cf خزانة ج 1
+13 %, 29b9db6c6baa 10 % …). Unturned sample (480 reliable pages): 12 % read ≥ 0.2°, 3 % ≥ 0.3° (left by the method:
+below its measures' reach — a second question, after Q). On noisy pages (IQR ≥ 0.3) every class reads 25–35 % ≥ 0.2°:
+the ruler itself is unreliable there — never decide from them.
+DECISION (mine, by the rule set before the survey ended): HOLD THE PILOT; FIX Q FIRST — projection turns set (and checked)
+by basefit when the page has ≥ 6 readable lines and their IQR < 0.3°, else as now; the ruler goes into book_crop as a
+function (basefit.base_angles at 1,000 px from verify's own look, or 1,400 px only for projection pages — measure the
+cost); bench it fbp.py-style on 9da5c530d977, 35fbe344b8c6, 00597fea27cf (pages.pkl of خزانة 01 in the 1b7990ba… bench),
+then regression 26i with fix P + Q (+ case rows: خزانة 01 p. 68 «turn no», p. 110 left ≤ 0.15°), then the pilot. 26h
+still runs and must pass (it is the base). Tell the owner, plus: site/crop-tilt-002.html (the two-angle question, not yet
+announced) and site/plan-383.html (still unannounced).
 Copies of every tool above (sources only): scratch/tilt-measures-2026-10-26/ (if /tmp was wiped). Tools (<T>/proj): bands.py (bands as scanned | turned), stretch.py, views.py (verify's measures on a page), calib.py,
 rulecal.py, hrule14.py, projrules.tsv / sheetline.tsv (fix P surveys), turnsurvey.tsv (line measure, stopped at ≈ 600).
 
