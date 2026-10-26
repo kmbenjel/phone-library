@@ -6,6 +6,32 @@ Each workstream appends its progress below (the newest state first, then the his
 OWNER 2026-10-26 ~03:00: the ~11,000 old-format names (parentheses) WAIT for the reading pass — no mechanical format pass («ننتظر مرحلة القراءة»). He clears and switches to xhigh.
 OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs at max: the regression's end (a–e), then the pilot.
 
+## 2026-10-26 08:10 — the faithful bench found 2 REAL CUTS in 7d358b26b0 → fix ready in scratch; 26d must be STOPPED (owner) (Claude, max)
+BENCH (fb-00597fea27cf, fb-68600214e7de, fb-064846139175, all «faithful»): خزانة 01's 10 pages back under the scan lines ✓,
+68600214e7de pp. 9/182/322 ✓ (looked at: the old moves were for scan lines). BUT خريدة القصر (شعراء الشام) 01 = 064846139175:
+p. 231 — the box (no longer moved) cuts «وقوله» and the footnote numbers «(١)» «(٢)» at the right edge: they stand out into
+the paper's edge shadow, where marks()' border zone reads them as the sheet's edge (mk['edge']); 26b had moved the box only
+because the footnote RULE (a hairline) crossed it. p. 278 — «انظر» cut at the left edge: its alif (1.3 × 6.7 pt) is a
+«hairline» by printlike's shape, so text_block's chain stopped short of the word. Every other change of that book (344, 150,
+14, 20, 456, 483, 535, 539, 630, 652, 674, 675, 682, 683, 707: «whole»/moved → the book's box) is the scanner's black side
+or its hairlines — 344, 150, 14 looked at: nothing cut.
+FIX (second look only — the first look and the bench's .pkl unchanged), built and tested in the scratchpad of session
+f40c30e8… (/tmp/claude-1000/-home-k-projects-phone-library/f40c30e8-604c-4121-b1ee-7e53d67164e1/scratchpad: code/book_crop_fix.py
+= scripts/book_crop.py + mkfix.py + mkfix2.py; fbfix.py = the bench for it; whole.sh/wcmp.py = new vs fix on every page of
+the 5 bench books): book_crop.edge_letters (an edge mark that is print, letter-sized, centred in the allowed area and on the
+row of a letter within 1.5 % of the width is a letter) and print_marks (a thin upright stroke on a row of print, beside a
+letter within 1 % and at most twice its height, is print — used by text_block, the straddle test and keep_). Bench: the fix
+= 7d358b26b0 on all 106 bench pages of 5 books except 231 (box like 26b) and 278 (box moved left, «انظر» whole).
+CASES ADDED (crop-regression.tsv, last 6 rows; crop_regress read the file at 26d's start, so 26d is unaffected): 231 in ×2,
+278 in, 344 out (the black side), خزانة 01 p. 34 out (the scan line), 1d12000b2925 p. 323 in («٣٢٣»). Checked on the bench
+recipes: 26b fails 34/323/344, 7d358b26b0 fails 231/278, the fix passes all six.
+BLOCKED: `systemctl --user stop crop-regress-2026-10-26d` was refused by the auto-mode classifier (the owner's rule: stop a
+running job only on his explicit word) — 26d runs the faulty 7d358b26b0. Do NOT edit scripts/book_crop.py while it runs.
+NEXT once the owner allows the stop: stop 26d → apply mkfix.py + mkfix2.py to scripts/book_crop.py (or copy
+code/book_crop_fix.py after checking it equals HEAD + the two edit sets) → commit → `systemd-run --user --slice=crop.slice
+--unit=crop-regress-2026-10-26e --nice=10 --working-directory=$PWD --setenv=PATH="$PATH" scratch/regress_2026-10-26e.sh`
+(ready) → when it ends: a–d of the 07:00 section below with 26e in place of 26d.
+
 ## 2026-10-26 07:00 — STATE BEFORE A /clear: regression 26d RUNNING; then its diff by eye; then the pilot (Claude, max effort)
 RUNNING: user unit crop-regress-2026-10-26d (scratch/regress_2026-10-26d.sh, marker data/crop/.regress-2026-10-26d, book_crop
 7d358b26b0) → logs/crop-regress-2026-10-26d.log, at its end by itself the diff against f06a68adb2 →

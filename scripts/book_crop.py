@@ -826,6 +826,27 @@ def printlike(b, w, h, z):
     if th * z < 2.5 and ln >= 4 * th: return False
     return not ((bw >= 0.1 * w and bw >= 8 * bh) or (bh >= 0.1 * h and bh >= 8 * bw))
 
+def hairline(b, z):
+    """one or two pixels thick at z pixels per pt and at least four times as long (printlike)"""
+    bw, bh = b[2] - b[0], b[3] - b[1]; th, ln = min(bw, bh), max(bw, bh)
+    return th * z < 2.5 and ln >= 4 * th
+
+def print_marks(marks, w, h, z):
+    """THE PRINT AMONG THE MARKS (2026-10-26): printlike, and a thin upright stroke standing in a word — an alif, a «١», a
+    parenthesis of a small font is 1–2 px thick at 1,000 px and four times as tall, a hairline by its shape (خريدة القصر
+    064846139175 ص 278: the alif of «انظر» left out, the text block stopped short of the word and the box cut it): print
+    when a letter of the page (letterlike, printlike) stands on its row — half of the shorter one's height shared — within
+    1 % of the width, and it is at most twice that letter's height. A scan line's dashes lie along it, not in a word"""
+    P = [b for b in marks if printlike(b, w, h, z)]
+    U = [b for b in marks if b[3] - b[1] > b[2] - b[0] and b[3] - b[1] < 0.1 * h and hairline(b, z)]
+    A = np.array([b[:4] for b in P if letterlike(b, w, h)], float).reshape(-1, 4)
+    if not U or not len(A): return P
+    g, qh = 0.01 * w, A[:, 3] - A[:, 1]
+    for b in U:
+        bh = b[3] - b[1]; ov = np.minimum(A[:, 3], b[3]) - np.maximum(A[:, 1], b[1])
+        if ((A[:, 0] <= b[2] + g) & (A[:, 2] >= b[0] - g) & (ov >= 0.5 * np.minimum(qh, bh)) & (bh <= 2 * qh + 1)).any(): P.append(b)
+    return P
+
 def letterlike(b, w, h):
     """a letter-like mark as marks() reads the text block by gaps: not wholly in the sheet's outer 3 %, not a thin line, not
     taller than 15 % of the page, not a speck"""
@@ -833,13 +854,13 @@ def letterlike(b, w, h):
     return not (b[2] <= 0.03 * w or b[0] >= 0.97 * w or b[3] <= 0.03 * h or b[1] >= 0.97 * h) and not thin_line(b, w, h) \
         and bh <= 0.15 * h and (bh >= 0.004 * h or bw >= 0.008 * w)
 
-def text_block(parts, seed, w, h, z):
+def text_block(parts, seed, w, h, z, prn=None):
     """THE TEXT BLOCK OF THE SECOND LOOK ON PRINT ONLY (2026-10-26): marks()' text block by gaps — from the seed's columns,
     every letter-like mark less than 1.5 % of the width away widens them, every one inside them is text (running head, page
     number, footnotes) — on the print-like marks alone (printlike): at 1,000 px a scan line breaks into one-pixel dashes that
     count as letters there and chained the text block up to the line (95 pages of the 31 regression books moved or enlarged,
     most for such dashes). None: no letter-like mark in the seed's columns"""
-    L = [b for b in parts if letterlike(b, w, h) and printlike(b, w, h, z)]
+    L = [b for b in (prn if prn is not None else [b for b in parts if printlike(b, w, h, z)]) if letterlike(b, w, h)]
     x0, x1, gx = seed[0], seed[2], 0.015 * w
     while True:
         inn = [b for b in L if b[2] >= x0 - gx and b[0] <= x1 + gx]
@@ -848,6 +869,26 @@ def text_block(parts, seed, w, h, z):
         if nx0 >= x0 and nx1 <= x1: break
         x0, x1 = min(x0, nx0), max(x1, nx1)
     return union(inn)
+
+def edge_letters(mk, w, h, z, al):
+    """LETTERS IN THE EDGE SHADOW (2026-10-26, خريدة القصر 064846139175 ص 231): a heading's first letters and the footnote
+    numbers standing out past the verse into the paper's edge shadow were read as the sheet's edge (marks()' border zone) and
+    the second look cut «وقوله», «(١)», «(٢)» at the box edge (the box had moved before only because the footnote rule crossed
+    it — a hairline, no print since text_block). An edge mark is a letter of the page when it is print (printlike) and
+    letter-sized (letterlike), centred in the allowed area (not the scanner band — خريدة القصر ص 649), and continues a line
+    of print: on the row of a letter of the page (its centre within that letter's height, at most twice as tall) and
+    within the gap that makes text (1.5 % of the width) of it or of another such edge letter"""
+    L = [b for b in print_marks(mk.get('parts') or [], w, h, z) if letterlike(b, w, h)]   # (an upright hairline beside it:
+    ok = lambda b: letterlike(b, w, h) and (printlike(b, w, h, z) or (b[3] - b[1] > b[2] - b[0] and hairline(b, z)))   # row())
+    E = [b for b in mk.get('edge') or [] if ok(b) and (not al or (al[0] - 0.01 * w <= (b[0] + b[2]) / 2 <= al[2] + 0.01 * w
+                                                                   and al[1] - 0.01 * h <= (b[1] + b[3]) / 2 <= al[3] + 0.01 * h))]
+    gx, got = 0.015 * w, []
+    row = lambda e, q: q[1] <= (e[1] + e[3]) / 2 <= q[3] and e[3] - e[1] <= 2 * (q[3] - q[1]) + 1
+    while E:
+        new = [e for e in E if any(e[0] <= q[2] + gx and e[2] >= q[0] - gx and row(e, q) for q in L + got)]
+        if not new: break
+        got += new; E = [e for e in E if e not in new]
+    return got
 
 def notes_of(margin, w, h):
     """MARGINAL NOTES (owner 2026-10-09, اللآلئ ج2 ص 40 «لعله الدارقطني»: «جميل، أبق مثل هذه الهوامش ولو اختلف الزوجي عن الفردي
@@ -2206,6 +2247,11 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                     p['after_tilt'] = round(abs(skew_of(m2['xy'], raw=True)[0]), 3); p['after_tilt_image'] = m2['proj']()
         if tilt_only or not p.get('crop'): continue
         c = p['crop']; known = (p.get('blots') or []) + (p.get('edge') or []) + (p.get('rules_dropped') or []) + (p.get('lines') or []) + (p.get('cut_stray') or [])
+        el = edge_letters(mk, p['w'], p['h'], mk['z'], p.get('allowed')) if mk.get('parts') else []
+        if el: p['edge_letters'] = [[round(v, 1) for v in b[:4]] for b in el]   # letters in the edge shadow (edge_letters)
+        pts = (mk.get('parts') or []) + el
+        pk = {tuple(b[:4]) for b in print_marks(pts, p['w'], p['h'], mk['z'])} if pts else set()
+        prn = [b for b in pts if tuple(b[:4]) in pk]; isp = lambda b: tuple(b[:4]) in pk   # the print (print_marks)
         if rec.get('clean_margins') and mk.get('text'):
             # a book without print in its side margins: the text block seen at 1,000 px must be inside the box, and no mark
             # may straddle the box edge (half in, half out = a cut letter); marks wholly outside the text columns are the
@@ -2213,8 +2259,8 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
             # same shape just large enough (never a cut line, never a page left whole for a stray mark)
             gx_, gy_, z_ = 0.015 * p['w'], 0.015 * p['h'], mk['z']
             t0 = p.get('text')                       # (the text block on print only: a scan line's one-pixel dashes are no
-            t = (text_block(mk.get('parts') or [], t0, p['w'], p['h'], z_) if t0 else None) or mk['text']   # letters — text_block)
-            mg2 = (mk.get('margin') or []) if t == mk['text'] else [b for b in mk.get('parts') or [] if not inside(b, t, 0.5)]
+            t = (text_block(pts, t0, p['w'], p['h'], z_, prn) if t0 else None) or mk['text']   # letters — text_block)
+            mg2 = (mk.get('margin') or []) if t == mk['text'] else [b for b in pts if not inside(b, t, 0.5)]
             if t0 and t:                             # at 1,000 px a photocopy's border breaks into letter-sized dashes that
                 t = [max(t[0], t0[0] - 0.03 * p['w']), max(t[1], t0[1] - 0.03 * p['h']),   # chain onto the text (owner
                      min(t[2], t0[2] + 0.03 * p['w']), min(t[3], t0[3] + 0.03 * p['h'])]   # 2026-10-10, القوافي ص 25 و44):
@@ -2235,9 +2281,9 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                                          and al_[1] - 0.01 * p['h'] <= (b[1] + b[3]) / 2 <= al_[3] + 0.01 * p['h'])
             # (a hairline or a copier's bar crossing the edge is no letter: printlike)
             straddles = lambda b, r, s: (not inside(b, r, 1.0) and b[0] < r[2] and b[2] > r[0] and b[1] < r[3] and b[3] > r[1]
-                                         and not near(b, known) and b[2] >= s[0] - gx_ and b[0] <= s[2] + gx_ and b[3] >= s[1] - gy_
-                                         and b[1] <= s[3] + gy_ and not thin_line(b, p['w'], p['h']) and inal(b) and printlike(b, p['w'], p['h'], z_))
-            cross = [b for b in mk.get('parts', []) if straddles(b, c, t)]
+                                         and (b in el or not near(b, known)) and b[2] >= s[0] - gx_ and b[0] <= s[2] + gx_ and b[3] >= s[1] - gy_
+                                         and b[1] <= s[3] + gy_ and not thin_line(b, p['w'], p['h']) and inal(b) and isp(b))
+            cross = [b for b in pts if straddles(b, c, t)]
             need = ([tn] if not inside(tn, c, 1.0) else []) + cross
             if need:
                 u = union(need + [tn])
@@ -2263,7 +2309,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                 n, sc = place(u)
                 # NO PRINT CUT BY THE MOVED BOX (2026-10-26, 1d12000b2925 ص 323: the box slid to a text block held at the 3 %
                 # bound and its foot ran through the page number): a mark the moved box cuts is taken in, once
-                st = [b for b in mk.get('parts', []) if straddles(b, n, u)]
+                st = [b for b in pts if straddles(b, n, u)]
                 if st: p['verify_cut'] = len(st); u = union([u] + st); n, sc = place(u)
                 if sc is not None: p['enlarged'] = round(max(sc, p.get('enlarged', 1.0)), 3)
                 if n[0] >= -0.5 and n[1] >= -0.5 and n[2] <= p['w'] + 0.5 and n[3] <= p['h'] + 0.5 and inside(u, n, 1.0):
@@ -2276,19 +2322,19 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
             if any(not inside(b, p['crop'], 1.0) for b in nts): p['notes_cut'] = True     # must never happen (checked)
             continue
         al_ = p.get('allowed')
-        out = [b for b in mk.get('parts', []) if not inside(b, c, 1.0) and not near(b, known)
+        out = [b for b in pts if not inside(b, c, 1.0) and (b in el or not near(b, known))
                and (not al_ or (al_[0] - 0.01 * p['w'] <= (b[0] + b[2]) / 2 <= al_[2] + 0.01 * p['w']
                                 and al_[1] - 0.01 * p['h'] <= (b[1] + b[3]) / 2 <= al_[3] + 0.01 * p['h']))]
         if out:
             # only what the page needs moves the box or keeps the page whole (owner 2026-10-14): its text block's letters,
             # notes, pictures and print in the margin; slivers of a scan line and stray specks outside are cut (the text
             # block on print only, and only print-like marks move the box: text_block, printlike — 2026-10-26)
-            tq = (text_block(mk.get('parts') or [], p['text'], p['w'], p['h'], mk['z']) if p.get('text') else None) or mk.get('text')
-            mg_ = (mk.get('margin') or []) if tq == mk.get('text') else [b for b in mk.get('parts') or [] if not inside(b, tq, 0.5)]
+            tq = (text_block(pts, p['text'], p['w'], p['h'], mk['z'], prn) if p.get('text') else None) or mk.get('text')
+            mg_ = (mk.get('margin') or []) if tq == mk.get('text') else [b for b in pts if not inside(b, tq, 0.5)]
             needs = ([tq] if tq else []) + notes_of(mg_, p['w'], p['h']) + figures_of(mg_, p['w'], p['h']) \
                     + printed_groups(mg_, p['w'], p['h'])
             meets = lambda b, n: b[0] < n[2] + 1 and b[2] > n[0] - 1 and b[1] < n[3] + 1 and b[3] > n[1] - 1
-            keep_ = lambda b: any(meets(b, n) for n in needs) and printlike(b, p['w'], p['h'], mk['z'])
+            keep_ = lambda b: any(meets(b, n) for n in needs) and isp(b)
             cut = [b for b in out if not keep_(b)]
             if cut: p['cut_stray'] = (p.get('cut_stray') or []) + [[round(v, 1) for v in b] for b in cut]
             out = [b for b in out if keep_(b)]
