@@ -20,6 +20,14 @@ books will come from the new run. Still open from the revisit: 1b — read the p
 (asked the owner). Possible later speed-up (not needed: < 2 %): whole_shown counts every clip of the page, so a footer
 banner's clip drawn after the scan (1d12000b2925, 43b1158bc5be) sends all its views to fresh copies — a device that knows
 which clips hold each image would let them use the kept copy.
+SMALL-TILT ANGLES, checked (2026-10-26 01:00, no change made): on 6 of the owner's 14 «turn» pages the method now turns them
+itself (0.35° ruler rule / level-first) by an angle 0.05–0.15° from the one he approved (تيمور 02 p. 217: 0.15° vs his 0.30°;
+p. 203 0.375 vs 0.275; خزانة 01 p. 164 0.475 vs 0.375; الحروب 38 p. 407 0.35 vs 0.45 — there shear AND image read 0.35 level).
+A two-strip reading (left/right row profiles cross-correlated; tracks known turns to sd 0.022°, but its absolute zero is
+pulled by layout — خزانة 01 p. 369 read 0.82° on a page that is level by eye) and a consistency test (each page given extra
+known tilts; scratchpad probe/tiebreak2.log) show every tie-break rule equally self-consistent (spread ≈ 0.07°; «closest to
+the measured tilt» worst, 0.12°): the measures differ by small biases of their own on these dense pages, none right
+everywhere. Differences ≤ 0.15° (he sees ≈ 0.25° on a full line) → left to his eye in the pilot review, not a rule change.
 
 ## 2026-10-25 22:00 — crop revisit coded (commit 9c26546); THE ONE REGRESSION RUNNING (Claude, max effort)
 RUNNING: user unit crop-regress-2026-10-25b (scratch/regress_2026-10-25b.sh, marker data/crop/.regress-2026-10-25b) →
