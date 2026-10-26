@@ -6,7 +6,33 @@ Each workstream appends its progress below (the newest state first, then the his
 OWNER 2026-10-26 ~03:00: the ~11,000 old-format names (parentheses) WAIT for the reading pass — no mechanical format pass («ننتظر مرحلة القراءة»). He clears and switches to xhigh.
 OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs at max: the regression's end (a–e), then the pilot.
 
-## 2026-10-26 03:45 — REGRESSION 26b ENDED: 0 failures (167 PASS). NEXT (max): read logs/crop-regress-diff-2026-10-26b.log, draw changed pages (scratch/crop_diff_sheets_2026-10-26.py f06a68adb2 OUTDIR) and look at each; memory lines → PER; refresh.sh; then the pilot (launch line in the 02:00 section). Unit mem-sampler still runs (stop it after the pilot).
+## 2026-10-26 06:45 — the second look on print; THE REGRESSION RUNNING AGAIN: crop-regress-2026-10-26c (Claude, max effort)
+RUNNING: user unit crop-regress-2026-10-26c (scratch/regress_2026-10-26c.sh, marker data/crop/.regress-2026-10-26c, book_crop
+1d95f5d01d) → logs/crop-regress-2026-10-26c.log, at its end by itself the diff against f06a68adb2 →
+logs/crop-regress-diff-2026-10-26c.log (scripts/crop_recipe_diff.py, new). Started 06:39 UTC, ≈ 4 h (1 worker while the owner
+uses the laptop). Do NOT edit book_crop.py while it runs. Beside it (scratchpad of session b7f753c2…/bench): units fb-* — the
+«faithful bench» (first look once on the whole book, then decide + verify of git HEAD and of the new code on chosen pages;
+«faithful» = the HEAD result equals the 26b recipe).
+WHY: 26b's 20 changed pages were all right when looked at (old | new) — but looking further, the SECOND LOOK (verify) had
+moved or enlarged 95 pages of the 31 books (0.6 %), most for nothing: at 1,000 px a scan line breaks into one-pixel dashes
+that count as letters there and chained the text block (held at its 3 % bound) up to the line — خزانة الأدب ج 1 (a PILOT
+book) pp. 16, 34, 36, 76, 96, 256, 390, 416, 430, 468: the box moved up over the very lines the owner had it avoid on 10-18;
+f134344a7421: 22 pages shown 4–9 % smaller for a top scan line; الحروب الصليبية pp. 398–426: a copier's black bar → the page
+up to 21 % smaller; and 1d12000b2925 p. 323: its PAGE NUMBER CUT at the foot (the bold «٣٢٣» read as a stain on the page
+turned at the first look, the box placed off it, then slid to the 3 % bound — through the number).
+CHANGES (book_crop 1d95f5d01d): printlike / letterlike / text_block — the second look's text block on print only (no
+hairline: 1 px thick and ≥ 4× as long; no bar: ≥ 10 % of the page and ≥ 8× as long as thick), notes and figures read
+outside it, the 3 % bound kept (القوافي); the moved box re-checked for a mark it would cut (taken in: verify_cut); the
+non-clean branch's needs on the same text block, only print-like marks move it; decide(): a stain at the book's folio place
+(3+ other pages' folios, same_place) restored as the page number (folio_blot), into box and text. Bench: 1d12000b2925 p. 323
+→ the box like its neighbours', «٣٢٣» whole, no move. (An extract bench cannot reproduce book-level boxes — use fb.py.)
+Not addressed (seen, rarer): a scratch made of 1 × 4 pt pieces still chains (29b9db6c6baa p. 99, held at 3 %).
+WHEN IT ENDS: a. 0 failures; b. read the diff — expected: «second look» / «folio stain» pages on the books above, nothing
+OTHER unexplained; c. `python3 scripts/crop_diff_sheets.py f06a68adb2 1d95f5d01d OUTDIR` and LOOK at every page (a box over
+a line, a cut letter or number, a page shown smaller); d. then the pilot (launch line in the 02:00 section) — the pilot
+measures the redo's memory (mem-sampler still runs; PER/PARENT decided from it, then stop the sampler).
+
+## 2026-10-26 05:40 (written 06:15) — REGRESSION 26b ENDED: 0 failures (167 PASS). NEXT (max): read logs/crop-regress-diff-2026-10-26b.log, draw changed pages (scratch/crop_diff_sheets_2026-10-26.py f06a68adb2 OUTDIR) and look at each; memory lines → PER; refresh.sh; then the pilot (launch line in the 02:00 section). Unit mem-sampler still runs (stop it after the pilot).
 
 ## 2026-10-26 03:25 — max effort; regression 26b still running; the pilot's review page shows his earlier remarks (Claude)
 - RUNNING (unchanged): crop-regress-2026-10-26b (see 02:00). At 03:24: 12 of 31 books, 61 PASS, 0 FAIL; 10,167 pages left
