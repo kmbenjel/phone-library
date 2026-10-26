@@ -6,6 +6,22 @@ Each workstream appends its progress below (the newest state first, then the his
 OWNER 2026-10-26 ~03:00: the ~11,000 old-format names (parentheses) WAIT for the reading pass — no mechanical format pass («ننتظر مرحلة القراءة»). He clears and switches to xhigh.
 OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs at max: the regression's end (a–e), then the pilot.
 
+## 2026-10-26 18:50 (UTC, real) — governor 1.5 / 0.5 GB with the owner's word; the 2 rejoined books in place; 26g RUNNING at 3 workers (Claude, max)
+- OWNER 18:35 (AskUserQuestion): «Yes, 1.5 / 0.5» → mem_governor PER 1.5 GB, PARENT 0.5 GB (commit 8ad0b6c; unit restarted
+  18:36; workers 1 → 3 at a 5.5 GB pen). 26g's book 1 took 956 s at 1 worker, identical to 26f; books 2+ run with 3.
+- DONE 18:40 (commit fccb6bc): plan 385 set the two 10-25 joins built from CROPPED volumes aside (نسخ مستبعدة/__المستبدل/…),
+  queue 386 put the same joins rebuilt from the ORIGINAL volumes in their place (phone MD5 = 0bb86a20… / 2f1b0956…, index
+  updated). NEXT for them, AFTER the pilot (memory pen): `crop_batch.py LIST crop-rejoined-2026-10-26 --again` (new option:
+  crops a listed book again only when its file was replaced since its last crop — a logged «add» — and the file carries no
+  crop: «q … cm» wrappers, or a CropBox placed page by page; Acrobat's uniform 8.5 pt inset on البداية 21's original is
+  not one — tested on the cropped volumes, the rebuilt files, a regression original and an applied recipe); then delete
+  the 2 set-aside files (owner 10-25 «remove the trace»).
+- Pilot pre-check 18:38: the 10 pilot files' phone MD5 = the file the old crop wrote; none in redo-done.tsv.
+- Watchers (this session): bujp5nkxf (26g end / FAIL / brake), bepuyvg9t (سيبويه's 26g recipe → cmpfix.py 9b98ea8b9570
+  b32a237bbf in scratchpad 3c2ec828…/bench2). Partial diffs as books end: `crop_recipe_diff.py 2bb44a7384 b32a237bbf BOOK`.
+- A new full-redo script (after the owner reviews the pilot page) must NOT chain crop_library.sh (the 10-18 script did): the
+  rest of the library is the owner's scope decision (memory crop-quality-bar).
+
 ## 2026-10-26 18:50 — STATE BEFORE A /clear: regression 26g RUNNING; then its diff by eye; then the pilot (Claude, max)
 Nothing else of mine runs (bench units ended; mem-sampler still runs — stop it after the pilot). The 18:25 section below is
 current: 26g (crop-regress-2026-10-26g, started 18:24, ≈ 3–4.5 h) → two diffs by itself; WHEN IT ENDS: a–c there.
