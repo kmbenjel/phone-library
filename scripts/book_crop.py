@@ -688,28 +688,95 @@ def turned(doc, i, deg, dx=0.0, dy=0.0):
     if deg or dx or dy: rotate_contents(t, t[0], deg, dx, dy)
     return t
 
+WHOLE_SHOWN = 0.92   # MuPDF decodes an image whole when 90 % of it or more is needed (fz_default_image_decode): 2 % kept aside
+
+def shown_share(quad, r):
+    """the share of the convex quadrilateral `quad` (four (x, y) points in order) that lies inside the rectangle r"""
+    area = lambda p: abs(sum(p[k - 1][0] * p[k][1] - p[k][0] * p[k - 1][1] for k in range(len(p)))) / 2
+    full = area(quad); p = list(quad)
+    if full <= 0: return 0.0
+    for ax, v, lo in ((0, r[0], True), (0, r[2], False), (1, r[1], True), (1, r[3], False)):   # one side of r at a time
+        ins = lambda q: q[ax] >= v if lo else q[ax] <= v
+        out = []
+        for k in range(len(p)):
+            a, b = p[k - 1], p[k]
+            if ins(a) != ins(b):
+                t = (v - a[ax]) / (b[ax] - a[ax]); out.append((a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])))
+            if ins(b): out.append(b)
+        p = out
+        if len(p) < 3: return 0.0
+    return area(p) / full
+
+def odd_drawing(t):
+    """a one-page document MuPDF may draw through clips the page's listings do not show — a soft mask, a pattern or
+    shading, a Type 3 font, text used as a clip — or whose images the two listings count differently, or a turned page"""
+    import re
+    pg = t[0]
+    if pg.rotation: return True
+    try:
+        cs = set(pg.get_contents())
+        for x in range(1, t.xref_length()):
+            s = t.xref_object(x, compressed=True)
+            if '/PatternType' in s or '/ShadingType' in s or '/Type3' in s: return True
+            if '/SMask' in s and '/Subtype/Image' not in s and not re.search(r'/SMask\s*/None', s): return True
+            if (x in cs or '/Subtype/Form' in s) and t.xref_is_stream(x) and re.search(rb'(?<![\w.])[4-7]\s+Tr(?![\w])', t.xref_stream(x)):
+                return True
+        log = pg.get_bboxlog()
+        if any(k not in ('fill-image', 'fill-imgmask', 'fill-path', 'stroke-path', 'fill-text', 'stroke-text', 'ignore-text') for k, _ in log):
+            return True
+        return sum(k in ('fill-image', 'fill-imgmask') for k, _ in log) != len(pg.get_image_info())
+    except Exception: return True
+
+def whole_shown(pg):
+    """every image of the page, as it now stands, shown ≥ 92 % inside the page and every clip and group (the clips' and
+    groups' boxes, as MuPDF clips an image's decoding) — so MuPDF decodes each of them whole. pg: a page object made for
+    this view (doc[0] makes a new one each time; PyMuPDF keeps get_image_info's answer on the object). In doubt: False"""
+    try:
+        info = pg.get_image_info()
+        if not info: return True
+        R = list(pg.rect)
+        for d in pg.get_drawings(extended=True):
+            k = d.get('type')
+            if k not in ('clip', 'group'): continue
+            b = d.get('scissor' if k == 'clip' else 'rect')
+            if b is None: return False
+            R = [max(R[0], b[0]), max(R[1], b[1]), min(R[2], b[2]), min(R[3], b[3])]
+        if R[2] <= R[0] or R[3] <= R[1]: return False
+        for x in info:
+            a, b, c, d, e, f = x['transform']
+            if shown_share([(e, f), (a + e, b + f), (a + c + e, b + d + f), (c + e, d + f)], R) < WHOLE_SHOWN: return False
+        return True
+    except Exception: return False
+
 class Turner:
     """turned() for many angles of ONE page (2026-10-25, speed): a single one-page document whose «q … cm» stream is
-    rewritten for each angle, so MuPDF decodes the page's image once instead of once per angle (JBIG2 and colour scans
-    render 3× faster). Each document it shows holds exactly the bytes turned() would make — renders checked byte for
-    byte on 41 books. page(deg, dx, dy) → the page, valid until the next call"""
+    rewritten for each angle, so MuPDF decodes the page's image once instead of once per angle (renders 1.5–5× faster).
+    EXACT ONLY WHERE MUPDF DECODES EVERY IMAGE WHOLE (2026-10-26): an image less than 90 % shown — cut by a CropBox (every
+    page of 816413b0e765: 9.6 % of its scan above the page), a clip or a group — is decoded in part, and MuPDF keeps every
+    decoded image: a view drawn after one that decoded it whole took the whole copy where a fresh document decodes the
+    part — the same page a sub-pixel apart (19 of 7,160 renders on the regression's books; marks a pixel wider on
+    fbf39d55c6f7 p. 9). So a view is drawn here only when every image of the page is ≥ 92 % shown in it (whole_shown) on
+    a page without hidden clips (odd_drawing); any other view comes from a fresh turned() document, as before — the
+    method sees the same pixels either way. page(deg, dx, dy) → the page, valid until the next call"""
     def __init__(self, doc, i):
+        self.doc, self.i, self.fresh = doc, i, None
         self.t = pymupdf.open(); self.t.insert_pdf(doc, from_page=i, to_page=i)
         self.plain = self.t.xref_get_key(self.t[0].xref, 'Contents')   # the content as turned() leaves it unturned
         self.xa = None; self.wrapped = None
+        self.ok = not odd_drawing(self.t)
     def page(self, deg, dx=0.0, dy=0.0):
+        if self.fresh: self.fresh.close(); self.fresh = None
         t = self.t; pg = t[0]
         if not (deg or dx or dy):                    # unturned: the page's own content, as turned() leaves it
             if self.xa is not None: t.xref_set_key(pg.xref, 'Contents', self.plain[1])
-            return t[0]
-        pre = turn_cm(t, pg, deg, dx, dy)
-        if self.xa is None:
-            if not wrap_contents(t, pg, pre): return t[0]   # no content stream to turn (turned() leaves it so too)
+        elif self.xa is not None: t.update_stream(self.xa, turn_cm(t, pg, deg, dx, dy)); t.xref_set_key(pg.xref, 'Contents', self.wrapped)
+        elif wrap_contents(t, pg, turn_cm(t, pg, deg, dx, dy)):   # (no content stream to turn: turned() leaves it so too)
             self.wrapped = t.xref_get_key(pg.xref, 'Contents')[1]; self.xa = int(self.wrapped.strip('[] ').split()[0])
-        else:
-            t.update_stream(self.xa, pre); t.xref_set_key(pg.xref, 'Contents', self.wrapped)
-        return t[0]
-    def close(self): self.t.close()
+        if self.ok and whole_shown(t[0]): return t[0]
+        self.fresh = turned(self.doc, self.i, deg, dx, dy); return self.fresh[0]
+    def close(self):
+        if self.fresh: self.fresh.close()
+        self.t.close()
 
 def inside(b, box, tol=0.5):
     return b[0] >= box[0] - tol and b[1] >= box[1] - tol and b[2] <= box[2] + tol and b[3] <= box[3] + tol
