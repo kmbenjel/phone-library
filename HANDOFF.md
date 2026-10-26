@@ -3,6 +3,31 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-26 01:30 — STATE BEFORE A /clear: the one regression running; then its diff, by eye (Claude, max effort)
+RUNNING (nothing else of mine): user unit crop-regress-2026-10-26 (scratch/regress_2026-10-26.sh, book_crop cedf4dd2b8,
+marker data/crop/.regress-2026-10-26) → logs/crop-regress-2026-10-26.log; at its end it writes by itself the diff against
+5d6113b97c → logs/crop-regress-diff-2026-10-26.log. At 01:26: 8 of 31 books, 39 PASS, 0 FAIL; ≈ 6–10 min a book now that it
+runs alone → done ≈ 04:00–05:00 UTC. Do NOT edit book_crop.py while it runs (cache key). Check: `systemctl --user is-active
+crop-regress-2026-10-26`, `grep -c ^FAIL logs/crop-regress-2026-10-26.log`. A crash (memory brake) reruns by itself.
+The test units of 00:10 (turner-eq-*, turner-fresh-*) have ENDED, all passed — ignore that paragraph's «running».
+WHEN IT ENDS (item 1e, max effort):
+  a. «N failures» line: 0 expected. The 14 owner-turn cases are checked at the END of the log (they reuse cached recipes);
+     crop_regress now passes an owner turn only if its shear reading after the turn is below the turn (wrong way ≈ 2×).
+  b. Read logs/crop-regress-diff-2026-10-26.log: causes «owner turn» / «level first» / «image ≤ 0.35» / OTHER. The 13 books
+     the stopped 25b run did changed only خزانة 01 pp. 26 (owner turn), 164, 307 (0.35 rule) — the new run should match.
+     Every OTHER page must be explained before the pilot redo.
+  c. Draw every changed page old | new as the reader sees it: `python3 scratch/crop_diff_sheets_2026-10-26.py cedf4dd2b8
+     <outdir>` (tested on خزانة 01: p. 26 levelled by the owner's turn) and LOOK at each (wrong direction, cut text, box).
+  d. 1b memory: per-book «memory peak … workers up to …» lines (25b: main 250–405 MB, a worker ≤ 890 MB with 3 per book);
+     after the big books (83dfc7786870 1,531 pp., 2b47002d18ab 1,491 pp., 51cfa6854fda) decide whether mem_governor's
+     PER = 2.2 GB a book can come down (more workers) — the stamps memory fix removed the 3.6 GB peaks.
+  e. Report to the owner; then items 2–4 below at the effort he sets (2 name composer xhigh, 3 pilot redo xhigh, 4 reading).
+DONE TONIGHT (commits 621a7d9 … e2d1bc8): the Turner made exact (cce9c37) and PROVEN — 114,175 views of 32 books
+byte-identical to fresh copies (scripts/turner_check.py, rerun it after any PyMuPDF upgrade) and 40/40 page-extract recipes
+identical with and without the kept copy; the 25b run stopped (13 books, 62 PASS, 0 FAIL); the small-tilt angles on the
+owner's «turn» pages compared (no rule change — see the 00:10 section's last paragraph). Open with the owner: the image
+of خزانة الأدب vol. 1's cover (asked again; would become a regression case).
+
 ## 2026-10-26 00:10 — the exact Turner committed (cce9c37); THE REGRESSION RUNNING AGAIN (Claude, max effort)
 RUNNING: user unit crop-regress-2026-10-26 (scratch/regress_2026-10-26.sh, marker data/crop/.regress-2026-10-26, book_crop
 cedf4dd2b8) → logs/crop-regress-2026-10-26.log, then by itself the diff → logs/crop-regress-diff-2026-10-26.log. Do NOT edit
