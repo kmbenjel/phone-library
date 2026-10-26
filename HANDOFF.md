@@ -6,6 +6,20 @@ Each workstream appends its progress below (the newest state first, then the his
 OWNER 2026-10-26 ~03:00: the ~11,000 old-format names (parentheses) WAIT for the reading pass — no mechanical format pass («ننتظر مرحلة القراءة»). He clears and switches to xhigh.
 OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs at max: the regression's end (a–e), then the pilot.
 
+## 2026-10-26 22:50 — 26g PASSED (0 failures, ended 22:40); guard G in book_crop (20d30c2020, commit 5136103); 26h RUNNING (Claude, max)
+- 26g vs 26f: only the bench-predicted pages (أسرار d20f1fe41833, سيبويه 9b98ea8b9570, خريدة 064846139175 163/259/451) and
+  the three looked at during the run (خزانة 01 p. 26, اللآلئ 468, مشتبهات 89). image_third pages: exactly 00597 p. 26,
+  9b98 p. 221, d319 p. 89. Guard bench g2 vs fix: خزانة 01 0 pages, سيبويه 0, مشتبهات only p. 89 (not turned, 6 lines).
+- RUNNING: user unit crop-regress-2026-10-26h (scratch/regress_2026-10-26h.sh, started 22:45, ≈ 4–4.5 h) → at its end by
+  itself logs/crop-regress-diff-2026-10-26h.log (vs 26b f06a68adb2) and …-26h-vs-26g.log (vs b32a237bbf). Expected vs 26g:
+  مشتبهات p. 89 only. Watcher: scratchpad 37b40576…/watch26h.sh. Do NOT edit book_crop.py while it runs.
+- NEXT: 26h diff by eye → the pilot (scratch/pilot_redo_2026-10-26.sh, launch line in the 07:00 section).
+- BESIDE (scratchpad 37b40576…/proj): the projection path fooled by a SCANNER'S BAR (الموسوعة 38 2b47002d18ab pp. 423, 437,
+  438, 440: a thick slanted bar across the whole sheet above the text, read 0.6–1.1°; the text level line by line). Whitening
+  every long rule is WRONG: on index pages (خريدة 01 pp. 658–705) and 35fbe344b8c6 p. 78 the printed running-head rule tilts
+  with the page and is the only ruler. Working on a narrower rule (a «rule» running well past the text block on both sides =
+  the sheet's/scanner's, not print). Survey of all 2,727 projection turns of 26g: proj/projrules.tsv (unit projrules-survey).
+
 ## 2026-10-26 22:10 — STATE BEFORE A /clear (Claude, max). Supersedes the 21:40 section's NEXT.
 RUNNING: crop-regress-2026-10-26g (75 PASS 0 FAIL at 22:00; ≈ half its pages left → ends ≈ 00:00 UTC; at its end it writes
 logs/crop-regress-diff-2026-10-26g.log and …-vs-26f.log by itself) and my bench unit crop-bench-guard2 (00597fea27cf, g2 —
