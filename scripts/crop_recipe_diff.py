@@ -2,8 +2,9 @@
 page by page — turn, crop box, shown part, scale, move, kind — so that every change a method change brings is explained
 before anything reaches the phone (the redo, a pilot). Each changed page is printed with its cause, read from the flags the
 new recipe carries: the owner's turn, a level-by-both turn taken first, a ruler-certified small tilt (turns); a page number
-read as a stain restored (folio stain); a second look that moved, enlarged or no longer moves the box (second look); a
-cover whose cut moved to keep its print (cover print); else OTHER. A turn rule explains a page only when its turn changed.
+read as a stain restored (folio stain); letters in the paper's edge shadow taken in (edge letters); a second look that
+moved, enlarged or no longer moves the box (second look); a cover whose cut moved to keep its print (cover print); else
+OTHER. A turn rule explains a page only when its turn changed.
 Usage: crop_recipe_diff.py OLDMD5 NEWMD5 [BOOK …]   (md5 = the first 10 hex digits of book_crop.py's md5)"""
 import collections, glob, json, os, sys
 C = os.path.expanduser('~/.cache/phone-library/crop-regress/')
@@ -17,6 +18,7 @@ def cause(p, q):
         return None
     if q.get('folio_blot') is not None or p.get('folio_blot') is not None: return 'folio stain'
     if q.get('verify_cut') is not None: return 'cut edge'
+    if q.get('edge_letters') and (p.get('verify_moved') or q.get('verify_moved')): return 'edge letters'
     if p.get('verify_moved') or q.get('verify_moved'): return 'second look'
     if q.get('cover_marks') is not None and p.get('show') != q.get('show') and all(p.get(k) == q.get(k) for k in ('crop', 'scale', 'move', 'kind')):
         return 'cover print'
