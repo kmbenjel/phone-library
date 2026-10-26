@@ -6,6 +6,54 @@ Each workstream appends its progress below (the newest state first, then the his
 OWNER 2026-10-26 ~03:00: the ~11,000 old-format names (parentheses) WAIT for the reading pass — no mechanical format pass («ننتظر مرحلة القراءة»). He clears and switches to xhigh.
 OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs at max: the regression's end (a–e), then the pilot.
 
+## 2026-10-26 22:10 — STATE BEFORE A /clear (Claude, max). Supersedes the 21:40 section's NEXT.
+RUNNING: crop-regress-2026-10-26g (75 PASS 0 FAIL at 22:00; ≈ half its pages left → ends ≈ 00:00 UTC; at its end it writes
+logs/crop-regress-diff-2026-10-26g.log and …-vs-26f.log by itself) and my bench unit crop-bench-guard2 (00597fea27cf, g2 —
+read `journalctl --user -u crop-bench-guard2 -o cat`, then `python3 <S>/bench/cmpv.py 00597fea27cf fix g2`: expected 0 pages
+differ). <S> = /tmp/claude-1000/-home-k-projects-phone-library/1b7990ba-6814-49a5-b805-48efc1d260b5/scratchpad. Watchers died
+with the /clear: re-arm (`<S>/watch26g.sh` in the background: ends on 26g's end, a FAIL or a governor BRAKE).
+GUARD G, FINAL FORM = <S>/bench/patch_g.py (→ <S>/bench/code/bc_g2.py from b32a237bbf): line_leans at 1,400 px (σ 1, angles
+0.025° off level — measured faithful: a page turn moves every line's reading by the turn within 0.25°) + made_lean; third()
+refuses when the turn makes ≥ 2 level lines (≤ 0.3°) lean (≥ 0.5°) AND they are ≥ a fifth of the lines read → tilt_disputed +
+lines_lean. BENCH (fbwq.py with the owner's turns; «fix» FAITHFUL to 26g on all 3 books): مشتبهات d319e06e78d0 — ONLY p. 89
+differs (not turned; 6 lines would lean); سيبويه 9b98ea8b9570 — 0 pages differ (p. 221 still turned); خزانة 01 — running.
+NEXT, in order: (1) 26g ends → read its diffs; every page outside the 3 bench books LOOKED AT (crop_diff_sheets.py
+2bb44a7384 b32a237bbf OUTDIR BOOK…); for every page with image_third run `python3 <S>/tools/leans14.py BOOK:PAGE:SKEW` (the
+guard's verdict) — those it refuses are expected in 26h. (2) `python3 <S>/bench/patch_g.py scripts/book_crop.py
+scripts/book_crop.py` → md5 must equal bc_g2.py's; commit; regression 26h (copy scratch/regress_2026-10-26g.sh → 26h:
+marker, log names, diff against b32a237bbf (26g) and f06a68adb2). Case row 126 (مشتبهات p. 89 «turn no») already added.
+(3) 26h diff by eye → the pilot (scratch/pilot_redo_2026-10-26.sh, launch line in the 07:00 section).
+FOUND, NOT FIXED — for the owner (a question page is half-built: images <S>/tiltq/*-1.jpg as scanned | *-2.jpg turned, red
+level lines; tools/tiltq.py BOOK PAGE OUT): pages whose lines lie at two angles (a warped photocopy, lines set one by one)
+are turned by their average by the ORDINARY rules too, which makes their level lines lean — الموسوعة الشاملة (38)
+2b47002d18ab p. 892 (upper lines level → 0.6° after a −0.7° turn; seen by eye, <S>/d26g/v892.jpg), p. 42; footnotes set at
+their own angle lean slightly after the text is levelled (مناقب 0e655bcab0be p. 208, 2 lines of 20 — the guard lets those
+pass). Old 1,000-px sample: ≈ 3 % of turned pages flagged. ASK HIM: leave such pages as scanned and list them, or turn by
+the average (as now)? WORSE, a real wrong turn by the existing method: الموسوعة (38) p. 438, a contents TABLE — its two column
+rules stand −0.01° / +0.03° from vertical as scanned; the method turned it 0.675° (tilt_by_proj 0.475 → level_by_proj 0.05:
+the projection-turn path) and the rules now lean 0.71–0.74° (<S>/tools/vrule_at.py on tiltq/2b47002d18ab-438-[12].jpg).
+Investigate the projection-turn path (by_proj in verify) on table pages BEFORE the full redo — it is in 26b..26g alike
+(pre-existing), so the pilot is not blocked by it, but tell the owner.
+
+## 2026-10-26 21:40 — 26g still RUNNING (18/31 books, 68 PASS 0 FAIL); fix B turned a page it must not → guard G benched (Claude, max)
+- 26g so far vs 26f: the 2 bench books = their bench recipes page for page (cmpfix 0 changes; residual clips أسرار 321, سيبويه
+  195 as known). Outside them 3 pages changed, ALL LOOKED AT (scratchpad 1b7990ba…/d26g): اللآلئ 435bf8357444 p. 468 box
+  +2.3 pt right for a handwritten margin note (nothing cut) ✓; خزانة 01 p. 26 (owner turn 0.68) now turned −0.775 by third()
+  — line by line «الجزء الأول» −0.20 → −0.15, fine ✓; مشتبهات القرآن d319e06e78d0 p. 89 turned 0.6 by third() ✗: its
+  Quranic lines are set one by one — the upper ones level, the lower 0.5–1.25°; the turn made 4 level lines lean 0.6–1.3°
+  (measured line by line; seen by eye at 1,400 px: z89-top.jpg). The «only page of the 31 books» claim for B was wrong:
+  third() also fires on disputed pages (tilt_by_edge) and before an owner turn.
+- FIX G (scratch: 1b7990ba…/scratchpad/bench/patch_g.py → code/bc_g.py; NOT yet in scripts/book_crop.py — 26g runs):
+  line_leans (each line of the text block measured alone: the sharpest turn of its band, smoothed, angles 0.025° off level)
+  + made_lean (level ≤ 0.3° before, ≥ 0.5° after); third() refuses when ≥ 2 lines are made to lean → tilt_disputed +
+  lines_lean (the review page's «tilt» doubt). Checked on the 1,000-px views: p. 89 5 lines → refused; سيبويه 221 0; خزانة
+  26 0; إرشاد 68600214e7de p. 8 0. Bench unit crop-bench-guard (fbwq.py fix g on d319e06e78d0, 9b98ea8b9570, 00597fea27cf):
+  «fix» must reproduce 26g (FAITHFUL), «g» must differ ONLY on p. 89. Control (leans_ctl.py, 300 random turned pages of 26g,
+  keep()'s turns): how often an ordinary turn makes lines lean → scratchpad leans-ctl.txt.
+- DONE beside: regression case مشتبهات p. 89 «turn no» (row 126); crop_recipe_diff cause «lines made to lean».
+- NEXT: 26g ends (≈ 00:00) → its full diff by eye → apply patch_g.py to scripts/book_crop.py (byte-identical to bc_g.py)
+  → regression 26h → its diff (expected vs 26g: p. 89 only, + any other third() page with ≥ 2 lines made to lean) → pilot.
+
 ## 2026-10-26 18:50 (UTC, real) — governor 1.5 / 0.5 GB with the owner's word; the 2 rejoined books in place; 26g RUNNING at 3 workers (Claude, max)
 - OWNER 18:35 (AskUserQuestion): «Yes, 1.5 / 0.5» → mem_governor PER 1.5 GB, PARENT 0.5 GB (commit 8ad0b6c; unit restarted
   18:36; workers 1 → 3 at a 5.5 GB pen). 26g's book 1 took 956 s at 1 worker, identical to 26f; books 2+ run with 3.
