@@ -8,10 +8,14 @@ new = sys.argv[1][:10]; OLD = '5d6113b97c'
 KEYS = ('skew', 'crop', 'show', 'scale', 'move', 'kind')
 tot = collections.Counter(); other = []
 def cause(p, q):
-    if q.get('owner_turn') is not None: return 'owner turn'
-    if q.get('level_first'): return 'level first'
-    if q.get('image_loose') is not None: return 'image ≤ 0.35'
-    if q.get('cover_marks') is not None and p.get('show') != q.get('show') and all(p.get(k) == q.get(k) for k in ('skew', 'crop', 'scale', 'move', 'kind')): return 'cover print'
+    # (a turn rule explains a page only when its turn changed: a page whose box alone changed is OTHER, whatever flags it
+    # carries — added 03:25 before the run's end, so that no change hides behind a flag)
+    if p.get('skew') != q.get('skew'):
+        if q.get('owner_turn') is not None: return 'owner turn'
+        if q.get('level_first'): return 'level first'
+        if q.get('image_loose') is not None: return 'image ≤ 0.35'
+        return None
+    if q.get('cover_marks') is not None and p.get('show') != q.get('show') and all(p.get(k) == q.get(k) for k in ('crop', 'scale', 'move', 'kind')): return 'cover print'
     return None
 for f in sorted(glob.glob(C + f'*.{OLD}.json')):
     h = os.path.basename(f)[:12]

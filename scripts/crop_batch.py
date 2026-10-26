@@ -45,16 +45,16 @@ def follow(path):
     return path
 
 OWNER_TURNS = J('data', 'crop', 'owner-turns.tsv')
+OWNER_PAGES = J('data', 'crop', 'owner-pages.tsv')
 
-def owner_turns(path):
-    """the pages of this book the owner ruled «turn» (data/crop/owner-turns.tsv: path, page, measured tilt, verdict — his
-    verdicts on site/crop-tilt-001.html, 2026-10-25) → {page (1-based, as in the recipe): |tilt|}, for book_crop.plan. The
-    list's paths and `path` are each followed to the name the file has now (logged moves, only while the name is not on
-    the phone — the log also holds the crop's own swaps), Unicode-normalised"""
-    if not os.path.exists(OWNER_TURNS): return {}
+def listed(table, path):
+    """the rows of a list of pages (path, page, …) that are about this book: the list's paths and `path` are each followed
+    to the name the file has now (logged moves, only while the name is not on the phone — the log also holds the crop's
+    own swaps), Unicode-normalised"""
+    if not os.path.exists(table): return []
     N = lambda x: unicodedata.normalize('NFC', x.removeprefix('Books/'))
-    rows = [l.rstrip('\n').split('\t') for l in open(OWNER_TURNS, encoding='utf-8') if l.strip() and not l.startswith('#')]
-    if not rows: return {}
+    rows = [l.rstrip('\n').split('\t') for l in open(table, encoding='utf-8') if l.strip() and not l.startswith('#')]
+    if not rows: return []
     fwd = {N(a): N(b) for a, b in moves()[0].items()}
     idx = {N(l.split('\t')[0]) for l in open(J('data', 'phone', 'index-now.tsv'), encoding='utf-8') if l.strip()}
     def now(x):
@@ -62,7 +62,22 @@ def owner_turns(path):
         while x not in idx and x in fwd and x not in seen: seen.add(x); x = fwd[x]
         return x
     me = now(path)
-    return {int(r[1]): float(r[2]) for r in rows if now(r[0]) == me}
+    return [r for r in rows if now(r[0]) == me]
+
+def owner_turns(path):
+    """the pages of this book the owner ruled «turn» (data/crop/owner-turns.tsv: path, page, measured tilt, verdict — his
+    verdicts on site/crop-tilt-001.html, 2026-10-25) → {page (1-based, as in the recipe): |tilt|}, for book_crop.plan"""
+    return {int(r[1]): float(r[2]) for r in listed(OWNER_TURNS, path)}
+
+def owner_pages(path):
+    """the pages of this book the owner pointed at in an earlier crop review (data/crop/owner-pages.tsv: path, page, his
+    words, where; and the pages he ruled «turn», owner-turns.tsv) → {page (1-based): «his words» (where)}: drawn on the
+    review page of every new crop of the book, doubted by the method or not, so that he sees each remark answered (the
+    pilot redo of 2026-10-26 holds five of the books he marked on 10-14)"""
+    out = {}
+    for r in listed(OWNER_TURNS, path): out.setdefault(int(r[1]), []).append('أجزتَ تدويرها (crop-tilt-001، 2026-10-25)')
+    for r in listed(OWNER_PAGES, path): out.setdefault(int(r[1]), []).append(f'«{r[2]}»' + (f' ({r[3]})' if len(r) > 3 and r[3] else ''))
+    return {k: ' / '.join(v) for k, v in out.items()}
 
 def names_of(path, back):
     """the file's earlier names (its logged moves, followed backwards)"""
@@ -157,11 +172,17 @@ def analyse(path, src, jobs=1):
         for i, why in sorted(flags, key=lambda x: (order[x[1]], x[0])):
             if len(sp) >= 6: break
             if (i, why) not in sp: sp.append((i, why))
+        # (and every page the owner pointed at before, his words beside it: «owner», with the method's own doubt if any)
+        own = {pg - 1: w for pg, w in owner_pages(path).items() if 0 < pg <= len(P)}
+        pick = dict(sorted(sp)[:6])
+        for i in own: pick[i] = 'owner' + ('+' + pick[i] if i in pick else '')
+        shown = sorted(pick.items())
         d = os.path.join(SHEETS, hashlib.md5(path.encode()).hexdigest()[:12])
-        if sp:
-            bc.sheet(src, rec, d, sorted(sp)[:6])
+        if shown:
+            bc.sheet(src, rec, d, shown)
         json.dump({'path': path, 'decision': rec.get('decision'), 'reasons': rec.get('reasons'), 'gain': rec.get('gain'),
-                   'doubts': {w: sum(1 for _, x in flags if x == w) for w in order}, 'shown': sorted(sp)[:6]},
+                   'doubts': {w: sum(1 for _, x in flags if x == w) for w in order}, 'shown': shown,
+                   'owner': {str(i + 1): w for i, w in own.items()}},
                   open(os.path.join(d, 'book.json'), 'w') if os.makedirs(d, exist_ok=True) is None else None, ensure_ascii=False)
     except Exception as e: print('SHEET FAIL', path[:60], repr(e)[:120], flush=True)
     out.update(dst=dst, info=info, recipe={'pages': [{k: p.get(k) for k in ('crop', 'show', 'scale', 'bands', 'fit_whole', 'skew', 'move', 'enlarged',
