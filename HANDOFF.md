@@ -6,13 +6,35 @@ Each workstream appends its progress below (the newest state first, then the his
 OWNER 2026-10-26 ~03:00: the ~11,000 old-format names (parentheses) WAIT for the reading pass — no mechanical format pass («ننتظر مرحلة القراءة»). He clears and switches to xhigh.
 OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs at max: the regression's end (a–e), then the pilot.
 
-## 2026-10-26 06:45 — the second look on print; THE REGRESSION RUNNING AGAIN: crop-regress-2026-10-26c (Claude, max effort)
-RUNNING: user unit crop-regress-2026-10-26c (scratch/regress_2026-10-26c.sh, marker data/crop/.regress-2026-10-26c, book_crop
-1d95f5d01d) → logs/crop-regress-2026-10-26c.log, at its end by itself the diff against f06a68adb2 →
-logs/crop-regress-diff-2026-10-26c.log (scripts/crop_recipe_diff.py, new). Started 06:39 UTC, ≈ 4 h (1 worker while the owner
-uses the laptop). Do NOT edit book_crop.py while it runs. Beside it (scratchpad of session b7f753c2…/bench): units fb-* — the
-«faithful bench» (first look once on the whole book, then decide + verify of git HEAD and of the new code on chosen pages;
-«faithful» = the HEAD result equals the 26b recipe).
+## 2026-10-26 07:00 — STATE BEFORE A /clear: regression 26d RUNNING; then its diff by eye; then the pilot (Claude, max effort)
+RUNNING: user unit crop-regress-2026-10-26d (scratch/regress_2026-10-26d.sh, marker data/crop/.regress-2026-10-26d, book_crop
+7d358b26b0) → logs/crop-regress-2026-10-26d.log, at its end by itself the diff against f06a68adb2 →
+logs/crop-regress-diff-2026-10-26d.log (scripts/crop_recipe_diff.py). Started 06:59 UTC, ≈ 4 h (fewer workers while the owner
+uses the laptop). Do NOT edit book_crop.py while it runs. Check: `systemctl --user is-active crop-regress-2026-10-26d`,
+`grep -c ^FAIL logs/crop-regress-2026-10-26d.log`. (26c, 1d95f5d01d, was STOPPED during its first book: a 2-px dash still
+chained on f134344a7421 p. 165 → a hairline is now 1–2 px, `th * z < 2.5`.)
+THE FAITHFUL BENCH (scratchpad of session b7f753c2…: /tmp/claude-1000/-home-k-projects-phone-library/b7f753c2-6527-4c3d-9dcb-
+f4e918ed0046/scratchpad/bench — fb.py: the first look once on the whole book, cached as <book>.pages.pkl, then decide + verify
+of git HEAD a38a604's book_crop (code/book_crop_old.py) and of the new one (code/book_crop_new.py = 7d358b26b0) on chosen pages;
+«faithful» = the HEAD result equals the 26b recipe; draw.py BOOK PAGE … draws old | new): DONE f134344a7421 (fb2: 24/24
+faithful; all 22 wrongly moved pages back in the book's box, none enlarged; controls 50/100 unchanged; pp. 49/165 looked at —
+right) and 1d12000b2925 (p. 323 «٣٢٣» whole, box like its neighbours'; 322/324/100 unchanged). STILL RUNNING at the /clear
+(units fb-00597fea27cf = خزانة 01 pp. 16 34 36 76 96 256 390 416 430 468 + 26 164 307 1 100 200; fb-68600214e7de pp. 9 24 76 80
+90 128 146 148 182 241 322 407 181 265 314; fb-064846139175 — index pages whose real cut letters MUST still be taken in: 700,
+344, 516, 627, 631 …): read `journalctl --user -u fb-<book> -o cat | grep faithful` — every line must say «faithful», the new
+crops must lose the scan-line moves and keep the real growth (064846139175 p. 700: digits cut at the left column's edge).
+If one shows a fault: stop 26d, fix, rerun as 26e (fb.py reruns in minutes from the .pkl). Not bench-tested: 2b47002d18ab
+(bars, 1,491 pp.) — the regression covers it.
+WHEN 26d ENDS: a. 0 failures; b. read the diff (causes «second look», «folio stain», «cut edge»; every OTHER explained);
+c. `python3 scripts/crop_diff_sheets.py f06a68adb2 7d358b26b0 OUTDIR` and LOOK at every page (a box over a line, a cut letter
+or number, a page shown smaller); d. the pilot: `systemd-run --user --slice=crop.slice --unit=crop-redo-pilot --nice=10
+--working-directory=$PWD --setenv=PATH="$PATH" scratch/pilot_redo_2026-10-26.sh` (header updated; its review page now also
+shows «cut» and «folio» pages — crop_batch.analyse, crop_doubts_page WHY; kept recipes now carry verify_moved/verify_cut/
+folio_blot/owner_turn); after it, audit the 10 books' second-look moves on the phone files themselves, measure the memory
+(mem-sampler) → PER/PARENT, stop mem-sampler; tell the owner (crop-doubts page; plan-383 page from 02:35 still unannounced).
+refresh.sh ran 06:41–06:58 (web 294ba85).
+
+## 2026-10-26 06:45 — the second look on print (Claude, max effort)
 WHY: 26b's 20 changed pages were all right when looked at (old | new) — but looking further, the SECOND LOOK (verify) had
 moved or enlarged 95 pages of the 31 books (0.6 %), most for nothing: at 1,000 px a scan line breaks into one-pixel dashes
 that count as letters there and chained the text block (held at its 3 % bound) up to the line — خزانة الأدب ج 1 (a PILOT
@@ -20,8 +42,8 @@ book) pp. 16, 34, 36, 76, 96, 256, 390, 416, 430, 468: the box moved up over the
 f134344a7421: 22 pages shown 4–9 % smaller for a top scan line; الحروب الصليبية pp. 398–426: a copier's black bar → the page
 up to 21 % smaller; and 1d12000b2925 p. 323: its PAGE NUMBER CUT at the foot (the bold «٣٢٣» read as a stain on the page
 turned at the first look, the box placed off it, then slid to the 3 % bound — through the number).
-CHANGES (book_crop 1d95f5d01d): printlike / letterlike / text_block — the second look's text block on print only (no
-hairline: 1 px thick and ≥ 4× as long; no bar: ≥ 10 % of the page and ≥ 8× as long as thick), notes and figures read
+CHANGES (book_crop 1d95f5d01d, then 7d358b26b0): printlike / letterlike / text_block — the second look's text block on print
+only (no hairline: 1–2 px thick at 1,000 px and ≥ 4× as long; no bar: ≥ 10 % of the page and ≥ 8× as long as thick), notes and figures read
 outside it, the 3 % bound kept (القوافي); the moved box re-checked for a mark it would cut (taken in: verify_cut); the
 non-clean branch's needs on the same text block, only print-like marks move it; decide(): a stain at the book's folio place
 (3+ other pages' folios, same_place) restored as the page number (folio_blot), into box and text. Bench: 1d12000b2925 p. 323

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # One-off (2026-10-26): the PILOT of the crop redo (the owner's order of 2026-10-25, item 3: «start the redo with a pilot of
 # about 10 books … you review the doubts page; then the full redo runs by itself»), launched by hand only after the
-# regression crop-regress-2026-10-26b passed (0 failures) and its recipe diff was explained page by page.
+# regression passed (0 failures) and its recipe diff was explained page by page — 26b (f06a68adb2) did, but its second look
+# moved boxes over scan lines and cut a page number (HANDOFF 06:45): the pilot waits for crop-regress-2026-10-26c (1d95f5d01d).
 # The 10 books (data/crop/pilot-2026-10-26.tsv): خزانة الأدب ج 1 (the owner's cover «not filling the page», his «turn»
 # pages 26/164/307), four books he marked on 2026-10-14 that are no regression case (مواد البيان: the cover; الإعلام ج 9:
 # «444 مالت عكسيا»; كتاب المغازي: «ميلان»; روضة الفهوم: «قبل وبعد كلاهما خطأ») and five drawn at random from the redo list

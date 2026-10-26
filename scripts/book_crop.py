@@ -816,12 +816,14 @@ def printed_groups(margin, w, h):
 
 def printlike(b, w, h, z):
     """a mark that may be print the box must hold — a letter, a word, a digit, a sign (2026-10-26) — at z pixels per pt: not a
-    HAIRLINE (one pixel thick and at least four times as long: a scan line broken into dashes, seen only at the second
-    look's resolution — خزانة الأدب ج 1 ص 34, 96, 256 …: the dashes above the running head carried the text block up and the
-    box with it, over the very lines the owner had the box avoid, 2026-10-18), not a BAR (a tenth of the page long or more and
-    eight times as long as thick: a copier's black bar — الحروب الصليبية ص 398–426, the page shown 8–21 % smaller)"""
+    HAIRLINE (one or two pixels thick and at least four times as long: a scan line broken into dashes, seen only at the
+    second look's resolution — خزانة الأدب ج 1 ص 34, 96, 256 …: the dashes above the running head carried the text block up
+    and the box with it, over the very lines the owner had the box avoid, 2026-10-18; f134344a7421 ص 165: a dash 2 px
+    thick; a letter's stroke apart from its letter is shorter, a printed rule is no text — decide() keeps the book's rules),
+    not a BAR (a tenth of the page long or more and eight times as long as thick: a copier's black bar — الحروب الصليبية
+    ص 398–426, the page shown 8–21 % smaller)"""
     bw, bh = b[2] - b[0], b[3] - b[1]; th, ln = min(bw, bh), max(bw, bh)
-    if th * z <= 1.5 and ln >= 4 * th: return False
+    if th * z < 2.5 and ln >= 4 * th: return False
     return not ((bw >= 0.1 * w and bw >= 8 * bh) or (bh >= 0.1 * h and bh >= 8 * bw))
 
 def letterlike(b, w, h):

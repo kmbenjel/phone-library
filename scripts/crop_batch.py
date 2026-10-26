@@ -162,9 +162,13 @@ def analyse(path, src, jobs=1):
                    'stain' if p.get('stain_kept') else
                    'stamp' if p.get('stamp') else
                    'sheet' if p.get('sheet_fill') and p.get('crop') else
-                   'larger' if (p.get('enlarged') or 1) >= 1.05 else None)
+                   'larger' if (p.get('enlarged') or 1) >= 1.05 else
+                   # (the second look's own corrections, 2026-10-26: a mark the moved box would have cut, taken in; a page
+                   # number read as a stain, put back — shown so that he sees them work)
+                   'cut' if p.get('verify_cut') else
+                   'folio' if p.get('folio_blot') else None)
             if why: flags.append((i, why))
-        order = {'tilt': 0, 'whole': 1, 'stain': 2, 'stamp': 3, 'larger': 4, 'sheet': 5}
+        order = {'tilt': 0, 'whole': 1, 'stain': 2, 'stamp': 3, 'larger': 4, 'sheet': 5, 'cut': 6, 'folio': 7}
         seen, sp = set(), []
         for i, why in sorted(flags, key=lambda x: (order[x[1]], x[0])):   # each kind of doubt first, then more of them
             if why in seen: continue
@@ -186,7 +190,8 @@ def analyse(path, src, jobs=1):
                   open(os.path.join(d, 'book.json'), 'w') if os.makedirs(d, exist_ok=True) is None else None, ensure_ascii=False)
     except Exception as e: print('SHEET FAIL', path[:60], repr(e)[:120], flush=True)
     out.update(dst=dst, info=info, recipe={'pages': [{k: p.get(k) for k in ('crop', 'show', 'scale', 'bands', 'fit_whole', 'skew', 'move', 'enlarged',
-                                                               'curved', 'notes', 'anchored_x', 'anchored_y') if p.get(k)}
+                                                               'curved', 'notes', 'anchored_x', 'anchored_y',
+                                                               'verify_moved', 'verify_cut', 'folio_blot', 'owner_turn') if p.get(k)}
                                                     for p in rec['pages']], 'size': rec.get('size'), 'gain': rec.get('gain'),
                                           'margin_pt': rec.get('margin_pt'), 'clean_margins': rec.get('clean_margins'),
                                           'decision': rec.get('decision'), 'reasons': rec.get('reasons'), 'level_trim': rec.get('level_trim'),
