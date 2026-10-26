@@ -163,12 +163,18 @@ def analyse(path, src, jobs=1):
                    'stamp' if p.get('stamp') else
                    'sheet' if p.get('sheet_fill') and p.get('crop') else
                    'larger' if (p.get('enlarged') or 1) >= 1.05 else
-                   # (the second look's own corrections, 2026-10-26: a mark the moved box would have cut, taken in; a page
-                   # number read as a stain, put back — shown so that he sees them work)
+                   # (the rules of 2026-10-26, shown so that he sees them work: a clear tilt turned on the image measure
+                   # falling to a third; the box slid sideways beyond 2 % for a side heading — its text off-centre; letters in
+                   # the paper's edge shadow taken in; a mark the moved box would have cut, taken in; a page number read as a
+                   # stain, put back)
+                   'third' if p.get('image_third') and p.get('skew') else
+                   'side' if p.get('verify_far') is not None else
+                   'edge' if p.get('edge_letters') and p.get('verify_moved') else
                    'cut' if p.get('verify_cut') else
                    'folio' if p.get('folio_blot') else None)
             if why: flags.append((i, why))
-        order = {'tilt': 0, 'whole': 1, 'stain': 2, 'stamp': 3, 'larger': 4, 'sheet': 5, 'cut': 6, 'folio': 7}
+        order = {'tilt': 0, 'whole': 1, 'stain': 2, 'stamp': 3, 'larger': 4, 'sheet': 5, 'third': 6, 'side': 7, 'edge': 8, 'cut': 9,
+                 'folio': 10}
         seen, sp = set(), []
         for i, why in sorted(flags, key=lambda x: (order[x[1]], x[0])):   # each kind of doubt first, then more of them
             if why in seen: continue
@@ -191,7 +197,8 @@ def analyse(path, src, jobs=1):
     except Exception as e: print('SHEET FAIL', path[:60], repr(e)[:120], flush=True)
     out.update(dst=dst, info=info, recipe={'pages': [{k: p.get(k) for k in ('crop', 'show', 'scale', 'bands', 'fit_whole', 'skew', 'move', 'enlarged',
                                                                'curved', 'notes', 'anchored_x', 'anchored_y',
-                                                               'verify_moved', 'verify_cut', 'folio_blot', 'owner_turn') if p.get(k)}
+                                                               'verify_moved', 'verify_cut', 'folio_blot', 'owner_turn',
+                                                               'verify_far', 'image_third') if p.get(k)}
                                                     for p in rec['pages']], 'size': rec.get('size'), 'gain': rec.get('gain'),
                                           'margin_pt': rec.get('margin_pt'), 'clean_margins': rec.get('clean_margins'),
                                           'decision': rec.get('decision'), 'reasons': rec.get('reasons'), 'level_trim': rec.get('level_trim'),

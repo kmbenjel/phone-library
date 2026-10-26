@@ -6,6 +6,19 @@ Each workstream appends its progress below (the newest state first, then the his
 OWNER 2026-10-26 ~03:00: the ~11,000 old-format names (parentheses) WAIT for the reading pass — no mechanical format pass («ننتظر مرحلة القراءة»). He clears and switches to xhigh.
 OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs at max: the regression's end (a–e), then the pilot.
 
+## 2026-10-26 18:50 — STATE BEFORE A /clear: regression 26g RUNNING; then its diff by eye; then the pilot (Claude, max)
+Nothing else of mine runs (bench units ended; mem-sampler still runs — stop it after the pilot). The 18:25 section below is
+current: 26g (crop-regress-2026-10-26g, started 18:24, ≈ 3–4.5 h) → two diffs by itself; WHEN IT ENDS: a–c there.
+ALSO DONE 18:45 (commit after eac381c): the pilot's review page shows the new rules at work — crop_batch.analyse doubt kinds
+«third» (a turn on the image falling to a third), «side» (a slide beyond 2 %: text off-centre), «edge» (letters in the edge
+shadow taken in), Arabic labels in crop_doubts_page.WHY; kept recipes carry verify_far / image_third. Tested end to end on
+extracts (analyse → sheets → page in a temp ROOT; test sheets removed). Note: on a short extract stamps_of reads repeated
+marks as stamps (20 of 26 pages of أسرار) — an artefact of extracts; the whole book has none (stamp_pages 0).
+ASK THE OWNER (not yet asked): mem_governor PER 2.2 → 1.5 GB, PARENT 1.5 → 0.5 GB (measured: a book in one process 0.97–1.29
+GB; crop_redo's own process is small) → 3 books at once in a 6 GB pen instead of 2 (the full redo ≈ 1.5× faster); needs a
+restart of the mem-governor unit = his word. Also still unannounced: site/plan-383.html (21 names re-composed, 02:35).
+OWNER 2026-10-26 08:38, when 26e stalled for memory: «either one or just kill brave» (Brave closed with SIGTERM; reopened later).
+
 ## 2026-10-26 18:25 — REGRESSION 26g RUNNING (book_crop b32a237bbf, commit 9513341) (Claude, max)
 RUNNING: user unit crop-regress-2026-10-26g (scratch/regress_2026-10-26g.sh, marker data/crop/.regress-2026-10-26g) →
 logs/crop-regress-2026-10-26g.log; at its end by itself two diffs: against 26b (f06a68adb2, the last passing run) →
