@@ -9,8 +9,10 @@ OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs a
 ## 2026-10-26 23:30 — STATE BEFORE A /clear (Claude, max). <T> = /tmp/claude-1000/-home-k-projects-phone-library/37b40576-c90e-4994-a417-028a295f8c53/scratchpad
 RUNNING (all mine except 26h's gate role; watchers died with the /clear — re-arm `<T>/watch26h.sh` in the background):
 - crop-regress-2026-10-26h (started 22:45, 31 PASS 0 FAIL at 23:20; ends ≈ 02:30–03:00; writes its two diffs by itself).
-- bench-fixp (<T>/bench/fbp.py 2b47002d18ab g2 p): g2 FAITHFUL to 26g (832 s); p running → `cd <T>/bench && python3
-  cmpv.py 2b47002d18ab g2 p` — expected only pp. 423, 437, 438 (none «tilted but not turned» → check rec['untreated_tilt']).
+- bench-fixp2 (<T>/bench/fbp.py 2b47002d18ab p; the first run's g2 half was FAITHFUL to 26g, 832 s, then my harness
+  crashed — analyse_pages(only=…) returns a dict; fixed, p rerun from the cached first look at 23:35, ≈ 15 min) → `cd
+  <T>/bench && python3 cmpv.py 2b47002d18ab g2 p` — expected only pp. 423, 437, 438 (none «tilted but not turned» → check
+  rec['untreated_tilt']; the first look's «changed» line in the journal is meaningful only from bench-fixp2).
 - basesurvey (<T>/proj/basesurvey.py: every page 26g turns + ≈ 2,000 unturned text pages, ≈ 35 min from 23:18) → read
   with `python3 <T>/proj/basestats.py [CLASS [PATH]]` (classes good/under/over/needless/harmless; paths proj/other/owner/
   unturned; residual by line spread).

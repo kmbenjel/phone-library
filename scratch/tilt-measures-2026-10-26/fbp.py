@@ -25,8 +25,8 @@ for v in vers:
     bc = load(v); t = time.time(); pages = copy.deepcopy(pages0)
     if v != 'g2':                                     # the pages by_proj turned: their first look again with this version
         idx = sorted(i for i, p in enumerate(pages) if p.get('tilt_by_proj') is not None)
-        new = bc.analyse_pages(path, st, only=set(idx))
-        for i, p in zip(idx, new): pages[i] = p
+        new = bc.analyse_pages(path, st, only=set(idx))      # (with «only» it returns {page index: record})
+        for i in idx: pages[i] = new[i]
         ch = [i + 1 for i in idx if pages[i] != pages0[i]]
         print(h, v, 'first look again on', len(idx), 'pages; changed', ch, flush=True)
     tried = []
