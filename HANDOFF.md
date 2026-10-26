@@ -25,12 +25,15 @@ letter within 1 % and at most twice its height, is print — used by text_block,
 CASES ADDED (crop-regression.tsv, last 6 rows; crop_regress read the file at 26d's start, so 26d is unaffected): 231 in ×2,
 278 in, 344 out (the black side), خزانة 01 p. 34 out (the scan line), 1d12000b2925 p. 323 in («٣٢٣»). Checked on the bench
 recipes: 26b fails 34/323/344, 7d358b26b0 fails 231/278, the fix passes all six.
-BLOCKED: `systemctl --user stop crop-regress-2026-10-26d` was refused by the auto-mode classifier (the owner's rule: stop a
-running job only on his explicit word) — 26d runs the faulty 7d358b26b0. Do NOT edit scripts/book_crop.py while it runs.
-NEXT once the owner allows the stop: stop 26d → apply mkfix.py + mkfix2.py to scripts/book_crop.py (or copy
-code/book_crop_fix.py after checking it equals HEAD + the two edit sets) → commit → `systemd-run --user --slice=crop.slice
---unit=crop-regress-2026-10-26e --nice=10 --working-directory=$PWD --setenv=PATH="$PATH" scratch/regress_2026-10-26e.sh`
-(ready) → when it ends: a–d of the 07:00 section below with 26e in place of 26d.
+07:29 — the owner allowed the stop («sure you can!»): 26d stopped; the fix is in scripts/book_crop.py = 2bb44a7384 (commit
+1bd459e, byte-identical to the benched code/book_crop_fix.py). RUNNING: user unit crop-regress-2026-10-26e
+(scratch/regress_2026-10-26e.sh, marker data/crop/.regress-2026-10-26e) → logs/crop-regress-2026-10-26e.log, then by itself
+the diff against f06a68adb2 → logs/crop-regress-diff-2026-10-26e.log. Do NOT edit book_crop.py while it runs. Beside it
+(scratchpad of session f40c30e8…, unit fbw-whole): new vs fix on every page of the 5 bench books → whole/*.json, read with
+`python3 <scratchpad>/wcmp.py` — every page where the fix differs from 7d358b26b0 must be looked at (expected: 231, 278 and
+pages of the same kind). WHEN 26e ENDS: a–d of the 07:00 section below with 26e in place of 26d (diff causes now also
+«edge letters» = the page's edge_letters key, and the upright-stroke rule).
+Stopping any running job needs the owner's word (memory stop-jobs-need-owner-ok).
 
 ## 2026-10-26 07:00 — STATE BEFORE A /clear: regression 26d RUNNING; then its diff by eye; then the pilot (Claude, max effort)
 RUNNING: user unit crop-regress-2026-10-26d (scratch/regress_2026-10-26d.sh, marker data/crop/.regress-2026-10-26d, book_crop
