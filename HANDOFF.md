@@ -4,6 +4,30 @@ Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then t
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
 OWNER 2026-10-26 ~03:00: the ~11,000 old-format names (parentheses) WAIT for the reading pass — no mechanical format pass («ننتظر مرحلة القراءة»). He clears and switches to xhigh.
+OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs at max: the regression's end (a–e), then the pilot.
+
+## 2026-10-26 03:35 — max effort; regression 26b still running; the pilot's review page shows his earlier remarks (Claude)
+- RUNNING (unchanged): crop-regress-2026-10-26b (see 02:00). At 03:24: 12 of 31 books, 61 PASS, 0 FAIL; 10,167 pages left
+  ≈ 3 h → ends ≈ 06:30 UTC (the 04:15 of the 02:00 section counted books, not pages). Monitored for FAIL/crash/end.
+- Its diff so far (12 books, 4,721 pages; the diff script only reads the cache): خزانة 01 pp. 1 (cover print), 26 (owner turn),
+  164, 307 (0.35 rule) — nothing else; all four LOOKED AT (old | new): the year «١٣٨٧ = ١٩٦٧» now whole at the cover's foot,
+  pp. 26/164/307 level. Against the stopped cedf4dd2b8 run (11 books): every key of every page identical except خزانة 01
+  p. 1's show (and the new key cover_marks on cover pages) — the cover rule touched exactly that page.
+- The diff script's causes tightened (before the run's end calls it): a turn rule explains a page only when its turn changed.
+- NEW (commit a3fe781): the crop review page (crop-doubts) of a redo also shows every page the owner pointed at before, his
+  words beside it — crop_batch.owner_pages ← data/crop/owner-pages.tsv (47 pages: the page numbers his 10-14 remarks name;
+  «الأولى، الأخيرة، الأوسطان، 1 و 4…» = the samples of crop-review-002/004 in page order) + خزانة 01 p. 1 (10-25) + his 14 «turn»
+  pages. Without it the pilot page would have shown only the method's doubts — not مواد البيان p. 474, الإعلام 09 p. 444,
+  المغازي 248/400/421, روضة الفهوم 43/52/84, خزانة 01 pp. 1/18/26/164/307. owner_turns unchanged (0 differences on 1,129
+  paths). Tested end to end (analyse, jobs 1, الاتباع والمزاوجة 98 pp.: 176 s, 400 MB peak) and the page on a fake record.
+- 1d memory: a sampler runs (user unit mem-sampler, scratchpad of session 07279fff…/mem-samples.tsv: every crop process's
+  RSS every 3 s). The redo analyses each book in ONE process (jobs 1): 400 MB for 98 pp.; the regression's workers (jobs 2–3)
+  reach 900 MB, its main 230–370 MB → a redo book ≈ 1–1.3 GB at worst vs the governor's PER 2.2 GB + PARENT 1.5 GB (2 books at
+  once in an 8 GB pen). Measure the pilot's processes, then lower PER/PARENT with a margin BEFORE the full redo (≈ 2× faster).
+- Later (not urgent): the 2 books the redo skips (البداية والنهاية 21، المغرب في حلى المغرب 01) are join_parts.py files built from
+  the CROPPED volume (insert_pdf carried its CropBox / q…cm / stamp patches / splits): no truncation gives their original.
+  Way: the original volume again (exact md5 of the crop log: ~/Books via local-map, else its source) + the joined file's own
+  front pages → join_parts → crop it as a new book (crop_batch), plan + log.
 
 ## 2026-10-26 02:00 — the cover print rule; THE REGRESSION RUNNING AGAIN: crop-regress-2026-10-26b (Claude, max effort)
 RUNNING: user unit crop-regress-2026-10-26b (scratch/regress_2026-10-26b.sh, marker data/crop/.regress-2026-10-26b, book_crop
