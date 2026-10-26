@@ -6,6 +6,8 @@ Each workstream appends its progress below (the newest state first, then the his
 OWNER 2026-10-26 ~03:00: the ~11,000 old-format names (parentheses) WAIT for the reading pass — no mechanical format pass («ننتظر مرحلة القراءة»). He clears and switches to xhigh.
 OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs at max: the regression's end (a–e), then the pilot.
 
+## 2026-10-26 03:45 — REGRESSION 26b ENDED: 0 failures (167 PASS). NEXT (max): read logs/crop-regress-diff-2026-10-26b.log, draw changed pages (scratch/crop_diff_sheets_2026-10-26.py f06a68adb2 OUTDIR) and look at each; memory lines → PER; refresh.sh; then the pilot (launch line in the 02:00 section). Unit mem-sampler still runs (stop it after the pilot).
+
 ## 2026-10-26 03:25 — max effort; regression 26b still running; the pilot's review page shows his earlier remarks (Claude)
 - RUNNING (unchanged): crop-regress-2026-10-26b (see 02:00). At 03:24: 12 of 31 books, 61 PASS, 0 FAIL; 10,167 pages left
   ≈ 3 h → ends ≈ 06:30 UTC (the 04:15 of the 02:00 section counted books, not pages). Monitored for FAIL/crash/end.
