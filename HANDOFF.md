@@ -14,11 +14,24 @@ OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs a
   itself logs/crop-regress-diff-2026-10-26h.log (vs 26b f06a68adb2) and …-26h-vs-26g.log (vs b32a237bbf). Expected vs 26g:
   مشتبهات p. 89 only. Watcher: scratchpad 37b40576…/watch26h.sh. Do NOT edit book_crop.py while it runs.
 - NEXT: 26h diff by eye → the pilot (scratch/pilot_redo_2026-10-26.sh, launch line in the 07:00 section).
-- BESIDE (scratchpad 37b40576…/proj): the projection path fooled by a SCANNER'S BAR (الموسوعة 38 2b47002d18ab pp. 423, 437,
-  438, 440: a thick slanted bar across the whole sheet above the text, read 0.6–1.1°; the text level line by line). Whitening
-  every long rule is WRONG: on index pages (خريدة 01 pp. 658–705) and 35fbe344b8c6 p. 78 the printed running-head rule tilts
-  with the page and is the only ruler. Working on a narrower rule (a «rule» running well past the text block on both sides =
-  the sheet's/scanner's, not print). Survey of all 2,727 projection turns of 26g: proj/projrules.tsv (unit projrules-survey).
+- BESIDE (scratchpad 37b40576…/proj and …/bench): the projection path fooled by a COPIER'S BAR (الموسوعة 38 2b47002d18ab
+  pp. 423, 437, 438: a thick slanted bar across the whole sheet above the text, read 0.6–1.1°; p. 438's table level line by
+  line, 10 of 25 lines made to lean by its 0.675° turn). Whitening every long rule is WRONG: on index pages (خريدة 01 pp.
+  658–705) and خزانة ج 4 (35fbe344b8c6) pp. 8/78/106 the printed head rule tilts with the page and is the only ruler (those
+  turns are right line by line). FIX P (bench/patch_p.py → bench/code/bc_p.py from 20d30c2020): in by_proj, a line across
+  ≥ 70 % of the sheet's width and ≥ 5 % past the core on both sides = a sheet's line → the projection read again without
+  it; no turn if it no longer reads ≥ 0.3° with sharpness ≥ 1.5 → rec['proj_sheet_line']. Surveys (proj/projrules.tsv,
+  proj/sheetline.tsv): of the 2,727 projection turns of 26g only 2b47002d18ab pp. 423, 437, 438 change (810908d4ed05's
+  level top bands read the same without them; 9da5c530d977 p. 142's head rule over a short poem is < 70 % long).
+  BENCH RUNNING: unit bench-fixp (bench/fbp.py: the whole book's first look once, g2 must reproduce 26g = FAITHFUL, then p)
+  → `python3 bench/cmpv.py 2b47002d18ab g2 p` — expected pp. 423, 437, 438 only; p. 423 is a WARPED page (upper lines
+  level, lower 0.3–0.6°): it must not become «tilted but not turned» (a regression FAIL). If good, after 26h: fix P →
+  book_crop (patch_p.py; md5 = bc_p.py's), case row «الموسوعة 38 p. 438 turn no», regression 26i BEFORE THE FULL REDO
+  (the pilot need not wait: no pilot book is known to carry such a bar).
+- QUESTION FOR THE OWNER (page built: site/crop-tilt-002.html ← data/review/crop-tilt-002.tsv; images by proj/bands.py):
+  pages whose lines lie at two angles (الموسوعة 38 pp. 892, 42, 423; مشتبهات 89, which guard G now leaves as scanned) —
+  «اترك» (as scanned, listed) or «أدر» (by the average, as now). If «اترك»: a line-by-line guard on EVERY turn (at 1,400 px
+  ≈ 10 s a page — design it at 1,000 px from verify's own look). If «أدر»: guard G contradicts him on مشتبهات 89 — revisit.
 
 ## 2026-10-26 22:10 — STATE BEFORE A /clear (Claude, max). Supersedes the 21:40 section's NEXT.
 RUNNING: crop-regress-2026-10-26g (75 PASS 0 FAIL at 22:00; ≈ half its pages left → ends ≈ 00:00 UTC; at its end it writes
