@@ -24,10 +24,17 @@ OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs a
   RSS every 3 s). The redo analyses each book in ONE process (jobs 1): 400 MB for 98 pp.; the regression's workers (jobs 2–3)
   reach 900 MB, its main 230–370 MB → a redo book ≈ 1–1.3 GB at worst vs the governor's PER 2.2 GB + PARENT 1.5 GB (2 books at
   once in an 8 GB pen). Measure the pilot's processes, then lower PER/PARENT with a margin BEFORE the full redo (≈ 2× faster).
-- Later (not urgent): the 2 books the redo skips (البداية والنهاية 21، المغرب في حلى المغرب 01) are join_parts.py files built from
-  the CROPPED volume (insert_pdf carried its CropBox / q…cm / stamp patches / splits): no truncation gives their original.
-  Way: the original volume again (exact md5 of the crop log: ~/Books via local-map, else its source) + the joined file's own
-  front pages → join_parts → crop it as a new book (crop_batch), plan + log.
+- The 2 books the redo skips (البداية والنهاية 21 الفهارس، المغرب في حلى المغرب 01) are join_parts.py files (queue 372) built from
+  the CROPPED volume: no truncation gives their original. READY (03:30, local only): downloads/rejoin-2026-10-26/<same file
+  names> = the same joins rebuilt from the ORIGINAL volumes (the 10-25 inputs were still in session fe6ea5d7's scratchpad:
+  vol/4.pdf, vol/7.pdf = exactly the files the crop wrote; truncated to the logged original size → the logged original MD5)
+  with the 10-25 specs (P + V:1-1 + V:3-z; P + V:1-z). PROOF: the 10-25 joins rebuilt the same way from the cropped volumes
+  are byte-identical to the phone files but for the random trailer /ID (58/61 bytes), and against them the new files differ
+  only by the old crop's own additions (CropBox on 1,311 / 470 pages, «q…cm» wrappers on 721 / 275) — every image and content
+  stream the same, in order; 1,315 / 480 pages. md5 0bb86a20388b938ee644d15d0e72b254 / 2f1b095677a7486b0247921385258d16.
+  TO DO after the pilot (crop analysis = memory pen): plan — each phone file aside to «نسخ مستبعدة/__المستبدل/…»; queue
+  (fetch_queue file://) — the rebuilt file in its place; crop_batch.py on the 2 paths (batch crop-rejoined-2026-10-26: a
+  fresh crop, its own crop row); then delete the two set-aside files (the owner's «remove the trace», plan 382).
 
 ## 2026-10-26 02:00 — the cover print rule; THE REGRESSION RUNNING AGAIN: crop-regress-2026-10-26b (Claude, max effort)
 RUNNING: user unit crop-regress-2026-10-26b (scratch/regress_2026-10-26b.sh, marker data/crop/.regress-2026-10-26b, book_crop
