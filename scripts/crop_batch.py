@@ -13,8 +13,10 @@ Per file (a PDF on the phone, path relative to Books/):
   5. logged in data/changes/changes.tsv (action «crop»: original size + MD5, appended bytes, gain, pages turned/whole),
      the recipe kept in data/crop/recipes/<original md5>.json (undo = truncate the phone file to the original size:
      scripts/crop_batch.py --undo <path>), data/phone/index-now.tsv size updated, data/crop/done.tsv (resumable).
-Usage: python3 scripts/crop_batch.py LIST.tsv BATCH_NAME [--workers N] [--jobs J]   (LIST: one phone path per line, under
-       Books/; --workers 1 --jobs 8: one book at a time, its pages shared among 8 processes)
+Usage: python3 scripts/crop_batch.py LIST.tsv BATCH_NAME [--workers N] [--jobs J] [--again]   (LIST: one phone path per
+       line, under Books/; --workers 1 --jobs 8: one book at a time, its pages shared among 8 processes; --again: a listed
+       book cropped before is cropped afresh when its file was replaced since (a logged «add» after its last crop) and
+       carries no crop — the CropBox / «q … cm» marks an earlier crop leaves are checked in the file itself)
        python3 scripts/crop_batch.py --undo PATH                         (restore one file to its original bytes)"""
 import csv, hashlib, io, json, os, subprocess, sys, tempfile, time, ftplib, fcntl, unicodedata
 from concurrent.futures import ProcessPoolExecutor, as_completed
@@ -84,6 +86,49 @@ def names_of(path, back):
     out, seen = [path], set()
     while path in back and path not in seen: seen.add(path); path = back[path]; out.append(path)
     return out
+
+def events():
+    """{path under Books/: (row, «crop» | «add»)} — the last crop or add logged for each path, in the log's order"""
+    ev = {}
+    for k, r in enumerate(csv.reader(open(LOG, encoding='utf-8'), delimiter='\t')):
+        if len(r) > 3 and r[1] == 'crop': ev[r[2].removeprefix('Books/')] = (k, 'crop')
+        elif len(r) > 3 and r[1] == 'add' and r[3]: ev[r[3].removeprefix('Books/')] = (k, 'add')
+    return ev
+
+def replaced_since_crop(path, back, ev):
+    """the file now at `path` was put there (a logged «add») after the last crop under any of its names — a new file, to be
+    cropped afresh (--again)"""
+    seen = [ev[n] for n in names_of(path, back) if n in ev]
+    return bool(seen) and max(seen)[1] == 'add'
+
+def carries_crop(pdf):
+    """the marks an earlier book_crop run leaves in a file, or '' (2026-10-26: the joins of 10-25 were built from cropped
+    volumes and carried their crop — cropped again, they would have been cut twice): pages drawn through its «q … cm» / «Q»
+    streams (1,112 of the 1,122 crops have some), or a CropBox other than the sheet on most pages, placed differently from
+    page to page (the crop centres the book's one size on each page's text: ≥ 1.8 pt apart on the other 10; a scan's own
+    CropBox is the same inset on every page — Acrobat's 8.5 pt on البداية والنهاية 21)"""
+    import re
+    sys.path.insert(0, os.path.expanduser('~/.local/share/phone-library-tools/site'))
+    import pymupdf
+    def box(x, key):                                  # a page's own or inherited box (PDF coordinates)
+        while x:
+            t, v = doc.xref_get_key(x, key)
+            if t == 'array': return [float(z) for z in v.strip('[] ').split()]
+            t, par = doc.xref_get_key(x, 'Parent'); x = int(par.split()[0]) if t == 'xref' else 0
+    doc = pymupdf.open(pdf); off = []; wrapped = 0
+    for page in doc:
+        mb, cb = box(page.xref, 'MediaBox'), box(page.xref, 'CropBox')
+        if mb and cb and (abs((cb[2] - cb[0]) - (mb[2] - mb[0])) > 1 or abs((cb[3] - cb[1]) - (mb[3] - mb[1])) > 1):
+            off.append((cb[0] - mb[0], cb[1] - mb[1]))
+        t, v = doc.xref_get_key(page.xref, 'Contents')
+        if t == 'xref': v = doc.xref_object(int(v.split()[0])).strip()   # (an indirect array of streams, or the one stream)
+        xs = [int(x) for x in v.strip('[] ').split()[::3]] if v.startswith('[') else []
+        if len(xs) > 2 and doc.xref_stream(xs[-1]).strip() == b'Q' and re.match(rb'\s*q( -?[\d.]+){6} cm\n', doc.xref_stream(xs[0])):
+            wrapped += 1
+    n = len(doc); doc.close()
+    moved = len(off) > n / 2 and max(max(o[k] for o in off) - min(o[k] for o in off) for k in (0, 1)) > 1
+    why = [f'{len(off)} of {n} pages with a CropBox other than the sheet, placed page by page'] if moved else []
+    return '; '.join(why + ([f'{wrapped} pages in «q … cm» / «Q» wrappers'] if wrapped else []))
 
 def md5_file(p):
     h = hashlib.md5()
@@ -263,12 +308,13 @@ def room(need=3.0, own=0):
     except (OSError, ValueError): pass
     return True
 
-def main(list_tsv, batch, workers=4, jobs=1):
+def main(list_tsv, batch, workers=4, jobs=1, again=False):
     paths = [l.strip().removeprefix('Books/') for l in open(list_tsv, encoding='utf-8') if l.strip() and not l.startswith('#')]
     done = {l.split('\t')[0] for l in open(DONE, encoding='utf-8')} if os.path.exists(DONE) else set()
     crop_rows = {r[2].removeprefix('Books/') for r in csv.reader(open(LOG, encoding='utf-8'), delimiter='\t') if len(r) > 2 and r[1] == 'crop'}
-    _, back = moves()
-    todo = [p for p in paths if not any(n in done or n in crop_rows for n in names_of(p, back))]
+    _, back = moves(); ev = events() if again else {}
+    todo = [p for p in paths if (again and replaced_since_crop(p, back, ev))
+            or not any(n in done or n in crop_rows for n in names_of(p, back))]
     local = dict(l.rstrip('\n').split('\t')[:2] for l in open(LOCAL_MAP, encoding='utf-8')) if os.path.exists(LOCAL_MAP) else {}
     print(f'{len(todo)} files to do ({len(paths) - len(todo)} done before)', flush=True)
     def stage(path):                                  # the original bytes, checked against the phone's own MD5
@@ -295,6 +341,10 @@ def main(list_tsv, batch, workers=4, jobs=1):
                 print('STAGE FAIL', path, e, flush=True); continue
             except Exception as e:
                 print('STAGE FAIL', path, e, flush=True); continue
+            if again and (why := carries_crop(src)):   # (--again: never a file that still carries an earlier crop)
+                print('SKIP (carries a crop already:', why + ')', path, flush=True)
+                if staged: os.remove(src)
+                continue
             work = os.path.join(STAGE, hashlib.md5(path.encode()).hexdigest()[:12] + '.work.pdf')
             if src != work: subprocess.run(['cp', src, work], check=True)
             if staged: os.remove(src)
@@ -375,4 +425,4 @@ if __name__ == '__main__':
     else:
         w = int(sys.argv[sys.argv.index('--workers') + 1]) if '--workers' in sys.argv else 4
         j = int(sys.argv[sys.argv.index('--jobs') + 1]) if '--jobs' in sys.argv else 1
-        main(sys.argv[1], sys.argv[2], w, j)
+        main(sys.argv[1], sys.argv[2], w, j, again='--again' in sys.argv)
