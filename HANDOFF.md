@@ -9,8 +9,7 @@ cedf4dd2b8) → logs/crop-regress-2026-10-26.log, then by itself the diff → lo
 book_crop.py while it runs. Beside it (scratchpad of session 9365be8c…, /tmp/claude-1000/-home-k-projects-phone-library/
 9365be8c-b77d-4867-b935-e76269705419/scratchpad/probe): units turner-eq-* (render check: every page of the cut books
 ae39a500653d, d20f1fe41833 and the split fbf39d55c6f7, every 5th page of the rest — any «DIFFER» line in *.log = the Turner is
-still not exact: stop the regression) and turner-fresh-0/1 (the 40 page extracts planned with every view fresh, compared
-with out-fix/ by eq_cmp_fresh.py: must be 40 same). Why: the Turner of 9c26546 was not exact (MuPDF keeps a whole decoded
+still not exact: stop the regression) and turner-fresh-0/1 (the 40 page extracts planned with every view fresh vs the kept copy: 40 same ✓, 01:20). Why: the Turner of 9c26546 was not exact (MuPDF keeps a whole decoded
 image and drew later part-views of cut images from it); now a view is drawn from the kept copy only when every image is
 ≥ 92 % shown (whole_shown, odd_drawing); scripts/turner_check.py is the proof tool (rerun after any PyMuPDF upgrade).
 The stopped 25b run (13 books, 62 PASS, 0 FAIL) changed 3 pages, all explained (WORKLOG 00:10). Its diff on the remaining
