@@ -47,12 +47,12 @@ def year_of(y, n=None, on_cover=False, useful=False):
     if gy: return gy if int(gy) <= 1950 else ''
     return f'{hy} هـ' if hy and int(hy) <= 1370 else ''
 
-ROLE_WORD = re.compile(r'وقف على|نظر فيه|رواية|وضع حواشي|هذب|تعريب|بعناية|عناية|اعتن|عني|عنى|صحح|تصحيح|علق|تعليق|جمع|رتب|ترتيب|تنسيق|نسق|إعداد|أعد|ضبط|راجع|مراجعة|قرأ|خرج|تخريج|'
-                       r'شرح|نشر|نسخ|اختصر|اختصار|إشراف|أشرف|قدم له|تقديم|اختار|انتقى|فهرس')
+ROLE_WORD = re.compile(r'وقف على|نظر فيه|رواية|وضع حواشي|كتب حواشي|هذب|تعريب|ترجم|بعناية|عناية|اعتن|عني|عنى|صحح|تصحيح|علق|تعليق|جمع|رتب|ترتيب|تنسيق|نسق|إعداد|أعد|ضبط|راجع|مراجعة|قرأ|خرج|تخريج|'
+                       r'شرح|نشر|نسخ|اختصر|اختصار|إشراف|أشرف|قدم له|تقديم|تصدير|اختار|انتقى|فهرس|وضع فهارس')
 TAHQIQ = re.compile(r'حقق|تحقيق|محقق')
 
-ROLE_HEAD = re.compile(r'^و?(نظر فيه|رواية|وضع حواشي|هذب|تعريب|بعناية|عناية|اعتن|عني|عنى|صحح|تصحيح|علق|تعليق|جمع|رتب|ترتيب|تنسيق|نسق|إعداد|أعد|ضبط|راجع|مراجعة|قرأ|خرج|تخريج|'
-                       r'شرحه|شرح و|نشر|نسخه|اختصر|اختصار|إشراف|أشرف|قدم|تقديم|اختار|انتقى|اختيار|وقف على)')
+ROLE_HEAD = re.compile(r'^و?(نظر فيه|رواية|وضع حواشي|كتب حواشي|هذب|تعريب|ترجم|بعناية|عناية|اعتن|عني|عنى|صحح|تصحيح|علق|تعليق|جمع|رتب|ترتيب|تنسيق|نسق|إعداد|أعد|ضبط|راجع|مراجعة|قرأ|خرج|تخريج|'
+                       r'شرحه|شرح و|نشر|نسخه|اختصر|اختصار|إشراف|أشرف|قدم|تقديم|تصدير|اختار|انتقى|اختيار|وقف على|وضع فهارس)')
 
 def role_of(r):
     """the editor's printed role when it is not tahqiq: a «…» of the note that BEGINS with a role word («صححه وعلق عليه»،
@@ -81,12 +81,30 @@ def name_of(r):
     if o: return o
     return name_auto(r)
 
+def split_people(ed):
+    """the editor line as read → (the editor's part, the other contributors as printed): «قدم له: X - إشراف وتحرير: Y»,
+    «كتب حواشيه: X، وضع فهارسه العامة: Y», «قدم له وحققه: X - راجعه وأعد فهارسه Y» — a part that begins with a role
+    («…:» or a role word) is another contributor (2026-10-25: «قدم له جميل زغيب نيتو وإشراف», «… الزروق وراجعه» — the
+    second role was read as a second editor and cut); a part without one is another editor («X - Y»)"""
+    parts = [p.strip() for p in re.split(r'\s+-\s+|،\s*(?=[^،:]{2,70}:)', ed or '') if p.strip()]
+    if not parts: return '', []
+    main, more = [parts[0]], []
+    for p in parts[1:]:
+        m = re.match(r'^([^:]{2,70}):\s*(.+)$', p)
+        if m and (ROLE_WORD.search(m.group(1)) or TAHQIQ.search(m.group(1))): more.append(f'{m.group(1).strip()} {m.group(2).strip()}')
+        elif ROLE_HEAD.match(p): more.append(p)
+        else: main.append(p)
+    return ' - '.join(main), more
+
 def name_auto(r):
     """publisher, city and year stay separate fields until name_compose renders them (no commas): «الناشر بالمدينة»"""
-    t, au, ed, pub, city = r['title'], r['author'], r['editor'], r['publisher'], r['city']
+    t, au, pub, city = r['title'], r['author'], r['publisher'], r['city']
+    ed, more = split_people(r['editor'])
     kind = r.get('kind', '')
     role = 'ترجمة' if kind == 'ترجمة' and ed else role_of(r)
-    m = re.match(r'^([^:]{2,40}):\s*(.+)$', ed or '')          # «صححه وعلق عليه: فلان»
+    m2 = re.match(r'^(.+?)\s*\(([^()]{2,40})\)$', ed or '')     # «بكر بن عبد الله أبو زيد (إشراف)»: the role after the name
+    if m2 and ':' not in ed and ROLE_WORD.search(m2.group(2)): ed = f'{m2.group(2).strip()}: {m2.group(1).strip()}'
+    m = re.match(r'^([^:]{2,70}):\s*(.+)$', ed or '')          # «صححه وعلق عليه: فلان» (a printed role of up to 70 letters)
     if m and TAHQIQ.search(m.group(1)) and len(m.group(1).split()) == 1: role, ed = 'ت', m.group(2).strip()   # «حققها: فلان» → «ت فلان»; «تحقيق وتخريج» stays as printed
     elif m and (ROLE_WORD.search(m.group(1)) or TAHQIQ.search(m.group(1))): role, ed = m.group(1).strip(), m.group(2).strip()
     place = pub + (f'، {city}' if city else '')
@@ -97,7 +115,7 @@ def name_auto(r):
     # the author is left out only when the title holds his whole name (not one word of it: «رحلة التجاني» keeps
     # «أبو محمد عبد الله التجاني» — owner: «تقصير كبير»)
     drop = au and norm(au).strip() and f' {norm(au)} ' in f' {norm(t)} '                   # whole words: «الجكني» is not in «الجكنية»
-    return compose(t, '' if drop else au, edition, kinds_extra=extra, year=year_of(r.get('year'), r['n'], '[cover-year]' in (r.get('note') or ''), useful='مستل' in (r.get('kind') or '')), role=role)
+    return compose(t, '' if drop else au, edition, kinds_extra=extra, year=year_of(r.get('year'), r['n'], '[cover-year]' in (r.get('note') or ''), useful='مستل' in (r.get('kind') or '')), role=role, more=more)
 
 if __name__ == '__main__':
     want = set(sys.argv[1:])

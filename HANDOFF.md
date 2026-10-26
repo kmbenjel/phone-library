@@ -22,7 +22,11 @@ from the other side is plain. Proof: old vs new frames() on the 31 regression bo
 (year kept), روضة المستبين back covers p. 734 / p. 1531 (spine kept); 280 local books (~/Books, read only): 20 covers and 71
 dark end pages, no false move (3 right ones). 4 regression cases added (crop-regression.tsv rows 110–113).
 WHEN IT ENDS: steps a–e of the 01:30 section below, on the -26b logs; the diff's «cover print» pages = those 3. Then item 2.
-MEANWHILE (allowed beside it, owner's order): item 2, the name composer — code and plans only; refresh.sh waits for the end.
+MEANWHILE (allowed beside it, owner's order): item 2, the name composer — DONE 02:35 (commit after 3764168): no cut inside a
+phrase, names/roles shortened before title words, tiers above the title; plan 383 applied (21 names; review page
+site/plan-383.html, http://127.0.0.1:8765/plan-383.html — tell the owner). NOT done (judgement, owner's look): 56 read books
+whose phone name was set otherwise (plan 315 approved, held readings, set parts: scratchpad list only); the 12,575 parentheses
+(mostly volume labels «(الواجهة)»), 558 commas, 9 «ط» of name_audit — next, as plans. refresh.sh waits for the regression's end.
 
 ## 2026-10-26 01:30 — STATE BEFORE A /clear: the one regression running; then its diff, by eye (Claude, max effort)
 RUNNING (nothing else of mine): user unit crop-regress-2026-10-26 (scratch/regress_2026-10-26.sh, book_crop cedf4dd2b8,

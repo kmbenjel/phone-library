@@ -52,14 +52,37 @@ def head(seg):
     while len(w) > 1 and norm(w[-1]) in WEAK_END: w.pop()
     return ' '.join(w)
 
+DATEWORD = re.compile(r'^([\d٠-٩]+|هـ|ه|م|-|–)$')
+UPTO = {norm(w) for w in 'إلى الى حتى'.split()}
+SUFFIX = ('هما', 'هم', 'ها', 'ه')
+
+def one_member(w, i):
+    """is the «و…» word w[i] a member that cannot be cut off (cuts)"""
+    n = norm(w[i]); rest = [x for x in w[i + 1:] if not DATEWORD.match(x)]
+    if not rest: return True
+    nx = norm(rest[0])                                 # a new clause next («… والإمالة وما كان …»); another item of
+    if nx in PARTICLES or nx in {'فيما', 'مما', 'عما', 'بما', 'لما', 'وما', 'ومن', 'وفي'}: return True   # a list may follow
+    if n[1:].startswith(norm('إيا')): return True
+    raw = lambda x: TASHKEEL.sub('', x)                 # (the raw word: norm folds «ة» into «ه», a pronoun's letter)
+    sf = next((x for x in SUFFIX if raw(w[i]).endswith(x)), None)
+    return bool(sf and len(raw(w[i])) > 4 and any(raw(x).endswith(sf) and len(raw(x)) > 3 for x in w[max(0, i - 3):i]))
+
 def cuts(seg):
     """a title's natural breaks, longest prefix first: before a particle («في», «من», «فيما»), a «و…» or «لـ…» word,
-    from the third word on — «الاستذكار الجامع لمذاهب فقهاء الأمصار…» → «الاستذكار الجامع», …"""
+    from the third word on — «الاستذكار الجامع لمذاهب فقهاء الأمصار…» → «الاستذكار الجامع», …; never inside a pair or a
+    range (owner 2026-10-19: «لا يمكن أن تكون الجملة مقصوصة هكذا أبدا»): not before a «و…» member of one word — the
+    title's last word, or one followed by a date, a particle or another «و…» («القضاء والفتيا», «إتيانه واجتنابه», «صلى
+    الله عليه وسلم», «الرقي والصعود في أصول الفقه», «التفخيم والإمالة وما كان …»); not before «وإياه» (it belongs to its
+    verb: «من نظمني وإياه الزمان») or a clause matching the one before it («قواها الألباني وضعفها الحويني»); nor before the
+    «إلى» of a «من …» («من أوله إلى نهاية …», «من إعلان الدستور العثماني إلى الآن»). A member of two words may go: a
+    rhymed title's second half («بداية المجتهد ونهاية المقتصد», «جمال القراء وكمال الإقراء»)"""
     w = seg.split(); out = []
     for i in range(len(w) - 1, 1, -1):
         n = norm(w[i])
         if n in PARTICLES or n in {'فيما', 'مما', 'عما', 'بما', 'لما', 'وما', 'ومن', 'وفي'} or (len(n) > 3 and (n.startswith('و') or n.startswith('لل')
                 or n.startswith('لم') or n.startswith('لا'))):
+            if n.startswith('و') and n not in PARTICLES and one_member(w, i): continue
+            if n in UPTO and any(norm(x) == 'من' for x in w[max(0, i - 6):i]): continue
             k = w[:i]
             if len(k) > 2 and norm(k[-2]) in {'ما', 'مما', 'فيما', 'عما', 'بما', 'لما', 'وما'}: continue   # never «… وبيان ما ورد»
             # a «و…» word is not left hanging without its complement («وتفسير | لمسلم بن خالد»)
@@ -103,6 +126,7 @@ def build(title_parts, joins, sub, author, ed, kinds=()):
     if sub: t += '، ' + '، '.join(sub)
     s = t
     if author: s += f' - {author}'
+    kinds = [k for k in kinds if not (ed and norm(k) in norm(ed))]   # (a lithograph whose printer is «طبعة حجرية فاس»)
     ed = ' - '.join([e for e in [ed] + list(kinds) if e])          # «مخطوط», «رسالة ماجستير» stay to the end
     if ed: s += f' - {ed}'                                         # owner 2026-10-10: no parentheses at all
     s = re.sub(r'\s*[،,]\s*', ' ', s)                             # and no commas: «مكتبة المعارف الرباط 1985»
@@ -156,13 +180,101 @@ def with_place(pub, city):
     cs = [c.strip() for c in re.split(r'\s*[،,/]\s*', city or '') if c.strip() and norm(c.strip()) not in norm(pub or '')]
     return ' '.join(x for x in [pub] + cs if x)
 
-def edition_text(names, pub, city, other, year='', role='ت'):
+def edition_text(names, pub, city, other, year='', role='ت', more=()):
     """«ت أ وب - الناشر بالمدينة» / «الناشر بالمدينة 1341 هـ» / «ت أ»; the role as printed when it is not tahqiq
-    («صححه وعلق عليه فلان», «تنسيق فلان» — owner 2026-10-10 night)"""
+    («صححه وعلق عليه فلان», «تنسيق فلان» — owner 2026-10-10 night); `more`: the other contributors as printed, after the
+    editor («راجعه وقدم له فلان», «إشراف وتحرير فلان»)"""
     if other: return other + (f' {year}' if year else '')
     p = ' '.join(x for x in (with_place(pub, city), year) if x)
-    if names: return f'{role or "ت"} ' + ' و'.join(names) + (f' - {p}' if p else '')
+    if names or more:
+        ed = ' - '.join(([f'{role or "ت"} ' + ' و'.join(names)] if names else []) + list(more))
+        return ed + (f' - {p}' if p else '')
     return p                                                          # owner: no «ط» — the publisher speaks for itself
+
+# A PERSON'S NAME, SHORTENED ONLY FOR A LONG TITLE (owner 2026-10-10, plan 313: «يمكن ذكر الاسم كاملا للمؤلف أو بالكنية
+# أو اللقب على حسب الشهير والمعروف، نجنح للاقتصار عند الاضطرار لوجود معلومات ضرورية كعنوان طويل»): the names and printed
+# roles get shorter after the publisher has gone and before the title loses a word (2026-10-25: «مراقي السعود لمبتغي
+# الرقي», «شمس الآفاق بنور» were cut while a nasab of six words stayed whole) — see compose's order
+HONOR = {norm(x) for x in 'الحافظ الإمام الشيخ العلامة سيدي المحدث الفقيه الأستاذ الدكتور المؤرخ الأديب الشريف المقرئ المسند الحاج الرئيس'.split()}
+KUNYA = {norm(x) for x in 'أبو أبي أبا أم'.split()}
+LINK = {norm(x) for x in 'بن بنت ولد'.split()}
+
+def units(w):
+    """the words of a name grouped: «عبد X», «أبو X» / «أبو عبد X», «X الدين» (a laqab), «ابن X» — a family or famous
+    name, never a link of the nasab (written «ابن» inside a name: «إسماعيل بن يوسف ابن الأحمر»)"""
+    out, i = [], 0
+    while i < len(w):
+        n = norm(w[i])
+        if n in KUNYA and i + 1 < len(w):
+            j = 3 if norm(w[i + 1]) == norm('عبد') and i + 2 < len(w) else 2
+            out.append(w[i:i + j]); i += j; continue
+        if n in (norm('عبد'), norm('ابن')) and i + 1 < len(w):
+            j = 3 if n == norm('ابن') and norm(w[i + 1]) in (norm('عبد'), norm('أبي')) and i + 2 < len(w) else 2
+            out.append(w[i:i + j]); i += j; continue
+        if i + 1 < len(w) and norm(w[i + 1]) in (norm('الدين'), norm('الله')):   # a laqab; «غرم الله», «حبيب الله»
+            out.append(w[i:i + 2]); i += 2; continue
+        out.append([w[i]]); i += 1
+    return out
+
+def name_forms(x):
+    """a person's name, then its shorter forms, each of ≥ 2 words, longest first: without the honorifics in front
+    («الحافظ», «الشيخ»), without a «أبو …» at its end, a nasab of three links or more kept to its first and last
+    («علي بن حسن بن علي بن عبد الحميد» → «علي بن حسن بن عبد الحميد»), of three nisbas or more the first and the last
+    (the famous one is either: «السنوسي … الجزائري», «المقدسي … الحنبلي»), or the kunya or the laqab with the nisbas
+    («أبو علي المالكي البغدادي», «زين الدين العراقي»)"""
+    w = x.split()
+    if len(w) <= 2: return [x]
+    U = units(w)
+    tok = lambda us: [t for u in us for t in u]
+    kind = lambda u: ('honor' if len(u) == 1 and norm(u[0]) in HONOR else 'kunya' if norm(u[0]) in KUNYA
+                      else 'link' if len(u) == 1 and norm(u[0]) in LINK else 'laqab' if len(u) == 2 and norm(u[1]) == norm('الدين') and not u[0].startswith('و')
+                      else 'nisba' if (len(u) == 1 and u[0].startswith('ال')) or norm(u[0]) == norm('ابن') else 'ism')
+    forms = [U]
+    a = U[:]
+    while a and kind(a[0]) == 'honor' and len(tok(a[1:])) >= 3: a = a[1:]
+    forms.append(a)
+    if len(a) > 1 and norm(a[-1][0]) == norm('أبو') and len(tok(a[:-1])) >= 3: a = a[:-1]; forms.append(a)
+    K = [kind(u) for u in a]
+    # the nasab: a name followed by «بن X» links («الحسن بن محمد»: an ism may begin with «ال»); after it its tail
+    s = next((i for i in range(len(a) - 2) if K[i] in ('ism', 'kunya', 'nisba') and K[i + 1] == 'link'), None)
+    if s is not None:
+        e = s
+        while e + 2 < len(a) and K[e + 1] == 'link': e += 2
+        head, chain, tail = a[:s], a[s:e + 1], a[e + 1:]
+        # of three links or more the first and the last (the last is often the family: «بن مانع», «بن عبد الهادي» —
+        # «محمد بن عبد العزيز بن مانع» keeps both of its two links)
+        c1 = chain[:3] + chain[-2:] if len(chain) > 5 else chain
+        if c1 is not chain: forms.append(head + c1 + tail)
+        nis = [u for u in tail if kind(u) == 'nisba']
+        if len(nis) >= 3:
+            forms.append(head + c1 + [u for u in tail if kind(u) != 'nisba' or u is nis[0] or u is nis[-1]])
+        if len(nis) >= 2:                                       # of two, the first («الجكني الشنقيطي», «السنوسي الجزائري»)
+            forms.append(head + c1 + [u for u in tail if kind(u) != 'nisba' or u is nis[0]])
+        kun = [u for u in head if kind(u) == 'kunya']
+        if kun and nis: forms.append(kun[-1:] + tail)          # «أبو علي المالكي البغدادي»
+        laq = [u for u in head if kind(u) == 'laqab']
+        if laq and nis: forms.append(laq[-1:] + nis[-1:])      # «زين الدين العراقي»
+    out = []
+    for f in forms:
+        t = ' '.join(tok(f))
+        if len(t.split()) >= 2 and t not in out: out.append(t)
+    return sorted(out, key=lambda t: -len(t.split())) or [x]
+
+PERSONS = re.compile(r'\s+و(?=(?:محمد|أحمد|عبد|علي|صالح|عمر|عثمان|إبراهيم|يوسف|حسن|حسين|أبو|أبي|ابن|إسماعيل|خالد|سعيد|مصطفى|عامر|نبيل)\b|\S+\sالدين\b)')
+
+def people_options(x):
+    """(text, people kept, words kept) of an author line: one person — each form of the name; several («X ومحمد Y وصالح
+    Z») — all, the first two, the first, each whole or in its shortest form"""
+    if not x: return [('', 0, 0)]
+    ps = [p.strip() for p in PERSONS.split(x) if p.strip()]
+    if len(ps) == 1:                                   # an author line that still holds a « و…» may be two people: whole
+        fs = [x] if re.search(r'\sو\S{2,}', x) else name_forms(x)
+        return [(f, 1, len(f.split())) for f in fs]
+    out = []
+    for k in sorted({len(ps), 2, 1}, reverse=True):
+        for ns in (ps[:k], [name_forms(p)[-1] for p in ps[:k]]):
+            out.append((' و'.join(ns), k, sum(len(n.split()) for n in ns)))
+    return list(dict.fromkeys(out))
 
 def title_options(seg):
     """(text, words kept) of a joined title's part: whole, without its subtitle, then cut at each natural break"""
@@ -185,9 +297,11 @@ def wscore(text, seg):
 DEATH = re.compile(r'^(?:ت\.?|المتوفى|المتوفي|توفي)?\s*(?:بعد|قبل|نحو|حوالي)?\s*\d{1,4}(?:\s*[-–]\s*\d{1,4})?\s*(?:هـ|ه)?'
                    r'(?:\s*/\s*\d{3,4}\s*م?)?$')
 
-def compose(title, author='', edition='', limit=LIMIT, year='', kinds_extra=(), role='ت'):
+def compose(title, author='', edition='', limit=LIMIT, year='', kinds_extra=(), role='ت', more=()):
     """the name that carries the most information within `limit` bytes: every combination of the title's cut, its joined
-    titles («ويليه، ومعه، =»), its subtitle, the editors and the publisher is weighed; nothing is cut when all fits"""
+    titles («ويليه، ومعه، =»), its subtitle, the author's and the editor's names (whole or shorter), the printed role, the
+    other contributors (`more`, as printed: «راجعه وقدم له فلان»), the editors and the publisher is weighed; nothing is cut
+    when all fits"""
     import itertools
     t, kinds, sub = split_title(tidy(title))
     kinds = kinds + [k for k in kinds_extra if k]                  # «رسالة ماجستير», «مخطوط» given apart from the title
@@ -198,48 +312,74 @@ def compose(title, author='', edition='', limit=LIMIT, year='', kinds_extra=(), 
         if DEATH.match(x): continue                       # «التويجري (1413 هـ)»: his death year, never the print's
         if x and norm(x) not in norm(edition): kinds.append(x)
     author = tidy(re.sub(r'\([^()]*\)', ' ', author))
+    more = [tidy(m) for m in more if tidy(m)]
     parts = JOIN.split(t)
     segs, joins = parts[0::2], parts[1::2]
-    full = build(segs, joins, sub, author, edition_text(names, pub, city, other, year, role), kinds)
+    full = build(segs, joins, sub, author, edition_text(names, pub, city, other, year, role, more), kinds)
     if B(full) <= limit: return full
+    # WHAT GIVES WAY, FIRST TO LAST (owner 2026-10-10, AGENTS.md §4): first everything else — year, city, subtitle,
+    # publisher, editors after the first, other contributors, the authors after the second, and the names and printed role
+    # at their full length (shortened only for a long title: plan 313) — weighed among themselves as since 2026-10-11; then
+    # the words after the titles' heads (only at natural breaks — cuts), the second author (2026-10-26: «الروضة الغنية» lost
+    # its own author, «تاج الدين الفركاح», to three words of its title), the heads of the titles, the later joined titles,
+    # the first editor. A candidate is scored by a tuple in the reverse of that order and compared tuple to tuple: nothing
+    # of a lesser rank outweighs one word of the title (2026-10-26: a role of seven words had outweighed five words of the
+    # title, a nasab of six words «مراقي السعود لمبتغي الرقي»); among equals the longer name
     seg_opts = [title_options(sg)[:10] for sg in segs]
+    hns = []
+    for sg in segs:
+        cs = cuts(SUB.split(sg)[0].strip()); hns.append(max(len((cs[-1] if cs else sg).split()), 2))
+    au_opts = people_options(author)
     ed_opts = []
     for k in sorted({len(names), min(2, len(names)), min(1, len(names)), 0}, reverse=True):
         for pp, cc, yy in ((pub, city, year), (pub, city, ''), (pub, '', year), (pub, '', ''), ('', '', year), ('', '', '')):
             if pub and yy and not pp: continue           # a print's year belongs to its printer: never alone once the
+                                                         # publisher has gone
             generic = re.match(r'^(وزارة|المجلس|الهيئة|جامعة|مجمع|مركز|الأمانة|دار المعارف|المكتب)', pp or '')
-            # owner 2026-10-10: when the whole title and the publisher cannot both fit, the publisher goes first; the
-            # (first) editor stays — so a publisher weighs less than any word of the title, an editor more
-            sc = (40 if k >= 1 else 0) + (2.5 if k >= 2 else 0) + 0.3 * max(0, k - 2) + (0.5 if pp else 0) + ((0.2 if generic else 0.1) if cc else 0)
-            sc += 0.3 if yy else 0                       # the year gives way first
             # a long printed role («اعتنى به وأشرف على طباعته») is cut at its «و» joints before the editor goes
-            # (2026-10-19: the editor was dropped whole while «اعتنى به» left room for him)
-            # — only to keep the editor (the role as printed weighs more than a few title words); a role that includes the
-            # tahqiq becomes «ت», never its first part («قدم له وحققه وعلق عليه» → «قدم له» would hide the tahqiq)
-            role0 = role or 'ت'; parts = role0.split(' و')
-            ropts = [(role0, 3)]
-            if len(parts) > 1:
-                ropts += [('ت', 0)] if re.search(r'حقق|تحقيق', role0) else [(' و'.join(parts[:j]), 0) for j in range(len(parts) - 1, 0, -1)]
-            for rl, bonus in ropts:
-                e = edition_text(names[:k], pp, cc, other, yy, rl)
-                ed_opts.append((sc + (6 if other else 0) + bonus, e))
-    ed_opts = list(dict.fromkeys(ed_opts))
+            # (2026-10-19); a role that includes the tahqiq becomes «ت», never its first part («قدم له وحققه وعلق عليه»
+            # → «قدم له» would hide the tahqiq)
+            role0 = role or 'ت'; rparts = role0.split(' و')
+            ropts = [role0]
+            if len(rparts) > 1:
+                ropts += ['ت'] if re.search(r'حقق|تحقيق', role0) else [' و'.join(rparts[:j]) for j in range(len(rparts) - 1, 0, -1)]
+            for rl in ropts:
+                for f in (name_forms(names[0])[:4] if k >= 1 else ['']):
+                    nk = ([f] + names[1:k]) if k >= 1 else []
+                    for j in range(len(more), -1, -1):  # the other contributors, as printed
+                        e = edition_text(nk, pp, cc, other, yy, rl, more[:j])
+                        # (below the title: the weights in use since 2026-10-11 — the second editor 2.5, each later one
+                        # 0.3, the publisher 0.5, its city 0.1/0.2, a kept year 0.3, the printed role whole 3 — and a
+                        # name's word 1.05: more than publisher, city and year together, so a name is shortened only to
+                        # keep the title, never for a publisher)
+                        rest = (2.5 * (k >= 2) + 0.3 * max(0, k - 2) + 0.5 * bool(pp) + (0.2 if generic else 0.1) * bool(cc)
+                                + 0.3 * bool(yy) + 3 * (rl == role0) + 1.05 * (len(f.split()) if k >= 1 else 0) + 0.3 * j)
+                        ed_opts.append(((int(k >= 1), round(rest, 4)), e))
+    ed_opts = sorted(dict.fromkeys(ed_opts), key=lambda x: x[0], reverse=True)
+    def total(n, heads, tails, sw, au, eo):
+        k1, rest = eo
+        return (k1, n, heads, min(au[1], 2), tails, round(rest + 1.05 * au[2] + 1.0 * max(0, au[1] - 2) + 0.3 * sw, 4))
     best = None
     for n in range(len(segs), 0, -1):                       # the first n joined titles
         for combo in itertools.product(*seg_opts[:n]):
-            ts = wscore(combo[0], segs[0]) + sum(4 + wscore(c, sg) for c, sg in zip(combo[1:], segs[1:]))
-            for ss in ((sub, 0.3 * len(' '.join(sub).split())), ([], 0)):
+            heads = sum(min(len(c.split()), h) for c, h in zip(combo, hns))
+            tails = sum(max(0, len(c.split()) - h) for c, h in zip(combo, hns))
+            for ss in ((sub, len(' '.join(sub).split())), ([], 0)):
                 if ss[0] and not sub: continue
-                for esc, e in ed_opts:
-                    nm = build(list(combo), joins[:n - 1], ss[0], author, e, kinds)
-                    if B(nm) > limit: continue
-                    sc = ts + ss[1] + esc
-                    if best is None or sc > best[0] or (sc == best[0] and B(nm) > B(best[1])): best = (sc, nm)
+                for au in au_opts:
+                    if best is not None and ed_opts and total(n, heads, tails, ss[1], au, ed_opts[0][0]) < best[0]: continue
+                    for eo, e in ed_opts:               # best first: the first that fits is this candidate's best (among
+                        sc = total(n, heads, tails, ss[1], au, eo)   # equal ones, the longest)
+                        if best is not None and sc < best[0]: break
+                        nm = build(list(combo), joins[:n - 1], ss[0], au[0], e, kinds)
+                        if B(nm) > limit: continue
+                        if best is None or sc > best[0] or (sc == best[0] and B(nm) > B(best[1])): best = (sc, nm)
     if best: return best[1]
     w = segs[0].split()                                    # last resort: whole words off the title's end, no edition
-    while len(w) > 2 and B(build([' '.join(w)], [], [], author, '', kinds)) > limit: w.pop()
+    au = min(au_opts, key=lambda o: B(o[0]))[0] if au_opts else author
+    while len(w) > 2 and B(build([' '.join(w)], [], [], au, '', kinds)) > limit: w.pop()
     while len(w) > 1 and norm(w[-1]) in WEAK_END: w.pop()
-    n = build([' '.join(w)], [], [], author, '', kinds)
+    n = build([' '.join(w)], [], [], au, '', kinds)
     return n if B(n) <= limit else build([' '.join(w)], [], [], '', '', kinds)
 
 def volume(nn, title, label='', limit=LIMIT, author='', edition='', year=''):
