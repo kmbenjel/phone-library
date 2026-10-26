@@ -6,6 +6,30 @@ Each workstream appends its progress below (the newest state first, then the his
 OWNER 2026-10-26 ~03:00: the ~11,000 old-format names (parentheses) WAIT for the reading pass — no mechanical format pass («ننتظر مرحلة القراءة»). He clears and switches to xhigh.
 OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs at max: the regression's end (a–e), then the pilot.
 
+## 2026-10-26 08:45 — REGRESSION 26f RUNNING (26e restarted with the owner's word); whole-book bench of the fix checked by eye (Claude, max)
+RUNNING: user unit crop-regress-2026-10-26f (scratch/regress_2026-10-26f.sh, marker data/crop/.regress-2026-10-26f, book_crop
+2bb44a7384 = 26e's) → logs/crop-regress-2026-10-26f.log, at its end by itself the diff against f06a68adb2 →
+logs/crop-regress-diff-2026-10-26f.log. Started 08:40 UTC. Do NOT edit book_crop.py while it runs. Check: `systemctl --user
+is-active crop-regress-2026-10-26f`, `grep -c ^FAIL logs/crop-regress-2026-10-26f.log`.
+WHY RESTARTED: 26e analysed its first book, then waited from 08:18 for «room» for good: crop_batch.room() counted the 0.83 GB
+its own process kept from that book as taken, and the governor's pen (free + what it holds − 2.5 GB) then meant ≥ 4.7 GB free
+whatever the job held (4.2 GB free with Brave open). Fix (commit 947ff52): room(own=…) — a book analysed in the caller's own
+process (one worker: crop_regress, crop_minitest) discounts what that process holds; crop_redo unaffected (pool workers are
+other processes; its wait ends when no book is pending). Owner asked (AskUserQuestion): «either one or just kill brave» →
+26e stopped, Brave closed the normal way (SIGTERM, tabs come back), 26f started (its first book from 26e's cache in 1 s).
+Workers stay at 1 (PER 2.2 GB: pen 5.5 GB → 1); ≈ 2× slower than 26b → ≈ 8 h if nothing changes. PER/PARENT are decided
+after the pilot (measures: 26b's workers ≤ 0.92 GB, its main ≤ 0.8 GB; one-process books ≈ 0.84 GB — mem-sampler, scratchpad
+of session 07279fff…/mem-samples.tsv).
+WHOLE-BOOK BENCH OF THE FIX (unit fbw-whole, ended 08:15; 7d358b26b0 vs 2bb44a7384 on every page of the 5 bench books, from
+the first look's .pkl): 00597fea27cf, 68600214e7de, f134344a7421, 1d12000b2925 — 0 pages differ (2,732 pages); 064846139175
+(خريدة القصر الشام 01, 720 pages) — 22 differ: 231 (= 26b) and 278, plus 88 104 148 154 159 163 197 198 214 263 289 405 450 452
+547 552 586 593 600 601 — ALL LOOKED AT (new | fix as the reader sees them + both edge strips, drawn by drawnf.py/strips.py
+in the scratchpad of session 3c2ec828…/nf): each time a footnote line's end («للصفدي», «السفر», «صلى الله», «الابريز»), a
+heading's start («وقوله», «ومنها», «نظمه»), or a note number's bracket stands out past the verse into the paper's edge
+shadow; 7d358b26b0 and 26b cut it, the fix slides the book's box ≈ 30–35 pt (the scanner's black side then shows at the
+other edge) and nothing on the other side is cut. So the regression diff's «edge letters» pages on this book are expected.
+WHEN 26f ENDS: a–d of the 07:00 section with 26f in place of 26d.
+
 ## 2026-10-26 08:10 — the faithful bench found 2 REAL CUTS in 7d358b26b0 → fix ready in scratch; 26d must be STOPPED (owner) (Claude, max)
 BENCH (fb-00597fea27cf, fb-68600214e7de, fb-064846139175, all «faithful»): خزانة 01's 10 pages back under the scan lines ✓,
 68600214e7de pp. 9/182/322 ✓ (looked at: the old moves were for scan lines). BUT خريدة القصر (شعراء الشام) 01 = 064846139175:
