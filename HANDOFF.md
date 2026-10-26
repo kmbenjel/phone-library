@@ -3,6 +3,8 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+OWNER 2026-10-26 ~03:00: the ~11,000 old-format names (parentheses) WAIT for the reading pass — no mechanical format pass («ننتظر مرحلة القراءة»). He clears and switches to xhigh.
+
 ## 2026-10-26 02:00 — the cover print rule; THE REGRESSION RUNNING AGAIN: crop-regress-2026-10-26b (Claude, max effort)
 RUNNING: user unit crop-regress-2026-10-26b (scratch/regress_2026-10-26b.sh, marker data/crop/.regress-2026-10-26b, book_crop
 f06a68adb2) → logs/crop-regress-2026-10-26b.log; at its end, by itself, the diff against 5d6113b97c →
