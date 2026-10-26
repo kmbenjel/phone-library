@@ -583,6 +583,46 @@ def baseline_tilt(a, paper, min_lines=6):
     if len(sl) < min_lines: return None
     return float(np.median(sl))
 
+def line_leans(a, paper, tb, z):
+    """EACH LINE ON ITS OWN (2026-10-26, مشتبهات القرآن ص 89: the third rule turned a page 0.6° whose lower lines lay 0.5–1.2°
+    while its upper ones stood level — Quranic lines set one by one; the two whole-page measures, held by the lower lines,
+    read it level after the turn, and six of its level lines leaned 0.6–0.9°): the lines of the text block (tb, in pt; z
+    pixels per pt) at least a quarter of its width, each measured alone — the turn (±2°, 0.05° apart) whose row profile
+    within the line's band is sharpest. The band is smoothed a little first (σ 1 px) and the angles stand 0.025° off level,
+    so that level, the one view a turn leaves unblurred, is not favoured (faithful at 1,400 px: a turn of the page moved
+    every line's reading by the turn within 0.25° on إرشاد الساري ج 10 ص 8, سيبويه ج 2 ص 221, مناقب أحمد ص 208).
+    Returns [(y pt, width share, angle or None — at the bound, unreadable)]"""
+    if tb is None: return []
+    H, W = a.shape; mx, my = 0.02 * W, 0.01 * H
+    x0, y0 = max(0, int(tb[0] * z - mx)), max(0, int(tb[1] * z - my)); x1, y1 = min(W, int(tb[2] * z + mx)), min(H, int(tb[3] * z + my))
+    if x1 - x0 < 50 or y1 - y0 < 50: return []
+    ink = np.clip((paper - a[y0:y1, x0:x1].astype(float)) / max(paper, 1), 0, 1)
+    prof = ndimage.uniform_filter1d(ink.sum(1), max(3, int(0.0065 * W))); on = prof > 0.02 * prof.max()
+    lab, n = ndimage.label(on); out = []; bw = x1 - x0
+    for k in range(1, n + 1):
+        ys = np.nonzero(lab == k)[0]; r0, r1 = ys[0], ys[-1] + 1
+        if r1 - r0 < 0.009 * W: continue
+        pad = int(0.6 * (r1 - r0)); b = ink[max(0, r0 - pad):r1 + pad]
+        xs = np.nonzero(b.sum(0) > 0.5)[0]
+        if len(xs) < 2 or xs[-1] - xs[0] < 0.25 * bw: continue
+        b = ndimage.gaussian_filter1d(b[:, xs[0]:xs[-1] + 1], 1.0, axis=0)
+        t = max((float(np.var(ndimage.rotate(b, t, reshape=False, order=1, cval=0).sum(1))), t) for t in np.arange(-1.975, 1.976, 0.05))[1]
+        out.append((round(((r0 + r1) / 2 + y0) / z, 1), round((xs[-1] - xs[0]) / bw, 2), None if abs(t) >= 1.95 else round(float(t), 3)))
+    return out
+
+def made_lean(before, after):
+    """the lines a turn MAKES lean (owner: «ولم نصطنع ميلا جديدا»): level before it (≤ 0.3°) and ≥ 0.5° after, matched by
+    height (within half the lines' spacing) — line_leans of the page as it was and as turned → [(y pt, before, after)]"""
+    if not before or not after: return []
+    ys = [v[0] for v in before]; sp = float(np.median(np.diff(ys))) if len(ys) > 1 else 12.0; out = []
+    for y, w, t in before:
+        if t is None or abs(t) > 0.3: continue
+        mt = [v for v in after if abs(v[0] - y) <= 0.45 * sp]
+        if not mt: continue
+        t1 = min(mt, key=lambda v: abs(v[0] - y))[2]
+        if t1 is not None and abs(t1) >= 0.5: out.append((y, t, t1))
+    return out
+
 def edge_tilt(a, paper):
     """THE LINES' EDGE AS A RULER (owner 2026-10-09: «you can just use a ruler against any line!», الفوائد المحصورة ص 526 — a
     list of short right-aligned lines no other measure reads): right-aligned lines all start at one edge (left-aligned ones
@@ -2066,6 +2106,14 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         mk['cols'] = lambda: once('cols', lambda: columns_tilt(a, mk['paper']) if mk.get('paper') else None)
         cur['looks'][key] = mk
         return mk
+    def leans(i, q, m):                               # each line of a view on its own (line_leans), at 1,400 px — the page
+        mv = q.get('move') or [0, 0]                  # as look() sees it (sheet, stamps), finer: only the third rule asks
+        page = cur['tu'].page(q.get('skew') or 0, mv[0], mv[1]); a, z = gray(page, 1400); a = a.copy(); pq = rec['pages'][i]
+        if pq.get('sheet'): a = whiten(a, z, fwd_box(doc, i, q, pq['sheet']))
+        ex = [pad_box(b, page.rect.width) for b in pq.get('stamp') or []] + (pq.get('dots') or [])
+        for b in (fwd_boxes(doc, i, q, ex) if ex else []):
+            a[max(0, int(b[1] * z)):int(b[3] * z) + 1, max(0, int(b[0] * z)):int(b[2] * z) + 1] = 255
+        return line_leans(a, m['paper'], m.get('text'), z) if m.get('paper') else []
     def best_turn(i, p, d0):                          # the turn near d0 that leaves the least tilt by BOTH measures:
         tried = {}                                    # d0 first; if not level, 10 more angles around it in 0.05° steps
         def ev(d):
@@ -2132,7 +2180,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         # leaves both measures ≤ 20 % of the tilt (at most 0.4° left from 2°) is far better than the page as it was
         if abs(before) >= 1.5 and max(r, im) <= max(0.4, 0.2 * abs(before)): p['reduced'] = round(max(r, im), 3); return True
         return False
-    def third(p, r, im, before, m0):                  # A CLEAR TILT BOTH MEASURES SAW, CUT TO A THIRD (2026-10-26, سيبويه ج 2
+    def third(p, r, im, before, m0, m2, i, d):        # A CLEAR TILT BOTH MEASURES SAW, CUT TO A THIRD (2026-10-26, سيبويه ج 2
         # ص 221: a colophon in display type, its three long lines lying 0.75–0.85° and two short ones level — no ruler of its
         # own; turned −0.975° the shear measure read 0.725 → 0.1 and the image 1.225 → 0.275, held back by the image's 0.2°
         # while the long lines were plainly tilted; the owner had all 14 undecided pages turned, crop-tilt-001): a page the
@@ -2141,6 +2189,14 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         if abs(before) < 0.4 or r > LEVEL or im > 0.35 + 1e-6: return False
         i0 = m0['proj'](-3.0, 3.0, 0.25)
         if i0 is None or im > abs(i0) / 3 + 1e-6: return False
+        # ... and no part of the page made to lean: a page whose lines lie at different angles (set one by one, pasted, curled)
+        # has no single turn, and the whole-page measures follow its majority (مشتبهات القرآن ص 89: six level lines leaned
+        # 0.6–0.9° after the 0.6° turn). Measured line by line: refused when the turn makes two or more level lines lean and
+        # they are a fifth of the lines read or more (footnotes set at their own angle — 2 lines of 20, مناقب أحمد ص 208 —
+        # may follow the text, as every turn lets them)
+        L0, L1 = leans(i, p, m0), leans(i, dict(p, skew=d), m2); ml = made_lean(L0, L1)
+        if len(ml) >= 2 and len(ml) >= 0.2 * sum(1 for v in L0 if v[2] is not None):
+            p['lines_lean'] = [list(v) for v in ml]; return False
         p['image_third'] = [round(abs(float(i0)), 3), im]; return True
     for i, p in enumerate(rec['pages']):
         if only is not None and i not in only: continue
@@ -2234,12 +2290,12 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                     done = False
                     if tries:
                         d, r, im, m2 = best_turn(i, p, min(tries)[1])
-                        if keep(p, d, r, im, u, m2, mk) or third(p, r, im, u, mk):
+                        if keep(p, d, r, im, u, m2, mk) or third(p, r, im, u, mk, m2, i, d):
                             p['skew'] = d; p['after_tilt'] = round(r, 3); p['after_tilt_image'] = im; p['turned_in_check'] = True
                             mk = m2; done = True
                     if not done:                      # (a page found by its edge alone whose turn is not certified: the
-                        if p.get('tilt_by_edge') is not None: p['tilt_disputed'] = round(u, 3)   # measures disagree)
-                        else: p['untreated_tilt'] = round(u, 3)
+                        if p.get('tilt_by_edge') is not None or p.get('lines_lean'): p['tilt_disputed'] = round(u, 3)   # measures
+                        else: p['untreated_tilt'] = round(u, 3)   # disagree; or its lines do — lines_lean)
         # THE OWNER'S TURN (data/crop/owner-turns.tsv, owner 2026-10-25 on crop-tilt-001: «أجيز هذا وجميع ما سبق»): a page he
         # ruled «turn» after seeing it turned by its measured tilt, which the measures above leave as it is, is turned by
         # that tilt — u measured here, on the page as it is (sign and size); the readings after it are kept for the record
