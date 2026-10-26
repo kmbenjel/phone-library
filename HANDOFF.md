@@ -6,6 +6,27 @@ Each workstream appends its progress below (the newest state first, then the his
 OWNER 2026-10-26 ~03:00: the ~11,000 old-format names (parentheses) WAIT for the reading pass — no mechanical format pass («ننتظر مرحلة القراءة»). He clears and switches to xhigh.
 OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs at max: the regression's end (a–e), then the pilot.
 
+## 2026-10-26 18:25 — REGRESSION 26g RUNNING (book_crop b32a237bbf, commit 9513341) (Claude, max)
+RUNNING: user unit crop-regress-2026-10-26g (scratch/regress_2026-10-26g.sh, marker data/crop/.regress-2026-10-26g) →
+logs/crop-regress-2026-10-26g.log; at its end by itself two diffs: against 26b (f06a68adb2, the last passing run) →
+logs/crop-regress-diff-2026-10-26g.log, and against 26f (2bb44a7384) → logs/crop-regress-diff-2026-10-26g-vs-26f.log.
+Started 18:24 UTC; 1–2 workers (governor) → ≈ 3–4.5 h. Do NOT edit book_crop.py while it runs.
+WHAT CHANGED (all benched first, bench code byte-identical to the committed file): A — a sideways slide up to 4 % for the
+page's own print (verify_far); A2 — letters in the edge shadow are print, never cut as strays (keep_); A3 — clean branch: an
+edge letter wholly outside the box is taken in; A4 — the dots/tails of an edge letter go with it; B — third(): a clear tilt
+(≥ 0.4°) both measures saw is turned when the shear reads level after and the image ≤ 0.35° and ≤ a third (image_third).
+6 cases added (rows 120–125). Bench results (fbwq.py; scratchpad 3c2ec828…/bench2): أسرار البلاغة crop again, 0 whole, 73
+pages changed vs 26b — ALL LOOKED AT (side headings whole, nothing cut on the other side); سيبويه ج 2: p. 221 turned −0.975°,
+12 pages keep the manuscript folio refs' digits (looked at); خريدة القصر 01: pp. 163/259/451 (note brackets, «و»).
+Known residuals (as in 26b, left on purpose): 4 letters clipped < 1 pt (أسرار 321 «١١٥», سيبويه 195 «١١٤/٢», خريدة 380, 489)
+— within the method's 1-pt tolerance; taking them in would re-centre the box ≥ 30 pt.
+WHEN 26g ENDS: a. 0 failures expected (171 + 6 cases); b. diff vs 26f: changes outside أسرار/سيبويه/خريدة come from A2/A3/A4/B
+on the other books — draw each (scratchpad risky.py OLD NEW OUTDIR BOOK…, or crop_diff_sheets.py) and look; for the 3 bench
+books 26g must equal the bench recipes (compare whole/*.fix.json vs the cache, page by page); c. then the pilot
+(scratch/pilot_redo_2026-10-26.sh, launch line in the 07:00 section). Memory: PER/PARENT of mem_governor are still 2.2/1.5 GB
+— measured (26b, 26f): a worker ≤ 0.92 GB, a one-process book 0.97–1.29 GB → propose PER 1.4 / PARENT 1.0 to the owner
+(the governor is a running service: restarting it needs his word).
+
 ## 2026-10-26 17:50 — REGRESSION 26f ENDED 12:52: 2 FAILURES, both understood; fixes A+B being benched (Claude, max)
 26f (2bb44a7384): 171 PASS, 2 FAIL. Its diff (logs/crop-regress-diff-2026-10-26f.log) outside the two failing books — 117
 pages in 12 books (folio stain 22, second look 73, edge letters 23, blank pages 2) — ALL LOOKED AT (old | new, risky sides
