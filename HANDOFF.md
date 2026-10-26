@@ -22,6 +22,16 @@ from the other side is plain. Proof: old vs new frames() on the 31 regression bo
 (year kept), روضة المستبين back covers p. 734 / p. 1531 (spine kept); 280 local books (~/Books, read only): 20 covers and 71
 dark end pages, no false move (3 right ones). 4 regression cases added (crop-regression.tsv rows 110–113).
 WHEN IT ENDS: steps a–e of the 01:30 section below, on the -26b logs; the diff's «cover print» pages = those 3. Then item 2.
+(02:40) It runs ~4.4 min a book alone (the stopped run shared the CPU with the Turner tests) → ends ≈ 04:15. First 7 books:
+0 pages changed vs 5d6113b97c. READY for item 3 (launch by hand once the diff is explained, 0 failures):
+`systemd-run --user --slice=crop.slice --unit=crop-redo-pilot --nice=10 --working-directory=$PWD --setenv=PATH="$PATH"
+scratch/pilot_redo_2026-10-26.sh` — 10 books (data/crop/pilot-2026-10-26.tsv: خزانة 01, four the owner marked on 10-14 that
+are no regression case, five random), each phone file checked = the file the old crop wrote; then site/crop-doubts.html.
+Full-redo pre-check DONE (live server-side MD5, 02:38): 1,120 of the 1,122 are still the file the old crop wrote; 2 differ
+and will be SKIPPED by crop_redo — «البداية والنهاية (ت التركي) 21 (الفهارس)» (joined with its front 10-25, its cropped
+original deleted by plan 382) and «المغرب في حلى المغرب 01» (changed after its crop): each needs an uncrop of the joined
+file (strip the crop's q…cm wrappers, CropBox = MediaBox) or a fresh copy, later. (data/phone/md5.tsv is stale for cropped
+books — its users check the size first; it misled only a quick look.)
 MEANWHILE (allowed beside it, owner's order): item 2, the name composer — DONE 02:35 (commit after 3764168): no cut inside a
 phrase, names/roles shortened before title words, tiers above the title; plan 383 applied (21 names; review page
 site/plan-383.html, http://127.0.0.1:8765/plan-383.html — tell the owner). NOT done (judgement, owner's look): 56 read books
