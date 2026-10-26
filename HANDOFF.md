@@ -17,7 +17,7 @@ OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs a
   not one — tested on the cropped volumes, the rebuilt files, a regression original and an applied recipe); then delete
   the 2 set-aside files (owner 10-25 «remove the trace»).
 - Pilot pre-check 18:38: the 10 pilot files' phone MD5 = the file the old crop wrote; none in redo-done.tsv.
-- Watchers (this session): bujp5nkxf (26g end / FAIL / brake), bepuyvg9t (سيبويه's 26g recipe → cmpfix.py 9b98ea8b9570
+- Watchers died with the /clear: re-arm — wait for `systemctl --user is-active crop-regress-2026-10-26g` to end; cmpfix.py 9b98ea8b9570 / d20f1fe41833 b32a237bbf
   b32a237bbf in scratchpad 3c2ec828…/bench2). Partial diffs as books end: `crop_recipe_diff.py 2bb44a7384 b32a237bbf BOOK`.
 - A new full-redo script (after the owner reviews the pilot page) must NOT chain crop_library.sh (the 10-18 script did): the
   rest of the library is the owner's scope decision (memory crop-quality-bar).
