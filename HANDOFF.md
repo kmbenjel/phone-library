@@ -3,6 +3,27 @@
 Any agent/model taking over: read `AGENTS.md` (esp. §7), then this file, then the last lines of `WORKLOG.md`.
 Each workstream appends its progress below (the newest state first, then the history). Everything is resumable.
 
+## 2026-10-26 02:00 — the cover print rule; THE REGRESSION RUNNING AGAIN: crop-regress-2026-10-26b (Claude, max effort)
+RUNNING: user unit crop-regress-2026-10-26b (scratch/regress_2026-10-26b.sh, marker data/crop/.regress-2026-10-26b, book_crop
+f06a68adb2) → logs/crop-regress-2026-10-26b.log; at its end, by itself, the diff against 5d6113b97c →
+logs/crop-regress-diff-2026-10-26b.log (scratch/crop_recipe_diff_2026-10-26.py: owner turn / level first / image ≤ 0.35 /
+cover print / OTHER). Started 01:59 UTC, ≈ 4–4.5 h. Do NOT edit book_crop.py while it runs. (Its header says «02:50»: wrong,
+left — a running bash script is never edited.) The run of 00:07 (crop-regress-2026-10-26) was STOPPED after 11 books (60 PASS,
+0 FAIL); its cedf4dd2b8 recipes stay in the cache: new vs cedf4dd2b8 may differ only on the 3 cover pages below (+ the new key
+cover_marks).
+WHY: the owner HAD answered the خزانة question (2026-10-25 22:51, session ff1c42e0, missed by the 01:30 notes): «you can
+figure out, just check the first page, the cover's. cover is there but not filling the page, like uncomplete measurments or
+so». Checked on the phone's own bytes (md5 5d61fa48…): the 10-10 crop shows p. 1 pushed down under the scan's grey header
+table, its foot cut (move 143.8 pt). The method since 10-21 already fills the page with the cover (cover_rect), but its even
+cut took the cover's last line, the year «١٣٨٧ = ١٩٦٧». New: book_crop.cover_marks (a cover's print as boxes; the bar follows
+the ground's grain) + cover_window (frames): the fill's cut stays even unless (a) a centred line of print at one end would be
+cut and the other end is plain over its whole cut + 3 pt, or (b) a spine's lettering would be cut and ≥ 40 % of the cover
+from the other side is plain. Proof: old vs new frames() on the 31 regression books (14,888 pages): 3 changed — خزانة 01 p. 1
+(year kept), روضة المستبين back covers p. 734 / p. 1531 (spine kept); 280 local books (~/Books, read only): 20 covers and 71
+dark end pages, no false move (3 right ones). 4 regression cases added (crop-regression.tsv rows 110–113).
+WHEN IT ENDS: steps a–e of the 01:30 section below, on the -26b logs; the diff's «cover print» pages = those 3. Then item 2.
+MEANWHILE (allowed beside it, owner's order): item 2, the name composer — code and plans only; refresh.sh waits for the end.
+
 ## 2026-10-26 01:30 — STATE BEFORE A /clear: the one regression running; then its diff, by eye (Claude, max effort)
 RUNNING (nothing else of mine): user unit crop-regress-2026-10-26 (scratch/regress_2026-10-26.sh, book_crop cedf4dd2b8,
 marker data/crop/.regress-2026-10-26) → logs/crop-regress-2026-10-26.log; at its end it writes by itself the diff against

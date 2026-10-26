@@ -901,6 +901,77 @@ def cover_rect(page, px=360):
         return [round(x0 / z, 2), round(y0 / z, 2), round(x1 / z, 2), round(y1 / z, 2)]
     return None
 
+def cover_marks(page, rect, ppt=1.5):
+    """THE COVER'S OWN PRINT (owner 2026-10-25, خزانة الأدب ج 1 ص 1: «cover is there but not filling the page, like incomplete
+    measurements»; the fill that answered it cut the cover's last line, the year «١٣٨٧ = ١٩٦٧»): the marks that stand out
+    from the cover's ground — lines of print, ornaments, a spine's lettering, labels — as boxes in pt, for cover_window.
+    A mark: ≥ T on some channel from the mean of a 7-pt square, T following the ground's own grain (3 × its 75th
+    percentile + 12, within 22–60: faint small print on a smooth cover, only real marks on cloth or leather); pieces under
+    2.5 pt (grain, dust) and the cover's own edge (2 % — its hair, a shadow) left out"""
+    pix = page.get_pixmap(matrix=pymupdf.Matrix(ppt, ppt), clip=pymupdf.Rect(rect), colorspace=pymupdf.csRGB, alpha=False)
+    a = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width * 3].reshape(pix.height, pix.width, 3).astype(np.float32)
+    k = max(3, int(round(7 * ppt)) | 1)
+    dev = np.abs(a - ndimage.uniform_filter(a, size=(k, k, 1))).max(axis=2)
+    H, W = dev.shape; my, mx = int(0.02 * H) + 1, int(0.02 * W) + 1
+    if H <= 2 * my + 2 or W <= 2 * mx + 2: return []
+    T = float(np.clip(3 * np.percentile(dev[my:H - my, mx:W - mx], 75) + 12, 22, 60))
+    e = dev >= T
+    e[:my] = e[H - my:] = False; e[:, :mx] = e[:, W - mx:] = False
+    lab, _ = ndimage.label(ndimage.binary_closing(e, structure=np.ones((3, 3)), iterations=1))
+    out = []
+    for sl in ndimage.find_objects(lab):
+        if sl is None or max(sl[0].stop - sl[0].start, sl[1].stop - sl[1].start) < 2.5 * ppt: continue
+        out.append([round(rect[0] + sl[1].start / ppt, 1), round(rect[1] + sl[0].start / ppt, 1),
+                    round(rect[0] + sl[1].stop / ppt, 1), round(rect[1] + sl[0].stop / ppt, 1)])
+    return out
+
+def cover_window(c, A, mk):
+    """the part of cover c shown at the book's proportion A (W ÷ H): the same cut at both ends (owner 2026-10-18, دلائل
+    الإعجاز «ولو نقص شيء لا يؤثر من حواف الغلاف»), moved off the middle only to keep print the even cut would take, and
+    only into plain ground: (a) a cut at the top and bottom keeps a line of print at one end whole (+ 3 pt) — marks across
+    the cover's middle, ≥ 10 % of its width, centred within 15 % — when the other end is plain over its whole cut + 3 pt
+    (خزانة الأدب ج 1: the year under the publisher); (b) a cut at the sides keeps a spine's lettering whole — marks ≥ 3 pt
+    wide down ≥ 30 % of the height — when ≥ 40 % of the cover from the other side is plain (a back cover with its spine,
+    روضة المستبين). Never for a hair (< 2 pt), never more than the cut: a frame on both sides, a corner logo, a library
+    label or a speck leaves the cut even. mk: cover_marks"""
+    cw, ch = c[2] - c[0], c[3] - c[1]
+    vert = cw / ch < A                                  # too tall: cut at the top and bottom
+    d = (ch - cw / A) / 2 if vert else (cw - ch * A) / 2
+    lo, hi = (c[1], c[3]) if vert else (c[0], c[2])
+    I0, I1 = (1, 3) if vert else (0, 2)
+    move = 0.0
+    if d > 1 and mk:
+        for s in (-1, 1):                               # -1: keep what lies at lo, cut more at hi; +1: the reverse
+            st = (lo, lo + d) if s < 0 else (hi - d, hi)
+            lost = [m for m in mk if m[I1] > st[0] and m[I0] < st[1]]
+            if vert:
+                lost = [m for m in lost if m[2] > c[0] + 0.3 * cw and m[0] < c[2] - 0.3 * cw]
+                if lost:
+                    x0, x1 = min(m[0] for m in lost), max(m[2] for m in lost)
+                    if x1 - x0 < 0.1 * cw or abs((x0 + x1) / 2 - (c[0] + c[2]) / 2) > 0.15 * cw: lost = []
+            else:
+                lost = [m for m in lost if m[2] - m[0] >= 3]
+                if sum_spans([(m[1], m[3]) for m in lost]) < 0.3 * ch: lost = []
+            if not lost: continue
+            need = (lo + d - min(m[I0] for m in lost) + 3) if s < 0 else (max(m[I1] for m in lost) - (hi - d) + 3)
+            if need < 2 or need - 3 > d: continue
+            need = min(need, d)
+            plain = (hi - max(m[I1] for m in mk)) if s < 0 else (min(m[I0] for m in mk) - lo)
+            if plain < d + need + 3 or (not vert and plain < 0.4 * cw): continue
+            move = s * need; break
+    if vert: return [c[0], c[1] + d + move, c[2], c[3] - d + move]
+    return [c[0] + d + move, c[1], c[2] - d + move, c[3]]
+
+def sum_spans(iv):
+    """the length covered by intervals [(a, b)] (overlaps counted once)"""
+    tot, cur = 0.0, None
+    for a, b in sorted(iv):
+        if cur is None or a > cur[1]:
+            if cur: tot += cur[1] - cur[0]
+            cur = [a, b]
+        else: cur[1] = max(cur[1], b)
+    return tot + (cur[1] - cur[0] if cur else 0.0)
+
 def sheet_rect(page, px=360):
     """A SHEET ON THE SCANNER BED (owner 2026-10-18, صبح الأعشى ج 5 ص 47: «المشكل نابع من عدم الجرأة على تجاوز سواد
     الطباعة»): a page photocopied grey lying on a lighter bed — the region darker than the midpoint between the sheet's
@@ -1114,7 +1185,7 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
         if page.rotation: rec['kind'] = 'rotated'; pages.append(rec); done[i] = rec; continue
         if i < 2 or i >= doc.page_count - 2:              # the first and last two pages: a cover is shown alone, whole
             cv = cover_rect(page)
-            if cv: rec.update(kind='cover', cover=cv, box=cv); pages.append(rec); done[i] = rec; continue
+            if cv: rec.update(kind='cover', cover=cv, box=cv, cover_marks=cover_marks(page, cv)); pages.append(rec); done[i] = rec; continue
         st = list(stamps.get(i) or stamps.get(str(i)) or [])
         cs = colour_stamps(page)                       # a coloured stamp on a page printed in black: left out like the others
         if cs: st += cs; rec['colour_stamp'] = cs
@@ -1195,6 +1266,8 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
         elif mk['dark'] > 0.35: rec['kind'] = 'picture'   # dark pages only: a tight light scan is text (stays whole if it cannot fit)
         else: rec['kind'] = 'text'
         rec['box'] = mk['box']
+        if rec['kind'] == 'picture' and (i < 2 or i >= doc.page_count - 4):   # the book's own cover, shown whole-page
+            rec['cover_marks'] = cover_marks(page, [0.0, 0.0, r.width, r.height])   # (frames): where its print lies
         pages.append(rec); done[i] = rec
     doc.close()
     return done if only is not None else pages
@@ -2216,10 +2289,10 @@ def frames(rec):
         if p['kind'] == 'cover' and c or own_cover:   # A COVER FILLS THE FRAME, cut to the book's proportions (owner
             cw, chh = c[2] - c[0], c[3] - c[1]        # 2026-10-18, دلائل الإعجاز ص 1: «الملاحظة على حالها … ولو نقص شيء لا
             lim = 1.0 if own_cover else 0.08          # يؤثر من حواف الغلاف»; مواد البيان: «هل العرض مستو مع جميع الصفحات؟ يمكن
-            if cw / chh > A and (cw - chh * A) / cw <= lim:      # القص من الجوانب … فهو غلاف فقط»): the book's own covers (its
-                d_ = (cw - chh * A) / 2; c = [c[0] + d_, c[1], c[2] - d_, c[3]]   # first two and last four pages) always; a
-            elif cw / chh < A and (chh - cw / A) / chh <= lim:   # cover picture inside the book only when ≤ 4 % a side goes
-                d_ = (chh - cw / A) / 2; c = [c[0], c[1] + d_, c[2], c[3] - d_]   # (فهرسة ابن خير ص 380 «دون قصّ صورة الغلاف»)
+            if (cw / chh > A and (cw - chh * A) / cw <= lim     # القص من الجوانب … فهو غلاف فقط»): the book's own covers (its
+                    or cw / chh < A and (chh - cw / A) / chh <= lim):   # first two and last four pages) always; a cover
+                c = cover_window(c, A, p.get('cover_marks') or [])     # picture inside the book only when ≤ 4 % a side
+                # goes (فهرسة ابن خير ص 380 «دون قصّ صورة الغلاف»); the cut placed where it takes no print (cover_window)
         if c and abs(c[2] - c[0] - W) <= 1.0 and abs(c[3] - c[1] - H) <= 1.0:      # the book's box
             x, y, rw, rh = (c[0] + c[2]) / 2, (c[1] + c[3]) / 2, W, H
         else:
