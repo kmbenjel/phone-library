@@ -6,6 +6,38 @@ Each workstream appends its progress below (the newest state first, then the his
 OWNER 2026-10-26 ~03:00: the ~11,000 old-format names (parentheses) WAIT for the reading pass — no mechanical format pass («ننتظر مرحلة القراءة»). He clears and switches to xhigh.
 OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs at max: the regression's end (a–e), then the pilot.
 
+## 2026-10-26 23:30 — STATE BEFORE A /clear (Claude, max). <T> = /tmp/claude-1000/-home-k-projects-phone-library/37b40576-c90e-4994-a417-028a295f8c53/scratchpad
+RUNNING (all mine except 26h's gate role; watchers died with the /clear — re-arm `<T>/watch26h.sh` in the background):
+- crop-regress-2026-10-26h (started 22:45, 31 PASS 0 FAIL at 23:20; ends ≈ 02:30–03:00; writes its two diffs by itself).
+- bench-fixp (<T>/bench/fbp.py 2b47002d18ab g2 p): g2 FAITHFUL to 26g (832 s); p running → `cd <T>/bench && python3
+  cmpv.py 2b47002d18ab g2 p` — expected only pp. 423, 437, 438 (none «tilted but not turned» → check rec['untreated_tilt']).
+- basesurvey (<T>/proj/basesurvey.py: every page 26g turns + ≈ 2,000 unturned text pages, ≈ 35 min from 23:18) → read
+  with `python3 <T>/proj/basestats.py [CLASS [PATH]]` (classes good/under/over/needless/harmless; paths proj/other/owner/
+  unturned; residual by line spread).
+NEW FINDING — THE PROJECTION PATH OVER-TURNS (pre-existing in every version; not yet fixed):
+- A precise tilt ruler: <T>/proj/basefit.py — each line's BASELINE (Arabic: the densest ink row) found to a fraction of a
+  pixel in 16 chunks, a robust straight fit per line, the page's tilt = the median over lines (1,400 px). LINEAR: on known
+  turns «reading + turn» stays constant within ±0.05° (calib on خزانة 01 pp. 68, 279, 358); agrees with printed rules
+  averaged over known turns (<T>/proj/rulecal.py: p. 68 rules −0.01/+0.08 vs baselines +0.11; p. 110 rule −0.76 vs −0.80).
+  One render as scanned gives the residual of any turn: after = tilt − turn.
+- By it, خزانة الأدب ج 1 (A PILOT BOOK): projection turns overshoot by ≈ 0.15–0.25° — p. 68 tilt +0.11 turned +0.325 →
+  −0.21 (a needless turn, confirmed by rules); p. 110 −0.80 turned −1.025 → +0.22 (rule confirms); pp. 45, 53, 75, 106, 144
+  alike. Cause: on these verse pages the projection is biased and its confirmation (the shear measure ≤ 0.2 after the turn,
+  level_by_proj) barely moves with the turn (p. 68: 0.1° for a 0.325° turn) — the first look's ±0.2° loop then picks an
+  arbitrary angle. Early survey (خزانة 01 only): residual ≥ 0.2° on ≈ 23 % of projection turns, fewer by the other paths;
+  noisy pages (lines' IQR ≥ 0.5°) carry most of it — validate basefit on such pages before trusting their verdicts.
+- The line measure of guard G (line_leans, and <T>/proj/fastleans.py, its 20–50× faster chunk-shear copy) SNAPS to ±0.025 /
+  ±0.225° (p. 68: every turn from −0.30 to −0.10 reads +0.225) — fine for guard G's coarse 0.3/0.5° test, useless for small
+  tilts. Printed rules alone mislead (خزانة 01's short head segment at y 142 pt does not follow the text).
+DECISION FOR THE NEXT SESSION: when basesurvey ends, read basestats.py. If over/needless turns (≥ 0.2° left) are common
+beyond خزانة 01 → HOLD THE PILOT (its خزانة 01 would carry them) and design FIX Q: projection turns set (and checked) by
+basefit when a page has ≥ 6 readable lines, else as now; bench it (fbp.py-style on خزانة 01 00597fea27cf — its pages.pkl
+is in the 1b7990ba… bench), then regression 26i with fix P + Q, then the pilot. If rare/limited to one book → the pilot
+after 26h as planned (crop_redo can redo a book later), fix Q before the FULL redo. Tell the owner either way, plus:
+site/crop-tilt-002.html (the two-angle question, not yet announced) and site/plan-383.html (still unannounced).
+Copies of every tool above (sources only): scratch/tilt-measures-2026-10-26/ (if /tmp was wiped). Tools (<T>/proj): bands.py (bands as scanned | turned), stretch.py, views.py (verify's measures on a page), calib.py,
+rulecal.py, hrule14.py, projrules.tsv / sheetline.tsv (fix P surveys), turnsurvey.tsv (line measure, stopped at ≈ 600).
+
 ## 2026-10-26 22:50 — 26g PASSED (0 failures, ended 22:40); guard G in book_crop (20d30c2020, commit 5136103); 26h RUNNING (Claude, max)
 - 26g vs 26f: only the bench-predicted pages (أسرار d20f1fe41833, سيبويه 9b98ea8b9570, خريدة 064846139175 163/259/451) and
   the three looked at during the run (خزانة 01 p. 26, اللآلئ 468, مشتبهات 89). image_third pages: exactly 00597 p. 26,
