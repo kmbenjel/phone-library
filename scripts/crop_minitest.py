@@ -21,8 +21,11 @@ for l in open('data/crop/owner-marked-2026-10-14.tsv', encoding='utf-8'):
     keep = sorted({0, 1, k - 2, k - 1} | {j for m in marked for j in range(max(0, m - 21), min(k, m + 20))})
     doc.select(keep); ex = os.path.join(d, 'extract.pdf'); doc.save(ex, garbage=3); doc.close()
     import crop_batch as cb
-    while not cb.room(): time.sleep(30)               # a book starts only with ≥ 3 GB free (2026-10-18 03:05)
-    t = time.time(); rec = bc.plan(ex, min(int(os.environ.get('BENCH_JOBS', 3)), cb.governed(3))); json.dump(rec, open(os.path.join(d, 'recipe.json'), 'w'), ensure_ascii=False)
+    while True:                                       # a book starts only with ≥ 3 GB free (2026-10-18 03:05)
+        jobs = min(int(os.environ.get('BENCH_JOBS', 3)), cb.governed(3))
+        if cb.room(own=cb.own_bytes() if jobs == 1 else 0): break   # (one worker: the extract runs here, in what this process kept)
+        time.sleep(30)
+    t = time.time(); rec = bc.plan(ex, jobs); json.dump(rec, open(os.path.join(d, 'recipe.json'), 'w'), ensure_ascii=False)
     sp = {int(k) for k in (rec.get('split') or {})}       # a split sheet becomes two pages: later pages shift by one each
     at = lambda j: j + sum(1 for k in sp if k < j)
     mp = {str(m): at(keep.index(m - 1)) for m in marked}; json.dump({'pages': keep, 'marked': mp, 'split': sorted(sp)}, open(os.path.join(d, 'map.json'), 'w'))

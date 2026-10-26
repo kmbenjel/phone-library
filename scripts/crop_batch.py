@@ -233,14 +233,24 @@ def free_gb():
         if l.startswith('MemAvailable:'): return int(l.split()[1]) / 1048576
     return 99.0
 
-def room(need=3.0):
+def own_bytes():
+    """this process's resident memory (VmRSS), in bytes"""
+    for l in open('/proc/self/status'):
+        if l.startswith('VmRSS:'): return int(l.split()[1]) * 1024
+    return 0
+
+def room(need=3.0, own=0):
     """a new book starts only with ≥ 3 GB free, whatever the worker count (2026-10-18 03:05: the owner's session was closed
-    by systemd-oomd while a bench ran 3 analyses beside his browsers — free memory had fallen to 0.8 GB)"""
+    by systemd-oomd while a bench ran 3 analyses beside his browsers — free memory had fallen to 0.8 GB).
+    own: bytes the caller holds that the new book will reuse — a book analysed in the caller's own process (one worker:
+    crop_regress, crop_minitest) runs in the memory it kept from the last one. Counted as taken, it blocked the regression
+    for good (2026-10-26 08:18, 26e: 0.83 GB of its own): the governor's pen is free + what it holds − 2.5 GB, so «what it
+    holds ≤ pen − 2.2 GB» meant free ≥ 4.7 GB whatever the job held"""
     if free_gb() < need: return False
     try:                                              # and room in the pen (crop.slice, sized by scripts/mem_governor.py)
         cg = f'/sys/fs/cgroup/user.slice/user-{os.getuid()}.slice/user@{os.getuid()}.service/crop.slice'
         hi = open(cg + '/memory.high').read().strip()
-        if hi != 'max' and int(open(cg + '/memory.current').read()) > int(hi) - 2.2 * 2 ** 30: return False   # (a book ≈ 2.2 GB)
+        if hi != 'max' and int(open(cg + '/memory.current').read()) - own > int(hi) - 2.2 * 2 ** 30: return False   # (a book ≈ 2.2 GB)
     except (OSError, ValueError): pass
     return True
 

@@ -47,10 +47,11 @@ def recipe(pdf):
     tag = '.' + hashlib.md5(json.dumps(sorted(ot.items())).encode()).hexdigest()[:6] if ot else ''
     key = os.path.join(CACHE, os.path.basename(pdf)[:-4] + f'.{me}{tag}.json')
     if os.path.exists(key): return json.load(open(key))
-    while not cb.room(): time.sleep(30)               # a book starts only with ≥ 3 GB free (2026-10-18 03:05)
-    try: jobs = int(open(os.path.join(ROOT, 'data', 'crop', 'workers')).read().strip())   # the memory governor's number
-    except (OSError, ValueError): jobs = int(os.environ.get('JOBS', 3))
-    rec = bc.plan(pdf, max(1, jobs), owner_turns=ot); json.dump(rec, open(key, 'w'), ensure_ascii=False); return rec
+    while True:                                       # a book starts only with ≥ 3 GB free (2026-10-18 03:05)
+        jobs = max(1, cb.governed(int(os.environ.get('JOBS', 3))))   # the memory governor's number
+        if cb.room(own=cb.own_bytes() if jobs == 1 else 0): break   # (one worker: the book runs here, in what this process kept)
+        time.sleep(30)
+    rec = bc.plan(pdf, jobs, owner_turns=ot); json.dump(rec, open(key, 'w'), ensure_ascii=False); return rec
 
 def forward(page, p):
     """maps original-page points to the reader's frame (turned, moved), like the content transform"""
