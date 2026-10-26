@@ -6,6 +6,31 @@ Each workstream appends its progress below (the newest state first, then the his
 OWNER 2026-10-26 ~03:00: the ~11,000 old-format names (parentheses) WAIT for the reading pass — no mechanical format pass («ننتظر مرحلة القراءة»). He clears and switches to xhigh.
 OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs at max: the regression's end (a–e), then the pilot.
 
+## 2026-10-26 17:50 — REGRESSION 26f ENDED 12:52: 2 FAILURES, both understood; fixes A+B being benched (Claude, max)
+26f (2bb44a7384): 171 PASS, 2 FAIL. Its diff (logs/crop-regress-diff-2026-10-26f.log) outside the two failing books — 117
+pages in 12 books (folio stain 22, second look 73, edge letters 23, blank pages 2) — ALL LOOKED AT (old | new, risky sides
+zoomed; scratchpad of session 3c2ec828…/risky.py, montage.py, edges-*.jpg): right, nothing cut; the index pages of خريدة
+القصر 01 once shown whole now in the box with every line start/end whole.
+FAIL 1 — أسرار البلاغة ت شاكر (d20f1fe41833): book decision crop → level. Cause 2bb44a7384's edge_letters (bench: f06/1d9/7d3
+crop, 2bb level): Shakir's PRINTED SIDE HEADINGS in the outer margin («الاستعارة التي أثبتوا عليها من جهة اللفظ»…) run out to
+the scan's edge; the 26b crop CUT them on 74 of 578 pages (1–15 pt); now seen as print, 43 pages are saved by the 2 % slide,
+31 need 2–3.6 % → left whole → > 5 % → level only. FIX A: the non-clean branch may slide the box sideways up to 4 % of the
+width for the page's own print if the slide leaves out none of the print the box held (verify_far).
+FAIL 2 — سيبويه ج 2 (9b98ea8b9570) p. 221 «tilted (both measures) but not turned». Cause 1d95f5d01d's folio_blot (6 page
+numbers read as stains restored → the book box +6 pt high → the colophon's view shifted 3 pt → both measures read 0.725°).
+The page IS tilted where it shows: its three long display lines 0.75–0.85°, two short ones level (measured line by line);
+best_turn −0.975° gives shear 0.1 / image 0.275, refused only by the image's 0.2° (no ruler on display type). FIX B (third()
+in verify): a clear tilt (≥ 0.4°) both measures saw, turned when the shear then reads level and the image ≤ 0.35° and ≤ a
+third of its reading before (image_third); exempt from residual_tilt; crop_regress's turn check accepts it. Only page of the
+31 books it can touch (the one untreated «turn no» case, فهرسة 355, reads 0.25° < 0.4°).
+CODE: patch script scratchpad 3c2ec828…/bench2/patch_ab.py (bc_2bb.py → bc_fix.py; the SAME script patches
+scripts/book_crop.py). Bench units fbwq-fix2-d20f / fbwq-fix2-9b98 (fbwq.py: plan()'s loop on the cached first look; f06
+reproduced 26b and 2bb reproduced 26f exactly = faithful). Also done (not yet committed): crop_batch.room() book estimate
+2.2 → 1.5 GB (26f one-process peaks 0.97–1.29 GB; with the pen at its 2 GB floor nothing could start); crop_regress turn
+check (image_third); crop_recipe_diff causes «image to a third», «side slide». NEXT: bench result → apply patch_ab.py to
+scripts/book_crop.py → add cases (أسرار 128/185 side headings in, سيبويه 02 p. 221 turn yes) → regression 26g → its diff by
+eye (expected: d20f1fe41833 back to crop with the headings whole, 9b98ea8b9570 p. 221 turned + the 6 folio pages) → pilot.
+
 ## 2026-10-26 08:45 — REGRESSION 26f RUNNING (26e restarted with the owner's word); whole-book bench of the fix checked by eye (Claude, max)
 RUNNING: user unit crop-regress-2026-10-26f (scratch/regress_2026-10-26f.sh, marker data/crop/.regress-2026-10-26f, book_crop
 2bb44a7384 = 26e's) → logs/crop-regress-2026-10-26f.log, at its end by itself the diff against f06a68adb2 →

@@ -1,8 +1,9 @@
 """The crop recipes of two book_crop versions in the regression cache (~/.cache/phone-library/crop-regress/<book>.<md5>….json),
 page by page — turn, crop box, shown part, scale, move, kind — so that every change a method change brings is explained
 before anything reaches the phone (the redo, a pilot). Each changed page is printed with its cause, read from the flags the
-new recipe carries: the owner's turn, a level-by-both turn taken first, a ruler-certified small tilt (turns); a page number
-read as a stain restored (folio stain); letters in the paper's edge shadow taken in (edge letters); a second look that
+new recipe carries: the owner's turn, a level-by-both turn taken first, a ruler-certified small tilt, a clear tilt whose
+image reading fell to a third (turns); a page number read as a stain restored (folio stain); a sideways slide up to 4 % for
+side headings (side slide); letters in the paper's edge shadow taken in (edge letters); a second look that
 moved, enlarged or no longer moves the box (second look); a cover whose cut moved to keep its print (cover print); else
 OTHER. A turn rule explains a page only when its turn changed.
 Usage: crop_recipe_diff.py OLDMD5 NEWMD5 [BOOK …]   (md5 = the first 10 hex digits of book_crop.py's md5)"""
@@ -13,11 +14,13 @@ BOOK = ('decision', 'size', 'width_quantile', 'gain', 'framed', 'clean_margins',
 
 def cause(p, q):
     if p.get('skew') != q.get('skew'):
-        for k, v in (('owner_turn', 'owner turn'), ('level_first', 'level first'), ('image_loose', 'image ≤ 0.35')):
+        for k, v in (('owner_turn', 'owner turn'), ('level_first', 'level first'), ('image_loose', 'image ≤ 0.35'),
+                     ('image_third', 'image to a third')):
             if q.get(k) is not None: return v
         return None
     if q.get('folio_blot') is not None or p.get('folio_blot') is not None: return 'folio stain'
     if q.get('verify_cut') is not None: return 'cut edge'
+    if q.get('verify_far') is not None: return 'side slide'
     if q.get('edge_letters') and (p.get('verify_moved') or q.get('verify_moved')): return 'edge letters'
     if p.get('verify_moved') or q.get('verify_moved'): return 'second look'
     if q.get('cover_marks') is not None and p.get('show') != q.get('show') and all(p.get(k) == q.get(k) for k in ('crop', 'scale', 'move', 'kind')):

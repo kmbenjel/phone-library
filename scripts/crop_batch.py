@@ -250,7 +250,9 @@ def room(need=3.0, own=0):
     try:                                              # and room in the pen (crop.slice, sized by scripts/mem_governor.py)
         cg = f'/sys/fs/cgroup/user.slice/user-{os.getuid()}.slice/user@{os.getuid()}.service/crop.slice'
         hi = open(cg + '/memory.high').read().strip()
-        if hi != 'max' and int(open(cg + '/memory.current').read()) - own > int(hi) - 2.2 * 2 ** 30: return False   # (a book ≈ 2.2 GB)
+        # (a book ≈ 1.5 GB: one process analysing a whole book peaked at 0.97–1.29 GB on the 31 regression books, 26f, 2026-10-26
+        # — the 2.2 GB of 10-18 predates the stamps fix of 10-25; with the pen at its 2 GB floor no book could start at all)
+        if hi != 'max' and int(open(cg + '/memory.current').read()) - own > int(hi) - 1.5 * 2 ** 30: return False
     except (OSError, ValueError): pass
     return True
 

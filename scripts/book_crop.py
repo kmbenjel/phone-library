@@ -2132,6 +2132,16 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         # leaves both measures ≤ 20 % of the tilt (at most 0.4° left from 2°) is far better than the page as it was
         if abs(before) >= 1.5 and max(r, im) <= max(0.4, 0.2 * abs(before)): p['reduced'] = round(max(r, im), 3); return True
         return False
+    def third(p, r, im, before, m0):                  # A CLEAR TILT BOTH MEASURES SAW, CUT TO A THIRD (2026-10-26, سيبويه ج 2
+        # ص 221: a colophon in display type, its three long lines lying 0.75–0.85° and two short ones level — no ruler of its
+        # own; turned −0.975° the shear measure read 0.725 → 0.1 and the image 1.225 → 0.275, held back by the image's 0.2°
+        # while the long lines were plainly tilted; the owner had all 14 undecided pages turned, crop-tilt-001): a page the
+        # first look left, both measures reading ≥ 0.4°, is turned when the shear measure then reads level and the image
+        # ≤ 0.35° and ≤ a third of what it read before the turn
+        if abs(before) < 0.4 or r > LEVEL or im > 0.35 + 1e-6: return False
+        i0 = m0['proj'](-3.0, 3.0, 0.25)
+        if i0 is None or im > abs(i0) / 3 + 1e-6: return False
+        p['image_third'] = [round(abs(float(i0)), 3), im]; return True
     for i, p in enumerate(rec['pages']):
         if only is not None and i not in only: continue
         if not p.get('crop') and not p.get('skew'): continue
@@ -2224,7 +2234,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                     done = False
                     if tries:
                         d, r, im, m2 = best_turn(i, p, min(tries)[1])
-                        if keep(p, d, r, im, u, m2, mk):
+                        if keep(p, d, r, im, u, m2, mk) or third(p, r, im, u, mk):
                             p['skew'] = d; p['after_tilt'] = round(r, 3); p['after_tilt_image'] = im; p['turned_in_check'] = True
                             mk = m2; done = True
                     if not done:                      # (a page found by its edge alone whose turn is not certified: the
@@ -2283,7 +2293,9 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
             straddles = lambda b, r, s: (not inside(b, r, 1.0) and b[0] < r[2] and b[2] > r[0] and b[1] < r[3] and b[3] > r[1]
                                          and (b in el or not near(b, known)) and b[2] >= s[0] - gx_ and b[0] <= s[2] + gx_ and b[3] >= s[1] - gy_
                                          and b[1] <= s[3] + gy_ and not thin_line(b, p['w'], p['h']) and inal(b) and isp(b))
-            cross = [b for b in pts if straddles(b, c, t)]
+            # (a letter in the edge shadow wholly outside the box is a cut letter too: «ومنها» lost its «و», a note number its
+            # bracket — خريدة القصر الشام 01 ص 259، 380، 451، 489 — straddles() takes only marks across the edge)
+            cross = [b for b in pts if straddles(b, c, t) or (b in el and not inside(b, c, 1.0) and inal(b))]
             need = ([tn] if not inside(tn, c, 1.0) else []) + cross
             if need:
                 u = union(need + [tn])
@@ -2334,18 +2346,32 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
             needs = ([tq] if tq else []) + notes_of(mg_, p['w'], p['h']) + figures_of(mg_, p['w'], p['h']) \
                     + printed_groups(mg_, p['w'], p['h'])
             meets = lambda b, n: b[0] < n[2] + 1 and b[2] > n[0] - 1 and b[1] < n[3] + 1 and b[3] > n[1] - 1
-            keep_ = lambda b: any(meets(b, n) for n in needs) and isp(b)
+            # (letters in the edge shadow are the page's own print, never strays: the first or last letters of أسرار البلاغة's
+            # side headings stand in the sheet's outer 3 %, where notes_of does not look, and were cut on 25 pages — edge_letters)
+            keep_ = lambda b: b in el or (any(meets(b, n) for n in needs) and isp(b))
             cut = [b for b in out if not keep_(b)]
             if cut: p['cut_stray'] = (p.get('cut_stray') or []) + [[round(v, 1) for v in b] for b in cut]
             out = [b for b in out if keep_(b)]
         if out:
+            # (the dots and tails of a letter in the edge shadow go with it: small pieces of the edge zone touching it, within 1 pt
+            # — أسرار البلاغة ص 136, the «ز» of «المجاز» stood 2.5 pt beyond the «ا» edge_letters saw and was cut)
+            eo = [b for b in out if b in el]
+            if eo:
+                out = out + [d[:4] for d in mk.get('edge') or [] if d[:4] not in out and d[2] - d[0] <= 0.02 * p['w'] and d[3] - d[1] <= 0.02 * p['h']
+                             and any(d[0] <= e[2] + 1 and d[2] >= e[0] - 1 and d[1] <= e[3] + 1 and d[3] >= e[1] - 1 for e in eo)]
             ob = [min(b[0] for b in out), min(b[1] for b in out), max(b[2] for b in out), max(b[3] for b in out)]
             dx = ob[0] - c[0] if ob[0] < c[0] else (ob[2] - c[2] if ob[2] > c[2] else 0)
             dy = ob[1] - c[1] if ob[1] < c[1] else (ob[3] - c[3] if ob[3] > c[3] else 0)
             n = [c[0] + dx, c[1] + dy, c[2] + dx, c[3] + dy]
-            if abs(dx) <= 0.02 * p['w'] and abs(dy) <= 0.02 * p['h'] and n[0] >= 0 and n[1] >= 0 and n[2] <= p['w'] and n[3] <= p['h'] \
+            # SIDE HEADINGS OUT TO THE SHEET'S EDGE (2026-10-26, أسرار البلاغة ت شاكر: the printed headings of the outer margin
+            # run out to the scan's edge — the box cut them on 74 pages, and once edge_letters read them as print a 2 % slide
+            # still left 31 pages whole, the book fell to «level only»): the page's own print may slide the box sideways up to
+            # 4 % of the width, as long as the slide leaves out none of the print the box held
+            far = 0.02 * p['w'] < abs(dx) <= 0.04 * p['w'] and not any(inside(b, c, 1.0) and not inside(b, n, 1.0) and keep_(b) for b in pts)
+            if (abs(dx) <= 0.02 * p['w'] or far) and abs(dy) <= 0.02 * p['h'] and n[0] >= 0 and n[1] >= 0 and n[2] <= p['w'] and n[3] <= p['h'] \
                and (p.get('box') is None or inside(p['box'], n, 1.0)) and all(inside(b, n, 1.0) for b in out):   # a blank page has no box
                 p['crop'] = [round(v, 1) for v in n]; p['verify_moved'] = True
+                if far: p['verify_far'] = round(dx, 1)
             else:
                 p['crop'] = None; p['verify'] = ob; moved.append(i); continue
         p['cut_specks'] = [x for x in mk['specks'] if not inside(x, p['crop'], 0)]
@@ -2364,6 +2390,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                             # regression's 31 books)
                             and not (p.get('level_by_rules') is not None and abs(p['level_by_rules']) <= 0.35)
                             and not (p.get('level_by_proj') is not None and p['level_by_proj'] <= 0.2)
+                            and not (p.get('image_third') is not None and p.get('after_tilt', 9) <= LEVEL and p.get('after_tilt_image', 9) <= 0.35 + 1e-6)
                             and p.get('owner_turn') is None]          # (the owner saw that turn and asked for it)
     rec['level_by_lines'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('level_by_lines') is not None and p.get('skew')]
     rec['curved'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('curved')]
