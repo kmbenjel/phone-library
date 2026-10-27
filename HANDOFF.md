@@ -9,6 +9,41 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-27 05:30 — 26i RUNNING (12/31 books); fixes O and Q3 built in scratch and benching (Claude, max)
+<S4> = /tmp/claude-1000/-home-k-projects-phone-library/c06d38ff-653e-4fde-b84f-8d7f324d892d/scratchpad (sources copied to
+scratch/crop-fixes-2026-10-27b/). Watcher <S4>/watch26i.sh (dies with a /clear: re-arm). book_crop.py NOT touched (26i runs).
+- 26i so far (9 books judged, <S4>/w4/judge-partial.txt, turn_judge.py: every changed turn read by two rulers as scanned):
+  R 0.348° → 0.012° left (9 pages), Q 0.079° → 0.013° (198), «baselines, other check» 0.114° → 0.114° (27: old sub-0.2°
+  loop turns of 0.1–0.175° dropped — Q turns nothing under 0.2°, by design). Box moves ≥ 3 pt: only ابن خير pp. 4 and 323
+  (the faults O fixes) and turn-shifts ≤ 8.6 pt.
+- FIX O (<S4>/orn/patch_o.py → code/bc_o.py, decide() only): (1) an ornament the book repeats is print — a «stain» ≥ M
+  both ways whose twin (same size ± 10 %, same vertical axis ± 3 %) is on ≥ 3 other text pages, any height (ابن خير's
+  fleuron, 12 pages: 12 < 3 % of the book, never the same height); it joins box/text only AFTER full_h is set (else ص 304
+  became a «full» page centred on itself, number 15 pt low — caught in the decide-only check quickd.py); (2) a dodge
+  that leaves as much of the padded mark in the box is not made (stain_kept): the fleuron pages slid to y0 = 0; 26h also
+  أسرار pp. 82–107, مناقب 710, f134 167, 435b 96, c63a 441; (3) specks where the book prints its folio (same_place with ≥
+  max(3, 3 %) folios, the page's own folio missing or elsewhere) are its folio: ابن خير ص 4 «- ٥ -» (3 grains < SPECK),
+  مناقب ص 500–601 (number 5 pt from the box edge). Surveys over all 31 books' 26h recipes: (1) fires only on ابن خير; (3)
+  20 pages in 5 books at the 3-page level — 29b9 ص 178 (dots under the text) and 00597 front pages excluded by the 3 % rule.
+  Bench (fbo.py: plan() on one cached first look, base must equal 26i): ابن خير base FAITHFUL; o changes exactly the 12
+  fleuron pages + p. 4 → LOOKED AT (<S4>/orn/d-acb8/, drawo.py with neighbours): page numbers where their neighbours'
+  are, fleuron whole. 435b/c63a running (unit bench-o-a). Staged case rows (5, ابن خير 167/11/4 ycentre, 167 in, 4
+  xcentre — new check «ycentre» in the staged crop_regress.py): all FAIL on 26i's code, PASS with O.
+- FIX Q3 (<S4>/orn/patch_q3.py → code/bc_q3.py): base_tilt drops lines > 1° from the median before counting (robust);
+  when it still cannot read a projection page, tracks_tilt(line_tracks at 1,000 px) sets the turn (tilt_by_tracks),
+  verify re-reads by the tracks (corrected once, level_by_tracks ≤ 0.1), else the shear (Q2-like). Study (robust-study.tsv,
+  2,194 of 3,085 projection pages of 26h): judged by the tracks, the 26h turns left ≥ 0.2° on 23.4 % of the pages only the
+  robust baselines read, Q3's turn 2.4 %. Smoke test (00597 pp. 7, 9, 10, 30) OK — p. 9 −0.675 → −0.325. Bench unit
+  bench-q3-a (00597, 29b9; RELOOK=1: the projection pages' first look again with q3) running.
+- STAGED for 26j (<S4>/after26i/, ORIG.md5 = the scripts they were copied from — copy only if unchanged): crop_regress
+  (turn check accepts tilt_by_tracks + level_by_tracks ≤ 0.1; check ycentre), crop_recipe_diff (causes «lines' tracks»,
+  «folio specks», «ornament», «no futile dodge»), crop_batch (doubt kinds folio←folio_specks, «orn»; kept keys),
+  crop_doubts_page (labels), crop-regression.tsv (+5 rows). Launch script scratch/regress_2026-10-27j.sh (written).
+- NEXT: benches → `python3 <S4>/orn/cmpo.py BOOK base o|q3`, drawo.py, judge Q3's turns by the tracks/baselines → 26i
+  ends → diffs + `python3 scripts/crop_regress.py` clean rerun (case row 25 changed) → THE PILOT on 3205efa17f → then
+  apply patch_o.py + patch_q3.py to scripts/book_crop.py, copy the staged files, commit, 26j → its diff → redo the pilot
+  books whose recipes change (crop_redo skips books in data/crop/redo-done.tsv: remove their lines first), then the full redo.
+
 ## 2026-10-27 04:15 — REGRESSION 26i RUNNING (book_crop 3205efa17f = P+Q+R+W+W3+Q2, commit b266c80) (Claude, max)
 <S3> = /tmp/claude-1000/-home-k-projects-phone-library/aeffe000-1514-4ee7-9b76-9011ea6d9cb8/scratchpad/w3 (its tools copied to
 scratch/tilt-fixes-2026-10-27/w/; the P/Q/R/W patches and benches there too — book_crop = 20d30c2020 + patch_p, patch_q,
