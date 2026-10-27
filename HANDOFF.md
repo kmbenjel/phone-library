@@ -9,6 +9,47 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-27 04:15 — REGRESSION 26i RUNNING (book_crop 3205efa17f = P+Q+R+W+W3+Q2, commit b266c80) (Claude, max)
+<S3> = /tmp/claude-1000/-home-k-projects-phone-library/aeffe000-1514-4ee7-9b76-9011ea6d9cb8/scratchpad/w3 (its tools copied to
+scratch/tilt-fixes-2026-10-27/w/; the P/Q/R/W patches and benches there too — book_crop = 20d30c2020 + patch_p, patch_q,
+patch_r, patch_w, patch_w3, patch_q2, byte-identical to the benched code).
+- RUNNING: user unit crop-regress-2026-10-27i (scratch/regress_2026-10-27i.sh, marker data/crop/.regress-2026-10-27i, started
+  04:13, ≈ 4.5–5.5 h) → by itself logs/crop-regress-diff-2026-10-27i.log (vs 26h 20d30c2020: what P, Q, R, W, W3, Q2 changed)
+  and …-27i-vs-26b.log (f06a68adb2). Do NOT edit book_crop.py while it runs. My watcher dies with a /clear: re-arm (FAIL
+  lines, governor BRAKE, a retry attempt, the unit's end).
+- 26h vs 26g: only مشتبهات p. 89, as predicted — 26h stands as the base.
+- bench-w2-a (q → w2): خزانة 01 4 pages, الموسوعة 38 63 — the replay's prediction exactly. Looked at by eye (W vis.py): the
+  re-turned pages (29b9 p. 20, 35fbe p. 469, 5b21 pp. 196/233/310, 00597 p. 156) all better — the projection turns overshot
+  0.3–0.45°, the lines' own angle leaves ±0.25° at most; R's first turns (00597 p. 81 0.775°!, p. 211; 2b47 pp. 263, 641,
+  1094, 1146, 1173, 1393, 1420) all leave every line ≤ 0.3° (from up to 0.98°); 00597 p. 75 (two blocks) left — the
+  owner's rule.
+- W3 (patch_w3.py): wsim2's two خريدة 01 pages (637, 703: «check which two») were FALSE refusals — index pages whose turn
+  levels their head rules (zoomed: the rows sit level with the rule); line_tracks read the rules as lines and misread the
+  rows (+0.8° against the rules, alike in both views; p. 703's entries jump 0.5–1° at 4 of 9 steps). line_tracks now marks
+  rule lines (ink unbroken ≥ 90 % of the span, no gap > 6 pt — text 50–80 %, nothing between 80 and 95 % on 11,520 lines);
+  print_turn keeps a refused turn when every rule reads ≤ 0.15° once turned and the text gives no reading of its own
+  (lines_read None, or > 1/4 of its steps over 0.3°) → p['level_by_print']. Replayed on all 2,318 turned pages of the 9
+  books (wsim3.py → <S3>/w9.jsonl, wsim3_eval.py; wsim4.py end to end with the fallback → <S3>/wsim4.txt): only 637 and
+  703 change; the 114 left and 5 re-turned identical to wsim2. REJECTED: rules dropped from the lines (V1 — رسوم دار الخلافة
+  ص 101's footnote rule bends with the leaf, the evidence of its fan) and the scatter test alone (V2 — undid فهرس الرواة
+  ص 183 and رسوم ص 183, true refusals). Also fires on 9da5 ص 223 (dictionary entries scattering, the head rule levelled):
+  looked at, right. Case rows 637, 703 «turn yes».
+- Q2 (patch_q2.py): the smoke test (<S3>/smoke.py, 2a8c, 39 s) showed ص 44 (26h −0.525, baselines −0.517) left unturned with
+  unsure_tilt: base_tilt gives None on the turned view (lines run together: 4 of 16 read −2.4/+9.1/+4.3° → IQR 0.56), and the
+  ordinary checks undid a right turn. Now the shear confirms the baselines' turn when they cannot read the turned page.
+  Bench <S3>/fbc.py on the 116 pages of 5 books it can touch (W3 vs W4 from one first look): 10 change, each to the
+  baselines' own angle — 00597 ص 343 0.6 → 0.75 and 344 −0.675 → −0.475 (Q's «a little worse» pair resolved), 2b47 ص 578
+  0.7 → 0.45, 35fbe 307, 00597 498, 9da5 56/242/273 — survey residuals ≈ 0.01–0.03° where W3 left 0.1–0.24°. Case row
+  «أنساب الأشراف المقدمة ص 44 turn yes».
+- crop_regress «level» made robust (base_angles, lines > 1° from the median left out — two lines run together): خزانة 01
+  ص 110 at −0.8° gave base_tilt None (4 such lines, IQR 0.325), now −0.029. The 4 level rows pre-checked PASS at the
+  plausible turns.
+- FOLLOW-UP (not done — bench first): base_tilt in book_crop is fragile the same way (≥ a quarter of the lines run together →
+  None: ص 44 turned, ص 110 at −0.8°). The robust median would widen Q's first look; bench on 00597/9da5/35fbe/2b47 first.
+- NEXT: 26i ends → read both diffs; every changed page outside the benched books LOOKED AT (crop_diff_sheets.py 20d30c2020
+  3205efa17f OUTDIR BOOK…) → if right, the pilot (scratch/pilot_redo_2026-10-26.sh; launch line in the 10-26 07:00 section).
+- Owner not yet told: site/plan-383.html (21 names re-composed, 10-26 02:35); crop-tilt-002 answered and built (guard W).
+
 ## 2026-10-27 01:30 — GUARD W (two angles, the owner's «Leave as scanned») being built; 26h, bench-q, survey running (Claude, max)
 <W> = /tmp/claude-1000/-home-k-projects-phone-library/fcd8d325-9813-40ca-94ce-bd6c86424307/scratchpad/w
 - The owner chose «Leave as scanned» (00:40). base_angles (fix Q's ruler) CANNOT read lines tilted ≈ 1° (they run together in
