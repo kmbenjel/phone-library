@@ -5,6 +5,52 @@ Each workstream appends its progress below (the newest state first, then the his
 
 OWNER 2026-10-26 ~03:00: the ~11,000 old-format names (parentheses) WAIT for the reading pass — no mechanical format pass («ننتظر مرحلة القراءة»). He clears and switches to xhigh.
 OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs at max: the regression's end (a–e), then the pilot.
+OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» — a page whose lines lie at two angles (warped
+photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
+every turn, benched before 26i.
+
+## 2026-10-27 01:30 — GUARD W (two angles, the owner's «Leave as scanned») being built; 26h, bench-q, survey running (Claude, max)
+<W> = /tmp/claude-1000/-home-k-projects-phone-library/fcd8d325-9813-40ca-94ce-bd6c86424307/scratchpad/w
+- The owner chose «Leave as scanned» (00:40). base_angles (fix Q's ruler) CANNOT read lines tilted ≈ 1° (they run together in
+  the row profile: ص 892's lower paragraph read −9°/+3.7°/−8°). New ruler line_tracks (<W>/patch_w.py): each line followed
+  strip by strip (21 pt strips, baseline peaks linked within a fifth of the pitch), column by column (vertical rules
+  whitened, white gutters cut), 1,000 px from verify's own look. Rule two_angles(scanned, turned, d): lines read alike in
+  both views (angle moved by the turn ±0.15°), rms ≤ 1 px, ≥ 6 strips, ≥ 30 % of the block; ≥ 5 lines; the lines follow one
+  another (median step ≤ 0.25° — index entries scatter); made worse = ≥ 0.5° and +0.25°; refused when ≥ 2 made worse and
+  (≥ a fifth OR < 80 % of lines level once turned). Exempt: level_by_rules (sheared tables: خريدة ص 627 rules −0.7 / lines
+  −0.25, the owner's ص 649 word) and owner turns. Refused → p['two_angles'] = the turn, p['lines_lean'], listed.
+- Survey (unit survey-tracks, <W>/tracks.tsv, every 26g turned page as scanned + 1,500 unturned; <W>/ana2.py): ≈ 1.6 % of
+  turned pages flagged — FANS (warped photocopies: الموسوعة 38 2b47002d18ab ≈ 20 pages, رسوم دار الخلافة 3103a9db389b ≈ 12),
+  BLOCKS (صبح الأعشى 05 29b9db6c6baa ص 234: last section level), INDEXES turned by the column path while their lines stand
+  level (2a8c4bfeff47 ص 37/47, 0c32c1a4815b ص 183, 2b47 ص 1487 — two rulers agree: lines ≈ 0). False flags removed: خريدة 01
+  index pages (064846139175 ص 665–705, turns right by their head rule) — the consistency + smoothness tests.
+- STAGED (<W>/after26h = the 00:30 staged files + W): crop_batch doubt kind 'two' (first; book.json 'two' = every page),
+  crop_doubts_page label + the list on the card, crop_recipe_diff cause 'two angles'. Case rows NOT yet added.
+- 01:20 FALLBACK added (patch_w.py → code/bc_w2.py): a refused turn is replaced by the lines' own angle (their median) when
+  it makes none worse, leaves ≥ 80 % within 0.2°, read alike again, and the shear reads ≤ 0.2° → p['turn_by_tracks'] (the
+  refused turn), p['level_by_tracks']; residual_tilt exempts it; staged crop_regress accepts it; doubt kind 'tracks'. Why:
+  line_tracks is ACCURATE (checked against base_tilt, baseline_tilt, the shear on near-level views — خزانة ج 4 ص 245, 469:
+  every ruler says −0.35°, the projection loop turned −0.65/−0.75°). Also found: base_tilt AS SCANNED is biased on tilted
+  pages (lines blur): خزانة 01 ص 344 base −0.46 vs tracks −0.63 — Q's verify correction (on the turned view) is RIGHT there;
+  cmpq's «worse» verdicts on pp. 343/344 were the biased survey ruler's.
+- Survey final (8,481 pages): upper bound 222 of 7,789 turned pages left as scanned (2.85 %; 114 projection turns, many
+  re-set by Q or the fallback). Replays: <W>/wsim2.py (bc_w2, kept / re-turned / left) on 9 books → <W>/wsim2-g2.txt;
+  old <W>/wsim-g2.txt (no fallback) has 2b47002d18ab only: 56 of 662 refused (fans; pp. 42, 423, 892 among them).
+- Looked at by eye (vis.py / vis2.py): fans 2b47 ص 892, 42, 423, 985 ✓; blocks 29b9 ص 234, الفوائد المحصورة 4b80 ص 192
+  (main text level, footnotes pasted at 0.95°) and ص 420 (text +1.0°, footnotes −0.7°) ✓; indexes 2a8c ص 47, 0c32 ص 183 ✓;
+  إرشاد الساري ج 10 5b21 ص 477 (main −0.5°, the foot curling to −1.6°: refused; no fallback — 69 % level). NOT flagged as
+  required: 2a8c ص 42 (owner case, −1.5° kept), 3103 ص 8, خريدة 01 index ص 675/699 (scatter → no reading).
+- 26h ENDED: 0 failures (its diffs: logs/crop-regress-diff-2026-10-26h*.log — read them first).
+- wsim2 DONE (<W>/wsim2-g2.txt): left as scanned / re-turned by the lines — 2b47 56/0 of 662, خريدة 01 2/0 of 237 (check
+  which two), 3103 19/0, 2a8c 2/0, 0c32 1/0, 29b9 1/1, 35fbe 7/1, 4b80 19/0, 5b21 9/3. Look at the re-turned pages and
+  the 2 خريدة pages (vis.py) before 26i.
+- RUNNING: unit bench-w2-a (<W>/bench/fbq.py 00597fea27cf w2, then 2b47002d18ab w2) → compare with the q.json results in
+  /tmp/claude-1000/-home-k-projects-phone-library/45cf1df4-524b-4ab8-a6ae-dc204a1aaf10/scratchpad/bench (cmpq.py-style).
+  bench-q-a/b still finishing 2b47 q and 35fbe q.
+- NEXT: the above →  → apply P, Q, R, W(2) → copy <W>/after26h/* (crop_batch, crop_doubts_page, crop_recipe_diff,
+  crop_regress, crop-regression.tsv + 6 W cases) → commit → scratch/regress_2026-10-27i.sh (<W>/regress_2026-10-27i.sh).
+- Fix Q bench: 9da5c530d977 and 00597fea27cf done (cmpq: most turns now level by baselines; خزانة 01 pp. 343/344 a little
+  worse: +0.09 → +0.16, +0.10 → +0.23 — the second look's correction trusted one re-read: look at it).
 
 ## 2026-10-27 00:30 — fixes Q and R built and benching; 26h still running (Claude, max). <Q> = /tmp/claude-1000/-home-k-projects-phone-library/45cf1df4-524b-4ab8-a6ae-dc204a1aaf10/scratchpad
 - FIX P bench (bench-fixp2) ended as predicted: only الموسوعة 38 pp. 423 (still turned, 0.625 → 0.7, shown whole: look at it),
