@@ -6,6 +6,34 @@ Each workstream appends its progress below (the newest state first, then the his
 OWNER 2026-10-26 ~03:00: the ~11,000 old-format names (parentheses) WAIT for the reading pass — no mechanical format pass («ننتظر مرحلة القراءة»). He clears and switches to xhigh.
 OWNER 2026-10-26 03:10 (after the /clear): «max is set» — the session runs at max: the regression's end (a–e), then the pilot.
 
+## 2026-10-27 00:30 — fixes Q and R built and benching; 26h still running (Claude, max). <Q> = /tmp/claude-1000/-home-k-projects-phone-library/45cf1df4-524b-4ab8-a6ae-dc204a1aaf10/scratchpad
+- FIX P bench (bench-fixp2) ended as predicted: only الموسوعة 38 pp. 423 (still turned, 0.625 → 0.7, shown whole: look at it),
+  437, 438 (no longer turned) differ.
+- FIX Q (<Q>/bench/patch_q.py on bc_p.py → code/bc_q.py): book_crop.base_angles / base_tilt (the basefit ruler, byte-identical
+  numbers) at 1,400 px (1,000 px reads fewer lines and drifts ≤ 0.07°: 29b9 p. 250 −0.375 vs −0.423, the rule confirms −0.425).
+  First look: a projection page with ≥ 6 agreeing lines (IQR < 0.3) is turned by their median (none under 0.2°) instead of
+  the 0.2°-step loop (tilt_by_base); verify reads them again on the turned view (fine() = guard G's 1,400-px view, shared),
+  corrects once, keeps when ≤ 0.1° (level_by_base), else the ordinary checks (not level_by_proj). Evidence: on 1,314 reliable
+  projection pages the loop moved the projection's own reading AWAY from the baselines on 385, closer on 250; printed rules
+  (rulecheck.txt) side with the baselines on 17 of 25 disagreements (29b9 p. 250 seen by eye: the footnote rule level only at
+  −0.425); 127 such pages turned for < 0.2°. Noisy pages (IQR ≥ 0.3: curled leaves, dictionaries) keep the old path.
+- FIX R (<Q>/bench/patch_r.py on bc_q.py → code/bc_r.py): unturned pages whose lines agree on ≥ 0.25° AND the whole-page shear
+  agrees within 0.15° (no two columns, no level rule over the text, no level frame, no proj_level_rule, no lines_lean, no
+  owner turn) → turned by the baselines in verify, kept when ≤ 0.1° after (base_found). Why: 26 of 478 sampled unturned
+  reliable pages read ≥ 0.25° (روضة المستبين 83dfc7786870 p. 491: every ruler 0.29–0.35°, refused by the halves test; the
+  projection's 0.3° start; the gain's 1.02 by 0.001 — <Q>/q/why.py). Quick test: 7 pages turned, all ≤ 0.06° after.
+- BENCH RUNNING: units bench-q-a (00597fea27cf g2 q; 2b47002d18ab q) and bench-q-b (9da5c530d977 g2 q; 35fbe344b8c6 g2 q)
+  — <Q>/bench/fbq.py (g2 must be FAITHFUL to 26h's 20d30c2020 recipe or 26g's); read with `python3 <Q>/bench/cmpq.py BOOK
+  [g2 q]` (every changed page by cause) and `python3 <Q>/bench/ruleq.py BOOK [g2 q]` (printed rules: what each turn leaves).
+  Then version r on the same books (fbq.py BOOK r; compare q r).
+- STAGED for after 26h (<Q>/after26h/): crop_regress.py (check «level»: the reader's view by its baselines ≤ N°; turn check
+  accepts level_by_base), crop_recipe_diff.py (causes baselines / baselines found / sheet line), crop_batch.py + crop_doubts_page.py
+  (doubt kind «base» for R's turns), crop-regression.tsv (+6 cases: خزانة 01 p. 68 turn no + level 0.15, p. 110 level 0.15,
+  صبح الأعشى 05 p. 250 level 0.1, معجم تيمور 02 p. 233 level 0.15, الموسوعة 38 p. 438 turn no).
+- NEXT: bench verdict → when 26h ends (≈ 02:30–03:00, watcher <Q>/watch26h.sh) and its diff is read: apply patch_p.py, patch_q.py
+  (+ patch_r.py) to scripts/book_crop.py (md5 must equal the bench code's), copy the staged files, commit, regression 26i
+  (copy scratch/regress_2026-10-26h.sh; diff vs 20d30c2020 and f06a68adb2) → its diff → the pilot.
+
 ## 2026-10-26 23:30 — STATE BEFORE A /clear (Claude, max). <T> = /tmp/claude-1000/-home-k-projects-phone-library/37b40576-c90e-4994-a417-028a295f8c53/scratchpad
 RUNNING (all mine except 26h's gate role; watchers died with the /clear — re-arm `<T>/watch26h.sh` in the background):
 - crop-regress-2026-10-26h (started 22:45, 31 PASS 0 FAIL at 23:20; ends ≈ 02:30–03:00; writes its two diffs by itself).
