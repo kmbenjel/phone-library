@@ -252,7 +252,7 @@ def analyse(path, src, jobs=1):
                                                                'curved', 'notes', 'anchored_x', 'anchored_y',
                                                                'verify_moved', 'verify_cut', 'folio_blot', 'owner_turn',
                                                                'verify_far', 'image_third', 'tilt_by_base', 'base_found',
-                                                               'two_angles', 'turn_by_tracks', 'level_by_tracks') if p.get(k)}
+                                                               'two_angles', 'turn_by_tracks', 'level_by_tracks', 'level_by_print') if p.get(k)}
                                                     for p in rec['pages']], 'size': rec.get('size'), 'gain': rec.get('gain'),
                                           'margin_pt': rec.get('margin_pt'), 'clean_margins': rec.get('clean_margins'),
                                           'decision': rec.get('decision'), 'reasons': rec.get('reasons'), 'level_trim': rec.get('level_trim'),

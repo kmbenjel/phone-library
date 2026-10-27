@@ -4,7 +4,8 @@
 # regression passed (0 failures) and its recipe diff was explained page by page — 26b (f06a68adb2) did, but its second look
 # moved boxes over scan lines and cut a page number (HANDOFF 06:45); 26f (2bb44a7384) failed twice (side headings, a colophon's
 # tilt — HANDOFF 17:50); 26g (b32a237bbf) passed, but its new third rule turned a page whose lines lie at two angles
-# (مشتبهات القرآن ص 89 — guard G, HANDOFF 22:50): the pilot waits for crop-regress-2026-10-26h (20d30c2020), 0 failures
+# (مشتبهات القرآن ص 89 — guard G, HANDOFF 22:50); 26h passed, then the tilt fixes P, Q, R and guard W (the owner's «Leave
+# as scanned» for lines at two angles, 2026-10-27): the pilot waits for crop-regress-2026-10-27i (3205efa17f), 0 failures
 # and its diff looked at.
 # The 10 books (data/crop/pilot-2026-10-26.tsv): خزانة الأدب ج 1 (the owner's cover «not filling the page», his «turn»
 # pages 26/164/307), four books he marked on 2026-10-14 that are no regression case (مواد البيان: the cover; الإعلام ج 9:
