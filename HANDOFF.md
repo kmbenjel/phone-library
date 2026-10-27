@@ -46,8 +46,24 @@ patch_r, patch_w, patch_w3, patch_q2, byte-identical to the benched code).
   plausible turns.
 - FOLLOW-UP (not done — bench first): base_tilt in book_crop is fragile the same way (≥ a quarter of the lines run together →
   None: ص 44 turned, ص 110 at −0.8°). The robust median would widen Q's first look; bench on 00597/9da5/35fbe/2b47 first.
+  STUDY (<S3>/robust_study.py → robust-study.tsv, every 26h projection page read as scanned; partial, 1,491 pages): base_tilt
+  reads 40 %, the robust median +20 %, line_tracks 80 %; where base and tracks both read they agree to a median 0.023° (96 %
+  ≤ 0.1°) — two independent rulers; robust vs tracks where only the robust reads: median 0.043°, none > 0.25°. On those pages
+  the 26h projection turn is off by a median 0.09–0.12°. → «Q3»: the robust median, then the tracks' median as the ruler of
+  a projection page — design, bench, regression 26j, before the full redo (with the ornament fix below).
 - NEXT: 26i ends → read both diffs; every changed page outside the benched books LOOKED AT (crop_diff_sheets.py 20d30c2020
   3205efa17f OUTDIR BOOK…) → if right, the pilot (scratch/pilot_redo_2026-10-26.sh; launch line in the 10-26 07:00 section).
+- 26i FAIL (04:40), the case CHANGED, not the code: الاتباع والمزاوجة ص 51 «turn yes» (agent's row of 10-09, «tilted ≈ 0.7°»)
+  — guard W left it as scanned: its main text stands at 0.1–0.3°, its footnotes at 0.5–1.0° (<S3>/v40ec-51.jpg; the 26h
+  turn 0.725 made the main text lean to 0.75°) = the owner's crop-tilt-002 «Leave as scanned», «حكم واحد لكل ما يشبهها». Row 25
+  now «turn no» with the reason; every other «turn yes» case replayed (<S3>/cases_w.py): kept. After 26i ends: rerun
+  `python3 scripts/crop_regress.py` (all recipes cached → minutes) for a clean pass with the new row.
+- FOUND, NOT FIXED (pre-existing, 26h too): فهرسة ابن خير acb87508dd15 — the end-of-section ornament (a ≈ 59 pt square under
+  the text) is read as a STAIN (blots) on 11 pages (26h: 11, 15, 158, 167, 176, 285, 304, 316, 321, 353, 378; 26i adds 323,
+  whose sub-0.2° turn of 26h hid it) and the box «dodges» it to the page top (crop y0 = 0): the page number sits ~120 pt lower
+  than on the full pages around it (<S3>/sh167/after-166-168.jpg). Fix in the stain reading (an ornament on the text's axis
+  under the text is print), bench, regression — before the full redo; tell the owner. Also: a page that loses a sub-0.2° turn
+  can have its first look read differently (acb8 ص 4: the folio «- ٥ -» read as specks, the box centred on its own content).
 - Owner not yet told: site/plan-383.html (21 names re-composed, 10-26 02:35); crop-tilt-002 answered and built (guard W).
 
 ## 2026-10-27 01:30 — GUARD W (two angles, the owner's «Leave as scanned») being built; 26h, bench-q, survey running (Claude, max)
