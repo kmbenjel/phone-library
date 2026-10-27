@@ -15,7 +15,10 @@ WHY = {'tilt': 'ميل لم تحسمه المقاييس (اختلفت أو لم 
        'third': 'ميل واضح رأته المقاييس كلها: قُوِّمت الصفحة ولم يبق من قراءة الصورة إلا ثلثها أو أقل',
        'side': 'إطار أُزيح جانبا أكثر من ٢٪ ليسع عنوانا جانبيا أو حرفا عند حافة الورقة (النص غير متوسط تماما)',
        'edge': 'حروف عند حافة الورقة (في ظلها) أُدخلت في الإطار',
-       'cut': 'حرف أو رقم كاد الإطار يقطعه بعد تحريكه: أُدخل في الإطار', 'folio': 'رقم الصفحة قُرئ بقعةً فأعيد إلى النص'}
+       'cut': 'حرف أو رقم كاد الإطار يقطعه بعد تحريكه: أُدخل في الإطار', 'folio': 'رقم الصفحة قُرئ بقعةً فأعيد إلى النص',
+       'base': 'ميل لم تره المقاييس المعتادة ورأته سطور الصفحة نفسها (قاعدة كل سطر) ووافقها مقياس آخر: قُوِّمت حتى استوت سطورها',
+       'two': 'سطور على زاويتين (صفحة ملتوية، أو سطور صُفّت كلٌّ وحده): لا يسويها تدوير واحد، فتُركت كما مُسحت',
+       'tracks': 'تدوير أمال بعض السطور فرُدّ، ثم قُوِّمت الصفحة بالزاوية التي تتفق عليها سطورها (كل سطر مقيس وحده)'}
 
 def main(batches):
     logged = {}
@@ -44,7 +47,9 @@ def main(batches):
                         f'<figcaption>ص {i + 1} — {E(cap)}</figcaption></figure>')
         n = {k: v for k, v in (book.get('doubts') or {}).items() if v}
         summ = '، '.join(f'{WHY[k].split(" (")[0]}: {v}' for k, v in n.items() if k in WHY)
-        cards.append(f'<article><h2>{E(book["path"])}</h2><p class="meta">مواضع الشك في الكتاب كله — {E(summ)}</p>{"".join(figs)}'
+        two = book.get('two') or []                   # (every page left as scanned for its two angles, named — owner 2026-10-27)
+        tw = f'<p class="meta">صفحات تُركت كما مُسحت لأن سطورها على زاويتين: ص {"، ".join(map(str, two))}</p>' if two else ''
+        cards.append(f'<article><h2>{E(book["path"])}</h2><p class="meta">مواضع الشك في الكتاب كله — {E(summ)}</p>{tw}{"".join(figs)}'
                      f'<div class="review" data-n="{E(h)}"><label><input type="checkbox" class="chk"> سليم</label>'
                      f'<textarea class="cmt" rows="2" placeholder="ملاحظتك"></textarea><span class="st"></span></div></article>')
     page = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">

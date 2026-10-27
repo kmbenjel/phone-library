@@ -78,6 +78,9 @@ def check(row, rec, pdf):
              or (p.get('level_by_columns') is not None and p['level_by_columns'] <= 0.15)
              or p.get('reduced') is not None)
              or (p.get('level_by_proj') is not None and p['level_by_proj'] <= 0.2)
+             or (p.get('level_by_base') is not None and abs(p['level_by_base']) <= 0.1 + 1e-6)
+             # (a turn refused for the lines it made worse, set again by the angle the lines take: book_crop two_angles)
+             or (p.get('level_by_tracks') is not None and abs(p['level_by_tracks']) <= 0.2 + 1e-6 and lvl is not None and lvl <= 0.2 + 1e-6)
              or (p.get('level_by_rules') is not None and abs(p['level_by_rules']) <= 0.35)
              # (a clear tilt both measures saw, cut to a third: the shear level, the image ≤ 0.35° — book_crop third())
              or (p.get('image_third') is not None and lvl is not None and img is not None and lvl <= bc.LEVEL and img <= 0.35 + 1e-6)
@@ -86,6 +89,15 @@ def check(row, rec, pdf):
              or (p.get('owner_turn') is not None and lvl is not None and lvl < abs(p['skew'])))) \
              and (expect == 'no' or not p.get('untreated_tilt'))
         return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}){" curved" if p.get("curved") else ""}{" — turned by the owner's verdict" if p.get("owner_turn") is not None else ""}, untreated {p.get("untreated_tilt")}'
+    if what == 'level':                                # the page as the reader sees it, turned or not, reads level by its lines'
+        import numpy as np                             # baselines: |angle| ≤ the expected degrees (book_crop.base_angles, 1,400
+        doc = pymupdf.open(pdf); tu = bc.Turner(doc, page - 1); mv = p.get('move') or [0, 0]   # px; a turn too far fails it
+        a, z = bc.gray(tu.page(p.get('skew') or 0, mv[0], mv[1]), 1400); a = np.array(a); tu.close(); doc.close()   # as surely
+        an = np.array([v[1] for v in bc.base_angles(a, p.get('paper') or 255, p.get('text') or p.get('core'), z)])   # as one
+        an = an[np.abs(an - np.median(an)) <= 1.0] if len(an) else an   # left undone). A line more than 1° from their median
+        iq = float(np.subtract(*np.percentile(an, [75, 25]))) if len(an) >= 6 else None   # is two lines run together, left out
+        b = (round(float(np.median(an)), 3), len(an), round(iq, 3)) if iq is not None and iq < 0.3 else None   # (خزانة 01
+        return b is not None and abs(b[0]) <= float(expect) + 1e-6, f'turned {p.get("skew")}, the baselines then read {b} (angle, lines, spread)'   # ص 110 at −0.8°: 4 of 16 such lines, base_tilt's spread 0.325°)
     if what == 'cropped':                              # cropped, not left whole (a book without print in its margins)
         got = 'yes' if p.get('crop') else 'no'
         return got == expect, f'crop {p.get("crop")}, enlarged {p.get("enlarged")}, book clean margins {rec.get("clean_margins")}'

@@ -82,6 +82,27 @@ reader draws the same image turned (shifted, or a little smaller: see 8). The im
      page that shows a tilt the first look did not treat is turned here when (b) sees the tilt too (≥ 0.15°) and the turn
      passes the same tests; if (b) sees no tilt it is listed as disputed (`tilt_disputed`), otherwise as
      `untreated_tilt`. An untouched page cannot gain a tilt.
+   - A PAGE TURNED BY ITS IMAGE (the shear measure left it level — verse, short lines — while the page image lines up
+     sharply at ≥ 0.3°: by_proj) is turned by its lines' baselines when at least 6 lines are read and agree (base_tilt:
+     each line's baseline fitted to a fraction of a pixel, the median over the lines, 1,400 px); none under 0.2°. The
+     second look reads them again on the turned page, corrects the turn once and keeps it when they read ≤ 0.1°.
+   - A page still left as scanned, of one column, with no level printed rule or frame over its text, whose lines agree on
+     a tilt of 0.25° or more — what the eye sees on a full line — that the shear measure of the whole page reads too (within
+     0.15°), is turned by its baselines, kept when they then read ≤ 0.1° (base_found).
+   - LINES AT TWO ANGLES (owner 2026-10-27, on crop-tilt-002: «Leave as scanned»): every turn, whatever found it, is checked
+     line by line (line_tracks: each line followed across the page strip by strip, column by column, so that lines lying at
+     different angles are each read), on the page as scanned and as turned — a line counts when both read it alike. A turn
+     that leaves two or more lines more tilted than they were — at least 0.5°, and 0.25° more than before — when they are
+     a fifth of the lines read, or the lines do not take the turn (fewer than 80 % of them level once turned), is undone: a
+     warped photocopy whose upper lines are level and lower ones tilted, a block of lines at its own angle, have no single
+     turn; an index whose column edges lean while its lines stand level is not tilted. Only lines that follow one another
+     decide (scattered readings — short index entries — do not). The page stays as scanned and is listed (`two_angles`),
+     unless the turn its lines do take (their median) makes none of them worse and levels four fifths of them, the shear
+     measure agreeing: then the first turn was off, and the page is turned by its lines (`level_by_tracks`). A turn its
+     printed rules certified (a table: its column rules stand straight once turned, the owner's word on خريدة القصر ص 649)
+     and the owner's own turns stay; so does a turn that levels every printed rule across the text (a head rule, a
+     frame's side) when the lines of text give no reading — an index under a head rule, its entries' readings scattered
+     by guillemets and digits (`level_by_print`).
    - every content mark found outside a page's box must lie (± 3 pt) on something the first look left out on purpose (a
      stain, edge noise); otherwise the box moves up to 2 % to take it in, or the page stays whole.
 7. DECISION (plan): the narrowest width (95 %, 98 %, 100 %) with at most 5 % of the text pages left whole after the second
@@ -622,6 +643,189 @@ def made_lean(before, after):
         t1 = min(mt, key=lambda v: abs(v[0] - y))[2]
         if t1 is not None and abs(t1) >= 0.5: out.append((y, t, t1))
     return out
+
+def base_angles(a, paper, tb, z, K=16):
+    """EACH LINE'S BASELINE AS A RULER (2026-10-27): the projection path (by_proj) turned verse pages 0.15–0.25° beyond their
+    tilt — خزانة الأدب ج 1 ص 68 tilted 0.11° was turned 0.325°, ص 110 tilted −0.80° turned −1.025°, its printed rule agreeing
+    with the baselines — because its check, the shear measure, barely moves with the turn on such pages. The lines of the
+    text block (tb, pt; z pixels per pt) at least a quarter of its width, each cut into K column chunks; in each chunk the
+    baseline (in Arabic the densest ink row) found to a fraction of a pixel (a parabola through the peak row and its two
+    neighbours); a straight line through the chunks, those furthest from it dropped twice → the line's angle, in the sign
+    of the turn that levels it (read again after a turn d it gives angle − d, within ±0.05° on known turns). Returns
+    [(y pt, angle)]"""
+    if tb is None: return []
+    H, W = a.shape; mx, my = 0.02 * W, 0.01 * H
+    x0, y0 = max(0, int(tb[0] * z - mx)), max(0, int(tb[1] * z - my)); x1, y1 = min(W, int(tb[2] * z + mx)), min(H, int(tb[3] * z + my))
+    if x1 - x0 < 50 or y1 - y0 < 50: return []
+    ink = np.clip((paper - a[y0:y1, x0:x1].astype(float)) / max(paper, 1), 0, 1); bw = x1 - x0; out = []
+    prof = ndimage.uniform_filter1d(ink.sum(1), max(3, int(0.0065 * W))); lab, n = ndimage.label(prof > 0.02 * prof.max())
+    for k in range(1, n + 1):
+        ys = np.nonzero(lab == k)[0]; r0, r1 = ys[0], ys[-1] + 1
+        if r1 - r0 < 0.009 * W: continue
+        pad = int(0.3 * (r1 - r0)); b = ink[max(0, r0 - pad):r1 + pad]
+        xs = np.nonzero(b.sum(0) > 0.5)[0]
+        if len(xs) < 2 or xs[-1] - xs[0] < 0.25 * bw: continue
+        b = b[:, xs[0]:xs[-1] + 1]; e = np.linspace(0, b.shape[1], K + 1).astype(int); pts = []
+        for j in range(K):
+            pr = ndimage.gaussian_filter1d(b[:, e[j]:e[j + 1]].sum(1), 1.0)
+            if pr.max() < 0.25 * (e[j + 1] - e[j]): continue      # (a chunk with little ink on any row: no baseline)
+            r = int(np.argmax(pr))
+            if 0 < r < len(pr) - 1:
+                den = pr[r - 1] - 2 * pr[r] + pr[r + 1]; r = r + (0.5 * (pr[r - 1] - pr[r + 1]) / den if den < 0 else 0)
+            pts.append(((e[j] + e[j + 1]) / 2, r))
+        if len(pts) < 6: continue
+        P = np.array(pts)
+        for _ in range(2):
+            f = np.polyfit(P[:, 0], P[:, 1], 1); res = np.abs(P[:, 1] - np.polyval(f, P[:, 0]))
+            if len(P) > 6: P = P[res < max(np.percentile(res, 75), 0.5)]
+        f = np.polyfit(P[:, 0], P[:, 1], 1)
+        out.append((round(((r0 + r1) / 2 + y0) / z, 1), round(float(np.degrees(np.arctan(f[0]))), 3)))
+    return out
+
+def base_tilt(a, paper, tb, z):
+    """the page's tilt by its lines' baselines (base_angles): their median, when at least 6 lines are read and they agree —
+    their interquartile range below 0.3° (a curled leaf, verse set hemistich by hemistich, a dictionary's short entries:
+    the lines read too differently and the ruler is not used) → (angle, lines, IQR), else None"""
+    an = [v[1] for v in base_angles(a, paper, tb, z)]
+    if len(an) < 6: return None
+    iq = float(np.subtract(*np.percentile(an, [75, 25])))
+    return (round(float(np.median(an)), 3), len(an), round(iq, 3)) if iq < 0.3 else None
+
+def _line_chains(ink, z, strip_pt, pitch, ref):
+    """(line_tracks) the chains of baseline peaks of one column of a text block: in every strip about strip_pt wide the peaks
+    of the ink-row profile (in Arabic the baseline is the densest row; a parabola through the peak gives a fraction of a
+    pixel), at most one within 0.45 of the line pitch and at least a quarter as dark as a full strip's (ref: per pixel of
+    width); each peak linked to the line heading towards it in the next strips (within a fifth of the pitch, up to 3 strips
+    on: the space between words) → [array of (x, y) px]"""
+    bh, bw = ink.shape
+    K = max(3, int(round(bw / (strip_pt * z)))); e = np.linspace(0, bw, K + 1).astype(int); peaks = []
+    for j in range(K):
+        pr = ndimage.gaussian_filter1d(ink[:, e[j]:e[j + 1]].sum(1), 1.0)
+        mxf = ndimage.maximum_filter1d(pr, 2 * max(2, int(0.45 * pitch)) + 1); pk = []
+        for r in np.nonzero((pr == mxf) & (pr >= 0.25 * ref * (e[j + 1] - e[j])))[0]:
+            rr = float(r)
+            if 0 < r < len(pr) - 1:
+                den = pr[r - 1] - 2 * pr[r] + pr[r + 1]
+                if den < 0: rr = r + 0.5 * (pr[r - 1] - pr[r + 1]) / den
+            pk.append(rr)
+        peaks.append(pk)
+    chains = []                                       # [points, last strip]
+    for j in range(K):
+        xc = (e[j] + e[j + 1]) / 2; cand = []
+        for ci, (pts, last) in enumerate(chains):
+            if j - last > 3: continue
+            if len(pts) >= 3: X = np.array(pts); yp = np.polyval(np.polyfit(X[:, 0], X[:, 1], 1), xc)
+            else: yp = pts[-1][1]
+            cand += [(abs(y - yp), ci, k) for k, y in enumerate(peaks[j]) if abs(y - yp) <= 0.2 * pitch]
+        uc, uk = set(), set()
+        for _, ci, k in sorted(cand):
+            if ci in uc or k in uk: continue
+            uc.add(ci); uk.add(k); chains[ci][0].append((xc, peaks[j][k])); chains[ci][1] = j
+        chains += [[[(xc, y)], j] for k, y in enumerate(peaks[j]) if k not in uk]
+    return [np.array(c[0]) for c in chains]
+
+def line_tracks(a, paper, tb, z, strip_pt=21.0):
+    """EACH LINE FOLLOWED ACROSS THE PAGE (2026-10-27, owner on crop-tilt-002: a page whose lines lie at two angles is left as
+    scanned): base_angles and line_leans find the lines on the page's row profile, where lines tilted about 1° run into each
+    other (الموسوعة الشاملة 38 ص 892: its lower paragraph read −9.2°, +3.7° and −8.1°). Here each line is followed strip by
+    strip (_line_chains) inside the text block (tb, pt; z pixels per pt): its vertical rules and frame sides (an ink run down a
+    quarter of the block) whitened, the block cut at its white gutters (≥ 0.6 % of the page wide, inside 15–85 % of the
+    block: an index in columns — a line is never linked across them), the line pitch read from the strips' row profiles
+    correlated with themselves (narrow strips: a tilt barely blurs them); a straight line through each chain of at least 6
+    strips and 30 % of its column, the points furthest from it dropped twice. Returns [(y pt, angle, share of the block's
+    width, rms px, points, rule)] — the angle in the sign of the turn that levels the line, as base_angles (read on the page
+    turned by d, a line reads its angle − d); rule: a printed rule, not a line of text — the ink unbroken along it (≥ 90 %
+    of its span, a line of text 50–80 %; no gap over 6 pt)"""
+    if tb is None: return []
+    H, W = a.shape; mx, my = 0.02 * W, 0.01 * H
+    x0, y0 = max(0, int(tb[0] * z - mx)), max(0, int(tb[1] * z - my)); x1, y1 = min(W, int(tb[2] * z + mx)), min(H, int(tb[3] * z + my))
+    if x1 - x0 < 50 or y1 - y0 < 50: return []
+    ink = np.clip((paper - a[y0:y1, x0:x1].astype(np.float32)) / max(paper, 1), 0, 1); bh, bw = ink.shape
+    m = ink > 0.35; run = np.zeros(bw, int)
+    for x in np.nonzero(m.sum(0) >= 0.25 * bh)[0]:
+        d_ = np.diff(np.concatenate(([0], m[:, x].astype(np.int8), [0]))); s0, s1 = np.nonzero(d_ == 1)[0], np.nonzero(d_ == -1)[0]
+        run[x] = int((s1 - s0).max()) if len(s0) else 0
+    rl = np.nonzero(run >= 0.25 * bh)[0]
+    if len(rl): ink[:, np.unique(np.clip(np.concatenate([rl - 1, rl, rl + 1]), 0, bw - 1))] = 0
+    K = max(8, int(round(bw / (strip_pt * z)))); e = np.linspace(0, bw, K + 1).astype(int)
+    P = [ndimage.gaussian_filter1d(ink[:, e[j]:e[j + 1]].sum(1), 1.0) for j in range(K)]
+    ac = np.zeros(bh)
+    for pr in P:
+        q = pr - pr.mean(); f = np.fft.rfft(q, 2 * bh); ac += np.fft.irfft(f * np.conj(f))[:bh]
+    hi = min(bh // 2, int(0.08 * W)); up = np.nonzero(np.diff(ac[:hi]) > 0)[0]   # (the pitch past the central lobe)
+    if len(up) == 0: return []
+    lo = max(3, int(up[0])); pitch = lo + int(np.argmax(ac[lo:hi]))
+    if ac[pitch] <= 0.05 * ac[0]: pitch = int(0.035 * W)   # (no rhythm of lines: an ordinary page's pitch)
+    ref = np.percentile([pr.max() / max(1, e[j + 1] - e[j]) for j, pr in enumerate(P)], 90)
+    occ = ndimage.uniform_filter1d(m.mean(0), max(3, int(0.006 * W))); lab, n = ndimage.label(occ < 0.01); cuts = [0]
+    for k in range(1, n + 1):
+        xs = np.nonzero(lab == k)[0]
+        if xs[-1] - xs[0] + 1 >= 0.006 * W and 0.15 * bw <= (xs[0] + xs[-1]) / 2 <= 0.85 * bw: cuts.append(int((xs[0] + xs[-1]) / 2))
+    cuts.append(bw); out = []
+    for c0, c1 in zip(cuts[:-1], cuts[1:]):
+        if c1 - c0 < 0.12 * bw: continue
+        for X in _line_chains(ink[:, c0:c1], z, strip_pt, pitch, ref):
+            if len(X) < 6 or X[-1, 0] - X[0, 0] < 0.3 * (c1 - c0): continue
+            for _ in range(2):
+                f = np.polyfit(X[:, 0], X[:, 1], 1); res = np.abs(X[:, 1] - np.polyval(f, X[:, 0]))
+                if len(X) > 6: X = X[res <= max(1.0, 2.5 * np.median(res))]
+            if len(X) < 6: continue
+            f = np.polyfit(X[:, 0], X[:, 1], 1); res = X[:, 1] - np.polyval(f, X[:, 0])
+            xs = np.arange(int(X[0, 0]), int(X[-1, 0]) + 1); rs = np.rint(np.polyval(f, xs)).astype(int)
+            hit = np.array([ink[max(0, r - 1):max(0, r + 2), c0 + x].max(initial=0) >= 0.4 for x, r in zip(xs, rs)])
+            rule = bool(hit.mean() >= 0.9 and (np.diff(np.concatenate(([-1], np.nonzero(hit)[0], [len(hit)]))) - 1).max() <= 6 * z)
+            out.append((round((float(np.polyval(f, (c1 - c0) / 2)) + y0) / z, 1), round(float(np.degrees(np.arctan(f[0]))), 3),
+                        round(float(X[-1, 0] - X[0, 0]) / bw, 2), round(float(np.sqrt((res ** 2).mean())), 2), len(X), rule))
+    return sorted(out)
+
+def lines_read(t0, t1, d):
+    """the lines a turn d can be judged by: line_tracks of the page as scanned (t0) and as turned by d (t1). A line counts when
+    it is read well (≤ 1 px from its straight line at 1,000 px, ≥ 6 strips, ≥ 30 % of the block) and the same in both views —
+    its angle moved by the turn within 0.15° (a line misread — an index entry's guillemets, digits and signs — is not read
+    alike twice); they must follow one another (the median change from one line to the next ≤ 0.25°: a warped leaf's tilt
+    grows line by line, a block of lines stands at its own angle; scattered readings are no reading). → [(y, before, after)]
+    by height, or None (fewer than 5)"""
+    ok = lambda t: t[3] <= 1.0 and t[4] >= 6 and t[2] >= 0.3
+    B = [u for u in t1 if ok(u)]; L = []
+    for t in t0:
+        if not ok(t): continue
+        m_ = [u for u in B if abs(u[0] - t[0]) <= 6]
+        if m_ and abs(min(m_, key=lambda u: abs(u[0] - t[0]))[1] - (t[1] - d)) <= 0.15 + 1e-6: L.append((t[0], t[1], round(t[1] - d, 3)))
+    L.sort()
+    if len(L) < 5 or float(np.median(np.abs(np.diff([v[1] for v in L])))) > 0.25 + 1e-6: return None
+    return L
+
+def two_angles(L):
+    """A TURN THE LINES DO NOT TAKE (owner: «ولم نصطنع ميلا جديدا»; 2026-10-27, «Leave as scanned» for a page whose lines lie
+    at two angles), judged on lines_read: a line is made worse when it ends ≥ 0.5° and ≥ 0.25° more tilted than it was →
+    those lines [(y, before, after)] when two or more are, and they are a fifth of the lines or the lines do not take the
+    turn (fewer than 80 % of them within 0.35° of level once turned); else []"""
+    if not L: return []
+    w = [v for v in L if abs(v[2]) >= max(0.5, abs(v[1]) + 0.25) - 1e-6]
+    agree = sum(1 for v in L if abs(v[2]) <= 0.35 + 1e-6)
+    return w if len(w) >= 2 and (len(w) >= 0.2 * len(L) or agree < 0.8 * len(L)) else []
+
+def print_turn(t0, t1, d):
+    """A TURN THE PRINT CERTIFIES (2026-10-27): the page's printed rules (line_tracks' rule lines, read in both views alike —
+    their angle moved by the turn within 0.15°) all stand level once turned (≤ 0.15°), and its lines of text give no reading
+    of their own (lines_read on them alone: none, or readings that jump over 0.3° at more than a quarter of the steps — an
+    index's entries, guillemets and digits beside the words: خريدة القصر 01 ص 703 jumped 0.5–1° at four of nine steps; its
+    ص 637's table rows read +0.8° against the head rules' −0.5°, the same misreading in both views). A rule is the print's
+    straightest line. Where the text does give a reading, two_angles has already weighed the rules among the lines (a
+    warped leaf's footnote rule bends with it — رسوم دار الخلافة ص 101: the turn left it 0.66°). → (certified, the rules
+    [(y, before, after)])"""
+    ok = lambda t: t[3] <= 1.0 and t[4] >= 6 and t[2] >= 0.3
+    R = []
+    for t in t0:
+        if not (ok(t) and t[5]): continue
+        m_ = [u for u in t1 if ok(u) and abs(u[0] - t[0]) <= 6]
+        if not m_: continue
+        u = min(m_, key=lambda u: abs(u[0] - t[0]))
+        if abs(u[1] - (t[1] - d)) <= 0.15 + 1e-6: R.append((t[0], t[1], round(t[1] - d, 3)))
+    if not R or any(abs(v[2]) > 0.15 + 1e-6 for v in R): return False, R
+    LT = lines_read([t for t in t0 if not t[5]], [t for t in t1 if not t[5]], d)
+    if LT and float((np.abs(np.diff([v[1] for v in LT])) > 0.3 + 1e-6).mean()) <= 0.25: return False, R
+    return True, R
 
 def edge_tilt(a, paper):
     """THE LINES' EDGE AS A RULER (owner 2026-10-09: «you can just use a ruler against any line!», الفوائد المحصورة ص 526 — a
@@ -1233,6 +1437,19 @@ def by_proj(a, mk, ang, gain, rec):
         if tb and any(abs(h[0]) <= 0.2 and h[1] >= tb[0] - 0.02 * (tb[2] - tb[0]) and h[3] <= tb[2] + 0.02 * (tb[2] - tb[0])
                       and h[2] >= tb[1] - 0.03 * (tb[3] - tb[1]) and h[4] <= tb[3] + 0.03 * (tb[3] - tb[1]) for h in mk.get('hrules') or []):
             rec['proj_level_rule'] = round(t, 2); return ang, gain
+        # A SHEET'S LINE (2026-10-26, الموسوعة الشاملة 38 ص 438: the copier's dark bar across the whole sheet above a contents
+        # table, slanting 0.64°, drew the projection to 0.475° while every line of the table lay level — turned 0.675°, ten
+        # of them leaned 0.5–1°; pp. 423 and 437 alike): a long straight line across most of the sheet (≥ 70 % of its width)
+        # and well past the text on both sides (≥ 5 % of the width beyond its core) is the sheet's or the copier's edge, not
+        # print — the projection is read again without it, and the page is turned only if its lines still line up at a
+        # tilt (a printed head rule spans the text it heads and tilts with it: خريدة القصر 01 ص 658–705, خزانة الأدب ج 4 ص 78)
+        c, W = mk.get('core'), rec.get('w')
+        sl = [h for h in mk.get('hrules') or [] if c and W and h[3] - h[1] >= 0.7 * W and c[0] - h[1] >= 0.05 * W and h[3] - c[2] >= 0.05 * W]
+        if sl:
+            b = a.copy(); z = a.shape[1] / W
+            for h in sl: b[max(0, int(h[2] * z) - 3):int(h[4] * z) + 4, max(0, int(h[1] * z) - 3):int(h[3] * z) + 4] = 255
+            t2, s2 = proj_signed(b, mk.get('paper') or 255, need=0.3)
+            if t2 is None or abs(t2) < 0.3 or s2 < 1.5: rec['proj_sheet_line'] = round(t, 2); return ang, gain
         rec['tilt_by_proj'] = t; return t, 1.1
     return ang, gain
 
@@ -1333,7 +1550,26 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
             # the rule from showing as one (it drifts beyond its 1 % band over half the page)
             if abs(ang) >= 1.0 and mk.get('level_frame'):
                 rec['frame_level'] = round(ang, 3); ang = 0.0; rec.pop('tilt_by_proj', None)
-            if rec.get('tilt_by_proj') is not None:      # a projection turn: angles around its reading (it is coarse), the
+            # THE LINES' BASELINES SET A PROJECTION TURN (2026-10-27): the loop below takes, among angles 0.2° apart, the one
+            # the shear measure reads most level, and on the pages the projection turns that reading barely moves with the
+            # turn — of the 1,314 such pages of the 31 regression books whose lines agree, 10 % were left ≥ 0.2° off by their
+            # own baselines and 127 were turned for a tilt under 0.2° (printed rules agreeing with the baselines: خزانة الأدب
+            # ج 1 ص 68 and 110). When at least 6 lines are read and agree (base_tilt, 1,400 px, the page as scanned, its
+            # stamps and dot fields left out), their median is the turn, or no turn under 0.2°; else the loop, as before
+            bt = None
+            if rec.get('tilt_by_proj') is not None and mk.get('text'):
+                a3, z3 = gray(page, 1400); a3 = whiten(np.array(a3), z3, sh)
+                for b in ex0 or []: a3[max(0, int(b[1] * z3)):int(b[3] * z3) + 1, max(0, int(b[0] * z3)):int(b[2] * z3) + 1] = 255
+                bt = base_tilt(a3, mk['paper'], mk['text'], z3)
+            if bt is not None:
+                rec['tilt_by_base'] = bt[0]
+                if abs(bt[0]) >= SKEW_MIN:
+                    deg = round(round(bt[0] / 0.025) * 0.025, 3)
+                    a2, z2 = gray(tu().page(deg), 500); a2 = whiten(a2, z2, fwd_box(doc, i, {'skew': deg}, sh) if sh else None)
+                    mk2 = marks(a2, z2, r.width, fwd_boxes(doc, i, {'skew': deg}, ex0) if ex0 else None)
+                    if mk2['box'] is not None and mk2['xy'] is not None: rec['skew'] = deg; mk = mk2
+                ang = 0.0                                # (neither loop below is run for it)
+            elif rec.get('tilt_by_proj') is not None:    # a projection turn: angles around its reading (it is coarse), the
                 best = None                              # one after which the page reads level by its own ink is kept
                 for k in list(range(-5, 6)):
                     deg = round(rec['tilt_by_proj'] + 0.2 * k, 3)
@@ -2104,16 +2340,28 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         mk['lines'] = lambda: once('lines', lambda: baseline_tilt(a, mk['paper']) if mk.get('paper') else None)
         mk['edges'] = lambda: once('edges', lambda: edge_tilt(a, mk['paper']) if mk.get('paper') else [None, None])
         mk['cols'] = lambda: once('cols', lambda: columns_tilt(a, mk['paper']) if mk.get('paper') else None)
+        def tracks():                                 # (stamps and dot fields whitened, as fine() does)
+            b = a.copy()
+            for x in (fwd_boxes(doc, i, q, ex) if ex else []):
+                b[max(0, int(x[1] * z)):int(x[3] * z) + 1, max(0, int(x[0] * z)):int(x[2] * z) + 1] = 255
+            return line_tracks(b, mk['paper'], mk.get('text'), z)
+        mk['tracks'] = lambda: once('tracks', lambda: tracks() if mk.get('paper') else [])
         cur['looks'][key] = mk
         return mk
-    def leans(i, q, m):                               # each line of a view on its own (line_leans), at 1,400 px — the page
-        mv = q.get('move') or [0, 0]                  # as look() sees it (sheet, stamps), finer: only the third rule asks
+    def fine(i, q):                                   # a view at 1,400 px, the page as look() sees it (sheet, stamps): for
+        mv = q.get('move') or [0, 0]                  # the measures that read single lines
         page = cur['tu'].page(q.get('skew') or 0, mv[0], mv[1]); a, z = gray(page, 1400); a = a.copy(); pq = rec['pages'][i]
         if pq.get('sheet'): a = whiten(a, z, fwd_box(doc, i, q, pq['sheet']))
         ex = [pad_box(b, page.rect.width) for b in pq.get('stamp') or []] + (pq.get('dots') or [])
         for b in (fwd_boxes(doc, i, q, ex) if ex else []):
             a[max(0, int(b[1] * z)):int(b[3] * z) + 1, max(0, int(b[0] * z)):int(b[2] * z) + 1] = 255
-        return line_leans(a, m['paper'], m.get('text'), z) if m.get('paper') else []
+        return a, z
+    def leans(i, q, m):                               # each line of a view on its own (line_leans) — only the third rule asks
+        a, z = fine(i, q); return line_leans(a, m['paper'], m.get('text'), z) if m.get('paper') else []
+    def base(i, q, m):                                # the lines' baselines of a view (base_tilt), once per view
+        if '_base' not in m:
+            a, z = fine(i, q); m['_base'] = base_tilt(a, m['paper'], m.get('text'), z) if m.get('paper') else None
+        return m['_base']
     def best_turn(i, p, d0):                          # the turn near d0 that leaves the least tilt by BOTH measures:
         tried = {}                                    # d0 first; if not level, 10 more angles around it in 0.05° steps
         def ev(d):
@@ -2230,7 +2478,22 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
             if best and best[0] <= 0.35: p['skew'], mk, rl = best[1], best[2], best[2].get('rule_tilts')
         lbr = bool(p.get('skew') and p.get('tilt_by_rules') and len(rl) >= 2 and abs(float(np.median(rl))) <= 0.35)
         if lbr: p['level_by_rules'] = round(float(np.median(rl)), 3)
-        if not lbr and p.get('skew') and p.get('tilt_by_proj') is not None and mk.get('xy') is not None:   # turned by the
+        # A TURN ITS LINES' BASELINES SET (tilt_by_base): read again by them on the page as the reader sees it, corrected once
+        # when they still read more than 0.05° (the ruler is linear; never below 0.2°), kept when they read ≤ 0.1°; else the
+        # ordinary checks below decide — not the shear measure's ≤ 0.2°, which such pages pass at almost any turn. Only when
+        # the baselines cannot read the turned page at all (fewer than 6 lines, or a spread ≥ 0.3°: أنساب الأشراف المقدمة
+        # ص 44 turned −0.525°, its clean lines 0.00 to +0.10° but a few pairs merged into −2.4°, +9.1°, +4.3°) is their turn
+        # confirmed as the projection's were — the page's shear ≤ 0.2° (level_by_proj): the angle stays the baselines'
+        if not lbr and p.get('skew') and p.get('tilt_by_base') is not None:
+            b = base(i, p, mk)
+            if b is not None and abs(b[0]) > 0.05:
+                d2 = round(round((p['skew'] + b[0]) / 0.025) * 0.025, 3)
+                if abs(d2) >= SKEW_MIN:
+                    q2 = dict(p, skew=d2); m2 = look(i, q2); b2 = base(i, q2, m2)
+                    if b2 is not None and abs(b2[0]) < abs(b[0]): p['skew'], mk, b = d2, m2, b2
+            if b is not None and abs(b[0]) <= 0.1 + 1e-6: lbr = True; p['level_by_base'] = b[0]
+        if not lbr and p.get('skew') and p.get('tilt_by_proj') is not None and mk.get('xy') is not None \
+           and (p.get('tilt_by_base') is None or base(i, p, mk) is None):                                      # turned by the
             pl = abs(skew_of(mk['xy'], raw=True)[0])     # projection: it stays when the page now reads level by its own ink
             if pl <= 0.2: lbr = True; p['level_by_proj'] = round(pl, 3)
         m0 = mk if lbr else (look(i, {k: v for k, v in p.items() if k != 'skew'}) if p.get('skew') else mk)
@@ -2296,6 +2559,63 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                     if not done:                      # (a page found by its edge alone whose turn is not certified: the
                         if p.get('tilt_by_edge') is not None or p.get('lines_lean'): p['tilt_disputed'] = round(u, 3)   # measures
                         else: p['untreated_tilt'] = round(u, 3)   # disagree; or its lines do — lines_lean)
+        # A TILT THE MEASURES' GATES LEFT (2026-10-27): of 478 sampled pages of the regression books left as scanned whose lines
+        # agree, 26 read ≥ 0.25° by their baselines, the other rulers mostly reading the same — the halves' test refused a whole
+        # page's angle that its narrower halves read smaller (روضة المستبين ص 491: −0.35° whole, −0.10 / −0.20° halves, every
+        # ruler 0.29–0.35°), the projection read 0.225–0.275° under its 0.3° start, the shear's gain fell short of 1.02 by a
+        # thousandth (مشتبهات القرآن ص 66). A page still unturned here, of one column, with no level printed rule or frame over
+        # its text and no lines a turn was refused for: turned by its baselines (base_tilt) when they read ≥ 0.25° and the
+        # shear measure of the whole page reads the same tilt (within 0.15°); kept when the baselines then read ≤ 0.1° and the
+        # page still shows its ink
+        if not p.get('skew') and ct is None and mk.get('xy') is not None and p.get('kind') == 'text' and not p.get('lines_lean') \
+           and p.get('frame_level') is None and p.get('proj_level_rule') is None and not mk.get('level_frame') \
+           and (owner_turns or {}).get(i + 1) is None:
+            r_, g_ = skew_of(mk['xy'], raw=True); tb_ = mk.get('text')   # (the shear first: the baselines are read only when
+            b = base(i, p, mk) if g_ >= 1.02 and abs(r_) >= 0.1 and tb_ is not None else None   # it sees a tilt at all)
+            if b is not None and abs(b[0]) >= 0.25 - 1e-6 and abs(-r_ - b[0]) <= 0.15 + 1e-6 and not any(
+                    abs(h[0]) <= 0.2 and h[1] >= tb_[0] - 0.02 * (tb_[2] - tb_[0]) and h[3] <= tb_[2] + 0.02 * (tb_[2] - tb_[0])
+                    and h[2] >= tb_[1] - 0.03 * (tb_[3] - tb_[1]) and h[4] <= tb_[3] + 0.03 * (tb_[3] - tb_[1]) for h in mk.get('hrules') or []):
+                d = round(round(b[0] / 0.025) * 0.025, 3); q2 = dict(p, skew=d); m2 = look(i, q2); b2 = base(i, q2, m2)
+                al0 = p.get('allowed'); bd = banded(al0, p['w'], p['h'])
+                if m2['xy'] is not None and b2 is not None and abs(b2[0]) <= 0.1 + 1e-6 \
+                   and 0.6 <= ink_ratio(mk, m2, mk['z'], al0 if bd else None, fwd_inner(doc, i, q2, al0) if bd else None) <= 5.0:
+                    for k in ('untreated_tilt', 'tilt_disputed', 'unsure_tilt'): p.pop(k, None)
+                    p.update(skew=d, tilt_by_base=b[0], level_by_base=b2[0], base_found=round(-r_, 3), turned_in_check=True)
+                    mk = m2
+        # LINES AT TWO ANGLES (owner 2026-10-27, crop-tilt-002 «Leave as scanned»): a warped photocopy whose upper lines stand
+        # level and lower ones lie 1–1.5° (الموسوعة الشاملة 38 ص 892, 42, 423: the tilt grows down the page) was turned by its
+        # average — 0.7° on ص 892 left its upper lines 0.6–1.0° and its lower ones up to 0.75°; صبح الأعشى 05 ص 234, its last
+        # section level under lines tilted 0.4–0.7°, turned 0.675°: the section leaned 0.7°; indexes whose column edges lean
+        # while their lines stand level (2a8c4bfeff47 ص 37، 47؛ فهرس الرواة 0c32c1a4815b ص 183: turned 0.43–0.51° by the
+        # columns, every line then leaning). Every turn, whatever found it, is checked line by line on the page as scanned and
+        # as turned (line_tracks, two_angles): when it leaves two or more lines more tilted than they were, and they are a fifth
+        # of the lines read or the lines do not take the turn, it is undone and the page listed. (Footnotes set at their own
+        # angle — 2 lines of 20, مناقب أحمد ص 208 — may follow the text, as every turn lets them.) A table's turn its column
+        # rules certified stays: a sheared scan whose rules and lines disagree (خريدة القصر ص 627: rules 0.7°, lines 0.25°)
+        # — the owner had ص 649 turned by its rules
+        if p.get('skew') and p.get('level_by_rules') is None and (owner_turns or {}).get(i + 1) is None:
+            mz = look(i, {k: v for k, v in p.items() if k != 'skew'})
+            t0, t1 = mz['tracks'](), look(i, p)['tracks']()
+            L = lines_read(t0, t1, p['skew']); tw = two_angles(L)
+            if tw:                                    # (the print's certificate: every rule level once turned, the text
+                cert, R = print_turn(t0, t1, p['skew'])   # giving no reading of its own — an index under its head rule)
+                if cert: tw = []; p['level_by_print'] = [list(v) for v in R]
+            if tw:
+                d0 = p.pop('skew')
+                for k in ('after_tilt', 'after_tilt_image', 'turned_in_check'): p.pop(k, None)
+                # (the turn the lines do take — their median — when it makes none of them worse, leaves four fifths of them
+                # within 0.2° of level, read alike again, and the shear measure of the page then reads ≤ 0.2°: the first turn
+                # was off, the page is not at two angles — خزانة الأدب ج 4 ص 469: lines −0.36°, turned −0.75° by the
+                # projection's 0.2° steps; turned −0.35° every ruler reads it level)
+                m = round(round(float(np.median([v[1] for v in L])) / 0.025) * 0.025, 3); L2 = None
+                if abs(m) >= SKEW_MIN:
+                    q2 = dict(p, skew=m); m2 = look(i, q2); L2 = lines_read(mz['tracks'](), m2['tracks'](), m)
+                if L2 and not two_angles(L2) and sum(1 for v in L2 if abs(v[2]) <= 0.2 + 1e-6) >= 0.8 * len(L2) \
+                   and m2['xy'] is not None and abs(skew_of(m2['xy'], raw=True)[0]) <= 0.2 + 1e-6:
+                    p['skew'] = m; p['turn_by_tracks'] = d0; p['level_by_tracks'] = round(float(np.median([v[2] for v in L2])), 3)
+                    p['after_tilt'] = round(abs(skew_of(m2['xy'], raw=True)[0]), 3); p['after_tilt_image'] = m2['proj'](); mk = m2
+                else:
+                    p['two_angles'] = d0; p['lines_lean'] = [list(v) for v in tw]; mk = mz
         # THE OWNER'S TURN (data/crop/owner-turns.tsv, owner 2026-10-25 on crop-tilt-001: «أجيز هذا وجميع ما سبق»): a page he
         # ruled «turn» after seeing it turned by its measured tilt, which the measures above leave as it is, is turned by
         # that tilt — u measured here, on the page as it is (sign and size); the readings after it are kept for the record
@@ -2446,6 +2766,8 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                             # regression's 31 books)
                             and not (p.get('level_by_rules') is not None and abs(p['level_by_rules']) <= 0.35)
                             and not (p.get('level_by_proj') is not None and p['level_by_proj'] <= 0.2)
+                            and not (p.get('level_by_base') is not None and abs(p['level_by_base']) <= 0.1 + 1e-6)
+                            and not (p.get('level_by_tracks') is not None and abs(p['level_by_tracks']) <= 0.2 + 1e-6)
                             and not (p.get('image_third') is not None and p.get('after_tilt', 9) <= LEVEL and p.get('after_tilt_image', 9) <= 0.35 + 1e-6)
                             and p.get('owner_turn') is None]          # (the owner saw that turn and asked for it)
     rec['level_by_lines'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('level_by_lines') is not None and p.get('skew')]
@@ -2454,6 +2776,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
     rec['tilt_disputed'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('tilt_disputed')]
     rec['untreated_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('untreated_tilt')]
     rec['unsure_tilt'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('unsure_tilt')]
+    rec['two_angles'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('two_angles') is not None and not p.get('skew')]
     if rec.get('decision') == 'crop' and len(rec['whole']) > MAX_WHOLE * max(1, rec['measured']):
         rec['decision'] = f'skip: {len(rec["whole"])} pages do not fit one box (second check, 1,000 px)'
     if rec.get('decision') == 'crop' and not rec['skewed'] and all(r.endswith('tilted pages') for r in rec.get('reasons') or []):

@@ -202,7 +202,10 @@ def analyse(path, src, jobs=1):
         P = rec['pages']; untreated = {k - 1 for k in rec.get('untreated_tilt') or []}; whole = {k - 1 for k in rec.get('whole') or []}
         flags = []
         for i, p in enumerate(P):
-            why = ('tilt' if p.get('unsure_tilt') or p.get('tilt_disputed') or i in untreated else
+            # (a page whose lines lie at two angles, left as scanned — owner 2026-10-27 on crop-tilt-002: «Leave as scanned»,
+            # listed for him: every such page of the book is named on its card, the first ones shown)
+            why = ('two' if p.get('two_angles') is not None and not p.get('skew') else
+                   'tilt' if p.get('unsure_tilt') or p.get('tilt_disputed') or i in untreated else
                    'whole' if i in whole or (p['kind'] == 'text' and not p.get('crop') and rec.get('decision') == 'crop') else
                    'stain' if p.get('stain_kept') else
                    'stamp' if p.get('stamp') else
@@ -216,10 +219,14 @@ def analyse(path, src, jobs=1):
                    'side' if p.get('verify_far') is not None else
                    'edge' if p.get('edge_letters') and p.get('verify_moved') else
                    'cut' if p.get('verify_cut') else
-                   'folio' if p.get('folio_blot') else None)
+                   'folio' if p.get('folio_blot') else
+                   # (2026-10-27: a tilt the usual measures' gates left, found by the page's own lines and turned — base_found)
+                   'base' if p.get('base_found') is not None and p.get('skew') else
+                   # (a turn that made lines worse, set again by the angle the lines take — two_angles, 2026-10-27)
+                   'tracks' if p.get('turn_by_tracks') is not None and p.get('skew') else None)
             if why: flags.append((i, why))
-        order = {'tilt': 0, 'whole': 1, 'stain': 2, 'stamp': 3, 'larger': 4, 'sheet': 5, 'third': 6, 'side': 7, 'edge': 8, 'cut': 9,
-                 'folio': 10}
+        order = {'two': 0, 'tilt': 1, 'whole': 2, 'stain': 3, 'stamp': 4, 'larger': 5, 'sheet': 6, 'third': 7, 'side': 8, 'edge': 9,
+                 'cut': 10, 'folio': 11, 'base': 12, 'tracks': 13}
         seen, sp = set(), []
         for i, why in sorted(flags, key=lambda x: (order[x[1]], x[0])):   # each kind of doubt first, then more of them
             if why in seen: continue
@@ -237,13 +244,15 @@ def analyse(path, src, jobs=1):
             bc.sheet(src, rec, d, shown)
         json.dump({'path': path, 'decision': rec.get('decision'), 'reasons': rec.get('reasons'), 'gain': rec.get('gain'),
                    'doubts': {w: sum(1 for _, x in flags if x == w) for w in order}, 'shown': shown,
+                   'two': [i + 1 for i, x in flags if x == 'two'],
                    'owner': {str(i + 1): w for i, w in own.items()}},
                   open(os.path.join(d, 'book.json'), 'w') if os.makedirs(d, exist_ok=True) is None else None, ensure_ascii=False)
     except Exception as e: print('SHEET FAIL', path[:60], repr(e)[:120], flush=True)
     out.update(dst=dst, info=info, recipe={'pages': [{k: p.get(k) for k in ('crop', 'show', 'scale', 'bands', 'fit_whole', 'skew', 'move', 'enlarged',
                                                                'curved', 'notes', 'anchored_x', 'anchored_y',
                                                                'verify_moved', 'verify_cut', 'folio_blot', 'owner_turn',
-                                                               'verify_far', 'image_third') if p.get(k)}
+                                                               'verify_far', 'image_third', 'tilt_by_base', 'base_found',
+                                                               'two_angles', 'turn_by_tracks', 'level_by_tracks') if p.get(k)}
                                                     for p in rec['pages']], 'size': rec.get('size'), 'gain': rec.get('gain'),
                                           'margin_pt': rec.get('margin_pt'), 'clean_margins': rec.get('clean_margins'),
                                           'decision': rec.get('decision'), 'reasons': rec.get('reasons'), 'level_trim': rec.get('level_trim'),

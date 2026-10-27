@@ -2,7 +2,10 @@
 page by page — turn, crop box, shown part, scale, move, kind — so that every change a method change brings is explained
 before anything reaches the phone (the redo, a pilot). Each changed page is printed with its cause, read from the flags the
 new recipe carries: the owner's turn, a level-by-both turn taken first, a ruler-certified small tilt, a clear tilt whose
-image reading fell to a third, a turn refused because it made level lines lean (turns); a page number read as a stain
+image reading fell to a third, a turn refused because it made level lines lean, a turn of a page the projection found set
+by its lines' baselines (baselines), a tilt the usual measures' gates left found by them (baselines found), a projection
+reading refused for a sheet's line across the page (sheet line), a turn refused for lines at two angles (two angles) or
+set again by the angle its lines take (the lines' turn) (turns); a page number read as a stain
 restored (folio stain); a sideways slide up to 4 % for
 side headings (side slide); letters in the paper's edge shadow taken in (edge letters); a second look that
 moved, enlarged or no longer moves the box (second look); a cover whose cut moved to keep its print (cover print); else
@@ -16,7 +19,11 @@ BOOK = ('decision', 'size', 'width_quantile', 'gain', 'framed', 'clean_margins',
 def cause(p, q):
     if p.get('skew') != q.get('skew'):
         for k, v in (('owner_turn', 'owner turn'), ('level_first', 'level first'), ('image_loose', 'image ≤ 0.35'),
-                     ('image_third', 'image to a third'), ('lines_lean', 'lines made to lean')):
+                     ('image_third', 'image to a third'), ('two_angles', 'two angles'), ('turn_by_tracks', "the lines' turn"),
+                     ('lines_lean', 'lines made to lean'),
+                     ('base_found', 'baselines found'),
+                     ('tilt_by_base', 'baselines'),
+                     ('proj_sheet_line', 'sheet line')):
             if q.get(k) is not None: return v
         return None
     if q.get('folio_blot') is not None or p.get('folio_blot') is not None: return 'folio stain'
