@@ -219,14 +219,17 @@ def analyse(path, src, jobs=1):
                    'side' if p.get('verify_far') is not None else
                    'edge' if p.get('edge_letters') and p.get('verify_moved') else
                    'cut' if p.get('verify_cut') else
-                   'folio' if p.get('folio_blot') else
+                   'folio' if p.get('folio_blot') or p.get('folio_specks') else
+                   # (2026-10-27: an ornament the book repeats, read as a stain before — print again, the box no longer
+                   # dodging it)
+                   'orn' if p.get('ornament') else
                    # (2026-10-27: a tilt the usual measures' gates left, found by the page's own lines and turned — base_found)
                    'base' if p.get('base_found') is not None and p.get('skew') else
                    # (a turn that made lines worse, set again by the angle the lines take — two_angles, 2026-10-27)
                    'tracks' if p.get('turn_by_tracks') is not None and p.get('skew') else None)
             if why: flags.append((i, why))
         order = {'two': 0, 'tilt': 1, 'whole': 2, 'stain': 3, 'stamp': 4, 'larger': 5, 'sheet': 6, 'third': 7, 'side': 8, 'edge': 9,
-                 'cut': 10, 'folio': 11, 'base': 12, 'tracks': 13}
+                 'cut': 10, 'folio': 11, 'orn': 12, 'base': 13, 'tracks': 14}
         seen, sp = set(), []
         for i, why in sorted(flags, key=lambda x: (order[x[1]], x[0])):   # each kind of doubt first, then more of them
             if why in seen: continue
@@ -252,7 +255,8 @@ def analyse(path, src, jobs=1):
                                                                'curved', 'notes', 'anchored_x', 'anchored_y',
                                                                'verify_moved', 'verify_cut', 'folio_blot', 'owner_turn',
                                                                'verify_far', 'image_third', 'tilt_by_base', 'base_found',
-                                                               'two_angles', 'turn_by_tracks', 'level_by_tracks', 'level_by_print') if p.get(k)}
+                                                               'two_angles', 'turn_by_tracks', 'level_by_tracks', 'level_by_print',
+                                                               'tilt_by_tracks', 'base_robust', 'ornament', 'folio_specks') if p.get(k)}
                                                     for p in rec['pages']], 'size': rec.get('size'), 'gain': rec.get('gain'),
                                           'margin_pt': rec.get('margin_pt'), 'clean_margins': rec.get('clean_margins'),
                                           'decision': rec.get('decision'), 'reasons': rec.get('reasons'), 'level_trim': rec.get('level_trim'),

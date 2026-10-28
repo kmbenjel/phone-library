@@ -22,11 +22,15 @@ def cause(p, q):
                      ('image_third', 'image to a third'), ('two_angles', 'two angles'), ('turn_by_tracks', "the lines' turn"),
                      ('lines_lean', 'lines made to lean'),
                      ('base_found', 'baselines found'),
+                     ('tilt_by_tracks', "lines' tracks"),
                      ('tilt_by_base', 'baselines'),
                      ('proj_sheet_line', 'sheet line')):
             if q.get(k) is not None: return v
         return None
     if q.get('folio_blot') is not None or p.get('folio_blot') is not None: return 'folio stain'
+    if q.get('folio_specks') is not None or p.get('folio_specks') is not None: return 'folio specks'
+    if q.get('ornament') != p.get('ornament'): return 'ornament'
+    if p.get('dodged') and not q.get('dodged') and q.get('stain_kept'): return 'no futile dodge'
     if q.get('verify_cut') is not None: return 'cut edge'
     if q.get('verify_far') is not None: return 'side slide'
     if q.get('edge_letters') and (p.get('verify_moved') or q.get('verify_moved')): return 'edge letters'

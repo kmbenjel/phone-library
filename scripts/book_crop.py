@@ -501,6 +501,16 @@ def marks(a, scale, width, exclude=None):
     # carried the text block, and the box with it, 33 pt to the left): ≤ 0.4 % thick and ≥ 3 % long, either way
     thin = ((hh <= 0.004 * H) & (ww >= 0.03 * Wd)) | ((ww <= 0.004 * Wd) & (hh >= 0.03 * H))
     letter = ~strip & ~thin & (hh <= 0.15 * H) & ((hh >= 0.004 * H) | (ww >= 0.008 * Wd))
+    # A SCAN LINE BROKEN INTO DASHES is no letter (2026-10-28, regression 26i: خزانة الأدب ج 1 ص 53, 176, 35fbe344b8c6
+    # ص 74, 194, 247, 491 — one-pixel pieces of the scan's top line joined the text block, one read as the page number, and
+    # the box was pulled ≈ 20 pt over the line): a horizontal hairline (under 2.5 px thick, ≥ 4× as long) is a letter only
+    # when a letter of the page stands on its row (its middle within that letter's height) within the text's gap — a printed
+    # dash «—», the dashes of «- ٥ -»
+    hair = letter & (hh < 2.5) & (ww >= 4 * hh)
+    if hair.any():
+        oth = letter & ~hair; ym = (Y0 + Y1) / 2
+        for k in np.nonzero(hair)[0]:
+            if not (oth & (Y0 <= ym[k]) & (Y1 >= ym[k]) & (X0 <= X1[k] + gx) & (X1 >= X0[k] - gx)).any(): letter[k] = False
     if not letter.any(): letter = ~strip if (~strip).any() else np.ones(len(cid), bool)
     tx0, tx1 = float(np.percentile(X0[letter], 2)), float(np.percentile(X1[letter], 98))   # the seed: letters only (a heavy
     while True:                                                                           # edge streak pulls the ink core)
@@ -665,15 +675,24 @@ def base_angles(a, paper, tb, z, K=16):
         pad = int(0.3 * (r1 - r0)); b = ink[max(0, r0 - pad):r1 + pad]
         xs = np.nonzero(b.sum(0) > 0.5)[0]
         if len(xs) < 2 or xs[-1] - xs[0] < 0.25 * bw: continue
-        b = b[:, xs[0]:xs[-1] + 1]; e = np.linspace(0, b.shape[1], K + 1).astype(int); pts = []
+        b = b[:, xs[0]:xs[-1] + 1]; e = np.linspace(0, b.shape[1], K + 1).astype(int); pts = []; js = []
         for j in range(K):
             pr = ndimage.gaussian_filter1d(b[:, e[j]:e[j + 1]].sum(1), 1.0)
             if pr.max() < 0.25 * (e[j + 1] - e[j]): continue      # (a chunk with little ink on any row: no baseline)
             r = int(np.argmax(pr))
             if 0 < r < len(pr) - 1:
                 den = pr[r - 1] - 2 * pr[r] + pr[r + 1]; r = r + (0.5 * (pr[r - 1] - pr[r + 1]) / den if den < 0 else 0)
-            pts.append(((e[j] + e[j + 1]) / 2, r))
+            pts.append(((e[j] + e[j + 1]) / 2, r)); js.append(j)
         if len(pts) < 6: continue
+        # a label set apart (2026-10-28, مشتبهات القرآن ص 178: an index row's page number across the empty middle — its
+        # digits' densest row above the entry's baseline tilted every row's fit 1.1–1.6°): parts split by a gap of a quarter
+        # of the line, the smallest of 1–2 chunks → no baseline; two hemistichs (4+ chunks each) stay
+        parts, n_, prev = [], 0, None
+        for j in js:
+            if prev is not None and j - prev - 1 >= K // 4: parts.append(n_); n_ = 0
+            n_ += 1; prev = j
+        parts.append(n_)
+        if len(parts) > 1 and min(parts) <= 2: continue
         P = np.array(pts)
         for _ in range(2):
             f = np.polyfit(P[:, 0], P[:, 1], 1); res = np.abs(P[:, 1] - np.polyval(f, P[:, 0]))
@@ -682,12 +701,25 @@ def base_angles(a, paper, tb, z, K=16):
         out.append((round(((r0 + r1) / 2 + y0) / z, 1), round(float(np.degrees(np.arctan(f[0]))), 3)))
     return out
 
-def base_tilt(a, paper, tb, z):
+def base_tilt(a, paper, tb, z, robust=False):
     """the page's tilt by its lines' baselines (base_angles): their median, when at least 6 lines are read and they agree —
     their interquartile range below 0.3° (a curled leaf, verse set hemistich by hemistich, a dictionary's short entries:
-    the lines read too differently and the ruler is not used) → (angle, lines, IQR), else None"""
-    an = [v[1] for v in base_angles(a, paper, tb, z)]
+    the lines read too differently and the ruler is not used) → (angle, lines, IQR), else None. robust: a line more than
+    1° from their median (two lines run together in the row profile) is left out before they are counted — the last
+    resort for a projection page neither base_tilt nor the lines' tracks read (fix Q3, 2026-10-27)"""
+    an = np.array([v[1] for v in base_angles(a, paper, tb, z)])
+    if robust and len(an): an = an[np.abs(an - np.median(an)) <= 1.0]
     if len(an) < 6: return None
+    iq = float(np.subtract(*np.percentile(an, [75, 25])))
+    return (round(float(np.median(an)), 3), len(an), round(iq, 3)) if iq < 0.3 else None
+
+def tracks_tilt(T):
+    """the page's tilt by its lines followed across it (line_tracks): the median of the lines read well (≤ 1 px from their
+    straight line at 1,000 px, ≥ 6 strips, ≥ 30 % of the block; printed rules left out) when at least 5 are read and agree —
+    their interquartile range below 0.3° → (angle, lines, IQR), else None (2026-10-27: where base_tilt reads too, the two
+    agree to a median 0.023°, 96 % within 0.1°)"""
+    an = [t[1] for t in T if t[3] <= 1.0 and t[4] >= 6 and t[2] >= 0.3 and not t[5]]
+    if len(an) < 5: return None
     iq = float(np.subtract(*np.percentile(an, [75, 25])))
     return (round(float(np.median(an)), 3), len(an), round(iq, 3)) if iq < 0.3 else None
 
@@ -1561,8 +1593,18 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
                 a3, z3 = gray(page, 1400); a3 = whiten(np.array(a3), z3, sh)
                 for b in ex0 or []: a3[max(0, int(b[1] * z3)):int(b[3] * z3) + 1, max(0, int(b[0] * z3)):int(b[2] * z3) + 1] = 255
                 bt = base_tilt(a3, mk['paper'], mk['text'], z3)
+                # (when the baselines cannot read it: the lines FOLLOWED ACROSS THE PAGE — line_tracks at 1,000 px, as the
+                # second look reads them; when these cannot either, the baselines without the lines run together)
+                if bt is None:
+                    a4, z4 = gray(page, 1000); a4 = whiten(np.array(a4), z4, sh)
+                    for b in ex0 or []: a4[max(0, int(b[1] * z4)):int(b[3] * z4) + 1, max(0, int(b[0] * z4)):int(b[2] * z4) + 1] = 255
+                    bt = tracks_tilt(line_tracks(a4, mk['paper'], mk['text'], z4))
+                    if bt is not None: rec['tilt_by_tracks'] = bt[0]
+                    else:
+                        bt = base_tilt(a3, mk['paper'], mk['text'], z3, robust=True)
+                        if bt is not None: rec['base_robust'] = True
             if bt is not None:
-                rec['tilt_by_base'] = bt[0]
+                if rec.get('tilt_by_tracks') is None: rec['tilt_by_base'] = bt[0]
                 if abs(bt[0]) >= SKEW_MIN:
                     deg = round(round(bt[0] / 0.025) * 0.025, 3)
                     a2, z2 = gray(tu().page(deg), 500); a2 = whiten(a2, z2, fwd_box(doc, i, {'skew': deg}, sh) if sh else None)
@@ -1961,6 +2003,48 @@ def decide(pages, wq=0.95):
             p['blots'].remove(bl); p['box'] = union([p['box'], bl]); t = p.get('text'); p['folio_blot'] = [round(v, 1) for v in bl]
             if t and bl[2] >= t[0] and bl[0] <= t[2]: p['text'] = union([t, bl])
             if not p.get('folio'): p['folio'] = list(bl[:4]) + ['foot' if (bl[1] >= t[3] - 1 if t else bl[1] > h / 2) else 'head']
+    # AN ORNAMENT THE BOOK REPEATS (2026-10-27, فهرسة ابن خير: the end-of-section fleuron, a 59 pt square under the text,
+    # read as a stain on 12 pages — a section ends anywhere on the page, so its place never repeats, and 12 pages are
+    # fewer than 3 % of the book): a «stain» at least M across both ways whose twin — the same width and height ± 10 %, its
+    # centre on the same vertical line ± 3 % of the page — stands on 3 other text pages or more, at any height, is that
+    # print: content again (the box had slid to the page's top to dodge it), and part of the page's box and text block
+    # (within the text's columns) once its pages are sorted full or short below — a section's end stays a short page.
+    # A stain is never so alike from page to page; thin bars and specks are not M across; and it stands within the text's
+    # columns, as a fleuron does — punch holes repeat alike too, but in the margin
+    def same_block(a, b, w):
+        aw, ah, bw_, bh_ = a[2] - a[0], a[3] - a[1], b[2] - b[0], b[3] - b[1]
+        return abs((a[0] + a[2]) - (b[0] + b[2])) / 2 <= 0.03 * w and 0.9 <= (aw + 1) / (bw_ + 1) <= 1.1 \
+            and 0.9 <= (ah + 1) / (bh_ + 1) <= 1.1
+    allo = [(i, bl) for i in text for bl in pages[i].get('blots', [])
+            if min(bl[2] - bl[0], bl[3] - bl[1]) >= M * pages[i]['w'] / REF and bl[3] - bl[1] < 0.25 * pages[i]['h']
+            and pages[i].get('text') and pages[i]['text'][0] <= (bl[0] + bl[2]) / 2 <= pages[i]['text'][2]]
+    for i, bl in [(i, bl) for i, bl in allo if sum(1 for j, c in allo if j != i and same_block(bl, c, pages[i]['w'])) >= 3]:
+        pages[i]['blots'].remove(bl); pages[i].setdefault('ornament', []).append([round(v, 1) for v in bl])
+    # A PAGE NUMBER READ AS DUST (2026-10-27, فهرسة ابن خير ص 4: «- ٥ -», three grains each under SPECK alone above a
+    # chapter's first lines — marks() takes such a group outside the text block for dust; turned 0.15° in 26h its grains
+    # merged and it was read, unturned in 26i the «(١)» under it was taken for the number and the page placed on itself, the
+    # box 30 pt off; مناقب الإمام أحمد ص 500–601: the number at the foot 5 pt from the box's edge): specks that together sit
+    # where the book prints its page number — the folio of 3 other pages or more (3 %), the same place and size as for a
+    # stain above — are that number when the page's own was not found there: print again, the page's folio, part of the
+    # text block when it lies within the text's columns
+    fols = [(j, pages[j]['folio']) for j in text if pages[j].get('folio')]
+    for i in text:
+        p = pages[i]; w, h = p['w'], p['h']; sp = p.get('specks') or []
+        at = lambda u: [f for j, f in fols if j != i and same_place(u, f, w, h)]
+        if not sp or (p.get('folio') and len(at(p['folio'])) >= max(3, int(0.03 * len(text)))): continue
+        g_, groups = M * w / REF, []
+        for s in sp:
+            for gr in groups:
+                if any(s[0] - g_ <= u[2] and u[0] - g_ <= s[2] and s[1] - g_ <= u[3] and u[1] - g_ <= s[3] for u in gr): gr.append(s); break
+            else: groups.append([s])
+        for gr in groups:
+            u = union(gr); f_ = at(u)
+            if len(f_) < max(3, int(0.03 * len(text))): continue
+            for s in gr: p['specks'].remove(s)
+            p['box'] = union([p['box'], u]); t = p.get('text'); p['folio_specks'] = [round(v, 1) for v in u]
+            if t and t[0] <= (u[0] + u[2]) / 2 <= t[2]: p['text'] = union([t, u])
+            k_ = [f[4] for f in f_]; p['folio'] = list(u) + [max(set(k_), key=k_.count)]
+            break
     # PRINTED RULES AND FRAMES belong to the page when the book prints them (marks() leaves every line out): a rule on the
     # same side of the text block at the same distance (± 2 % of the page) on ≥ 40 % of the text pages (at least 3); a rule
     # inside the text block's span stays; a rule further than 6 % of the page from the text is the scanner's or the sheet's
@@ -2003,6 +2087,12 @@ def decide(pages, wq=0.95):
     Tw, Th = q([v for v in bw.values() if v <= 1.25 * _mw] or list(bw.values()), wq), q(bh.values(), 1.0)
     full_w = [i for i in text if cw[i] >= 0.9 * q(cw.values(), 0.5)]
     full_h = [i for i in text if bh[i] >= 0.9 * q(bh.values(), 0.5)]
+    # an ornament (above) joins its page's box and text block only now: a page ending in a section's fleuron stays a short
+    # page that takes its neighbours' place — counted full by it, ابن خير ص 304 was centred on itself, its number 15 pt low
+    for i in text:
+        for o in pages[i].get('ornament') or []:
+            p = pages[i]; p['box'] = union([p['box'], o]); t = p.get('text')
+            if t and t[0] <= (o[0] + o[2]) / 2 <= t[2]: p['text'] = union([t, o])
     # a printed frame around the text (a vertical rule on both sides on most full pages) is the page's own border: the box
     # keeps a hairline outside it (owner, وحي القلم: «كل ما خارج الإطار الظاهر الخفيف… يمكن أن يقص»); otherwise a margin of
     # 8 % of the text width each side (owner: the margins of the third sample were «كبيرة قليلا»), 5 % above and below
@@ -2204,6 +2294,9 @@ def decide(pages, wq=0.95):
         # بحيث عيوب الطباعة أعلى الصفحات تختفي»)
         px_, py_ = 0.006 * p['w'], 0.006 * p['h']
         avoid = [[v[0] - px_, v[1] - py_, v[2] + px_, v[3] + py_] for v in avoid]
+        # a slide that leaves as much of the mark in the box as before gains nothing and costs the page its place (2026-10-27,
+        # فهرسة ابن خير ص 167: slid to the page's top, the fleuron still whole in the box, the page number 120 pt low)
+        def seen(m, c): return max(0.0, min(m[2], c[2]) - max(m[0], c[0])) * max(0.0, min(m[3], c[3]) - max(m[1], c[1]))
         if bx and avoid:                             # dodge a stain: slide the box away from it, as far as the content and
             lo, hi = max(0, bx[2] - (b[2] - b[0])), min(bx[0], p['w'] - (b[2] - b[0]))      # the page allow (same size)
             for bl in avoid:
@@ -2214,6 +2307,9 @@ def decide(pages, wq=0.95):
                         # worse than a thin mark in its margin (2026-10-09, الفوائد المحصورة ص 200: a 22 pt slide for a scan bar)
                         cand = min(max(nx, lo), hi); ml, mr = bx[0] - cand, cand + (b[2] - b[0]) - bx[2]
                         if min(ml, mr) < 0.6 * max(ml, mr): p['stain_kept'] = True; continue
+                        s_ = nx - cand; s_ = -s_ if s_ and p.get('paper', 0) >= 235 and abs(s_) <= 0.03 * p['w'] else 0.0
+                        if seen([bl[0] + s_, bl[1], bl[2] + s_, bl[3]], [cand, b[1], cand + b[2] - b[0], b[3]]) >= 0.999 * seen(bl, b):
+                            p['stain_kept'] = True; continue
                         want = nx; nx = cand; b = [round(nx, 1), b[1], round(nx + b[2] - b[0], 1), b[3]]; p['dodged'] = True
                         short = want - nx                    # the page edge stops the box: on white paper the content moves the
                         if short and p.get('paper', 0) >= 235 and abs(short) <= 0.03 * p['w']:   # last points the other way
@@ -2232,6 +2328,7 @@ def decide(pages, wq=0.95):
                         cand = min(max(ny, lo_y), hi_y); mt, mbm = bx[1] - cand, cand + (b[3] - b[1]) - bx[3]
                         # (up and down the eye forgives unequal margins more than a dark bar: الحروب الصليبية ص 426)
                         if min(mt, mbm) < 0.35 * max(mt, mbm): p['stain_kept'] = True; continue
+                        if seen(bl, [b[0], cand, b[2], cand + b[3] - b[1]]) >= 0.999 * seen(bl, b): p['stain_kept'] = True; continue
                         b = [b[0], round(cand, 1), b[2], round(cand + b[3] - b[1], 1)]; p['dodged'] = True
         # a SCANNER BAND OR BLACK BORDER stays outside, even at the cost of unequal margins (owner 2026-10-18: خريدة القصر
         # «أيمان الصفحات مداخلة للحافة» — a black strip 20 pt wide kept beside the text; صبح الأعشى «المشكل نابع من عدم
@@ -2358,10 +2455,11 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         return a, z
     def leans(i, q, m):                               # each line of a view on its own (line_leans) — only the third rule asks
         a, z = fine(i, q); return line_leans(a, m['paper'], m.get('text'), z) if m.get('paper') else []
-    def base(i, q, m):                                # the lines' baselines of a view (base_tilt), once per view
-        if '_base' not in m:
-            a, z = fine(i, q); m['_base'] = base_tilt(a, m['paper'], m.get('text'), z) if m.get('paper') else None
-        return m['_base']
+    def base(i, q, m, robust=False):                  # the lines' baselines of a view (base_tilt), once per view
+        k = '_base_r' if robust else '_base'
+        if k not in m:
+            a, z = fine(i, q); m[k] = base_tilt(a, m['paper'], m.get('text'), z, robust) if m.get('paper') else None
+        return m[k]
     def best_turn(i, p, d0):                          # the turn near d0 that leaves the least tilt by BOTH measures:
         tried = {}                                    # d0 first; if not level, 10 more angles around it in 0.05° steps
         def ev(d):
@@ -2484,16 +2582,29 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         # the baselines cannot read the turned page at all (fewer than 6 lines, or a spread ≥ 0.3°: أنساب الأشراف المقدمة
         # ص 44 turned −0.525°, its clean lines 0.00 to +0.10° but a few pairs merged into −2.4°, +9.1°, +4.3°) is their turn
         # confirmed as the projection's were — the page's shear ≤ 0.2° (level_by_proj): the angle stays the baselines'
+        rb = bool(p.get('base_robust'))                  # (the robust baselines read it again: fix Q3's last resort)
         if not lbr and p.get('skew') and p.get('tilt_by_base') is not None:
-            b = base(i, p, mk)
+            b = base(i, p, mk, rb)
             if b is not None and abs(b[0]) > 0.05:
                 d2 = round(round((p['skew'] + b[0]) / 0.025) * 0.025, 3)
                 if abs(d2) >= SKEW_MIN:
-                    q2 = dict(p, skew=d2); m2 = look(i, q2); b2 = base(i, q2, m2)
+                    q2 = dict(p, skew=d2); m2 = look(i, q2); b2 = base(i, q2, m2, rb)
                     if b2 is not None and abs(b2[0]) < abs(b[0]): p['skew'], mk, b = d2, m2, b2
             if b is not None and abs(b[0]) <= 0.1 + 1e-6: lbr = True; p['level_by_base'] = b[0]
+        # A TURN THE LINES FOLLOWED ACROSS THE PAGE SET (tilt_by_tracks: the baselines could not read it): read again by them on
+        # the page as the reader sees it (this look's line_tracks), corrected once, kept when they read ≤ 0.1°; when they
+        # cannot read the turned page, the shear's ≤ 0.2° below, as for the baselines' turns
+        tk = None
+        if not lbr and p.get('skew') and p.get('tilt_by_tracks') is not None:
+            tk = tracks_tilt(mk['tracks']()) if mk.get('paper') else None
+            if tk is not None and abs(tk[0]) > 0.05:
+                d2 = round(round((p['skew'] + tk[0]) / 0.025) * 0.025, 3)
+                if abs(d2) >= SKEW_MIN:
+                    q2 = dict(p, skew=d2); m2 = look(i, q2); t2 = tracks_tilt(m2['tracks']()) if m2.get('paper') else None
+                    if t2 is not None and abs(t2[0]) < abs(tk[0]): p['skew'], mk, tk = d2, m2, t2
+            if tk is not None and abs(tk[0]) <= 0.1 + 1e-6: lbr = True; p['level_by_tracks'] = tk[0]
         if not lbr and p.get('skew') and p.get('tilt_by_proj') is not None and mk.get('xy') is not None \
-           and (p.get('tilt_by_base') is None or base(i, p, mk) is None):                                      # turned by the
+           and (p.get('tilt_by_base') is None or base(i, p, mk, rb) is None) and tk is None:                   # turned by the
             pl = abs(skew_of(mk['xy'], raw=True)[0])     # projection: it stays when the page now reads level by its own ink
             if pl <= 0.2: lbr = True; p['level_by_proj'] = round(pl, 3)
         m0 = mk if lbr else (look(i, {k: v for k, v in p.items() if k != 'skew'}) if p.get('skew') else mk)

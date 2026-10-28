@@ -79,6 +79,9 @@ def check(row, rec, pdf):
              or p.get('reduced') is not None)
              or (p.get('level_by_proj') is not None and p['level_by_proj'] <= 0.2)
              or (p.get('level_by_base') is not None and abs(p['level_by_base']) <= 0.1 + 1e-6)
+             # (a projection page the baselines could not read, turned by its lines followed across it and read level by
+             # them once turned: book_crop fix Q3, 2026-10-27)
+             or (p.get('tilt_by_tracks') is not None and p.get('level_by_tracks') is not None and abs(p['level_by_tracks']) <= 0.1 + 1e-6)
              # (a turn refused for the lines it made worse, set again by the angle the lines take: book_crop two_angles)
              or (p.get('level_by_tracks') is not None and abs(p['level_by_tracks']) <= 0.2 + 1e-6 and lvl is not None and lvl <= 0.2 + 1e-6)
              or (p.get('level_by_rules') is not None and abs(p['level_by_rules']) <= 0.35)
@@ -119,6 +122,10 @@ def check(row, rec, pdf):
         if not p.get('show'): return False, 'no frame'   # number, a centred heading)
         x, t = (float(v) for v in expect.split('±')); s = p['show']; c = (s[0] + s[2]) / 2
         return abs(c - x) <= t, f'centre {c:.1f} (expected {x}±{t}), anchored {p.get("anchored_x")}'
+    if what == 'ycentre':                              # the shown part's middle lies at Y ± T pt: a page placed where its
+        if not p.get('show'): return False, 'no frame'   # neighbours are (its page number where theirs is: فهرسة ابن خير)
+        y, t = (float(v) for v in expect.split('±')); s = p['show']; c = (s[1] + s[3]) / 2
+        return abs(c - y) <= t, f'middle {c:.1f} (expected {y}±{t}), anchored {p.get("anchored_y")}'
     if what == 'centred':
         if not crop: return False, 'page left whole'
         b = p['box']; cxb, cxc = (b[0] + b[2]) / 2, (crop[0] + crop[2]) / 2
