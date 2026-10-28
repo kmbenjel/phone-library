@@ -9,7 +9,21 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
-## 2026-10-28 23:45 UTC — crop-tilt-003 BUILT; B5 BENCHED (Claude, max)
+## 2026-10-28 23:40 UTC — B5 FOLDED IN; REGRESSION 27m RUNNING (Claude, max)
+- bandedge.py totals (band in view at frame edges, whole book): 27l 202 pages / 598 pt, B4 84 / 183, B5 83 / 178; edge
+  shadow 23 → 70 → 72 pages (frames stop at the band's grey ramp). B5 ≠ B4 on 3 pages only (165 +0.3 pt band +2.1 shadow;
+  621/623 band 3.1/2.4 pt → 0). Band where 27l had none: 6 pages (65, 400, 616, 617 + two 0.9 pt) = the 4-pt rule — line
+  ends / margin notes running to the paper's edge kept whole (27l cut «حديد» 400, the verse openings 617, «في الهامش» 616).
+  Allowed areas: none cuts a text block > 20 pt (largest 16.6, as B4).
+- book_crop.py = 6a1fad7b21 + patch_l/b/b2/b3/b4/b5 = 4fcdf11f58 (byte-identical to code/bc_lbb5.py); stage_tools.py ran
+  (diff causes + 11 case rows); commit a131e06. Unit crop-regress-2026-10-28m launched 23:40 (≈ 3 h) → logs/crop-regress-
+  2026-10-28m.log; the script writes the diffs vs 27l/26j/26i at the end.
+- NEXT: 27m 0 failures → diff vs 27l by eye (banded books 0648 594 band pages, 435b 158, 2af9 97, 9b98 93, c63a 78, 29b9
+  76, 2b47 69, 55d3 60 — expect «band …» causes) → FREEZE (plan of 10-29: after that only the owner's pilot remarks or a new
+  kind of fault) → the pilot (scratch/pilot_redo_2026-10-26.sh: header to 27m; paths in index-now; plan 383 names).
+  If 27m fails: find which fix, bench, fix, 27n.
+
+## 2026-10-28 23:30 UTC — crop-tilt-003 BUILT; B5 BENCHED (Claude, max)
 - REVIEW PAGE site/crop-tilt-003.html (http://127.0.0.1:8765/crop-tilt-003.html ← data/review/crop-tilt-003.tsv, built by
   scratch/crop-fixes-2026-10-28k/build_tilt003.py from twoang_page.py's pictures in /tmp/claude-1000/twoang — rebuild needs
   them; doubts_page.py now takes an optional «#T title intro» line). The 83 two-angle pages, all left as scanned by 27l: 4
