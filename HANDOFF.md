@@ -9,6 +9,14 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-28 ~07:00 UTC — REGRESSION 26j ENDED: 3 FAILURES (all passed in 26i → caused by O/Q3/H/G); pilot blocked (Claude, medium)
+- FAIL القوافي للتنوخي p. 89 centred: content centre 1066 vs box 1108 (1106/1106 in every run 25–27i).
+- FAIL خزانة 01 p. 1 cover: the year line «١٣٨٧ هـ = ١٩٦٧ م» cut again (cover_window fix of 10-26 undone).
+- FAIL صبح الأعشى 05 p. 234: two-angle page turned −0.425° (26i: not turned) — breaks the owner's 10-27 «Leave as scanned».
+- Diffs: logs/crop-regress-diff-2026-10-28j.log (vs 26i: OTHER 4034, lines' tracks 1031, baselines 224; book 'size'/'gain'
+  changed on 10 books → most OTHER are cascades), …-vs-26b.log. Not looked at by eye yet.
+- NEXT (at MAX, owner sets it): find which of O/Q3/H/G caused each failure → fix → 27k; then the diff review → pilot.
+
 ## 2026-10-28 ~02:10 UTC — REGRESSION 26j RUNNING (book_crop 9a43a0bc8c); pilot waits for it (Claude)
 OWNER: effort is MEDIUM now. Before the 26j diff review and the pilot, STOP and tell the owner to set MAX (his order).
 - Services restarted after the 10-27 17:42 reboot (start_services.sh). reporter_follow.sh changed (owner): ONE terminal, idle ones only.
