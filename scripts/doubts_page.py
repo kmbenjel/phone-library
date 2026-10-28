@@ -2,7 +2,8 @@
 فتحه في برايف أضع x»): a section per kind of doubt, per file its name, folder, why it is doubtful and its first pages;
 a comment box per row — «x» opens the file in Brave (scripts/review_on_demand_x.py watches for it), anything else is a
 comment for the agent (review_server.py → data/names/review-comments.jsonl, report = the list's name).
-Input: data/review/<report>.tsv — «#S<TAB>section id<TAB>section title (Arabic)» lines, then rows
+Input: data/review/<report>.tsv — optional «#T<TAB>page title<TAB>opening line» (Arabic; default «ما بقي مشكلا», «N ملفا»),
+«#S<TAB>section id<TAB>section title (Arabic)» lines, then rows
 «section id<TAB>phone path (relative to Books/)<TAB>why (Arabic)<TAB>page images (comma-separated paths)».
 Usage: python3 scripts/doubts_page.py doubts-001   → site/doubts-001.html (+ site/doubts-001/ for the images)"""
 import html, os, shutil, sys
@@ -10,10 +11,11 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def main(report):
     src = os.path.join(ROOT, 'data', 'review', f'{report}.tsv')
-    sections, rows = {}, []
+    sections, rows, head = {}, [], None
     for l in open(src, encoding='utf-8'):
         r = l.rstrip('\n').split('\t')
         if r[0] == '#S': sections[r[1]] = r[2]
+        elif r[0] == '#T': head = (r + ['', ''])[1:3]
         elif r[0] and not r[0].startswith('#'): rows.append((r + ['', '', '', ''])[:4])
     imgdir = os.path.join(ROOT, 'site', report)
     shutil.rmtree(imgdir, ignore_errors=True); os.makedirs(imgdir)
@@ -32,8 +34,9 @@ def main(report):
 <div class="mut">{E(folder)}</div><div class="why">{E(why)}</div></div></div>
 <div class="pics">{"".join(pics) or '<span class="mut">لا صور محفوظة لهذا الملف — اكتب x لفتحه</span>'}</div>
 <div class="review" data-n="{k}"><textarea class="cmt" rows="2" placeholder="x لفتحه في برايف، أو تعليقك"></textarea><span class="st"></span></div></article>''')
+    title, intro = (head[0], head[1]) if head else ('ما بقي مشكلا', f'{len(rows)} ملفا.')
     page = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ما بقي مشكلا</title><style>
+<title>{E(title)}</title><style>
 :root{{--bg:#fbfaf7;--fg:#1f1d1a;--mut:#6b655c;--card:#fff;--line:#e4dfd6;--acc:#9a3412}}
 @media (prefers-color-scheme: dark){{:root:not([data-theme="light"]){{--bg:#161513;--fg:#ece8e1;--mut:#a39c91;--card:#1f1d1a;--line:#34312c;--acc:#f0a070}}}}
 :root[data-theme="dark"]{{--bg:#161513;--fg:#ece8e1;--mut:#a39c91;--card:#1f1d1a;--line:#34312c;--acc:#f0a070}}
@@ -44,8 +47,8 @@ article{{background:var(--card);border:1px solid var(--line);border-radius:10px;
 .head{{display:flex;gap:10px}} .pics{{display:flex;gap:6px;overflow-x:auto;margin:8px 0}} .pics img{{height:300px;border:1px solid var(--line);background:#fff}}
 textarea{{width:100%;font:inherit;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:6px;box-sizing:border-box}}
 .warn{{background:#fff3cd;color:#5c4400;padding:8px 12px;border-radius:8px}}
-</style></head><body><main><h1>ما بقي مشكلا</h1>
-<p class="mut">{len(rows)} ملفا. اكتب <b>x</b> في خانة أي ملف ليُفتح في برايف (يُجلب من الهاتف أولا، فانتظر لحظة)، أو اكتب ملاحظتك وأعمل بها.</p>
+</style></head><body><main><h1>{E(title)}</h1>
+<p class="mut">{E(intro)} اكتب <b>x</b> في خانة أي ملف ليُفتح في برايف (يُجلب من الهاتف أولا، فانتظر لحظة)، أو اكتب ملاحظتك وأعمل بها.</p>
 <p class="warn" id="noserver" hidden>لحفظ التعليقات افتح الصفحة من الخادم المحلي: http://127.0.0.1:8765/{E(report)}.html</p>
 {"".join(out)}</main><script>
 const R = '{report}', live = location.protocol.startsWith('http');

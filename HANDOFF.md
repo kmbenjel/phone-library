@@ -9,6 +9,40 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-28 23:45 UTC — crop-tilt-003 BUILT; B5 BENCHED (Claude, max)
+- REVIEW PAGE site/crop-tilt-003.html (http://127.0.0.1:8765/crop-tilt-003.html ← data/review/crop-tilt-003.tsv, built by
+  scratch/crop-fixes-2026-10-28k/build_tilt003.py from twoang_page.py's pictures in /tmp/claude-1000/twoang — rebuild needs
+  them; doubts_page.py now takes an optional «#T title intro» line). The 83 two-angle pages, all left as scanned by 27l: 4
+  agents looked at every page (verdict-*.jsonl), I looked at the questioned ones. 82 right (warped / pasted-up strips / two
+  blocks; 3 are level pages whose refused turn had no support — leaving them is right). 1 WRONG: التنبيه والإيقاظ (f134) ص 101
+  is one angle ≈ 0.4° (my own row measure, /tmp/claude-1000/rowtilt/rowtilt.py: every row 0.16–0.53°); two rows misread by
+  line_tracks (0.05 for 0.26; −0.08 for +0.16) refused the turn (one ends 0.354 vs the 0.35 bar). NOT a bar problem: 0.36
+  would also flip 5 true two-angle pages. Left as is (errs safe); on the page first with «أقترح أن تُدار» — his «أدرها» →
+  data/crop/owner-turns.tsv. Candidate later fix (not done): confirm a «made worse» line by an independent row reading.
+  Noted, no fix: lines_read counts printed rules (line_tracks' rule flag is unused) — مختصر تاريخ دمشق 27's footnote rule on
+  6 pages; changed no verdict.
+- plan-383: the owner wrote «done» on its last row (10-28 22:42) = reviewed, no remarks. CLOSED.
+- Watchers: review-x unit (review_on_demand_x.py, «x» opens a row's book) started 23:26; watch_comments.py runs as my Monitor.
+- B5 (lbb5, 1,261 s): 18/18 rows PASS, size same, clean True. vplace vs 27l: 71 back in place; only 661 flagged (index run,
+  in place). vs B4 7 pages: 71/171 back in place, 621/623 drop 78 % black band strips, 670 keeps «وانظر» and the number
+  line ends whole (≤ 3.5 pt of the turn's wedge at the bottom-left corner: the 4-pt rule), 121 neutral, 165 WORSE: frame
+  slides 3 pt to the band mask's straight edge → its grey shadow ramp (562–565 pt) + ≈ 0.5 pt of black in view (root cause
+  known: band_mask's straight edge vs the band's wobbling edge). bandedge.py (whole book, r27l/lbb4/lbb5 band + shadow at
+  every frame edge) running → bandedge.log. Early: B-chain frames show 0.9–2.4 pt of band on some pages 27l showed none
+  (25, 65, 70, 72) — pre-existing in B4, not B5. Decide from the totals: B6 (allowed edge = the band's innermost extent
+  minus its shadow ramp) before folding, or fold L→B5 and note it.
+
+## 2026-10-28 22:45 UTC — bench-b4-b DONE, bench-b5-a RUNNING (Claude, max)
+- bench-b4-b (lbb4, B4 tolerance 0): 1,949 s, size 483.92 × 700.57, clean True, ccheck 18/18 PASS. bench-b5-a started
+  22:41 (lbb5, ends ≈ 23:14). Then the NEXT of 22:20.
+- Owner asked what to review (22:45); told: plan-383 applied (review optional), crop-tilt-002 answered, the 83 two-angle
+  pages (survey-w.jsonl in crop-fixes-2026-10-28k: w35 and not w50, no cert, not median_ok; 15 books mapped) — asked him:
+  I check all 83 myself, or build a page (twoang_vis.py per page). He said «both»: twoang_page.py rendered all 83 (/tmp/claude-1000/twoang),
+  4 agents checking (verdict-*.jsonl), then my look at the questioned + a sample → build_tilt003.py → site/crop-tilt-003.html.
+- PLAN (mine, told the owner 10-29): FREEZE the method after 27m if it passes and its diff is clean → the pilot; after that
+  only his pilot remarks or a NEW kind of fault change it (no endless small polishing). Crops stay reversible (incremental
+  save, undo = truncate), so a later change can be re-applied.
+
 ## 2026-10-28 22:32 UTC — STATE AT THE /clear (Claude, max)
 - RUNNING: bench-b4-b (lbb4, ends ≈ 22:38) → unit chain-b5 (/tmp/claude-1000/cv/chain_b5.sh) then starts bench-b5-a
   (`bplan.py 064846139175 lbb5` → scratch/crop-fixes-2026-10-28m/out/064846139175.lbb5.json, bench-b5.log, ≈ 29 min). If
