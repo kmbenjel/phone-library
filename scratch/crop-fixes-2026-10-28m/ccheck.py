@@ -7,8 +7,10 @@ import crop_regress as cr
 N = lambda s: unicodedata.normalize('NFC', s)
 h, v = sys.argv[1], sys.argv[2]
 rec = json.load(open(f'{S}/out/{h}.{v}.json')); pdf = os.path.expanduser(f'~/.cache/phone-library/crop-regress/{h}.pdf')
-rows = [r for r in csv.reader(open(ROOT + '/data/improve/crop-regression.tsv', encoding='utf-8'), delimiter='\t')
-        if r and not r[0].startswith('#') and hashlib.md5(N(r[0]).encode()).hexdigest()[:12] == h]
+rows = []                                            # (the regression's rows, then the staged ones of case-rows.tsv)
+for f in (ROOT + '/data/improve/crop-regression.tsv', S + '/case-rows.tsv'):
+    rows += [r for r in csv.reader(open(f, encoding='utf-8'), delimiter='\t')
+             if r and not r[0].startswith('#') and hashlib.md5(N(r[0]).encode()).hexdigest()[:12] == h and r not in rows]
 fails = 0; keep_flat = set()
 for r in rows:
     ok, why = cr.check(r, rec, pdf); fails += not ok

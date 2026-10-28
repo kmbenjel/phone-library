@@ -1,5 +1,7 @@
-"""stage_tools.py — the tool edits that go with book_crop fixes L, B, B2 and B3 (2026-10-28), applied once to the working tree:
-crop_recipe_diff.py names their causes («band: box kept»: the off-band slide stopped at the page's box — p['band_box'];
+"""stage_tools.py — the tool edits that go with book_crop fixes L, B, B2, B3, B4 and B5 (2026-10-28; B5 needs no cause
+of its own — the band slivers it removes show as «band no ink»), applied once to the working tree:
+crop_recipe_diff.py names their causes («band: not dodged»: a mark in a scanner band no longer dodged, the old run's dodge
+gone — p['band_undodged'] (fix B4); «band: box kept»: the off-band slide stopped at the page's box — p['band_box'];
 «band no ink»: the scanner bands as scanned read as no ink on the turned page changed its box or text — p['band_ink'],
 p['band_ink2']; «band: second look off»: the second look placed the frame off a band, 4 pt beside the print —
 p['band_slide'] (fix B3); «slant line»: the lines found by their ink changed — p['slant_lines']; «band carried»: the scanner bands
@@ -20,9 +22,11 @@ restored (folio stain);""", """loop's turn, the lines' turn not kept — fix Q5)
 kept — fix B2); the scanner bands as scanned no ink on the turned page (band no ink — fix B2); a thin line at a slant
 taken for a line by its ink, not its box (slant line — fix L); the scanner bands read before the turn bounding the
 turned page (band carried — fix B); the second look's frame slid off a scanner band, 4 pt beside the print (band: second
-look off — fix B3); a page number read as a stain restored (folio stain);""")
+look off — fix B3); a mark in a scanner band no longer dodged — the off-band slide keeps it out (band: not dodged — fix B4);
+a page number read as a stain restored (folio stain);""")
 edit(d, """        return None
     if q.get('folio_blot') is not None""", """        return None
+    if q.get('band_undodged') and p.get('dodged') and not q.get('dodged'): return 'band: not dodged'
     if q.get('band_slide') is not None: return 'band: second look off'
     if q.get('band_box') is not None: return 'band: box kept'
     if q.get('band_ink') or q.get('band_ink2'): return 'band no ink'

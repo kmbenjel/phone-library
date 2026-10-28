@@ -10,9 +10,24 @@
 # B — THE SCANNER BANDS READ BEFORE THE TURN BOUND EVERY TURNED PAGE (the generic loop did it, the projection loop, the
 # baselines and the tracks did not): خريدة القصر 01 ص 422's black band reads 0.60 dark in its outermost column turned 0.45°
 # (the turn's blank wedge) — not over 0.6, no band, the box slid 10 pt onto it. Only the sides that have a band.
+# B2 — THE BANDS AS SCANNED ARE NO INK ON A TURNED PAGE THAT LOST THEM (the bench of L + B on خريدة القصر 01): turned 1.5–2.5°,
+# a band's outermost column takes in the turn's blank wedge and falls under bands()' 60 % (ص 634: 0.52); read as the page's
+# ink, the band ran the box to the sheet's edge and joined a table's rules into one «picture» — 8 pages left whole (633, 634,
+# 636, 637, 638, 644, 652, 660). On a side where the turned page shows no band, the band read before the turn (band_mask) is
+# no ink, the paper's grey rim beside it a shadow along its turned edge (ص 694); decide()'s off-band slide never passes the box.
+# B3 — BESIDE A BAND THE SECOND LOOK KEEPS 4 PT OFF THE PRINT AND SLIDES OFF THE BAND: holding line ends that run to the
+# paper's edge with half the margin, or re-centring on them, the frame went back into the band 15–33 pt (ص 344 «عليه», 54,
+# 70, 87, 326…); ص 400's line end «حديد», cut in 27l, is whole.
+# B4 — B2's rim took a table's grid touching the band for the rim (ص 636–638: the allowed area cut 362–431 pt into the text):
+# the rim lies along the band; and nothing beyond the allowed area on a band's side is dodged (ص 389, 579, 585, 637: a
+# sliver of the band's turned edge dodged, the text 10–15 pt higher in the frame than on the pages around).
+# B5 — THE BAND'S OWN EDGE PIXELS ARE THE BAND: band_mask's straight edge misses the band's last pixel where its edge wobbles;
+# a mark wholly within 2.4 pt of a lost band is the band (ص 71: a 16-pt sliver read as a letter, the text block 23 pt longer,
+# the page 11 pt high; the top-corner slivers B4 no longer dodges are gone too). A rim, a grid, a letter reach further.
 # NOT fixed here (known, later): خريدة القصر 01 ص 438 — the dotted-line rule takes the thin strokes at the start of each verse
-# line for a dotted line, the footnote/verse numbers fall into the margin, the box 10 pt off (26i the same).
-# book_crop.py = 6a1fad7b21 + patch_l.py + patch_b.py (scratch/crop-fixes-2026-10-28m).
+# line for a dotted line, the footnote/verse numbers fall into the margin, the box 10 pt off (26i the same). A turn the second
+# look drops keeps the first look's turned-view box (ص 636: 5 pt of band in view). The full-height knife edge (ص 595, 606).
+# book_crop.py = 6a1fad7b21 + patch_l.py + patch_b.py + patch_b2.py + patch_b3.py + patch_b4.py + patch_b5.py (scratch/crop-fixes-2026-10-28m).
 cd "$(dirname "$0")/.."
 M=data/crop/.regress-2026-10-28m; [ -e $M ] && { echo "already ran"; exit 1; }; touch $M
 R=logs/crop-regress-2026-10-28m.log; : > $R
@@ -43,7 +58,7 @@ done
 f=$(grep -oE '^[0-9]+ failures' $R | tail -1 | cut -d' ' -f1)
 echo "$(date -u '+%F %T') regression finished: ${f:-?} failures — see $R"
 [ "$(md5sum scripts/book_crop.py | cut -c1-10)" = "$B" ] || echo "WARNING: book_crop.py changed during the run"
-python3 scripts/crop_recipe_diff.py 6a1fad7b21 "$B" > logs/crop-regress-diff-2026-10-28m.log 2>&1   # (vs 27l: what L and B changed)
+python3 scripts/crop_recipe_diff.py 6a1fad7b21 "$B" > logs/crop-regress-diff-2026-10-28m.log 2>&1   # (vs 27l: what L, B, B2–B5 changed)
 python3 scripts/crop_recipe_diff.py 9a43a0bc8c "$B" > logs/crop-regress-diff-2026-10-28m-vs-26j.log 2>&1
 python3 scripts/crop_recipe_diff.py 3205efa17f "$B" > logs/crop-regress-diff-2026-10-28m-vs-26i.log 2>&1
 echo "$(date -u '+%F %T') diffs written: logs/crop-regress-diff-2026-10-28m.log, …-28m-vs-26j.log, …-28m-vs-26i.log"

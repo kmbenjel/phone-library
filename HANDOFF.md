@@ -9,6 +9,79 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-28 22:32 UTC — STATE AT THE /clear (Claude, max)
+- RUNNING: bench-b4-b (lbb4, ends ≈ 22:38) → unit chain-b5 (/tmp/claude-1000/cv/chain_b5.sh) then starts bench-b5-a
+  (`bplan.py 064846139175 lbb5` → scratch/crop-fixes-2026-10-28m/out/064846139175.lbb5.json, bench-b5.log, ≈ 29 min). If
+  bench-b5-a never appeared, launch it by hand (same line as bench-b4-b with lbb5). book_crop.py still 6a1fad7b21; nothing applied.
+- Tools in the work folder: vsum.py (triage), tzoom.py (zoom with frames), vplace.py (vertical place vs neighbours — beware
+  mixed-layout index runs: ص 661's flag was that, it is in place), fl2.py (first look + lines outside text), same.py
+  (recipe equality — use it on 27m's 0648 recipe vs lbb5 and 6860 vs lb: must be identical), ccheck.py (18 rows).
+- Then follow the NEXT of the 22:20 section. 27m header and stage_tools already updated for B2–B5. Launch 27m:
+  `systemd-run --user --slice=crop.slice --unit=crop-regress-2026-10-28m --nice=10 --working-directory=$PWD scratch/regress_2026-10-28m.sh`
+- Diff review will be big: banded books 0648 (594 band pages), 435b 158, 2af9 97, 9b98 93, c63a 78, 29b9 76, 2b47 69, 55d3 60.
+- Owner still not told (older): site/plan-383.html; crop-tilt-002 built; the 83 two-angle pages listed.
+
+## 2026-10-28 22:20 UTC — B4 BENCHED (lbb4A) → B4 TOLERANCE 0 (bench-b4-b running) → FIX B5 BUILT; B5 BENCH NEXT (Claude, max)
+- bench-b4-a (lbb4A = B4 with the second look's 1 % margin): 18/18 rows, size same, only 579, 585 (back in place), 636 (frame
+  7.3 pt left: its box, measured on the dropped 1.125° turn, holds the grid's rules to 50.2 → 5 pt of band in view; H cut the
+  rules' last 2 pt instead — a trade, the pre-existing dropped-turn weakness), 686 (1.8 pt) changed vs H. No allowed area
+  cuts a text block by > 20 pt any more. vplace.py (every page's text top in its frame vs its 6 nearest same-parity full
+  pages, a MEASURE over the whole book) vs 27l: newly out of place 71 (−11), 389 (−14), 637 (−9.5), 661 (−19: in L+B already —
+  its frame top is 20.6 in L+B/H/B4; 27l showed it whole, enlarged 1.13: look at it); back in place 409, 516, 611, 634, 642,
+  663, 667, 669.
+- 389/637: their slivers lie 5.8/5.3 pt beyond the allowed edge (the wedge between the turned band edge and the upright limit)
+  — under the 1 % margin → B4 now has NO margin (patch_b4.py; bench-b4-b = lbb4, md5 796dc0a6d3; lbb4A kept).
+- ص 71: a sliver 1 px × 16 pt hugging the band mask at the foot read as a LETTER (not 3 % long → not a line) → text block +23
+  pt → the page 11 pt high. Root cause of all the slivers: band_mask's straight edge vs the band's wobbling edge.
+- FIX B5 (patch_b5.py on bc_lbb4 → code/bc_lbb5.py, md5 4fcdf11f58): a mark WHOLLY within 2.4 pt of a lost band is the band
+  (2 px at 500 px, 4 at 1,000). REJECTED first: growing the band 2 px through ink — ate ص 694's rim (blot again, line ends out,
+  text 61.2 → 93.0) and ص 637's table border (text −8.5 pt). Checked (fl2.py first looks + marks at 1,000 px): 71 text back
+  to 27l's, slivers gone on 389/579/585/637, 694/634/652/636 unchanged, 344 «عليه» kept (box now starts at the print, 63.6).
+- NEXT: bench-b4-b ends (≈ 22:38; confirms the dodge backstop) → bench lbb5 (unit bench-b5-a) → ccheck 18 rows, vplace vs
+  27l (71/389/579/585/637 back in place), vsum lbb4 → lbb5, allowed survey → look → apply the chain L→B→B2→B3→B4→B5 →
+  stage_tools → commit → 27m (header updated for B2–B5).
+
+## 2026-10-28 21:40 UTC — H BENCHED AND LOOKED AT: 2 FAULTS → FIX B4 BUILT, BENCH bench-b4-a RUNNING (lbb4) (Claude, max)
+- bench-b3-b (H, 1,762 s at 1 worker): size 483.92 × 700.57 (= L+B), clean True; case rows 18/18 PASS (11 + 7 new staged in
+  case-rows.tsv: 634/652/660/636/644 «cropped yes», 344 «in» «عليه», 634 «in» the head rule — region corrected to the rule's
+  ink, scanned 62.0,81.6,67.6,84.0: the old one lay above the rule and 0.4 pt past the 500-px box edge; the rule's faint
+  last 3 pt at the paper's edge go with the band). Controls: lb fails 6 (344 out + the 5 «cropped»), r27l fails 3 (422, 636, 644).
+- vs L+B (vsum.py, bsheets → /tmp/claude-1000/cv/sh-lb-H, looked at ~35 sheets + measured): 8 whole → cropped, all right (tables
+  whole, scale 1); 0 → whole; ~45 unturned band pages off the band by B3 (54, 70, 87, 326… band gone); ص 400 «حديد» kept (27l
+  and L+B cut its last letters; now 1 pt of band shows — accepted, the 4-pt rule); ص 656 now turned 0.625 (tracks: lines
+  0.67–0.93° as scanned, 0.071 after — 27l left it tilted, unsure_tilt: the band read as ink spoilt the check) and placed
+  like its neighbour; 699/705/709/712 (frames at y 0 in L+B) placed like their neighbours; 595/606 flipped short → full
+  (box h 570.4 at 0.9 × median: the full_h knife edge, like معجم تيمور's full_w — pre-existing, both placements defensible).
+- FAULT 1 (B2's rim rule): a table's grid touching a lost band is tall and thin by ink → taken for the rim: ص 636/637/638
+  allowed areas cut 362/410/431 pt into the text (crops right only because the text held every slide). FAULT 2: a sliver of the
+  lost band's turned edge (47–54 pt at the top corner) is a «line» → decide() dodged it before the off-band slide: ص 389, 579,
+  585 text top 20.2/23.8/17.7 pt in the frame vs 33–37 on every page around (27l 35.1/38.1/30.2). MEASURE, DON'T EYEBALL: the
+  sheets suggested the opposite.
+- FIX B4 (patch_b4.py on bc_lbb3 → code/bc_lbb4.py, md5 ef0992c133): the rim lies along the band (breadth ≤ 6 % + the band
+  edge's slant over its rows); nothing whose centre lies > 1 % inside a band is dodged (p['band_undodged']). First looks
+  (fl.py): 636 allowed 488.4 → 62.9 (box takes the grid's left rules, 50.2), 637 148.1 → 553.4, 638 487.2 → 61.0; ص 694's rim
+  still found; 634/652/422 unchanged. stage_tools.py: + cause «band: not dodged» (dry-run on temp copies: applies once).
+- NEXT: bench-b4-a ends → ccheck lbb4 (18 rows) → vsum lbb3 lbb4 (expect 389/579/585 text tops ≈ 35/38/30, 636–638 crops
+  as H, little else) → look → apply L+B+B2+B3+B4 (cp code2/bc_lbb4.py after checking book_crop = 6a1fad7b21) → stage_tools
+  → 27m header (draft in the session; B2/B3/B4) → commit → launch 27m as a unit in crop.slice.
+- Pre-existing, noted: a turn verify drops (unsure_tilt) keeps the first look's turned-view box/text/allowed (ص 636: measured
+  at 1.125°, shown unturned).
+
+## 2026-10-28 20:55 UTC — BENCH bench-b3-b RUNNING (variant H = code/bc_lbb3.py, md5 eae1a866cd = the patch chain rebuilt) (Claude, max)
+- Variant G kept as out/064846139175.lbb3G.json (+ bench-b3G.log); H writes out/064846139175.lbb3.json (+ bench-b3.log), 1 worker
+  (≈ 2 GB free: Brave). out/064846139175.r27l.json = a link to 27l's cached recipe (6a1fad7b21) for controls.
+- ccheck.py now also runs the staged rows of case-rows.tsv. Checked by eye (scanned page): ص 344 59.3,553.4,63.7,558.9 = the
+  last letters of «عليه» at the paper's edge; ص 634 60.9,78.9,67.6,82.1 = the left end of the table's head rule.
+- Known, harmless: B3's p['band_slide'] is not cleared when place() runs a second time without a slide (a cause label only).
+- ص 554 SETTLED (looked at, 600 dpi, tzoom.py + marks of lb vs H on the same view): the text block's right edge 484.7 → 470.0
+  leaves the heading's first letter «و» (479.8–484.7) and the footnote number «(٤)» (471–483.5) outside it — at 500 px the thin
+  strokes of «ال» and of the brackets break into specks under the letter size, so nothing bridges the 9.8 pt to «و» (gap
+  limit 1.5 % = 9.2 pt). L+B reached it only because band-edge fragments counted as letters widened the seed (core = the
+  whole page). A weakness of the 500-px text block, not B2's damage; no effect on the crop (left edge pinned by the band;
+  the 1,000-px second look holds the print).
+- FIX D seen (خزانة 02 68600214e7de pp. 316–321, lb recipe): the speck sits at y 141.6 on consecutive pages (a hair on the
+  glass), the book's text tops are 178–185; on ص 316 it is read as the FOLIO ('head'). Design from the book's usual text top.
+
 ## 2026-10-28 ~16:30 UTC — STATE AT THE /clear: B2 = VARIANT H (built, first looks checked), FULL BENCH NOT YET RUN (Claude, max)
 - bench lbb3 (variant G: band no ink on LOST sides + letters' outer 3 % from the band's turned edge) + B3: ALL 10 case rows
   PASS (ص 344 included), 0 whole pages — BUT the band-edge strip dropped real line ends on 123 pages (638 the table's first
