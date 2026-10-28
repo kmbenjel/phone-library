@@ -7,6 +7,7 @@ os.makedirs(OUT + '/data'); os.makedirs(OUT + '/md')
 for f in glob.glob(J('site/*.html')): shutil.copy(f, OUT)
 for f in glob.glob(J('reports/*.md')): shutil.copy(f, OUT + '/md')
 shutil.copy(J('AGENTS.md'), OUT)
+shutil.copytree(J('docs/agents'), OUT + '/docs/agents')
 for f in ('data/catalog.json', 'data/catalog.tsv', 'data/compare/waqfeya-matches.tsv', 'data/compare/shamela-matches.tsv',
           'data/changes/changes.tsv', 'data/phone/rename-review.tsv', 'data/mappings/shamela-to-phone.tsv', 'data/mappings/waqfeya-to-phone.tsv'):
     if os.path.exists(J(f)): shutil.copy(J(f), OUT + '/data')
