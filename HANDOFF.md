@@ -9,6 +9,13 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-28 11:30 UTC — 27l PASSED (0 failures, 211 PASS; ended 11:16, diffs written) — DIFF REVIEW NEXT, AT MAX (Claude)
+Q5 confirmed: خريدة 01 (0648) ص 625 turned 0.5° again, المثلث (eb86) ص 189 1.15° again (the loop's turn, the lines' not kept).
+To judge by eye first (book-level changes vs 26j, not predicted by the benches): 68600214e7de size 379.99 → 383.56 (462
+pages OTHER, box 3.6 pt taller); 810908d4ed05 size 1796.67×2808.32 → 1695.3×2591.5, width_quantile 0.98 → 0.95, gain,
+clean_margins flipped (102 pages OTHER) — the biggest; 9b98ea8b9570 parity_offsets −44.7 → −44.5 (48 pages OTHER, sub-pt).
+The rest: «the loop's turn kept» (Q4) and «two angles» (T) as predicted. Then vs 26i, then the pilot.
+
 ## 2026-10-28 08:38 UTC — REGRESSION 27l RUNNING (book_crop 6a1fad7b21 = 26j + C, Q4, T, Q5; commit ea8f5a9) (Claude, max)
 Unit crop-regress-2026-10-28l (scratch/regress_2026-10-28l.sh), log logs/crop-regress-2026-10-28l.log; at its end it writes
 logs/crop-regress-diff-2026-10-28l.log (vs 26j: what C, Q4, T, Q5 changed), …-28l-vs-26i.log (all eight fixes), …-28l-vs-26b.log.
