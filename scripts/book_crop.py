@@ -829,11 +829,14 @@ def lines_read(t0, t1, d):
 
 def two_angles(L):
     """A TURN THE LINES DO NOT TAKE (owner: «ولم نصطنع ميلا جديدا»; 2026-10-27, «Leave as scanned» for a page whose lines lie
-    at two angles), judged on lines_read: a line is made worse when it ends ≥ 0.5° and ≥ 0.25° more tilted than it was →
-    those lines [(y, before, after)] when two or more are, and they are a fifth of the lines or the lines do not take the
-    turn (fewer than 80 % of them within 0.35° of level once turned); else []"""
+    at two angles), judged on lines_read: a line is made worse when it ends beyond 0.35° — the band within which a line
+    takes the turn, below — and ≥ 0.25° more tilted than it was → those lines [(y, before, after)] when two or more are, and
+    they are a fifth of the lines or the lines do not take the turn (fewer than 80 % of them within 0.35° of level once
+    turned); else []. (The bar was 0.5° until 2026-10-28: صبح الأعشى ج 5 ص 234's level last section, three lines of
+    fifteen, leaned 0.39–0.52° under the −0.425° that fixes G and Q3 read in its main text, and the turn stayed — a near-level
+    line made to lean beyond 0.35° is a new tilt: «ولم نصطنع ميلا جديدا»)"""
     if not L: return []
-    w = [v for v in L if abs(v[2]) >= max(0.5, abs(v[1]) + 0.25) - 1e-6]
+    w = [v for v in L if abs(v[2]) > 0.35 + 1e-6 and abs(v[2]) >= abs(v[1]) + 0.25 - 1e-6]
     agree = sum(1 for v in L if abs(v[2]) <= 0.35 + 1e-6)
     return w if len(w) >= 2 and (len(w) >= 0.2 * len(L) or agree < 0.8 * len(L)) else []
 
@@ -1305,12 +1308,15 @@ def cover_window(c, A, mk):
                 lost = [m for m in lost if m[2] - m[0] >= 3]
                 if sum_spans([(m[1], m[3]) for m in lost]) < 0.3 * ch: lost = []
             if not lost: continue
-            need = (lo + d - min(m[I0] for m in lost) + 3) if s < 0 else (max(m[I1] for m in lost) - (hi - d) + 3)
-            if need < 2 or need - 3 > d: continue
-            need = min(need, d)
+            need = (lo + d - min(m[I0] for m in lost)) if s < 0 else (max(m[I1] for m in lost) - (hi - d))   # (just whole)
+            if need < -1 or need > d: continue
             plain = (hi - max(m[I1] for m in mk)) if s < 0 else (min(m[I0] for m in mk) - lo)
-            if plain < d + need + 3 or (not vert and plain < 0.4 * cw): continue
-            move = s * need; break
+            # the ground beyond the print: 3 pt at both ends when there is room, else what there is, alike at both ends
+            # (2026-10-28: fix H made خزانة الأدب ج 1's box 15.6 pt shorter — its cover's print fits the window with 1.1 pt
+            # to spare, and asking 3 + 3 cut the year again)
+            e = min(3.0, (plain - d - need) / 2)
+            if e < 0 or (not vert and plain < 0.4 * cw): continue
+            move = s * min(need + e, d); break
     if vert: return [c[0], c[1] + d + move, c[2], c[3] - d + move]
     return [c[0] + d + move, c[1], c[2] - d + move, c[3]]
 
@@ -1588,30 +1594,7 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
             # own baselines and 127 were turned for a tilt under 0.2° (printed rules agreeing with the baselines: خزانة الأدب
             # ج 1 ص 68 and 110). When at least 6 lines are read and agree (base_tilt, 1,400 px, the page as scanned, its
             # stamps and dot fields left out), their median is the turn, or no turn under 0.2°; else the loop, as before
-            bt = None
-            if rec.get('tilt_by_proj') is not None and mk.get('text'):
-                a3, z3 = gray(page, 1400); a3 = whiten(np.array(a3), z3, sh)
-                for b in ex0 or []: a3[max(0, int(b[1] * z3)):int(b[3] * z3) + 1, max(0, int(b[0] * z3)):int(b[2] * z3) + 1] = 255
-                bt = base_tilt(a3, mk['paper'], mk['text'], z3)
-                # (when the baselines cannot read it: the lines FOLLOWED ACROSS THE PAGE — line_tracks at 1,000 px, as the
-                # second look reads them; when these cannot either, the baselines without the lines run together)
-                if bt is None:
-                    a4, z4 = gray(page, 1000); a4 = whiten(np.array(a4), z4, sh)
-                    for b in ex0 or []: a4[max(0, int(b[1] * z4)):int(b[3] * z4) + 1, max(0, int(b[0] * z4)):int(b[2] * z4) + 1] = 255
-                    bt = tracks_tilt(line_tracks(a4, mk['paper'], mk['text'], z4))
-                    if bt is not None: rec['tilt_by_tracks'] = bt[0]
-                    else:
-                        bt = base_tilt(a3, mk['paper'], mk['text'], z3, robust=True)
-                        if bt is not None: rec['base_robust'] = True
-            if bt is not None:
-                if rec.get('tilt_by_tracks') is None: rec['tilt_by_base'] = bt[0]
-                if abs(bt[0]) >= SKEW_MIN:
-                    deg = round(round(bt[0] / 0.025) * 0.025, 3)
-                    a2, z2 = gray(tu().page(deg), 500); a2 = whiten(a2, z2, fwd_box(doc, i, {'skew': deg}, sh) if sh else None)
-                    mk2 = marks(a2, z2, r.width, fwd_boxes(doc, i, {'skew': deg}, ex0) if ex0 else None)
-                    if mk2['box'] is not None and mk2['xy'] is not None: rec['skew'] = deg; mk = mk2
-                ang = 0.0                                # (neither loop below is run for it)
-            elif rec.get('tilt_by_proj') is not None:    # a projection turn: angles around its reading (it is coarse), the
+            def proj_loop():                             # a projection turn: angles around its reading (it is coarse), the
                 best = None                              # one after which the page reads level by its own ink is kept
                 for k in list(range(-5, 6)):
                     deg = round(rec['tilt_by_proj'] + 0.2 * k, 3)
@@ -1628,8 +1611,45 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
                         if mk2['box'] is None or mk2['xy'] is None: continue
                         lv = abs(skew_of(mk2['xy'], raw=True)[0])
                         if lv < best[0]: best = (lv, deg, mk2)
+                return best
+            bt = None; looped = False
+            if rec.get('tilt_by_proj') is not None and mk.get('text'):
+                a3, z3 = gray(page, 1400); a3 = whiten(np.array(a3), z3, sh)
+                for b in ex0 or []: a3[max(0, int(b[1] * z3)):int(b[3] * z3) + 1, max(0, int(b[0] * z3)):int(b[2] * z3) + 1] = 255
+                bt = base_tilt(a3, mk['paper'], mk['text'], z3)
+                # (when the baselines cannot read it: the lines FOLLOWED ACROSS THE PAGE — line_tracks at 1,000 px, as the
+                # second look reads them; when these cannot either, the baselines without the lines run together)
+                if bt is None:
+                    a4, z4 = gray(page, 1000); a4 = whiten(np.array(a4), z4, sh)
+                    for b in ex0 or []: a4[max(0, int(b[1] * z4)):int(b[3] * z4) + 1, max(0, int(b[0] * z4)):int(b[2] * z4) + 1] = 255
+                    bt = tracks_tilt(line_tracks(a4, mk['paper'], mk['text'], z4))
+                    if bt is not None: rec['tilt_by_tracks'] = bt[0]
+                    else:
+                        bt = base_tilt(a3, mk['paper'], mk['text'], z3, robust=True)
+                        if bt is not None: rec['base_robust'] = True
+            # THE LOOP'S TURN STANDS WHEN THE NEW RULER CONFIRMS IT (fix Q4, 2026-10-28): the lines followed across the page
+            # (or the robust baselines) correct the loop where it is off — on القوافي للتنوخي by 0.3–0.48° — but a turn they
+            # read within 0.05° of the loop's (its own resolution; the second look corrects a tracks turn only beyond it) is
+            # not changed: ص 70 0.8° → 0.825° moved two strokes of a marginal «٤/١» out of a dotted-line reading into the
+            # margin and the book lost its clean margins (10 pages of 90 over the 10 % limit)
+            if bt is not None and (rec.get('tilt_by_tracks') is not None or rec.get('base_robust')):
+                best = proj_loop(); looped = True
+                if best and best[0] <= 0.2 and abs(bt[0] - best[1]) <= 0.05 + 1e-6:
+                    rec['skew'] = best[1]; mk = best[2]; rec['loop_confirmed'] = bt[0]
+                    rec.pop('tilt_by_tracks', None); rec.pop('base_robust', None); bt = None; ang = 0.0
+            if bt is not None:
+                if rec.get('tilt_by_tracks') is None: rec['tilt_by_base'] = bt[0]
+                if abs(bt[0]) >= SKEW_MIN:
+                    deg = round(round(bt[0] / 0.025) * 0.025, 3)
+                    a2, z2 = gray(tu().page(deg), 500); a2 = whiten(a2, z2, fwd_box(doc, i, {'skew': deg}, sh) if sh else None)
+                    mk2 = marks(a2, z2, r.width, fwd_boxes(doc, i, {'skew': deg}, ex0) if ex0 else None)
+                    if mk2['box'] is not None and mk2['xy'] is not None: rec['skew'] = deg; mk = mk2
+                ang = 0.0                                # (neither loop below is run for it)
+            elif rec.get('tilt_by_proj') is not None and not looped:
+                best = proj_loop()
                 if best and best[0] <= 0.2: rec['skew'] = best[1]; mk = best[2]
                 ang = 0.0                                # (the generic loop below is not run for it)
+            elif looped: ang = 0.0                       # (the loop's turn kept above: the generic loop is not run either)
             if abs(ang) >= SKEW_MIN and gain >= 1.02:
                 for deg in (-ang, ang):
                     a2, z2 = gray(tu().page(deg), 500); a2 = whiten(a2, z2, fwd_box(doc, i, {'skew': deg}, sh) if sh else None)
