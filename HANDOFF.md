@@ -9,6 +9,45 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-28 08:17 UTC — REGRESSION 27k RUNNING (book_crop dc613e4200 = 26j + C, Q4, T; commit 23f6270) (Claude, max)
+Unit crop-regress-2026-10-28k (scratch/regress_2026-10-28k.sh), log logs/crop-regress-2026-10-28k.log; at its end it writes
+logs/crop-regress-diff-2026-10-28k.log (vs 26j: what C, Q4, T changed), …-28k-vs-26i.log (all seven fixes), …-28k-vs-26b.log.
+Watchers die with a /clear: re-arm (FAIL / crash / end). Work folder scratch/crop-fixes-2026-10-28k (tools tracked; out/ and
+code/ are local: code/bc_<v>.py = variants, rebuild from the patches).
+- 26j's three failures, each traced by code variants (26j without each fix: bplan.py; one page's first look: fl.py; decide
+  internals: fl_decide.py + a debug copy):
+  · خزانة 01 ص 1 cover: H (rightly: 34 pages' boxes no longer reach the scan line) → the book's box 15.6 pt shorter → the
+    cover's print fits its window with 1.1 pt to spare, cover_window asked 3 + 3 → year cut. FIX C (patch_c.py): margin 3 pt
+    or what there is, both ends alike; proved the same move wherever the old rule moved; only that cover of 15 changes.
+    Case region corrected to the year's measured ink (554.4–560.25; it read 556–561 by hand) — looked at: year and the
+    «تراثنا» frame whole.
+  · القوافي ص 89 centred: Q3 alone. ص 70 0.8° → 0.825° moved two strokes of the marginal «٤/١» out of a dotted-line reading
+    (the dotted-line rule reads a text row's dots as a scanner's speckle at one angle, not the next) into the margin: 10 of 90
+    pages «print in their margins» (limit 9.0; 26i had 9) → clean_margins False → wider frame, ص 84's verse number cut as a
+    stray, the photocopy's edge arc kept. FIX Q4 (patch_q4.py): the projection loop runs first; its turn stands when the
+    tracks/robust baselines read it within 0.05° (the loop's resolution; the second look corrects only beyond 0.05°),
+    p['loop_confirmed']. Q3's real corrections stay (القوافي pp. 22, 62, 102: 0.3–0.48° — LOOK AT THEM in the diff review).
+  · صبح الأعشى 05 ص 234 turn no: G and Q3 each read the main text truly (−0.42/−0.44°); −0.425° made the level last section
+    lean 0.39–0.52°, one line over guard W's 0.5° bar. FIX T (patch_t.py): a line is made worse beyond 0.35° (two_angles'
+    own «takes the turn» band). Survey of all 7,649 turned pages of 26j (survey_w.py → survey-w.jsonl): 86 more refused, 2
+    kept by the print's certificate, 1 rescued by the median turn, 83 LEFT AS SCANNED and listed (2b47 25, 4b80 الفوائد
+    المحصورة 15, 55d3 7, 3103 6, eb86 5, 29b9 4, 435b 4, acb8 ابن خير 4, …); 80 of 84 do not take one turn (< 80 % of lines
+    within 0.35°). Looked at 10 by eye (twoang_vis.py): fans, two blocks, a footnote block whose turn tilted level main text
+    (4b80 ص 259), wrong turns (روضة المستبين ص 679 = 83df ص 1476: lines 0.05–0.39 turned 0.5) — all right to leave.
+    «turn yes» rows: none refused (0648 ص 637/703 refused at 0.5 already, kept by level_by_print as before).
+- Bench (bplan.py k → ccheck.py): القوافي 18 rows 0 failures (clean True, wq 0.95, verse numbers all shown, only the 17
+  photocopy edge arcs cut as in 26i); صبح الأعشى 05 4 rows 0 (two angles 20, 165, 234, 351, 367, 493 — as the survey
+  said); خزانة 01 13 rows 0. New case rows (5): القوافي ص 84 in (fails on 26j's recipe, passes on 26i's — control done),
+  خزانة 01 ص 203, الموسوعة 38 ص 125, الفوائد المحصورة ص 259, mtda27 ص 26 «turn no».
+- KNOWN WEAKNESSES (not fixed — later, with the owner): clean_margins is a hard 10 % count — القوافي sits at 9/90; photocopy
+  edge arcs (curved shadow lines, thin, not axis-aligned) count as margin print (القوافي pp. 9, 84) and the sliver test is
+  rounding-close there; the dotted-line rule (marks(): 10th/90th percentiles as the text's edges) takes text-row dots and
+  thin glyphs as «lines» on ~13,000 pages of the 31 books — it decides margin classifications at the knife edge.
+- NEXT (at MAX): 27k 0 failures → its diff vs 26j (C, Q4, T only: Q4 reverts sub-0.05° Q3 turns to 26i, T's 83 pages) and
+  vs 26i by eye (key books first; Q3's big corrections; معجم تيمور 02's folio anchor, still open) → the pilot
+  (scratch/pilot_redo_2026-10-26.sh; header names 26i — update; check paths in index-now; plan 383 renamed names) → tell the
+  owner (plan-383 page, crop-tilt-002 built, and the 83 two-angle pages now listed).
+
 ## 2026-10-28 ~07:00 UTC — REGRESSION 26j ENDED: 3 FAILURES (all passed in 26i → caused by O/Q3/H/G); pilot blocked (Claude, medium)
 - FAIL القوافي للتنوخي p. 89 centred: content centre 1066 vs box 1108 (1106/1106 in every run 25–27i).
 - FAIL خزانة 01 p. 1 cover: the year line «١٣٨٧ هـ = ١٩٦٧ م» cut again (cover_window fix of 10-26 undone).
