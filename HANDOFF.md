@@ -9,6 +9,22 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-28 01:30 — STATE BEFORE A /clear: 26i PASSED; pilot NOT yet launched (Claude, max)
+<S4> = /tmp/claude-1000/-home-k-projects-phone-library/c06d38ff-653e-4fde-b84f-8d7f324d892d/scratchpad (copies in scratch/crop-fixes-2026-10-27b/).
+- 26i ended (194 PASS, 1 FAIL = the changed row 25); clean rerun on the cache: 0 failures, 195 PASS (logs/crop-regress-2026-10-27i-clean.log).
+  Diffs: logs/crop-regress-diff-2026-10-27i.log, …-vs-26b.log. Looked at: 9 books (see 05:30 section); the other 22 books' changes NOT yet
+  looked at — run <S4>/w4/turn_judge.py 20d30c2020 3205efa17f -j 3 (cached readings) and sel_sheets.py for moves ≥ 3 pt, look, then the pilot.
+- FIX O: benched on 3 books (ابن خير 13 pages, 435b p. 96, c63a pp. 360/441), all base FAITHFUL, all changed pages looked at: better.
+  Final patch_o.py restricts ornaments to the text's columns (punch holes). Ready.
+- FIX Q3: v1 (robust baselines first) benched on 00597/29b9 — big gains but its turned-view correction went wrong on ص 233/318 and the
+  robust ruler is non-linear on hard pages (vis.py). patch_q3.py REWRITTEN to v2 (plain base as Q; else line tracks; else robust;
+  R unchanged; head-rule check rule_angle.py sides with tracks). v2 NOT yet built/benched: python3 <S4>/orn/patch_q3.py scripts/book_crop.py
+  <S4>/orn/code/bc_q3.py, delete the ('relook','q3',…) key from <S4>/orn/<book>.pages.pkl, rerun RELOOK=1 fbo.py BOOK base q3, judge3.py.
+- Staged tool edits <S4>/after26i/ (ORIG.md5); 26j script scratch/regress_2026-10-27j.sh. Order: 26i diff looked at → pilot
+  (scratch/pilot_redo_2026-10-26.sh, launch line in the 10-26 07:00 section) → Q3 v2 bench → apply O+Q3 → 26j → redo changed pilot books.
+- Rare, later: 30 near-full pages (0.9–0.95 of median height) centred on themselves, head ≥ 10 pt low (435b p. 96 type).
+- Owner not yet told: site/plan-383.html; crop-tilt-002 built (guard W).
+
 ## 2026-10-27 05:30 — 26i RUNNING (12/31 books); fixes O and Q3 built in scratch and benching (Claude, max)
 <S4> = /tmp/claude-1000/-home-k-projects-phone-library/c06d38ff-653e-4fde-b84f-8d7f324d892d/scratchpad (sources copied to
 scratch/crop-fixes-2026-10-27b/). Watcher <S4>/watch26i.sh (dies with a /clear: re-arm). book_crop.py NOT touched (26i runs).

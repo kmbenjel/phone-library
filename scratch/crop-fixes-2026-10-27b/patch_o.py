@@ -2,7 +2,8 @@
 end-of-section fleuron, a 59 pt square under the text — was read as a stain (blots) on 12 pages: the repeat rule wants a
 stain at the same place (height too) on ≥ 3 % of the text pages, and a section ends anywhere on the page (12 of ≈ 370
 pages). Now a «stain» at least M across both ways whose twin (same width and height ± 10 %, its centre on the same vertical
-line ± 3 % of the page) stands on 3 other text pages or more, at any height, is print: content again (p['ornament']), part
+line ± 3 % of the page) stands on 3 other text pages or more, at any height, within the text's columns (punch holes repeat alike in the margin), is
+print: content again (p['ornament']), part
 of the text block when its centre lies within the text's columns. Surveyed on the 26h recipes of all 31 regression books:
 ornament-sized stains repeat only there. (2) A DODGE THAT GAINS NOTHING: the vertical dodge slid those pages' boxes to the
 page's top (crop y0 = 0) while the box still held the whole fleuron — the page number 120 pt lower than on the pages
@@ -30,13 +31,15 @@ sub("""            if not p.get('folio'): p['folio'] = list(bl[:4]) + ['foot' if
     # centre on the same vertical line ± 3 % of the page — stands on 3 other text pages or more, at any height, is that
     # print: content again (the box had slid to the page's top to dodge it), and part of the page's box and text block
     # (within the text's columns) once its pages are sorted full or short below — a section's end stays a short page.
-    # A stain is never so alike from page to page; thin bars and specks are not M across
+    # A stain is never so alike from page to page; thin bars and specks are not M across; and it stands within the text's
+    # columns, as a fleuron does — punch holes repeat alike too, but in the margin
     def same_block(a, b, w):
         aw, ah, bw_, bh_ = a[2] - a[0], a[3] - a[1], b[2] - b[0], b[3] - b[1]
         return abs((a[0] + a[2]) - (b[0] + b[2])) / 2 <= 0.03 * w and 0.9 <= (aw + 1) / (bw_ + 1) <= 1.1 \\
             and 0.9 <= (ah + 1) / (bh_ + 1) <= 1.1
     allo = [(i, bl) for i in text for bl in pages[i].get('blots', [])
-            if min(bl[2] - bl[0], bl[3] - bl[1]) >= M * pages[i]['w'] / REF and bl[3] - bl[1] < 0.25 * pages[i]['h']]
+            if min(bl[2] - bl[0], bl[3] - bl[1]) >= M * pages[i]['w'] / REF and bl[3] - bl[1] < 0.25 * pages[i]['h']
+            and pages[i].get('text') and pages[i]['text'][0] <= (bl[0] + bl[2]) / 2 <= pages[i]['text'][2]]
     for i, bl in [(i, bl) for i, bl in allo if sum(1 for j, c in allo if j != i and same_block(bl, c, pages[i]['w'])) >= 3]:
         pages[i]['blots'].remove(bl); pages[i].setdefault('ornament', []).append([round(v, 1) for v in bl])
     # A PAGE NUMBER READ AS DUST (2026-10-27, فهرسة ابن خير ص 4: «- ٥ -», three grains each under SPECK alone above a
