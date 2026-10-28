@@ -19,9 +19,19 @@ logs/crop-regress-diff-2026-10-28l.log (vs 26j: what C, Q4, T, Q5 changed), …-
   view), خريدة القصر 01 0648 ص 625 (26i 0.5°), المثلث eb86 ص 189 (26i 1.15°). Now the first look keeps the loop's turn
   (loop_turn) where the new ruler disagrees, and the second look tries it (≤ 0.2° by the page's ink) before dropping a turn
   (loop_fallback). Bench: القوافي only ص 62 changes; case row ص 62 «turn yes». CHECK 0648 ص 625 and eb86 ص 189 in 27l.
-- STILL TO LOOK AT in the diff review: the 64 pages 26i turned 0.175–0.425° that the tracks now call level (< 0.2°) — e.g.
-  خزانة 01 ص 67 (26i −0.425°), ص 17 (−0.375°): trust the tracks (Q3's study) but look at a few; القوافي ص 22 (0.325° →
-  0.525°: its tracks read their own turned view 0.2° off — not linear there).
+- LOOKED AT (09:00): خزانة 01 ص 67 / ص 17, two of the 64 pages 26i turned that the tracks call level: their lines read
+  well (22 / 19) at a median −0.178° / −0.122° — 26i's −0.425° / −0.375° turns left them at +0.25°: Q3's «no turn» is the
+  better one. Still to look at: القوافي ص 22 (0.325° → 0.525°: its tracks read their own turned view 0.2° off).
+- معجم تيمور 02 (9da5c530d977), OPEN SINCE 26i — CAUSE FOUND, NOT FIXED (not a pilot book; must be settled before the
+  full redo): full_w = core width ≥ 0.9 × the book's median core width, and 107 of its 368 text pages (29 %) are indented
+  lists whose cores (197.6–199.0 pt) sit within 1 % of that threshold (26h: median 221.06 → 198.96, ص 32's 198.8 short;
+  26i/26j: median 220.25 → 198.23, ص 32 FULL). A «full» indented page is centred on its own narrow block: ص 32's text
+  (167–376) centred, its head rule and page number «٣٢» (to 419 — the measure, as on its neighbours) 4–5 pt from the frame's
+  edge; as «short» (26h) it keeps its neighbours' place by its left edge (anchored_x −3.6) — right. The `ex-head` folio
+  anchor that appeared in 26i is not the fault (it only places short pages; its «folio» is the centred running head).
+  Other books: 0–20 pages within 1 % of the threshold (0648 20, eb86 15). Fix to design and bench after 27l: a threshold
+  that does not split a cluster (the gap in the widths nearest 0.9 × median), or «full» = both text edges where the full
+  pages' edges lie; survey all 31 books first (which pages change class), then the owner's eye on ص 32 type pages.
 Watchers die with a /clear: re-arm (FAIL / crash / end). Work folder scratch/crop-fixes-2026-10-28k (tools tracked; out/ and
 code/ are local: code/bc_<v>.py = variants, rebuild from the patches).
 - 26j's three failures, each traced by code variants (26j without each fix: bplan.py; one page's first look: fl.py; decide
