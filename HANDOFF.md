@@ -9,6 +9,23 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-28 ~02:10 UTC — REGRESSION 26j RUNNING (book_crop 9a43a0bc8c); pilot waits for it (Claude)
+OWNER: effort is MEDIUM now. Before the 26j diff review and the pilot, STOP and tell the owner to set MAX (his order).
+- Services restarted after the 10-27 17:42 reboot (start_services.sh). reporter_follow.sh changed (owner): ONE terminal, idle ones only.
+- 26i diff reviewed (tools in scratch/crop-fixes-2026-10-27b: turn_judge.py → turn-judge-26i.txt, sel_sheets.py; strip/inkjudge/before.py
+  were in the /tmp scratchpad). Turns much better (Q pages 0.105→0.014°). Faults found → fixed in 9a43a0bc8c (commit 07aa6af):
+  H (patch_h.py) scan-line one-pixel dashes counted as letters/folio at the first look → box pulled ~20 pt over the line (خزانة 01
+  ص 53/176, خزانة 04 ص 74/194/247/491); G (patch_g.py) base_angles fit across an index row's gap (page number digits ↔ entry) →
+  مشتبهات القرآن ص 178 (level) turned 1.425°; + O and Q3 as staged (stage_tools.py applied). 10 new cases (5 ابن خير, 5 H/G).
+- NOT fixed, decide after 26j: معجم تيمور 02 (9da5c530d977) — in 26i the book-level folio anchor flipped on ('ex-head' 19.0; the
+  «folio» is the running head): ~22 even pages placed by it, p. 32's page number 5 pt from the box edge (26h: centred). Also ~25
+  small (≤ 15 pt) moves from marginal numbers joining/leaving the text block (خزانة 01 ص 305/384/397…) — acceptable.
+- RUNNING: unit crop-regress-2026-10-28j (scratch/regress_2026-10-28j.sh; key books first: خزانة 01, مشتبهات, خزانة 04, ابن خير,
+  معجم تيمور 02, صبح الأعشى 05), log logs/crop-regress-2026-10-28j.log, diffs written at its end (…-28j.log vs 26i, …-vs-26b.log).
+  1 worker while the owner's apps hold memory → many hours. Watchers die with /clear: re-arm (FAIL / crash / end).
+- NEXT (at MAX): 26j 0 failures → diff by eye (key books first) → the pilot (scratch/pilot_redo_2026-10-26.sh; its header names
+  26i — update; check pilot paths still exist in index-now, plan 383 renamed names) → tell the owner (plan-383 page, crop-tilt-002).
+
 ## 2026-10-28 01:30 — STATE BEFORE A /clear: 26i PASSED; pilot NOT yet launched (Claude, max)
 <S4> = /tmp/claude-1000/-home-k-projects-phone-library/c06d38ff-653e-4fde-b84f-8d7f324d892d/scratchpad (copies in scratch/crop-fixes-2026-10-27b/).
 - 26i ended (194 PASS, 1 FAIL = the changed row 25); clean rerun on the cache: 0 failures, 195 PASS (logs/crop-regress-2026-10-27i-clean.log).
