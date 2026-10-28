@@ -9,9 +9,19 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
-## 2026-10-28 08:17 UTC — REGRESSION 27k RUNNING (book_crop dc613e4200 = 26j + C, Q4, T; commit 23f6270) (Claude, max)
-Unit crop-regress-2026-10-28k (scratch/regress_2026-10-28k.sh), log logs/crop-regress-2026-10-28k.log; at its end it writes
-logs/crop-regress-diff-2026-10-28k.log (vs 26j: what C, Q4, T changed), …-28k-vs-26i.log (all seven fixes), …-28k-vs-26b.log.
+## 2026-10-28 08:38 UTC — REGRESSION 27l RUNNING (book_crop 6a1fad7b21 = 26j + C, Q4, T, Q5; commit ea8f5a9) (Claude, max)
+Unit crop-regress-2026-10-28l (scratch/regress_2026-10-28l.sh), log logs/crop-regress-2026-10-28l.log; at its end it writes
+logs/crop-regress-diff-2026-10-28l.log (vs 26j: what C, Q4, T, Q5 changed), …-28l-vs-26i.log (all eight fixes), …-28l-vs-26b.log.
+27k (dc613e4200, without Q5) was STOPPED 8 min in by the owner's word (AskUserQuestion, 08:30) when Q5 was found.
+- FIX Q5 (patch_q5.py), found reviewing 26j: 97 pages 26i turned are unturned in 26j — 64 by design (the tracks read < 0.2°;
+  Q4 leaves them: the loop was > 0.05° off), but a turn Q3's rulers set that the second look cannot keep was DROPPED
+  (unsure_tilt): القوافي ص 62 (26i −0.95°, level by its own ink 0.125°; tracks −1.43°, inconsistent on their own turned
+  view), خريدة القصر 01 0648 ص 625 (26i 0.5°), المثلث eb86 ص 189 (26i 1.15°). Now the first look keeps the loop's turn
+  (loop_turn) where the new ruler disagrees, and the second look tries it (≤ 0.2° by the page's ink) before dropping a turn
+  (loop_fallback). Bench: القوافي only ص 62 changes; case row ص 62 «turn yes». CHECK 0648 ص 625 and eb86 ص 189 in 27l.
+- STILL TO LOOK AT in the diff review: the 64 pages 26i turned 0.175–0.425° that the tracks now call level (< 0.2°) — e.g.
+  خزانة 01 ص 67 (26i −0.425°), ص 17 (−0.375°): trust the tracks (Q3's study) but look at a few; القوافي ص 22 (0.325° →
+  0.525°: its tracks read their own turned view 0.2° off — not linear there).
 Watchers die with a /clear: re-arm (FAIL / crash / end). Work folder scratch/crop-fixes-2026-10-28k (tools tracked; out/ and
 code/ are local: code/bc_<v>.py = variants, rebuild from the patches).
 - 26j's three failures, each traced by code variants (26j without each fix: bplan.py; one page's first look: fl.py; decide
