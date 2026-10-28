@@ -88,7 +88,9 @@ def check(row, rec, pdf):
              # about twice the tilt)
              or (p.get('owner_turn') is not None and lvl is not None and lvl < abs(p['skew'])))) \
              and (expect == 'no' or not p.get('untreated_tilt'))
-        return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}){" curved" if p.get("curved") else ""}{" — turned by the owner's verdict" if p.get("owner_turn") is not None else ""}, untreated {p.get("untreated_tilt")}'
+        owner_msg = " — turned by the owner's verdict" if p.get("owner_turn") is not None else ""
+        curved_msg = " curved" if p.get("curved") else ""
+        return ok, f'turned {p.get("skew")}, left after turning {lvl} (image {img}){curved_msg}{owner_msg}, untreated {p.get("untreated_tilt")}'
     if what == 'level':                                # the page as the reader sees it, turned or not, reads level by its lines'
         import numpy as np                             # baselines: |angle| ≤ the expected degrees (book_crop.base_angles, 1,400
         doc = pymupdf.open(pdf); tu = bc.Turner(doc, page - 1); mv = p.get('move') or [0, 0]   # px; a turn too far fails it
