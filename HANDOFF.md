@@ -16,6 +16,9 @@ every turn, benched before 26i.
   looked at — run <S4>/w4/turn_judge.py 20d30c2020 3205efa17f -j 3 (cached readings) and sel_sheets.py for moves ≥ 3 pt, look, then the pilot.
 - FIX O: benched on 3 books (ابن خير 13 pages, 435b p. 96, c63a pp. 360/441), all base FAITHFUL, all changed pages looked at: better.
   Final patch_o.py restricts ornaments to the text's columns (punch holes). Ready.
+- /tmp SCRATCHPAD <S4> WAS WIPED (seen 01:30): only scratch/crop-fixes-2026-10-27b/ survives — patch_o.py (final, with the columns
+  rule), patch_q3.py = v1 ONLY; the after26i staged edits, the 26j bench outputs, judge3/rule_angle/vis copies are gone. Q3 v2 must be
+  rewritten from the description below (and the staged tool edits redone from the 05:30 section).
 - FIX Q3: v1 (robust baselines first) benched on 00597/29b9 — big gains but its turned-view correction went wrong on ص 233/318 and the
   robust ruler is non-linear on hard pages (vis.py). patch_q3.py REWRITTEN to v2 (plain base as Q; else line tracks; else robust;
   R unchanged; head-rule check rule_angle.py sides with tracks). v2 NOT yet built/benched: python3 <S4>/orn/patch_q3.py scripts/book_crop.py
