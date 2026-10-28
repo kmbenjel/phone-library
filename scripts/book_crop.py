@@ -1637,6 +1637,7 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
                 if best and best[0] <= 0.2 and abs(bt[0] - best[1]) <= 0.05 + 1e-6:
                     rec['skew'] = best[1]; mk = best[2]; rec['loop_confirmed'] = bt[0]
                     rec.pop('tilt_by_tracks', None); rec.pop('base_robust', None); bt = None; ang = 0.0
+                elif best and best[0] <= 0.2: rec['loop_turn'] = best[1]   # (the second look falls back on it: fix Q5)
             if bt is not None:
                 if rec.get('tilt_by_tracks') is None: rec['tilt_by_base'] = bt[0]
                 if abs(bt[0]) >= SKEW_MIN:
@@ -2475,6 +2476,16 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         return a, z
     def leans(i, q, m):                               # each line of a view on its own (line_leans) — only the third rule asks
         a, z = fine(i, q); return line_leans(a, m['paper'], m.get('text'), z) if m.get('paper') else []
+    def loop_back(i, p):                              # THE LOOP'S TURN when the new rulers' turn cannot be kept (fix Q5,
+        lt = p.get('loop_turn')                       # 2026-10-28: القوافي ص 62 left as scanned, 26i's −0.95° reading level
+        if lt is None: return None                    # by its own ink): checked as before Q3 — the page then reads level by
+        m2 = look(i, dict(p, skew=lt))                # its own ink (≤ 0.2°)
+        if m2.get('xy') is None: return None
+        pl = abs(skew_of(m2['xy'], raw=True)[0])
+        if pl > 0.2: return None
+        for k in ('untreated_tilt', 'tilt_disputed', 'unsure_tilt'): p.pop(k, None)
+        p['skew'] = lt; p['level_by_proj'] = round(pl, 3); p['loop_fallback'] = True
+        return m2
     def base(i, q, m, robust=False):                  # the lines' baselines of a view (base_tilt), once per view
         k = '_base_r' if robust else '_base'
         if k not in m:
@@ -2651,13 +2662,18 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                 else:
                     p.pop('skew', None); p['tilt_disputed'] = round(u2, 3); mk = m0
             else:
-                if p.get('skew'): p.pop('skew', None); p['unsure_tilt'] = True
-                mk = m0
+                m2 = loop_back(i, p) if p.get('skew') else None
+                if m2 is not None: mk = m2
+                else:
+                    if p.get('skew'): p.pop('skew', None); p['unsure_tilt'] = True
+                    mk = m0
         elif p.get('skew'):
             before = p['skew']; d, r, im, m2 = best_turn(i, p, before)
             if keep(p, d, r, im, before, m2, m0): p['skew'], mk = d, m2; p['after_tilt'] = round(r, 3); p['after_tilt_image'] = im
             else:
-                p.pop('skew', None); p['unsure_tilt'] = True; mk = look(i, p)
+                m2 = loop_back(i, p)
+                if m2 is not None: mk = m2
+                else: p.pop('skew', None); p['unsure_tilt'] = True; mk = look(i, p)
         elif mk['xy'] is not None and ct is None:
             u, g = skew_of(mk['xy'])
             # (no turn when the halves disagree, even if the whole page and its image agree on a tilt: index pages fool

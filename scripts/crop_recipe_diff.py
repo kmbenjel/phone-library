@@ -6,7 +6,8 @@ image reading fell to a third, a turn refused because it made level lines lean, 
 by its lines' baselines (baselines), a tilt the usual measures' gates left found by them (baselines found), a projection
 reading refused for a sheet's line across the page (sheet line), a turn refused for lines at two angles (two angles) or
 set again by the angle its lines take (the lines' turn), a projection loop's turn the lines' tracks confirmed within
-0.05° (the loop's turn kept — book_crop fix Q4) (turns); a page number read as a stain
+0.05° (the loop's turn kept — book_crop fix Q4) or taken when the second look could not keep the lines' turn (the
+loop's turn, the lines' turn not kept — fix Q5) (turns); a page number read as a stain
 restored (folio stain); a sideways slide up to 4 % for
 side headings (side slide); letters in the paper's edge shadow taken in (edge letters); a second look that
 moved, enlarged or no longer moves the box (second look); a cover whose cut moved to keep its print (cover print); else
@@ -21,6 +22,7 @@ def cause(p, q):
     if p.get('skew') != q.get('skew'):
         for k, v in (('owner_turn', 'owner turn'), ('level_first', 'level first'), ('image_loose', 'image ≤ 0.35'),
                      ('image_third', 'image to a third'), ('two_angles', 'two angles'), ('loop_confirmed', "the loop's turn kept"),
+                     ('loop_fallback', "the loop's turn, the lines' turn not kept"),
                      ('turn_by_tracks', "the lines' turn"),
                      ('lines_lean', 'lines made to lean'),
                      ('base_found', 'baselines found'),
