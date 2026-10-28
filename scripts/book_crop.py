@@ -166,13 +166,14 @@ def bands(mask):
     (r0, r1), (c0, c1) = trim(rows), trim(cols)
     return r0, r1, c0, c1
 
-def marks(a, scale, width, exclude=None):
+def marks(a, scale, width, exclude=None, band=None):
     """ink marks of one page, in pt (page.rect coordinates) → dict:
        box     every content mark;  core  the text block (2–98 % of the content ink: where the page is centred);
        specks  isolated specks;  blots  stains and edge streaks (neither text nor print: left outside the box);
-       allowed where the box may go (inside scanner bands and edge shadows);  dark  share of dark pixels;
-       xy      content ink pixels (x, y in pixels) for the skew estimate.
-    scale = pixels per pt, width = the page width in pt (M and SPECK are scaled to it)"""
+       allowed where the box may go (inside scanner bands and edge shadows);  bands  inside the scanner bands alone;
+       dark    share of dark pixels;  xy  content ink pixels (x, y in pixels) for the skew estimate.
+    scale = pixels per pt, width = the page width in pt (M and SPECK are scaled to it); band: the scanner bands read before
+    a turn, turned with the page (band_mask, one bit a side) — no ink on a side where the turned page shows no band"""
     if exclude:                                     # an uploader's stamp (stamps_of): not part of the page, not measured
         a = a.copy()
         for b in exclude:
@@ -184,8 +185,28 @@ def marks(a, scale, width, exclude=None):
     mask = a < paper - 50
     out['dark'] = float(mask.mean()); out['paper'] = paper
     r0, r1, c0, c1 = bands(mask)
+    # A SCANNER BAND THE TURNED PAGE LOST IS TAKEN FROM THE PAGE AS SCANNED (fix B2, 2026-10-28): turned, a band's outermost
+    # column takes in the turn's blank wedge and can fall under bands()' 60 % (خريدة القصر 0648 ص 634: 0.52 at 1.75°, ص 422:
+    # 0.60 at 0.45°) — the band was then read as the page's ink: the content box ran to the sheet's edge, the band became
+    # «rules», and where a table's rules reach it the two were one mark, a «picture» from the sheet's edge to the text (ص 636,
+    # 644: the pages stayed whole). On a side where bands() reads no band, the band read before the turn is no ink; where it
+    # still reads one (a small turn), its trim and the edge shadow beside it are read as before
+    if band is not None:
+        lost = (1 if c0 == 0 else 0) | (2 if r0 == 0 else 0) | (4 if c1 == mask.shape[1] else 0) | (8 if r1 == mask.shape[0] else 0)
+        band = (band & lost) != 0
+        if band.any():
+            mask = mask & ~band
+            # (fix B5) the band's own edge pixels a straight edge misses: a mark wholly within 2.4 pt of the band is the band
+            # (two pixels at the first look's 500 px, four at the second look's 1,000)
+            ring = ndimage.binary_dilation(band, iterations=max(2, int(round(2.4 * scale)))) & ~band
+            if (mask & ring).any():
+                lb5, n5 = ndimage.label(mask, structure=np.ones((3, 3), bool))
+                tot, inr = np.bincount(lb5.ravel(), minlength=n5 + 1), np.bincount(lb5[ring], minlength=n5 + 1)
+                sl = tot == inr; sl[0] = False
+                if sl.any(): band |= sl[lb5]; mask = mask & ~band
+        else: band = None
     m = mask[r0:r1, c0:c1]
-    allowed = [c0 / scale, r0 / scale, c1 / scale, r1 / scale]; out['allowed'] = allowed
+    allowed = [c0 / scale, r0 / scale, c1 / scale, r1 / scale]; out['allowed'] = allowed; out['bands'] = list(allowed)
     out['xy0'] = (c0, r0)                           # (xy is measured from the bands' inner corner, in pixels)
     if m.size == 0: return out
     lab, n = ndimage.label(m, structure=np.ones((3, 3), bool))
@@ -193,6 +214,10 @@ def marks(a, scale, width, exclude=None):
     objs = ndimage.find_objects(lab)
     area = np.bincount(lab.ravel(), minlength=n + 1)
     H, Wd = m.shape
+    if band is not None:                            # (the lost band's turned edge, row by row and column by column: m pixels
+        bb = band[r0:r1, c0:c1]; fr, fc = bb.all(1), bb.all(0)   # of band from each side, 0 where there is none)
+        eL, eR = np.where(fr, 0, bb.argmin(1)), np.where(fr, 0, bb[:, ::-1].argmin(1))
+        eT, eB = np.where(fc, 0, bb.argmin(0)), np.where(fc, 0, bb[::-1].argmin(0))
     hgt = np.array([0] + [s[0].stop - s[0].start for s in objs]); wid = np.array([0] + [s[1].stop - s[1].start for s in objs])
     # long straight rules standing up the page (a table's column rules): each one's own slope, read on its ink — the
     # surest ruler of a page that holds them (owner 2026-10-18, خريدة القصر ص 649 «الأخير ما زال مائلا»: an index table
@@ -241,6 +266,28 @@ def marks(a, scale, width, exclude=None):
         elif s[1].stop >= Wd - 1 and hgt[i] >= 0.4 * H: allowed[2] = min(allowed[2], (s[1].start + c0) / scale)
         elif s[0].start <= 1: allowed[1] = max(allowed[1], (s[0].stop + r0) / scale)
         else: allowed[3] = min(allowed[3], (s[0].start + r0) / scale)
+    # (fix B2) THE EDGE SHADOW ALONG A BAND THE TURNED PAGE LOST lies along the band's turned edge, not along the image's: the
+    # paper's grey rim beside the band, read before the turn as a shadow, was read as a streak (blot) and took the line ends
+    # beside it with it as its «detached pieces» (ص 694: «٣١٠»، «٢٨٨» — the text block 32 pt short). Touching the band's
+    # edge where it lies outermost along the mark, long along it, thin by its ink (its area over its length: slanted), and
+    # lying along it: no broader than 6 % and the band edge's own slant over its rows (fix B4 — a table's ruled grid whose
+    # outer rule touches the band is tall and thin by its ink too: ص 636, 637, 638, the allowed area cut 362–431 pt deep)
+    if band is not None:
+        for i, s in enumerate(objs, 1):
+            if i in shadow: continue
+            y0, y1, x0, x1 = s[0].start, s[0].stop, s[1].start, s[1].stop
+            if hgt[i] >= 0.4 * H and area[i] / hgt[i] <= 0.06 * Wd:
+                l_, r_ = eL[y0:y1][eL[y0:y1] > 0], eR[y0:y1][eR[y0:y1] > 0]
+                if len(l_) and x0 <= l_.min() + 1 and wid[i] <= 0.06 * Wd + l_.max() - l_.min():
+                    shadow.add(i); allowed[0] = max(allowed[0], (x1 + c0) / scale)
+                elif len(r_) and x1 >= Wd - r_.min() - 1 and wid[i] <= 0.06 * Wd + r_.max() - r_.min():
+                    shadow.add(i); allowed[2] = min(allowed[2], (x0 + c0) / scale)
+            elif wid[i] >= 0.4 * Wd and area[i] / wid[i] <= 0.06 * H:
+                t_, b_ = eT[x0:x1][eT[x0:x1] > 0], eB[x0:x1][eB[x0:x1] > 0]
+                if len(t_) and y0 <= t_.min() + 1 and hgt[i] <= 0.06 * H + t_.max() - t_.min():
+                    shadow.add(i); allowed[1] = max(allowed[1], (y1 + r0) / scale)
+                elif len(b_) and y1 >= H - b_.min() - 1 and hgt[i] <= 0.06 * H + b_.max() - b_.min():
+                    shadow.add(i); allowed[3] = min(allowed[3], (y0 + r0) / scale)
     pre = [i for i in range(1, n + 1) if i not in isolated and i not in shadow]
     pt = lambda x0, y0, x1, y1: [(x0 + c0) / scale, (y0 + r0) / scale, (x1 + c0) / scale, (y1 + r0) / scale]
     box_of = lambda i: pt(objs[i - 1][1].start, objs[i - 1][0].start, objs[i - 1][1].stop, objs[i - 1][0].stop)
@@ -399,12 +446,45 @@ def marks(a, scale, width, exclude=None):
     # mark (≤ 0.6 % thick, ≥ 20 % of the page long), or a dashed line beside the text block (≥ 4 thin dashes in one column or
     # row, spanning ≥ 15 % of the page). A printed rule or frame comes back in decide() when the book prints it (the same rule
     # on many pages); a scan line or a flaw does not
-    lines = {i for i in content if (wid[i] <= 0.006 * Wd and hgt[i] >= 0.2 * H) or (hgt[i] <= 0.006 * H and wid[i] >= 0.2 * Wd)}
+    # A LINE IS THIN BY ITS INK, NOT BY ITS BOX (2026-10-28, regression 27l): every turn tilts the scanner's lines with the
+    # page — a level one-pixel scan line 80 px long is 2–3 px tall once turned 0.5–0.8°, over the 0.4 % (2.8 px) by a
+    # fraction of a pixel, and joined the text block at one turn and not the next (خزانة الأدب ج 2 ص 315, a hook at its end:
+    # the page shrunk to 0.86; 00597fea27cf ص 332: the box 29 pt off the text). A mark at a slant (its box at most the
+    # limit + a tenth of its length tall) is as thin as a level one when its ink is: column by column at most the limit
+    # thick and its middles on one straight line within a pixel (90th percentiles), sloping ≤ 0.1 — letters are not
+    def straight_thin(i, horiz, lim):
+        s_ = objs[i - 1]; ys_, xs_ = np.nonzero(lab[s_] == i)
+        if not horiz: ys_, xs_ = xs_, ys_
+        n_ = int(xs_.max()) + 1; cnt = np.bincount(xs_, minlength=n_); has = cnt > 0
+        if has.sum() < 0.8 * n_ or np.percentile(cnt[has], 90) > lim: return False
+        xs1 = np.nonzero(has)[0]; mid = np.bincount(xs_, weights=ys_, minlength=n_)[has] / cnt[has]
+        fit = np.polyfit(xs1, mid, 1)
+        return abs(fit[0]) <= 0.1 and np.percentile(np.abs(mid - np.polyval(fit, xs1)), 90) <= 1.0
+    slant = set()                                     # (the lines found only by their ink: the recipe's slant_lines)
+    def thin_h(i, lim):
+        if hgt[i] <= lim: return True
+        if hgt[i] <= lim + 0.1 * wid[i] and straight_thin(i, True, lim): slant.add(i); return True
+        return False
+    def thin_v(i, lim):
+        if wid[i] <= lim: return True
+        if wid[i] <= lim + 0.1 * hgt[i] and straight_thin(i, False, lim): slant.add(i); return True
+        return False
+    lines = {i for i in content if (hgt[i] >= 0.2 * H and thin_v(i, 0.006 * Wd)) or (wid[i] >= 0.2 * Wd and thin_h(i, 0.006 * H))}
     for i in content:                                 # a shorter thin line (≥ 3 % long, ≤ 0.4 % thick) beyond the text block
         s_ = objs[i - 1]                              # (خزانة الأدب ص 18: 64 × 1.2 pt above the running head)
         yc, xc = (s_[0].start + s_[0].stop) / 2, (s_[1].start + s_[1].stop) / 2
-        if (hgt[i] <= 0.004 * H and wid[i] >= 0.03 * Wd and (yc <= cy0 - g or yc >= cy1 + g)) or \
-           (wid[i] <= 0.004 * Wd and hgt[i] >= 0.03 * H and (xc <= cx0 - g or xc >= cx1 + g)): lines.add(i)
+        if (wid[i] >= 0.03 * Wd and (yc <= cy0 - g or yc >= cy1 + g) and thin_h(i, 0.004 * H)) or \
+           (hgt[i] >= 0.03 * H and (xc <= cx0 - g or xc >= cx1 + g) and thin_v(i, 0.004 * Wd)): lines.add(i)
+    cset = set(content)                               # the detached pieces of a line: grains of its group lying along it,
+    for i in list(lines):                             # within its rows (columns) ± 1 px — a scan line the turn broke
+        s_ = objs[i - 1]; horiz = wid[i] >= hgt[i]    # (خزانة الأدب ج 2 ص 315: a 3 × 1 px piece 2 px off its end held
+        for j in members[int(gid[i])]:                # the box 36 pt up)
+            if j in lines or j not in cset or not small[j]: continue
+            t = objs[j - 1]
+            if (horiz and t[0].start >= s_[0].start - 1 and t[0].stop <= s_[0].stop + 1) or \
+               (not horiz and t[1].start >= s_[1].start - 1 and t[1].stop <= s_[1].stop + 1):
+                lines.add(j)
+                if i in slant: slant.add(j)
     for vert in (True, False):
         pos = (lambda i: (objs[i - 1][1].start + objs[i - 1][1].stop) / 2) if vert else (lambda i: (objs[i - 1][0].start + objs[i - 1][0].stop) / 2)
         lo_c, hi_c, span, tol = (cx0, cx1, H, 0.004 * Wd) if vert else (cy0, cy1, Wd, 0.004 * H)
@@ -444,11 +524,13 @@ def marks(a, scale, width, exclude=None):
                 if hi - lo >= 0.15 * span: lines.update(grp)
             k = j + 1
     out['lines'] = [box_of(i) for i in sorted(lines)]
+    out['slant_lines'] = [box_of(i) for i in sorted(slant)]
     with_lines = list(content)                        # the tilt is read on all the print, lines included (a footnote rule is
     content = [i for i in content if i not in lines] or content   # the straightest line of a page — الاتباع والمزاوجة ص 51)
     # printed rules and frames, even faint ones (a chain border can break into specks): beyond the text block, a column
     # (row) where light ink runs along half the text block's height (width) or more is print — the box takes it in
     faint = a[r0:r1, c0:c1] < paper - 20
+    if band is not None: faint &= ~band[r0:r1, c0:c1]   # (a band is no faint rule either: ص 634's «rules» at 37–60 pt)
     iy0, iy1, ix0, ix1 = int(cy0), max(int(cy1), int(cy0) + 1), int(cx0), max(int(cx1), int(cx0) + 1)
     bw = max(3, int(round(0.01 * Wd)))               # a band ≈ 1 % of the width: chain links alternate across it
     colcov = ndimage.maximum_filter(faint[iy0:iy1, :], size=(1, bw)).mean(0)
@@ -1576,6 +1658,7 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
         if sh and mk.get('allowed'): mk['allowed'] = [max(mk['allowed'][0], sh[0]), max(mk['allowed'][1], sh[1]), min(mk['allowed'][2], sh[2]), min(mk['allowed'][3], sh[3])]
         tu_ = []                                       # (the page turned for several angles: one Turner)
         tu = lambda: tu_[0] if tu_ else (tu_.append(Turner(doc, i)) or tu_[0])
+        al0 = None; bnd0 = mk.get('bands')                # (the scanner bands alone, as scanned: fix B2)
         if mk['box'] is not None and mk['dark'] <= 0.35:     # a tilted text page: turn it level (the sign is checked)
             al0 = mk.get('allowed')                      # (its scanner bands, read before the turn: a turned image's
             ang, gain = skew_of(mk['xy'])                #  blank corners hide them)
@@ -1670,13 +1753,42 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
                             a_ = fwd_inner(doc, i, {'skew': deg}, al0)
                             mk['allowed'] = [max(mk['allowed'][0], a_[0]), max(mk['allowed'][1], a_[1]), min(mk['allowed'][2], a_[2]), min(mk['allowed'][3], a_[3])]
                         break
+        # THE TURNED PAGE MEASURED WITHOUT ITS SCANNER BANDS AS SCANNED (fix B2, 2026-10-28): its turn decided as before —
+        # every path above measured the turned page with its bands as the turn's blank wedge left them —, its content, text
+        # and margins are read with the bands no ink (band_mask); the bands as scanned are kept for the second look (bands0)
+        if bnd0 and mk['box'] is not None and mk['dark'] <= 0.35 \
+           and (bnd0[0] > 0.5 or bnd0[1] > 0.5 or bnd0[2] < r.width - 0.5 or bnd0[3] < r.height - 0.5):
+            rec['bands0'] = [round(v, 2) for v in bnd0]
+            if rec.get('skew'):
+                q_ = {'skew': rec['skew']}; a2, z2 = gray(tu().page(rec['skew']), 500)
+                a2 = whiten(a2, z2, fwd_box(doc, i, q_, sh) if sh else None)
+                mk2 = marks(a2, z2, r.width, fwd_boxes(doc, i, q_, ex0) if ex0 else None, band_mask(doc, i, q_, bnd0, a2.shape, z2))
+                if mk2['box'] is not None:
+                    if mk2['box'] != mk['box'] or mk2.get('text') != mk.get('text'): rec['band_ink'] = True
+                    al_ = mk.get('allowed') or mk2['allowed']   # (the allowed area as the turn's paths read it stays)
+                    mk2['allowed'] = [max(mk2['allowed'][0], al_[0]), max(mk2['allowed'][1], al_[1]),
+                                      min(mk2['allowed'][2], al_[2]), min(mk2['allowed'][3], al_[3])]
+                    mk = mk2
         if tu_: tu_[0].close()
+        # THE BANDS AS SCANNED BOUND THE PAGE WHATEVER ITS TURN (fix B, 2026-10-28): the generic loop carried them over, the
+        # turns set by the projection loop, the baselines and the tracks did not — خريدة القصر ص 422's black band reads 0.64
+        # in its outermost column turned 0.325°, 0.60 turned 0.45° (the turn's blank wedge): no band, the box slid onto it
+        # (only a side that HAS a band, as decide() reads them: the whole page turned is a rectangle a few pt inside it,
+        # which decide() would take for bands on every side)
+        if rec.get('skew') and al0 and mk.get('allowed'):
+            a_ = fwd_inner(doc, i, {'skew': rec['skew']}, al0); al = mk['allowed']
+            bd = [al0[0] > 0.5, al0[1] > 0.5, al0[2] < r.width - 0.5, al0[3] < r.height - 0.5]
+            mk['allowed'] = [max(al[0], a_[0]) if bd[0] else al[0], max(al[1], a_[1]) if bd[1] else al[1],
+                             min(al[2], a_[2]) if bd[2] else al[2], min(al[3], a_[3]) if bd[3] else al[3]]
+            if max(abs(u - v) for u, v in zip(al, mk['allowed'])) > 0.5: rec['band_carried'] = [round(v, 1) for v in al]   # (the
+            # turned page alone read: the recipe's band_carried)
         mk.pop('xy', None); mk.pop('parts', None)
         if sh and mk.get('allowed'):                   # (the sheet's edges bound the box, on the turned page too)
             sh_ = fwd_box(doc, i, {'skew': rec.get('skew') or 0}, sh)
             mk['allowed'] = [max(mk['allowed'][0], sh_[0]), max(mk['allowed'][1], sh_[1]), min(mk['allowed'][2], sh_[2]), min(mk['allowed'][3], sh_[3])]
         rec.update(allowed=mk['allowed'], specks=mk['specks'], blots=mk['blots'], edge=mk['edge'], core=mk['core'], paper=round(mk.get('paper', 0)),
                    rules=mk.get('rules', []), lines=mk.get('lines', []), text=mk.get('text'), margin=mk.get('margin', []), folio=mk.get('folio'))
+        if mk.get('slant_lines'): rec['slant_lines'] = mk['slant_lines']   # (fix L's own: the lines found by their ink)
         if mk['box'] is None: rec['kind'] = 'blank' if mk['dark'] < 0.5 else 'picture'
         elif mk['dark'] > 0.35: rec['kind'] = 'picture'   # dark pages only: a tight light scan is text (stays whole if it cannot fit)
         else: rec['kind'] = 'text'
@@ -1713,6 +1825,29 @@ def fwd_inner(doc, i, p, b):
     m = ~tm * fwd * tm
     tl, tr, br, bl = [pymupdf.Point(x, y) * m for x, y in ((b[0], b[1]), (b[2], b[1]), (b[2], b[3]), (b[0], b[3]))]
     return [max(tl.x, bl.x), max(tl.y, tr.y), min(tr.x, br.x), min(bl.y, br.y)]
+
+def band_mask(doc, i, p, b, shape, z):
+    """THE SCANNER BANDS AS SCANNED, ON THE PAGE TURNED AND MOVED LIKE p (fix B2, 2026-10-28): b, the area inside the bands
+    bands() read on the page as scanned (pt; only the sides that have one), its edges turned with the page → the pixels of an
+    image of that view (shape, z pixels per pt) lying beyond them, one pixel's allowance in (the turn resamples the edge),
+    one bit a side (1 left, 2 head, 4 right, 8 foot: marks() takes a side only where the turned page shows no band)"""
+    page = doc[i]; mv = p.get('move') or [0, 0]; deg = p.get('skew') or 0
+    tm = page.transformation_matrix; mb = raw_box(doc, page.xref, 'MediaBox'); cx, cy = (mb[0] + mb[2]) / 2, (mb[1] + mb[3]) / 2
+    fwd = pymupdf.Matrix(1, 0, 0, 1, -cx, -cy) * pymupdf.Matrix(deg) * pymupdf.Matrix(1, 0, 0, 1, cx, cy) * pymupdf.Matrix(1, 0, 0, 1, mv[0], -mv[1])
+    m = ~tm * fwd * tm; w, h = page.rect.width, page.rect.height; e = 1 / z
+    ys, xs = (np.arange(shape[0]) + 0.5) / z, (np.arange(shape[1]) + 0.5) / z
+    out = np.zeros(shape, np.uint8)
+    for k, has in enumerate((b[0] > 0.5, b[1] > 0.5, b[2] < w - 0.5, b[3] < h - 0.5)):
+        if not has: continue
+        if k in (0, 2):                               # a band down a side: its edge, from the head to the foot, turned
+            p0, p1 = pymupdf.Point(b[k], 0) * m, pymupdf.Point(b[k], h) * m
+            xe = p0.x + (ys - p0.y) * (p1.x - p0.x) / (p1.y - p0.y)
+            out |= (xs[None, :] < (xe + e)[:, None] if k == 0 else xs[None, :] > (xe - e)[:, None]).astype(np.uint8) << k
+        else:                                         # a band across the head or the foot
+            p0, p1 = pymupdf.Point(0, b[k]) * m, pymupdf.Point(w, b[k]) * m
+            ye = p0.y + (xs - p0.x) * (p1.y - p0.y) / (p1.x - p0.x)
+            out |= (ys[:, None] < (ye + e)[None, :] if k == 1 else ys[:, None] > (ye - e)[None, :]).astype(np.uint8) << k
+    return out
 
 def stamps_of(path, jobs=1, px=400):
     """UPLOADERS' STAMPS (owner 2026-10-09, الفوائد المحصورة: «neglect that رفع المساهم stamp in every page's footer, don't
@@ -2310,6 +2445,21 @@ def decide(pages, wq=0.95):
         b = [round(b[0] + sx, 1), round(b[1] + sy, 1), round(b[2] + sx, 1), round(b[3] + sy, 1)]
         tbx = p.get('text') or bx                    # a line beside the text (a scan line, an edge, print damage) is dodged
         avoid = (p.get('blots') or []) + [ln for ln in (p.get('lines') or []) if tbx and not (ln[0] >= tbx[0] - 1 and ln[2] <= tbx[2] + 1 and ln[1] >= tbx[1] - 1 and ln[3] <= tbx[3] + 1)]
+        # NOTHING IN A SCANNER BAND IS DODGED (fix B4, 2026-10-28): a mark whose centre lies beyond the allowed area on a side
+        # that has a band — in the band, or in the wedge between its turned edge and the upright limit carried inside it — is
+        # the band, kept out by the off-band slide below. Dodged first, it moved the page for nothing: خريدة القصر 0648 ص 389,
+        # 579, 585, 637, a sliver of the band's turned edge at the top corner (5–11 pt beyond the limit), the frame 10–15 pt
+        # down — the text that much higher than on every page around it. (The stains moved with the content above are
+        # measured back where the allowed area was read)
+        al4 = p.get('allowed')
+        if al4 and avoid:
+            mv4, nbl, nav = p.get('move') or [0, 0], len(p.get('blots') or []), len(avoid)
+            def in_band(v, d):
+                cx_, cy_ = (v[0] + v[2]) / 2 - d[0], (v[1] + v[3]) / 2 - d[1]
+                return ((al4[0] > 0.5 and cx_ < al4[0]) or (al4[2] < p['w'] - 0.5 and cx_ > al4[2])
+                        or (al4[1] > 0.5 and cy_ < al4[1]) or (al4[3] < p['h'] - 0.5 and cy_ > al4[3]))
+            avoid = [v for k, v in enumerate(avoid) if not in_band(v, mv4 if k < nbl else [0, 0])]
+            if len(avoid) < nav: p['band_undodged'] = nav - len(avoid)
         # with a little room around each (0.6 % of the page): a mark is measured on its dark core, its blur and a slant
         # reach further, and a box that stops 2 pt short of it still shows it (owner 2026-10-18, خزانة الأدب ج 1: «ضع الإطار
         # بحيث عيوب الطباعة أعلى الصفحات تختفي»)
@@ -2365,11 +2515,15 @@ def decide(pages, wq=0.95):
         if al and bx and tb and p['kind'] == 'text':
             for k0, k1, lo_i, hi_i in ((0, 2, 0, 2), (1, 3, 1, 3)):
                 over_hi, over_lo = b[k1] - al[hi_i], al[lo_i] - b[k0]
+                # (never past the box's edge — what the page must show: a slide to 4 pt from the text that cuts into the box
+                # leaves the page whole, both bands shown entire — خريدة القصر 0648 ص 634, 652, 660 turned 1.5–2.5°: a table's
+                # rules reach out past its text to the sheet's edge, the slanted band's corner comes into the box; fix B2)
                 if over_hi > 1 and over_lo <= 0:
-                    sh = -min(over_hi + 1, b[k0] - al[lo_i], max(0, (b[k1] - tb[k1]) - 4))
+                    s0 = min(over_hi + 1, b[k0] - al[lo_i], max(0, (b[k1] - tb[k1]) - 4)); s1 = min(s0, max(0, b[k1] - bx[k1])); sh = -s1
                 elif over_lo > 1 and over_hi <= 0:
-                    sh = min(over_lo + 1, al[hi_i] - b[k1], max(0, (tb[k0] - b[k0]) - 4))
+                    s0 = min(over_lo + 1, al[hi_i] - b[k1], max(0, (tb[k0] - b[k0]) - 4)); s1 = min(s0, max(0, bx[k0] - b[k0])); sh = s1
                 else: continue
+                if s0 - s1 > 0.05: p['band_box'] = round(s0 - s1, 1)   # (how far the box held the slide back)
                 if abs(sh) >= 1:
                     b[k0] = round(b[k0] + sh, 1); b[k1] = round(b[k1] + sh, 1); p['off_band'] = round(sh, 1)
         b = [max(0, b[0]), max(0, b[1]), min(p['w'], b[2]), min(p['h'], b[3])]
@@ -2440,16 +2594,18 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
     doc = pymupdf.open(path); moved = list(moved_in or [])
     near = lambda b, regions: any(b[0] < r[2] + 3 and b[2] > r[0] - 3 and b[1] < r[3] + 3 and b[3] > r[1] - 3 for r in regions)
     cur = {'i': None, 'tu': None, 'looks': {}}       # the page being checked: its Turner and its looks by (turn, move) —
-    def look(i, q):                                   # the same view is never measured twice (2026-10-25, speed: the
+    def look(i, q, carry=False):                      # the same view is never measured twice (2026-10-25, speed: the
         if cur['i'] != i:                             # first look's angle came back in best_turn, the trial turns of an
             if cur['tu']: cur['tu'].close()           # untouched page in it too)
             cur.update(i=i, tu=Turner(doc, i), looks={})
         mv = q.get('move') or [0, 0]; key = (q.get('skew') or 0, mv[0], mv[1])
-        if key in cur['looks']: return cur['looks'][key]
+        b0 = rec['pages'][i].get('bands0') if carry and key[0] else None   # (carry: the scanner bands as scanned are no ink
+        if (key, b0 is not None) in cur['looks']: return cur['looks'][(key, b0 is not None)]   # on the turned page — fix B2)
         page = cur['tu'].page(*key); a, z = gray(page, px); st = rec['pages'][i].get('stamp')   # the page as the reader
         if rec['pages'][i].get('sheet'): a = whiten(a, z, fwd_box(doc, i, q, rec['pages'][i]['sheet']))   # will see it, at px
         ex = [pad_box(b, page.rect.width) for b in st or []] + (rec['pages'][i].get('dots') or [])
-        mk = marks(a, z, page.rect.width, fwd_boxes(doc, i, q, ex) if ex else None); mk['z'] = z
+        mk = marks(a, z, page.rect.width, fwd_boxes(doc, i, q, ex) if ex else None,
+                   band_mask(doc, i, q, b0, a.shape, z) if b0 else None); mk['z'] = z
         memo = {}
         def once(k, f):                               # each measure of this view taken once
             if k not in memo: memo[k] = f()
@@ -2464,7 +2620,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                 b[max(0, int(x[1] * z)):int(x[3] * z) + 1, max(0, int(x[0] * z)):int(x[2] * z) + 1] = 255
             return line_tracks(b, mk['paper'], mk.get('text'), z)
         mk['tracks'] = lambda: once('tracks', lambda: tracks() if mk.get('paper') else [])
-        cur['looks'][key] = mk
+        cur['looks'][(key, b0 is not None)] = mk
         return mk
     def fine(i, q):                                   # a view at 1,400 px, the page as look() sees it (sheet, stamps): for
         mv = q.get('move') or [0, 0]                  # the measures that read single lines
@@ -2779,6 +2935,10 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                 if m2['xy'] is not None:
                     p['after_tilt'] = round(abs(skew_of(m2['xy'], raw=True)[0]), 3); p['after_tilt_image'] = m2['proj']()
         if tilt_only or not p.get('crop'): continue
+        if p.get('skew') and p.get('bands0'):         # the crop checks read the turned page without its scanner bands as
+            mc = look(i, p, carry=True)                # scanned (fix B2: the turn's blank wedge hides a band from bands())
+            if mc.get('box') != mk.get('box') or mc.get('text') != mk.get('text'): p['band_ink2'] = True
+            mk = mc
         c = p['crop']; known = (p.get('blots') or []) + (p.get('edge') or []) + (p.get('rules_dropped') or []) + (p.get('lines') or []) + (p.get('cut_stray') or [])
         el = edge_letters(mk, p['w'], p['h'], mk['z'], p.get('allowed')) if mk.get('parts') else []
         if el: p['edge_letters'] = [[round(v, 1) for v in b[:4]] for b in el]   # letters in the edge shadow (edge_letters)
@@ -2825,22 +2985,40 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                 # a slide must leave half the book's margin around the text and its notes (2026-10-09: اللآلئ ج2 ص 39 slid
                 # until its note touched the edge); else the box grows with the full margin (shown at the book's size)
                 mg = rec.get('margin_pt') or 0.01 * (c[2] - c[0]); h_ = 0.5 * mg
+                # BESIDE A SCANNER BAND THE FRAME KEEPS 4 PT OFF THE PRINT (fix B3, 2026-10-28), as decide()'s off-band slide
+                # does, and a frame placed afresh slides off the band as far as the print allows: line ends, a table's rules,
+                # a caption set along the edge run up to the band (خريدة القصر 0648 ص 344, 400, 617, 25) — held with half the
+                # margin, or re-centred on them, the frame went back into the band 15–33 pt (a side with a band: its allowed
+                # edge more than 1 % inside the page)
+                ab = p.get('allowed') or [0, 0, p['w'], p['h']]
+                bs = [ab[0] > 0.01 * p['w'], ab[1] > 0.01 * p['h'], ab[2] < 0.99 * p['w'], ab[3] < 0.99 * p['h']]
+                def off_band(n, u):
+                    n = list(n)
+                    for k0, k1, lim in ((0, 2, p['w']), (1, 3, p['h'])):
+                        lo, hi = (ab[k0] - n[k0]) if bs[k0] else 0, (n[k1] - ab[k1]) if bs[k1] else 0
+                        if lo > 1 and hi <= 0: sh = min(lo + 1, (ab[k1] if bs[k1] else lim) - n[k1], max(0, u[k0] - 4 - n[k0]))
+                        elif hi > 1 and lo <= 0: sh = -min(hi + 1, n[k0] - (ab[k0] if bs[k0] else 0), max(0, n[k1] - u[k1] - 4))
+                        else: continue
+                        if abs(sh) >= 0.5: n[k0] += sh; n[k1] += sh; p['band_slide'] = round(sh, 1)
+                    return n
                 def place(u):                            # → the box holding u, and its scale when it had to grow (else None)
-                    up = [u[0] - h_, u[1] - h_, u[2] + h_, u[3] + h_]
+                    e_ = [4 if bs[k] else h_ for k in range(4)]
+                    up = [u[0] - e_[0], u[1] - e_[1], u[2] + e_[2], u[3] + e_[3]]
                     dx = up[0] - c[0] if up[0] < c[0] else (up[2] - c[2] if up[2] > c[2] else 0)
                     dy = up[1] - c[1] if up[1] < c[1] else (up[3] - c[3] if up[3] > c[3] else 0)
                     n = [c[0] + dx, c[1] + dy, c[2] + dx, c[3] + dy]
                     if abs(dx) <= 0.02 * p['w'] and abs(dy) <= 0.02 * p['h'] and inside(up, n, 1.0) \
                        and n[0] >= 0 and n[1] >= 0 and n[2] <= p['w'] and n[3] <= p['h']:
-                        return n, None
+                        return off_band(n, u), None
                     cw, ch = c[2] - c[0], c[3] - c[1]
-                    sc = max(1.0, (u[2] - u[0] + 2 * mg) / cw, (u[3] - u[1] + 2 * mg) / ch)
+                    f_ = [4 if bs[k] else mg for k in range(4)]
+                    sc = max(1.0, (u[2] - u[0] + f_[0] + f_[2]) / cw, (u[3] - u[1] + f_[1] + f_[3]) / ch)
                     smax = min(p['w'] / cw, p['h'] / ch)        # never beyond the sheet: the margin gives way first
                     if sc > smax: sc = max(1.0, smax, (u[2] - u[0]) / cw, (u[3] - u[1]) / ch)
                     x2, y2 = (u[0] + u[2]) / 2, (u[1] + u[3]) / 2
                     n = [x2 - cw * sc / 2, y2 - ch * sc / 2, x2 + cw * sc / 2, y2 + ch * sc / 2]
                     sx = -n[0] if n[0] < 0 else (p['w'] - n[2] if n[2] > p['w'] else 0); sy = -n[1] if n[1] < 0 else (p['h'] - n[3] if n[3] > p['h'] else 0)
-                    return [n[0] + sx, n[1] + sy, n[2] + sx, n[3] + sy], sc
+                    return off_band([n[0] + sx, n[1] + sy, n[2] + sx, n[3] + sy], u), sc
                 n, sc = place(u)
                 # NO PRINT CUT BY THE MOVED BOX (2026-10-26, 1d12000b2925 ص 323: the box slid to a text block held at the 3 %
                 # bound and its foot ran through the page number): a mark the moved box cuts is taken in, once

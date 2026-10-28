@@ -7,8 +7,12 @@ by its lines' baselines (baselines), a tilt the usual measures' gates left found
 reading refused for a sheet's line across the page (sheet line), a turn refused for lines at two angles (two angles) or
 set again by the angle its lines take (the lines' turn), a projection loop's turn the lines' tracks confirmed within
 0.05° (the loop's turn kept — book_crop fix Q4) or taken when the second look could not keep the lines' turn (the
-loop's turn, the lines' turn not kept — fix Q5) (turns); a page number read as a stain
-restored (folio stain); a sideways slide up to 4 % for
+loop's turn, the lines' turn not kept — fix Q5) (turns); the off-band slide held back by the page's box (band: box
+kept — fix B2); the scanner bands as scanned no ink on the turned page (band no ink — fix B2); a thin line at a slant
+taken for a line by its ink, not its box (slant line — fix L); the scanner bands read before the turn bounding the
+turned page (band carried — fix B); the second look's frame slid off a scanner band, 4 pt beside the print (band: second
+look off — fix B3); a mark in a scanner band no longer dodged — the off-band slide keeps it out (band: not dodged — fix B4);
+a page number read as a stain restored (folio stain); a sideways slide up to 4 % for
 side headings (side slide); letters in the paper's edge shadow taken in (edge letters); a second look that
 moved, enlarged or no longer moves the box (second look); a cover whose cut moved to keep its print (cover print); else
 OTHER. A turn rule explains a page only when its turn changed.
@@ -31,6 +35,12 @@ def cause(p, q):
                      ('proj_sheet_line', 'sheet line')):
             if q.get(k) is not None: return v
         return None
+    if q.get('band_undodged') and p.get('dodged') and not q.get('dodged'): return 'band: not dodged'
+    if q.get('band_slide') is not None: return 'band: second look off'
+    if q.get('band_box') is not None: return 'band: box kept'
+    if q.get('band_ink') or q.get('band_ink2'): return 'band no ink'
+    if q.get('slant_lines') != p.get('slant_lines'): return 'slant line'
+    if (q.get('band_carried') or p.get('band_carried')) and q.get('allowed') != p.get('allowed'): return 'band carried'
     if q.get('folio_blot') is not None or p.get('folio_blot') is not None: return 'folio stain'
     if q.get('folio_specks') is not None or p.get('folio_specks') is not None: return 'folio specks'
     if q.get('ornament') != p.get('ornament'): return 'ornament'
