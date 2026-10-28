@@ -32,6 +32,8 @@ logs/crop-regress-diff-2026-10-28l.log (vs 26j: what C, Q4, T, Q5 changed), …-
   Other books: 0–20 pages within 1 % of the threshold (0648 20, eb86 15). Fix to design and bench after 27l: a threshold
   that does not split a cluster (the gap in the widths nearest 0.9 × median), or «full» = both text edges where the full
   pages' edges lie; survey all 31 books first (which pages change class), then the owner's eye on ص 32 type pages.
+  REJECTED (survey on 26j's recipes): the WIDEST gap in [0.85, 0.95] × median — thresholds fall to ≈ 0.86 × median, 127
+  pages change class, and 9da5's cluster goes FULL (the wrong side). The 0.9 factor has no recorded reason (book_crop v4).
 Watchers die with a /clear: re-arm (FAIL / crash / end). Work folder scratch/crop-fixes-2026-10-28k (tools tracked; out/ and
 code/ are local: code/bc_<v>.py = variants, rebuild from the patches).
 - 26j's three failures, each traced by code variants (26j without each fix: bplan.py; one page's first look: fl.py; decide
