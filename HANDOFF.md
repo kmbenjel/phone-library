@@ -13,6 +13,14 @@ every turn, benched before 26i.
 Unit crop-regress-2026-10-28l (scratch/regress_2026-10-28l.sh), log logs/crop-regress-2026-10-28l.log; at its end it writes
 logs/crop-regress-diff-2026-10-28l.log (vs 26j: what C, Q4, T, Q5 changed), …-28l-vs-26i.log (all eight fixes), …-28l-vs-26b.log.
 27k (dc613e4200, without Q5) was STOPPED 8 min in by the owner's word (AskUserQuestion, 08:30) when Q5 was found.
+STATE AT THE /clear (10:15 UTC): 27l running, 67 PASS 0 FAIL, all 7 key books done; watchers die with the /clear — RE-ARM
+(Monitor on logs/crop-regress-2026-10-28l.log: ^FAIL|Traceback|Killed|attempt [2-9]|^N failures, plus the unit's end).
+Key books checked against 26j / the bench: القوافي = bench + ص 62 (Q5, −0.95°); صبح 05 and خزانة 01 = bench exactly
+(cover window 147.8–561.0); مشتبهات unchanged; خزانة 04: 8 pages back to 26i's turns (Q4) — incl. ص 212 0.15°: the loop
+may keep a turn < 0.2° that base/tracks never make (26i did the same; invisible — note for the next round); ابن خير +4
+two-angle pages (142, 209, 248, 325 = the survey's), معجم تيمور 02 + ص 226 (survey's). Pilot: never ran (no marker), all
+10 paths in index-now — update the script's header (names 26i) before launching it after 27l's diff is read.
+STILL TO CHECK in 27l: خريدة 01 (0648) ص 625 and المثلث (eb86) ص 189 turned again by Q5.
 - FIX Q5 (patch_q5.py), found reviewing 26j: 97 pages 26i turned are unturned in 26j — 64 by design (the tracks read < 0.2°;
   Q4 leaves them: the loop was > 0.05° off), but a turn Q3's rulers set that the second look cannot keep was DROPPED
   (unsure_tilt): القوافي ص 62 (26i −0.95°, level by its own ink 0.125°; tracks −1.43°, inconsistent on their own turned
