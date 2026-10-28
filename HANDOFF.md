@@ -9,6 +9,54 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-28 12:45 UTC — STATE AT THE /clear: L READY; B NEEDS ONE MORE STEP (B2) BEFORE 27m (Claude, max)
+Nothing running (bench-lb-a ended; no regression; book_crop.py still 6a1fad7b21 = 27l). Both bench books looked at by eye
+(sheets: scratch/crop-fixes-2026-10-28m/bsheets.py 6a1fad7b21 out:lb OUT BOOK --pages …).
+- خزانة 02 (L): see below — right; 4 dirt pages exposed (fix D before the full redo).
+- خريدة 01 0648 (B): ~140 pages turned by the projection/tracks/baselines paths now keep out of their bands — LOOKED AT,
+  better: pp. 14, 229, 503 no longer show the black band; pp. 516, 611, 700 were whole pages shrunk 0.88 with both bands →
+  cropped at scale 1. BUT 3 PAGES NEWLY LEFT WHOLE (shrunk 0.88, bands showing; 27l cropped them clean): pp. 634 (1.75°), 652
+  (2.525°), 660 (1.525°). Cause: their BOX reaches into the band (box x0 51.4 / 53.9 / 63.6 < text x0 66.1 / 62.4 / 88.1 —
+  marks in the band counted as content, because marks() ran before the carry: its own «inband» rule only knows the turned
+  page's bands); the carried limit (largest upright rectangle of the turned band area: −17 pt a side at 2.5°) + the off-band
+  slide (limited by the TEXT, 4 pt) leave the box outside the frame → whole. 27l already had pp. 633, 636, 644 whole the same
+  way (bands found, box into them).
+- NEXT = FIX B2: the carried bands must act as bands do inside marks() — marks whose centre lies beyond the carried allowed
+  area by > 1 % of the width are band («edge»), not content (box/text/core recomputed), or pass the carried limits INTO marks();
+  then re-bench 0648 (`cd scratch/crop-fixes-2026-10-28m; rm out/064846139175.lb.json` or a new variant name) and look at 634,
+  652, 660 + 633, 636, 644 + a sample of the ~140. Then: apply L + B(+B2) to scripts/book_crop.py, `python3 stage_tools.py`,
+  commit, launch scratch/regress_2026-10-28m.sh (as a unit in crop.slice — see the 27l launch), diff, the pilot.
+
+## 2026-10-28 12:20 UTC — 27l DIFF REVIEWED: 4 PAGES BACK TO 26i's FAULTS → FIXES L + B BENCHED (details) (Claude, max)
+Work folder scratch/crop-fixes-2026-10-28m (tools tracked; code/, code2/, out/ local — rebuild code2 from the patches:
+`python3 patch_l.py ../../scripts/book_crop.py code2/bc_l.py && python3 patch_b.py code2/bc_l.py code2/bc_lb.py`).
+- 27l vs 26j by eye (sel_sheets 9a43a0bc8c 6a1fad7b21, 34 pages moved ≥ 3 pt): Q4/T/C/Q5 as predicted; القوافي = 26i on every
+  page (its book box +14 units = 0.4 %, uniform — the room-to-fit limit, harmless); سيبويه ج 2 parity −44.5 = 26i again. FOUR
+  REGRESSIONS, all = 26i (Q4 brought back the loop's turns, and at those turns the page reads differently, 0.025–0.125° apart):
+  · خزانة 02 (6860) ص 315 and خزانة 01 (00597) ص 332: a scan line 3 px tall once turned (0.4 % = 2.8 px at 500 px), read as text
+    (not «line» by its box, not «stain» by chance) → box pulled 37/29 pt, ص 315 shrunk to 0.86, the book's height +3.6 pt. FIX L.
+  · خريدة 01 (0648) ص 422: the left black band's outermost column 0.60 dark turned 0.45° (blank wedge) — bands() wants > 0.6 →
+    no band, the box slid 10 pt onto it. Only the generic loop carried the bands read before the turn. FIX B.
+  · خريدة 01 ص 438: NOT FIXED (known weakness: the dotted-line rule takes the thin strokes at the start of each verse line for
+    a dotted line → the footnote/verse numbers at x 462–474 fall into the margin, box 10 pt off). Later, with the dotted-line redesign.
+- FIX L (patch_l.py): a line is thin by its ink (column by column ≤ the limit, middles on one straight line, slope ≤ 0.1, box ≤
+  limit + 10 % of its length), both rules (long ≥ 20 %, short ≥ 3 % beyond the block), both ways; grains of a line's group
+  lying along it (± 1 px) are its pieces (ص 315: a 3 × 1 px piece held the box 36 pt up). Recipe flag slant_lines.
+  SIDE EFFECT (looked at, right): turned pages' head rules (6–8 px tall boxes) are now lines as level pages' were (خزانة 02: level
+  69 → 76 %, turned 49 → 59 %) → boxes 1–8 pt narrower where the rule outruns the text — consistent; margins 6 % (≈ 13 pt) hold them.
+- FIX B (patch_b.py): the bands as scanned (al0, only the sides that have one) bound every turned page. Recipe flag band_carried.
+- BENCH (unit bench-lb-a, bplan.py → out/<book>.lb.json): خزانة 02 done — pp. 50, 290, 315, 319, 354 lose their scan lines (all
+  were «enlarged» in 27l; now scale 1, centred — looked at); book height 383.56 → 364.52 = honest (clean margins: 98th pct of
+  typical text heights; the scan-line pages had inflated it). EXPOSED, NOT CAUSED: pp. 316, 317, 318, 320 carry scanner dirt
+  (a hair/curl 9 × 4 px, 40 pt above the running head, within 1.5 % of the columns → text block) — inside the frame in 27l too,
+  now also shrunk 0.92–0.95. → FIX D (dust above/below the block, not a lone page number) BEFORE THE FULL REDO; not a pilot book.
+  خريدة 01: see the 12:45 section (B2 needed).
+- STAGED: stage_tools.py (crop_recipe_diff causes «slant line», «band carried» + 4 case rows case-rows.tsv — each passes on 26j,
+  fails on 27l: checked); scratch/regress_2026-10-28m.sh (key books خزانة 02 and خريدة 01 first; diffs vs 27l, 26j, 26i).
+- NEXT: bench 0648 looked at → apply L + B to scripts/book_crop.py (code2/bc_lb.py = the patches on 6a1fad7b21) + stage_tools.py
+  → commit → 27m → its diff (every «slant line» / «band carried» / enlarged change) → the pilot (header → 27m).
+- Settled while waiting: القوافي ص 22 (26i 0.325° left +0.175° by the baselines; 27l 0.525° leaves −0.08°, tracks −0.02°) — Q3 right.
+
 ## 2026-10-28 11:30 UTC — 27l PASSED (0 failures, 211 PASS; ended 11:16, diffs written) — DIFF REVIEW NEXT, AT MAX (Claude)
 Q5 confirmed: خريدة 01 (0648) ص 625 turned 0.5° again, المثلث (eb86) ص 189 1.15° again (the loop's turn, the lines' not kept).
 To judge by eye first (book-level changes vs 26j, not predicted by the benches): 68600214e7de size 379.99 → 383.56 (462
