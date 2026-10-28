@@ -9,6 +9,50 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-28 ~16:30 UTC — STATE AT THE /clear: B2 = VARIANT H (built, first looks checked), FULL BENCH NOT YET RUN (Claude, max)
+- bench lbb3 (variant G: band no ink on LOST sides + letters' outer 3 % from the band's turned edge) + B3: ALL 10 case rows
+  PASS (ص 344 included), 0 whole pages — BUT the band-edge strip dropped real line ends on 123 pages (638 the table's first
+  column, 694 an index's left column, 204/122 prose/footnote line ends) and the book's size fell 483.92 → 481.18. REJECTED.
+- NOW in patch_b2.py = VARIANT H: band no ink only on sides where the turned page's bands() reads none; NO band-edge letter
+  strip; instead the EDGE-SHADOW rule also finds a shadow along the lost band's turned edge (touching it where outermost,
+  ≥ 40 % long, thin by ink = area/length ≤ 6 %) — ص 694's grey rim had become a blot that swallowed «٣١٠»، «٢٨٨» as its
+  «detached pieces». First looks on 20 pages: text blocks = L+B on 18; differ only 554 (right x1 484.7 → 470.0 — CHECK) and
+  25 (the vertical caption beside the band joins the text, top 112 → 94 — probably right); boxes no longer run to the
+  sheet's edge (634, 652, 660, 633, 636, 644). code2/bc_lbb2.py, bc_lbb3.py (= + patch_b3) are built from it, copied to code/.
+- NEXT: `mv out/064846139175.lbb3.json out/064846139175.lbb3G.json`, run the bench again (systemd-run --user
+  --slice=crop.slice --unit=bench-b3-b … bplan.py 064846139175 lbb3, as bench-b3-a), then ccheck.py (10 rows must pass),
+  book size must stay 483.92 × 700.57, bsheets.py out:lb out:lbb3 → look at every changed page (expect: the 8 whole pages
+  cropped; 326/70/165/390/435… band out; 25/400/551/617/622/623/632/672/685 NOT pushed into the band thanks to B3) → p. 554
+  → case rows (634/652/660/636/644 «cropped yes»; 344 «in» 59.3,553.4,63.7,558.9 = line end «عليه»; 634 «in»
+  60.9,78.9,67.6,82.1 = head rule end) in case-rows.tsv → apply L+B+B2+B3 to scripts/book_crop.py
+  (patch_l → patch_b → patch_b2 → patch_b3 on 6a1fad7b21), python3 stage_tools.py, add B2/B3 to scratch/regress_2026-10-28m.sh
+  header, git add -f the new tools (patch_b2.py, patch_b3.py, ccheck.py), commit, launch 27m.
+
+## 2026-10-28 ~15:00 UTC — B2 AND B3 BUILT, BENCH bench-b3-a RUNNING (0648, variant lbb3 = L + B + B2 + B3) (Claude, max)
+Work folder scratch/crop-fixes-2026-10-28m: patch_b2.py, patch_b3.py (chain: patch_l → patch_b → patch_b2 → patch_b3 on
+6a1fad7b21; code2/bc_lbb2.py, code2/bc_lbb3.py, copied to code/ for bplan.py), ccheck.py (case rows on a bench recipe),
+stage_tools.py (+ causes «band: second look off», «band: box kept», «band no ink»). Bench outputs out/<book>.<variant>.json:
+lb (L+B), lbb2A (B2 first variant, superseded), lbb3 (running → bench-b3.log).
+- FOUND: the L+B bench FAILED the existing case row خريدة 01 ص 344 'out' (27l passed it): B's slide moved the frame off the
+  band, the 1,000-px look found line ends («عليه»، «جماعة») running to 1 pt from the paper's edge and re-centred the frame
+  33 pt back INTO the band. Also L+B left 8 pages whole (633, 634, 636, 637, 638, 644, 652, 660; 27l: 5).
+- B2 (patch_b2.py): (1) on a side where bands() reads NO band on the turned page (outermost column ≤ 60 % with the blank
+  wedge: ص 634 0.52, ص 422 0.60), the band read as scanned (bands0, band_mask) is no ink — first look re-measures the final
+  turn, second look's crop checks use look(carry=True); the sheet's outer 3 % (letters) measured from the band's turned
+  edge. Where bands() still reads the band (small turns: ص 406, 353) nothing changes. (2) decide()'s off-band slide never
+  passes the box (band_box). REJECTED variants (benched/looked at): band removed on every side (ص 406: the band's grey rim
+  carried the text block 12 pt — a thin dark line in view); m starting at the band's outermost edge (ص 652 at 2.5°: the
+  table's grid and the «ت» of «ملاحظات» read as the sheet's edge).
+- B2 first-variant bench looked at (64 pages ≥ 3 pt vs L+B, all sheets seen): ALL 8 whole pages cropped at scale 1, tables
+  whole; ~35 pages better (the band no longer in view: 70, 165, 326, 390, 435, 438, 455, 569, 600, 614, 627, 648, 658, 666,
+  700, 159, 450; short index ends 705/709/712 placed like their neighbours); REGRESSIONS of one kind: 25, 400, 551, 617,
+  622, 623, 632, 672, 685 (+344) — the second look re-centred/grew INTO the band to hold print running up to it.
+- B3 (patch_b3.py, verify's place()): on a side with a band (allowed > 1 % inside the page) the frame keeps 4 pt beside
+  the print (not half the margin; not the full margin when it grows) and a frame placed afresh slides off the band as far
+  as the print allows (band_slide). NEXT: bench-b3-a → ccheck.py 064846139175 lbb3 (ص 344 must pass) → bsheets.py out:lb
+  out:lbb3 (and out:lbb2A out:lbb3) → look → case rows for 634/652/660 «cropped yes» + 344 → apply L+B+B2+B3 to
+  scripts/book_crop.py, stage_tools.py, update scratch/regress_2026-10-28m.sh header, commit, launch 27m.
+
 ## 2026-10-28 12:45 UTC — STATE AT THE /clear: L READY; B NEEDS ONE MORE STEP (B2) BEFORE 27m (Claude, max)
 Nothing running (bench-lb-a ended; no regression; book_crop.py still 6a1fad7b21 = 27l). Both bench books looked at by eye
 (sheets: scratch/crop-fixes-2026-10-28m/bsheets.py 6a1fad7b21 out:lb OUT BOOK --pages …).
