@@ -1,7 +1,13 @@
-# Mark generated static HTML catalogs and review pages as generated so GitHub Linguist classifies phone-library as Python
+# Exclude HTML files from language statistics so GitHub Linguist classifies phone-library as Python
+*.html linguist-generated=true
+*.html linguist-detectable=false
+
+# Exclude generated directories, templates, and data
+build/** linguist-generated=true
 site/** linguist-generated=true
 site-web/** linguist-generated=true
-selection/*.html linguist-generated=true
-templates/*.html linguist-documentation=true
+selection/** linguist-generated=true
+templates/** linguist-documentation=true
 data/** linguist-generated=true
 plans/** linguist-generated=true
+tools/** linguist-vendored=true
