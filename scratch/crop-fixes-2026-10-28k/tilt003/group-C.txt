@@ -1,0 +1,23 @@
+29b9db6c6baa	234	صبح الأعشى 05	refused turn -0.425°	15 lines	/tmp/claude-1000/twoang/29b9db6c6baa-234-1.jpg	/tmp/claude-1000/twoang/29b9db6c6baa-234-2.jpg
+29b9db6c6baa	351	صبح الأعشى 05	refused turn 0.425°	19 lines	/tmp/claude-1000/twoang/29b9db6c6baa-351-1.jpg	/tmp/claude-1000/twoang/29b9db6c6baa-351-2.jpg
+29b9db6c6baa	493	صبح الأعشى 05	refused turn 0.5°	17 lines	/tmp/claude-1000/twoang/29b9db6c6baa-493-1.jpg	/tmp/claude-1000/twoang/29b9db6c6baa-493-2.jpg
+29b9db6c6baa	367	صبح الأعشى 05	refused turn -0.625°	13 lines	/tmp/claude-1000/twoang/29b9db6c6baa-367-1.jpg	/tmp/claude-1000/twoang/29b9db6c6baa-367-2.jpg
+3103a9db389b	104	رسوم دار الخلافة	refused turn 0.25°	15 lines	/tmp/claude-1000/twoang/3103a9db389b-104-1.jpg	/tmp/claude-1000/twoang/3103a9db389b-104-2.jpg
+3103a9db389b	187	رسوم دار الخلافة	refused turn 0.525°	22 lines	/tmp/claude-1000/twoang/3103a9db389b-187-1.jpg	/tmp/claude-1000/twoang/3103a9db389b-187-2.jpg
+3103a9db389b	255	رسوم دار الخلافة	refused turn -0.4°	9 lines	/tmp/claude-1000/twoang/3103a9db389b-255-1.jpg	/tmp/claude-1000/twoang/3103a9db389b-255-2.jpg
+3103a9db389b	89	رسوم دار الخلافة	refused turn 0.425°	23 lines	/tmp/claude-1000/twoang/3103a9db389b-89-1.jpg	/tmp/claude-1000/twoang/3103a9db389b-89-2.jpg
+3103a9db389b	127	رسوم دار الخلافة	refused turn -0.375°	22 lines	/tmp/claude-1000/twoang/3103a9db389b-127-1.jpg	/tmp/claude-1000/twoang/3103a9db389b-127-2.jpg
+3103a9db389b	221	رسوم دار الخلافة	refused turn -0.275°	9 lines	/tmp/claude-1000/twoang/3103a9db389b-221-1.jpg	/tmp/claude-1000/twoang/3103a9db389b-221-2.jpg
+435bf8357444	186	اللآلئ المصنوعة 02	refused turn -0.525°	16 lines	/tmp/claude-1000/twoang/435bf8357444-186-1.jpg	/tmp/claude-1000/twoang/435bf8357444-186-2.jpg
+435bf8357444	362	اللآلئ المصنوعة 02	refused turn -0.6°	20 lines	/tmp/claude-1000/twoang/435bf8357444-362-1.jpg	/tmp/claude-1000/twoang/435bf8357444-362-2.jpg
+435bf8357444	445	اللآلئ المصنوعة 02	refused turn 0.55°	14 lines	/tmp/claude-1000/twoang/435bf8357444-445-1.jpg	/tmp/claude-1000/twoang/435bf8357444-445-2.jpg
+435bf8357444	252	اللآلئ المصنوعة 02	refused turn -0.25°	19 lines	/tmp/claude-1000/twoang/435bf8357444-252-1.jpg	/tmp/claude-1000/twoang/435bf8357444-252-2.jpg
+acb87508dd15	142	فهرسة ابن خير 1	refused turn 0.625°	20 lines	/tmp/claude-1000/twoang/acb87508dd15-142-1.jpg	/tmp/claude-1000/twoang/acb87508dd15-142-2.jpg
+acb87508dd15	248	فهرسة ابن خير 1	refused turn -0.425°	15 lines	/tmp/claude-1000/twoang/acb87508dd15-248-1.jpg	/tmp/claude-1000/twoang/acb87508dd15-248-2.jpg
+acb87508dd15	209	فهرسة ابن خير 1	refused turn 0.5°	15 lines	/tmp/claude-1000/twoang/acb87508dd15-209-1.jpg	/tmp/claude-1000/twoang/acb87508dd15-209-2.jpg
+acb87508dd15	325	فهرسة ابن خير 1	refused turn -0.45°	19 lines	/tmp/claude-1000/twoang/acb87508dd15-325-1.jpg	/tmp/claude-1000/twoang/acb87508dd15-325-2.jpg
+eb8673fd16b1	184	المثلث للبطليوسي 1	refused turn -0.35°	12 lines	/tmp/claude-1000/twoang/eb8673fd16b1-184-1.jpg	/tmp/claude-1000/twoang/eb8673fd16b1-184-2.jpg
+eb8673fd16b1	228	المثلث للبطليوسي 1	refused turn -0.3°	7 lines	/tmp/claude-1000/twoang/eb8673fd16b1-228-1.jpg	/tmp/claude-1000/twoang/eb8673fd16b1-228-2.jpg
+eb8673fd16b1	291	المثلث للبطليوسي 1	refused turn 0.425°	9 lines	/tmp/claude-1000/twoang/eb8673fd16b1-291-1.jpg	/tmp/claude-1000/twoang/eb8673fd16b1-291-2.jpg
+eb8673fd16b1	239	المثلث للبطليوسي 1	refused turn -0.35°	11 lines	/tmp/claude-1000/twoang/eb8673fd16b1-239-1.jpg	/tmp/claude-1000/twoang/eb8673fd16b1-239-2.jpg
+eb8673fd16b1	461	المثلث للبطليوسي 1	refused turn 0.525°	16 lines	/tmp/claude-1000/twoang/eb8673fd16b1-461-1.jpg	/tmp/claude-1000/twoang/eb8673fd16b1-461-2.jpg

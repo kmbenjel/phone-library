@@ -1,9 +1,12 @@
 """build_tilt003.py — the owner's review page crop-tilt-003 (data/review/crop-tilt-003.tsv → scripts/doubts_page.py): the 83
 pages regression 27l leaves as scanned for their two angles, each with its two pictures (twoang_page.py, /tmp/claude-1000/twoang)
 and the verdict of the look by eye (verdict-*.jsonl; mine.jsonl overrides: my own look at every page questioned). Pages
-questioned first, then the rest by book."""
+questioned first, then the rest by book. The evidence (rows.jsonl, verdict-*.jsonl, mine.jsonl) lives in tilt003/; the
+pictures stay in /tmp/claude-1000/twoang (twoang_page.py makes them again). A row the owner settled stays in its place,
+marked done (verdict DONE: comments are kept by row number — moving rows would put his words under another page)."""
 import json, glob, os, subprocess
 T = '/tmp/claude-1000/twoang'; ROOT = '/home/k/projects/phone-library'
+E = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tilt003')
 PATH = {'00597fea27cf': 'الأدب/خزانة الأدب للبغدادي/01 - خزانة الأدب للبغدادي.pdf',
  '29b9db6c6baa': 'الأدب/صبح الأعشى في كتابة الإنشا - القلقشندي (ط دار الكتب المصرية)/05 - صبح الأعشى في كتابة الإنشا (تابع المقالة الثانية - المقالة الثالثة).pdf',
  '8ec1fd8095ad': 'البلاغة/دلائل الإعجاز - عبد القاهر الجرجاني (ت محمود شاكر - مكتبة الخانجي).pdf',
@@ -35,23 +38,24 @@ def why(r, v):
     return s + ' رأيي: لم أقطع فيها، انظرها.'
 
 if __name__ == '__main__':
-    R = {(r['pdf'], r['page']): r for r in map(json.loads, open(f'{T}/rows.jsonl'))}
+    R = {(r['pdf'], r['page']): r for r in map(json.loads, open(f'{E}/rows.jsonl'))}
     V = {}
-    for fn in sorted(glob.glob(f'{T}/verdict-*.jsonl')) + ([f'{T}/mine.jsonl'] if os.path.exists(f'{T}/mine.jsonl') else []):
+    for fn in sorted(glob.glob(f'{E}/verdict-*.jsonl')) + ([f'{E}/mine.jsonl'] if os.path.exists(f'{E}/mine.jsonl') else []):
         for v in map(json.loads, open(fn)): V[(v['pdf'], int(v['page']))] = v
     miss = [k for k in R if k not in V]
     assert not miss, f'no verdict for {miss}'
-    bad = sorted([k for k in R if V[k]['verdict'] != 'RIGHT'], key=lambda k: (PATH[k[0]], k[1]))
+    bad = sorted([k for k in R if V[k]['verdict'] not in ('RIGHT', 'DONE')], key=lambda k: (PATH[k[0]], k[1]))
+    done = sorted([k for k in R if V[k]['verdict'] == 'DONE'], key=lambda k: (PATH[k[0]], k[1]))
     ok = sorted([k for k in R if V[k]['verdict'] == 'RIGHT'], key=lambda k: (PATH[k[0]], k[1]))
     out = ['#T\tصفحات تُركت كما مُسحت: سطورها على زاويتين\t'
-           f'{len(R)} صفحة من كتب الاختبار الـ31، يتركها المنهج الآن بلا تدوير بقاعدتك (2026-10-27 «اتركها كما مُسحت»): '
+           f'{len(R) - len(done)} صفحة من كتب الاختبار الـ31، يتركها المنهج الآن بلا تدوير بقاعدتك (2026-10-27 «اتركها كما مُسحت»): '
            'تدوير واحد يسوي بعض سطورها ويميل غيرها. لكل صفحة صورتان: الأولى كما مُسحت، والثانية لو أُديرت بالزاوية التي '
            'كان المنهج سيديرها بها. على كل سطر خط بميله الذي قيس: أخضر = مستو (0.35° فأقل)، أحمر = مائل، والرقم ميله بالدرجات. '
            'فُحصت كل صفحة بالعين وبقياس مستقل للميل، ورأيي مكتوب تحت اسمها. اكتب رأيك إن خالفته، أو «أدرها» لتُدار.',
-           '#S\tQ\tما أرى رفض تدويره خطأ: سطوره على ميل واحد', '#S\tOK\tما أرى تركه صوابا']
-    for sec, ks in (('Q', bad), ('OK', ok)):
+           '#S\tD\tتم بأمرك', '#S\tQ\tما أرى رفض تدويره خطأ: سطوره على ميل واحد', '#S\tOK\tما أرى تركه صوابا']
+    for sec, ks in (('D', done), ('Q', bad), ('OK', ok)):
         for k in ks:
             out.append('\t'.join([sec, PATH[k[0]], why(R[k], V[k]), f'{T}/{k[0]}-{k[1]}-1.jpg,{T}/{k[0]}-{k[1]}-2.jpg']))
     open(f'{ROOT}/data/review/crop-tilt-003.tsv', 'w', encoding='utf-8').write('\n'.join(out) + '\n')
     subprocess.run(['python3', f'{ROOT}/scripts/doubts_page.py', 'crop-tilt-003'], check=True)
-    print(len(bad), 'questioned,', len(ok), 'right')
+    print(len(done), 'done,', len(bad), 'questioned,', len(ok), 'right')

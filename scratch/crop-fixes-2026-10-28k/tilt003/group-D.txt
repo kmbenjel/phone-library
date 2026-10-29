@@ -1,0 +1,13 @@
+00597fea27cf	203	خزانة الأدب 01	refused turn 0.575°	15 lines	/tmp/claude-1000/twoang/00597fea27cf-203-1.jpg	/tmp/claude-1000/twoang/00597fea27cf-203-2.jpg
+0c32c1a4815b	185	سؤالات أبي داود	refused turn 0.289°	8 lines	/tmp/claude-1000/twoang/0c32c1a4815b-185-1.jpg	/tmp/claude-1000/twoang/0c32c1a4815b-185-2.jpg
+51cfa6854fda	679	روضة المستبين 1	refused turn 0.5°	10 lines	/tmp/claude-1000/twoang/51cfa6854fda-679-1.jpg	/tmp/claude-1000/twoang/51cfa6854fda-679-2.jpg
+5b214426d112	184	إرشاد الساري 10	refused turn -0.575°	31 lines	/tmp/claude-1000/twoang/5b214426d112-184-1.jpg	/tmp/claude-1000/twoang/5b214426d112-184-2.jpg
+5b214426d112	408	إرشاد الساري 10	refused turn -0.35°	31 lines	/tmp/claude-1000/twoang/5b214426d112-408-1.jpg	/tmp/claude-1000/twoang/5b214426d112-408-2.jpg
+83dfc7786870	1476	روضة المستبين (whole)	refused turn 0.5°	10 lines	/tmp/claude-1000/twoang/83dfc7786870-1476-1.jpg	/tmp/claude-1000/twoang/83dfc7786870-1476-2.jpg
+8ec1fd8095ad	587	دلائل الإعجاز	refused turn 0.425°	14 lines	/tmp/claude-1000/twoang/8ec1fd8095ad-587-1.jpg	/tmp/claude-1000/twoang/8ec1fd8095ad-587-2.jpg
+9da5c530d977	226	معجم تيمور 02	refused turn 0.25°	16 lines	/tmp/claude-1000/twoang/9da5c530d977-226-1.jpg	/tmp/claude-1000/twoang/9da5c530d977-226-2.jpg
+c63a21351cba	187	اللآلئ المصنوعة 01	refused turn 0.325°	19 lines	/tmp/claude-1000/twoang/c63a21351cba-187-1.jpg	/tmp/claude-1000/twoang/c63a21351cba-187-2.jpg
+c63a21351cba	125	اللآلئ المصنوعة 01	refused turn 0.5°	14 lines	/tmp/claude-1000/twoang/c63a21351cba-125-1.jpg	/tmp/claude-1000/twoang/c63a21351cba-125-2.jpg
+f134344a7421	95	التنبيه والإيقاظ لما في ذيول تذكرة الحفاظ	refused turn -0.425°	12 lines	/tmp/claude-1000/twoang/f134344a7421-95-1.jpg	/tmp/claude-1000/twoang/f134344a7421-95-2.jpg
+f134344a7421	101	التنبيه والإيقاظ لما في ذيول تذكرة الحفاظ	refused turn -0.4°	8 lines	/tmp/claude-1000/twoang/f134344a7421-101-1.jpg	/tmp/claude-1000/twoang/f134344a7421-101-2.jpg
+f134344a7421	126	التنبيه والإيقاظ لما في ذيول تذكرة الحفاظ	refused turn -0.425°	11 lines	/tmp/claude-1000/twoang/f134344a7421-126-1.jpg	/tmp/claude-1000/twoang/f134344a7421-126-2.jpg

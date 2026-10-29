@@ -9,6 +9,29 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-29 00:50 UTC — STATE AT THE /clear (owner restarts VS Code) (Claude, max)
+- RUNNING (systemd units, survive the restart): crop-regress-2026-10-28m (since 23:40; 3 of 9 key books done by 00:27;
+  ends ≈ 02:40–03:00, then writes the diffs vs 27l/26j/26i) and review-x (review_on_demand_x.py: «x» on a review row opens
+  its book in Brave). FIRST after the restart: arm `cd ~/projects/phone-library && python3 -u scripts/watch_comments.py` as
+  a Monitor (resumes from ~/.cache/phone-library/watch-comments.pos; re-arm at each 30-min expiry) and a background wait on
+  the 27m unit. Then the NEXT of the 23:40 section.
+- OWNER «أدرها» on crop-tilt-003 row 1 (00:43) → data/crop/owner-turns.tsv + التنبيه والإيقاظ ص 101 0.40, added BEFORE 27m
+  reached that book (owner turns are read per book into the cache key's tag) → in 27m's diff expect ص 101 turned 0.4 with
+  owner_turn. Closed in data/names/review-closed.tsv (crop-tilt-003 1); the page shows 82 rows. doubts_page.py now hides
+  closed rows but keeps the numbers (comments and «x» read rows by number) — rebuilding doubts-00x pages hides theirs too.
+- OWNER QUESTION OPEN (asked 10-29 00:30, no answer yet): he read the tilt work as «line by line … مرهق جدا». Told: one
+  turn per page; lines are only MEASURED to check no level line is tilted (≈ 1 s per turned page: 7,649 in 62 min on 2
+  workers). Options given: keep as is (my recommendation) / SKEW_MIN 0.2 → 0.5 (drops 4,085 of the 7,649 turns of the 31
+  books; he once said he sees 0.25° on a full line — the bar's comment) / drop the line check (warped pages turned by a
+  middle angle — against his 10-27 rule). Change nothing before he answers. He also said the tilt on the 83 pages is
+  «قريب» (minor).
+- Told him (no action): the review pictures are whole pages before the frame (originals); on the phone 15 of those 17
+  books carry the OLD crop (done.tsv), اللآلئ المصنوعة 01/02 are the early-October margin-fixed copies (plans 142/212);
+  the old crop is an appended update (removable). The method is not final; FREEZE after 27m (his reply: none against).
+- crop-tilt-003 rebuild: scratch/crop-fixes-2026-10-28k/build_tilt003.py (evidence tilt003/: rows, verdicts, mine.jsonl;
+  pictures /tmp/claude-1000/twoang — twoang_page.py remakes them). Independent row-tilt measure: rowtilt.py (same folder;
+  not for tables / two columns).
+
 ## 2026-10-28 23:40 UTC — B5 FOLDED IN; REGRESSION 27m RUNNING (Claude, max)
 - bandedge.py totals (band in view at frame edges, whole book): 27l 202 pages / 598 pt, B4 84 / 183, B5 83 / 178; edge
   shadow 23 → 70 → 72 pages (frames stop at the band's grey ramp). B5 ≠ B4 on 3 pages only (165 +0.3 pt band +2.1 shadow;
@@ -67,7 +90,7 @@ every turn, benched before 26i.
 - Then follow the NEXT of the 22:20 section. 27m header and stage_tools already updated for B2–B5. Launch 27m:
   `systemd-run --user --slice=crop.slice --unit=crop-regress-2026-10-28m --nice=10 --working-directory=$PWD scratch/regress_2026-10-28m.sh`
 - Diff review will be big: banded books 0648 (594 band pages), 435b 158, 2af9 97, 9b98 93, c63a 78, 29b9 76, 2b47 69, 55d3 60.
-- Owner still not told (older): site/plan-383.html; crop-tilt-002 built; the 83 two-angle pages listed.
+- Owner told 10-28/29: plan-383 (he reviewed it, «done»), crop-tilt-002 built, the 83 two-angle pages (crop-tilt-003).
 
 ## 2026-10-28 22:20 UTC — B4 BENCHED (lbb4A) → B4 TOLERANCE 0 (bench-b4-b running) → FIX B5 BUILT; B5 BENCH NEXT (Claude, max)
 - bench-b4-a (lbb4A = B4 with the second look's 1 % margin): 18/18 rows, size same, only 579, 585 (back in place), 636 (frame
