@@ -17,13 +17,14 @@ every turn, benched before 26i.
   the 27m unit. Then the NEXT of the 23:40 section.
 - OWNER «أدرها» on crop-tilt-003 row 1 (00:43) → data/crop/owner-turns.tsv + التنبيه والإيقاظ ص 101 0.40, added BEFORE 27m
   reached that book (owner turns are read per book into the cache key's tag) → in 27m's diff expect ص 101 turned 0.4 with
-  owner_turn. Closed in data/names/review-closed.tsv (crop-tilt-003 1); the page shows 82 rows. doubts_page.py now hides
+  owner_turn. Closed in data/names/review-closed.tsv (crop-tilt-003 1); then «mark all ok» on row 83 (00:55): rows 2–83
+  closed (left as scanned) — crop-tilt-003 is SETTLED, the page says nothing waits. doubts_page.py now hides
   closed rows but keeps the numbers (comments and «x» read rows by number) — rebuilding doubts-00x pages hides theirs too.
-- OWNER QUESTION OPEN (asked 10-29 00:30, no answer yet): he read the tilt work as «line by line … مرهق جدا». Told: one
+- OWNER ANSWERED 10-29 ~00:55: «keep as it is» — the line check on turns and SKEW_MIN 0.2 stay. (Asked 10-29 00:30: he read the tilt work as «line by line … مرهق جدا».) Told: one
   turn per page; lines are only MEASURED to check no level line is tilted (≈ 1 s per turned page: 7,649 in 62 min on 2
   workers). Options given: keep as is (my recommendation) / SKEW_MIN 0.2 → 0.5 (drops 4,085 of the 7,649 turns of the 31
   books; he once said he sees 0.25° on a full line — the bar's comment) / drop the line check (warped pages turned by a
-  middle angle — against his 10-27 rule). Change nothing before he answers. He also said the tilt on the 83 pages is
+  middle angle — against his 10-27 rule). He chose to keep it. He also said the tilt on the 83 pages is
   «قريب» (minor).
 - Told him (no action): the review pictures are whole pages before the frame (originals); on the phone 15 of those 17
   books carry the OLD crop (done.tsv), اللآلئ المصنوعة 01/02 are the early-October margin-fixed copies (plans 142/212);

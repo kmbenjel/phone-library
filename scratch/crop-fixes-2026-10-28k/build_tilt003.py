@@ -47,12 +47,19 @@ if __name__ == '__main__':
     bad = sorted([k for k in R if V[k]['verdict'] not in ('RIGHT', 'DONE')], key=lambda k: (PATH[k[0]], k[1]))
     done = sorted([k for k in R if V[k]['verdict'] == 'DONE'], key=lambda k: (PATH[k[0]], k[1]))
     ok = sorted([k for k in R if V[k]['verdict'] == 'RIGHT'], key=lambda k: (PATH[k[0]], k[1]))
-    out = ['#T\tصفحات تُركت كما مُسحت: سطورها على زاويتين\t'
+    cf = f'{ROOT}/data/names/review-closed.tsv'
+    closed = {l.split('\t')[1] for l in open(cf, encoding='utf-8') if l.startswith('crop-tilt-003\t')}
+    if len(closed) >= len(R):                         # the owner settled every row (10-29 «mark all ok»)
+        out = ['#T\tصفحات تُركت كما مُسحت: سطورها على زاويتين\t'
+               f'راجعتَ الصفحات كلها (2026-10-29): تبقى {len(R) - len(done)} صفحة كما مُسحت كما قرر المنهج، وتُدار ص 101 من '
+               'التنبيه والإيقاظ بأمرك. لا شيء ينتظرك هنا.']
+    else: out = ['#T\tصفحات تُركت كما مُسحت: سطورها على زاويتين\t'
            f'{len(R) - len(done)} صفحة من كتب الاختبار الـ31، يتركها المنهج الآن بلا تدوير بقاعدتك (2026-10-27 «اتركها كما مُسحت»): '
            'تدوير واحد يسوي بعض سطورها ويميل غيرها. لكل صفحة صورتان: الأولى كما مُسحت، والثانية لو أُديرت بالزاوية التي '
            'كان المنهج سيديرها بها. على كل سطر خط بميله الذي قيس: أخضر = مستو (0.35° فأقل)، أحمر = مائل، والرقم ميله بالدرجات. '
            'فُحصت كل صفحة بالعين وبقياس مستقل للميل، ورأيي مكتوب تحت اسمها. اكتب رأيك إن خالفته، أو «أدرها» لتُدار.',
-           '#S\tD\tتم بأمرك', '#S\tQ\tما أرى رفض تدويره خطأ: سطوره على ميل واحد', '#S\tOK\tما أرى تركه صوابا']
+           ]
+    out += ['#S\tD\tتم بأمرك', '#S\tQ\tما أرى رفض تدويره خطأ: سطوره على ميل واحد', '#S\tOK\tما أرى تركه صوابا']
     for sec, ks in (('D', done), ('Q', bad), ('OK', ok)):
         for k in ks:
             out.append('\t'.join([sec, PATH[k[0]], why(R[k], V[k]), f'{T}/{k[0]}-{k[1]}-1.jpg,{T}/{k[0]}-{k[1]}-2.jpg']))
