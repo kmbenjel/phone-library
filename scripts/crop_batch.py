@@ -18,7 +18,7 @@ Usage: python3 scripts/crop_batch.py LIST.tsv BATCH_NAME [--workers N] [--jobs J
        book cropped before is cropped afresh when its file was replaced since (a logged «add» after its last crop) and
        carries no crop — the CropBox / «q … cm» marks an earlier crop leaves are checked in the file itself)
        python3 scripts/crop_batch.py --undo PATH                         (restore one file to its original bytes)"""
-import csv, hashlib, io, json, os, subprocess, sys, tempfile, time, ftplib, fcntl, unicodedata
+import csv, hashlib, io, json, os, re, subprocess, sys, tempfile, time, ftplib, fcntl, unicodedata
 from concurrent.futures import ProcessPoolExecutor, as_completed
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
@@ -68,7 +68,8 @@ def listed(table, path):
 
 def owner_turns(path):
     """the pages of this book the owner ruled «turn» (data/crop/owner-turns.tsv: path, page, measured tilt, verdict — his
-    verdicts on site/crop-tilt-001.html, 2026-10-25) → {page (1-based, as in the recipe): |tilt|}, for book_crop.plan"""
+    verdicts on site/crop-tilt-001.html, 2026-10-25) → {page (1-based, as in the recipe): |tilt|}, for book_crop.plan; a tilt
+    of 0: a page he ruled «leave as scanned» (crop-tilt-002 / 003 — book_crop fix F, 2026-10-29)"""
     return {int(r[1]): float(r[2]) for r in listed(OWNER_TURNS, path)}
 
 def owner_pages(path):
@@ -77,7 +78,10 @@ def owner_pages(path):
     review page of every new crop of the book, doubted by the method or not, so that he sees each remark answered (the
     pilot redo of 2026-10-26 holds five of the books he marked on 10-14)"""
     out = {}
-    for r in listed(OWNER_TURNS, path): out.setdefault(int(r[1]), []).append('أجزتَ تدويرها (crop-tilt-001، 2026-10-25)')
+    for r in listed(OWNER_TURNS, path):              # (the review and date from the verdict; the first rows: crop-tilt-001)
+        m = re.search(r'(crop-tilt-\d{3})\.html row \d+, (\d{4}-\d{2}-\d{2})', r[3] if len(r) > 3 else '')
+        out.setdefault(int(r[1]), []).append(f'{"أجزتَ تدويرها" if float(r[2]) else "أبقيتَها كما مُسحت"} '
+                                             f'({m[1] + "، " + m[2] if m else "crop-tilt-001، 2026-10-25"})')
     for r in listed(OWNER_PAGES, path): out.setdefault(int(r[1]), []).append(f'«{r[2]}»' + (f' ({r[3]})' if len(r) > 3 and r[3] else ''))
     return {k: ' / '.join(v) for k, v in out.items()}
 

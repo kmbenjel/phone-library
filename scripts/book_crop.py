@@ -2060,7 +2060,8 @@ def analyse(path):
 def plan(path, jobs=1, owner_turns=None):
     """the whole method: measure every page once, then the narrowest box that works — the width of 95 % of the pages,
     else 98 %, else all; each tried with the second check (a book is cropped only if few pages stay whole).
-    owner_turns: {page (1-based, as in the recipe): |tilt|} — pages the owner ruled «turn» (verify)"""
+    owner_turns: {page (1-based, as in the recipe): |tilt|} — pages the owner ruled «turn» (verify); a tilt of 0: a page he
+    ruled «leave as scanned» (fix F)"""
     import copy, shutil
     d = pymupdf.open(path); n0 = d.page_count
     spreads = n0 and sum(1 for pg in d if not pg.rotation and pg.rect.width > 1.15 * pg.rect.height) >= 0.5 * n0
@@ -2784,6 +2785,22 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         tk = None
         if not lbr and p.get('skew') and p.get('tilt_by_tracks') is not None:
             tk = tracks_tilt(mk['tracks']()) if mk.get('paper') else None
+            # (no reading at this turn, and the shear cannot confirm it either: the turns beside it — fix N, 2026-10-29,
+            # إرشاد الساري 10 ص 477: text and margin commentary side by side, the lines' spread at the 0.3° limit — unread
+            # at −0.575° and −0.55°, level at −0.6°; left 0.55° tilted when the shear, which calls −1.5° level there, had
+            # the last word)
+            if tk is None and mk.get('paper') and not (
+                    p.get('tilt_by_proj') is not None and mk.get('xy') is not None
+                    and (p.get('tilt_by_base') is None or base(i, p, mk, rb) is None) and abs(skew_of(mk['xy'], raw=True)[0]) <= 0.2):
+                nb = []
+                for k_ in (0.025, -0.025, 0.05, -0.05):
+                    d_ = round(p['skew'] + k_, 3)
+                    if abs(d_) < SKEW_MIN - 1e-9: continue
+                    m_ = look(i, dict(p, skew=d_)); t_ = tracks_tilt(m_['tracks']()) if m_.get('paper') else None
+                    if t_ is not None and abs(t_[0]) <= 0.1 + 1e-6: nb.append((abs(t_[0]), abs(k_), d_, m_, t_))
+                if nb:
+                    _, _, d_, m_, t_ = min(nb, key=lambda v: (v[0], v[1]))
+                    p['tracks_near'] = p['skew']; p['skew'], mk, tk = d_, m_, t_
             if tk is not None and abs(tk[0]) > 0.05:
                 d2 = round(round((p['skew'] + tk[0]) / 0.025) * 0.025, 3)
                 if abs(d2) >= SKEW_MIN:
@@ -2923,6 +2940,17 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         # ruled «turn» after seeing it turned by its measured tilt, which the measures above leave as it is, is turned by
         # that tilt — u measured here, on the page as it is (sign and size); the readings after it are kept for the record
         ot = (owner_turns or {}).get(i + 1)
+        # THE OWNER'S «LEAVE AS SCANNED» (fix F, 2026-10-29: his turn of 0 — the pages he saw left as scanned for their two
+        # angles and kept so, crop-tilt-002 «Leave as scanned», crop-tilt-003 «mark all ok»): never turned, whatever a later
+        # reading finds — 27m's fix L narrowed صبح الأعشى 05 ص 367's text block as scanned by 3.6 pt, its short foot lines read
+        # 0.2° otherwise, guard W saw one line made to lean instead of three and turned the page he had kept −0.625°. The turn
+        # the method would make is kept for the record (owner_flat)
+        if ot is not None and not ot:
+            if p.get('skew'):
+                p['owner_flat'] = p.pop('skew')
+                for k in ('after_tilt', 'after_tilt_image', 'turned_in_check'): p.pop(k, None)
+                mk = look(i, {k: v for k, v in p.items() if k != 'skew'})
+            ot = None
         if ot is not None and not p.get('skew'):
             m0_ = look(i, {k: v for k, v in p.items() if k != 'skew'})
             u = p.get('untreated_tilt') or p.get('tilt_disputed') or 0.0

@@ -1,7 +1,9 @@
 """The crop recipes of two book_crop versions in the regression cache (~/.cache/phone-library/crop-regress/<book>.<md5>….json),
 page by page — turn, crop box, shown part, scale, move, kind — so that every change a method change brings is explained
 before anything reaches the phone (the redo, a pilot). Each changed page is printed with its cause, read from the flags the
-new recipe carries: the owner's turn, a level-by-both turn taken first, a ruler-certified small tilt, a clear tilt whose
+new recipe carries: the owner's turn, the owner's «leave as scanned» undoing a turn (owner: as scanned — fix F), a turn
+read at the turns beside it when the lines' tracks could not read it at its own (tracks: a turn beside — fix N), a
+level-by-both turn taken first, a ruler-certified small tilt, a clear tilt whose
 image reading fell to a third, a turn refused because it made level lines lean, a turn of a page the projection found set
 by its lines' baselines (baselines), a tilt the usual measures' gates left found by them (baselines found), a projection
 reading refused for a sheet's line across the page (sheet line), a turn refused for lines at two angles (two angles) or
@@ -24,7 +26,8 @@ BOOK = ('decision', 'size', 'width_quantile', 'gain', 'framed', 'clean_margins',
 
 def cause(p, q):
     if p.get('skew') != q.get('skew'):
-        for k, v in (('owner_turn', 'owner turn'), ('level_first', 'level first'), ('image_loose', 'image ≤ 0.35'),
+        for k, v in (('owner_turn', 'owner turn'), ('owner_flat', 'owner: as scanned'), ('tracks_near', 'tracks: a turn beside'),
+                     ('level_first', 'level first'), ('image_loose', 'image ≤ 0.35'),
                      ('image_third', 'image to a third'), ('two_angles', 'two angles'), ('loop_confirmed', "the loop's turn kept"),
                      ('loop_fallback', "the loop's turn, the lines' turn not kept"),
                      ('turn_by_tracks', "the lines' turn"),

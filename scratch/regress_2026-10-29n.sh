@@ -8,9 +8,13 @@
 # F — THE OWNER'S «LEAVE AS SCANNED» STANDS: a turn of 0 in data/crop/owner-turns.tsv (his 86 pages: crop-tilt-002's 4,
 # crop-tilt-003's 82) = the page is never turned, whatever a reading finds (owner_flat keeps the turn the method would make);
 # the owner's turn itself applies to a non-zero turn only. 77 «turn no» case rows added for the pages the regression did not
-# hold (scratch/crop-fixes-2026-10-29/stage_f.py). Expected against 27m: only the kept pages 27m turned change, back to
-# 27l's frames (ftest.py: ص 367 crop [141.2, 90.6, 494.5, 718.9], as 27l); every other page identical.
-# book_crop.py = 4fcdf11f58 + patch_f.py (scratch/crop-fixes-2026-10-29).
+# hold (scratch/crop-fixes-2026-10-29/stage_f.py).
+# N — A TURN THE LINES' TRACKS CANNOT READ AT ITS OWN IS READ AT THE TURNS BESIDE IT (±0.025°, ±0.05°; only when the shear
+# cannot confirm the turn either): إرشاد الساري 10 ص 477, left 0.55° tilted by 27m (tracks unread at −0.575°, their spread at
+# the 0.3° limit; the shear calls −1.5° level there), turned −0.6° and level (−0.008°); case row «477 turn yes» added.
+# Expected against 27m: the kept pages 27m turned, back to 27l's frames (ftest.py: ص 367 crop [141.2, 90.6, 494.5, 718.9],
+# as 27l); 5b21 ص 477 turned −0.6°; any other page N reaches (tracks unread, shear unsure) — each one looked at; every other
+# page identical. book_crop.py = 4fcdf11f58 + patch_f.py + patch_n.py = a0e20119c2 (scratch/crop-fixes-2026-10-29).
 cd "$(dirname "$0")/.."
 M=data/crop/.regress-2026-10-29n; [ -e $M ] && { echo "already ran"; exit 1; }; touch $M
 R=logs/crop-regress-2026-10-29n.log; : > $R
