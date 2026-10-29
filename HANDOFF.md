@@ -17,6 +17,12 @@ every turn, benched before 26i.
 - Owner told (01:25): the phone's FTP app is off; F then 27n then pilot; the pilot can go before 27n if he wants (F changes
   none of its 10 books). No reply yet.
 
+## 2026-10-29 03:35 UTC — STATE AT THE /clear (Claude, max)
+- 27m still running (21 of 31 books, 0 FAIL lines so far) → ends ≈ 04:30. FIRST after the clear: arm watch_comments.py as a
+  Monitor, a background wait on unit crop-regress-2026-10-28m, then follow «AFTER 27m ENDS» of the 01:20 section below.
+- The owner was told: phone FTP app off since 10-28 14:12 (pilot needs it); fix F waits for 27m's end; then 27n → freeze →
+  pilot (he may ask for the pilot before 27n: F changes none of its 10 books).
+
 ## 2026-10-29 01:20 UTC — 27m DIFF REVIEW STARTED: ONE FAULT → FIX F STAGED; crop_redo HARDENED (Claude, max)
 - 27m (crop-regress-2026-10-28m) still running: 8 of 31 books by 01:12, ≈ 2× 27l's time per book → ends ≈ 03:30–04:00.
   All 31 books have local copies (no phone needed). Watchers: watch_comments.py Monitor; a background wait on the unit.
