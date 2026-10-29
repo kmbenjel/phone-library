@@ -9,6 +9,25 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-29 22:35 UTC — F + N APPLIED (book_crop a0e20119c2, commit c457b56); REGRESSION 27n RUNNING (Claude, max)
+- 27m diff vs 27l now looked at on ALL 31 books. Last 10: 7 unchanged; الموسوعة الشاملة 38 (2b47) ص 401/418/419/423/432/438 no
+  longer shrunk for a top scan line (L); ص 425/430 now centred on their printed page number — 27l had misread ص 423's number
+  off its scan line (x 51.8 for 293.4), which threw the neighbours' median, so they fell back to the text centre; 2af9 ص 3/307,
+  83df ص 143 (a plate) small and right. Owner-kept pages turned by 27m: only 29b9 ص 367 and 435b ص 186 (both F's).
+- APPLIED: book_crop = 4fcdf11f58 + patch_f + patch_n (byte-identical to code/bc_fn.py); stage_f.py --apply (86 owner-turns
+  rows of 0, 77 «turn no» case rows); case row «5b21 477 turn yes» (crop_regress.check passes on bc_fn: −0.6°, level_by_tracks
+  −0.008); crop_batch.owner_pages labels per verdict (أبقيتَها كما مُسحت / أجزتَ تدويرها + review and date from the row);
+  crop_recipe_diff causes «owner: as scanned» (owner_flat), «tracks: a turn beside» (tracks_near); docs/agents/scripts.md.
+- RUNNING: unit crop-regress-2026-10-29n since 22:31 (≈ 4 h → ≈ 02:30–03:00) → logs/crop-regress-2026-10-29n.log; at the end it
+  writes logs/crop-regress-diff-2026-10-29n.log (vs 27m) and …-29n-vs-27l.log. Expected vs 27m: the kept pages 27m turned back
+  to 27l's frames (ص 367 crop [141.2, 90.6, 494.5, 718.9]), 5b21 ص 477 turned −0.6°, any other page N reaches — look at each.
+  FIRST after a /clear: arm watch_comments.py as a Monitor; a background wait on the unit.
+- NEXT: 27n 0 failures + diff as expected → FREEZE → pilot (needs the phone's FTP app ON — off since 10-28 14:12).
+- KNOWN, NOT FIXED (tell the owner): (1) اللآلئ 02 ص 465 margin speck → edge letter, page scaled 0.954 (fix E rejected twice);
+  (2) اللآلئ 02 ص 468 frame cuts ~3 pt of a handwritten margin note's outer strokes; (3) NEW SEEN 10-29: الموسوعة الشاملة 38
+  ص 419/431/439 — a thick copier bar's bent part read as text → text block stretched, page scaled 0.82–0.91, bar in view (27l the
+  same: pre-existing; L only drops thin lines). Measuring how common it is across the 31 books.
+
 ## 2026-10-29 ~04:15 UTC — 27m ENDED: 0 FAILURES; DIFF REVIEWED; FIX N READY, E NOT (Claude, max)
 - 27m (crop-regress-2026-10-28m) finished, 0 failures; diffs in logs/crop-regress-diff-2026-10-28m*.log. FIRST after the
   clear: re-arm `python3 -u scripts/watch_comments.py` as a Monitor. Nothing applied yet; book_crop.py still 4fcdf11f58.
