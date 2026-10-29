@@ -9,6 +9,14 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-29 03:30 UTC — STATE AT THE /clear (Claude, max)
+- 27m still RUNNING: 21 of 31 books by 03:30, no FAIL line so far → ends ≈ 04:30–05:00. FIRST after the clear: re-arm
+  `python3 -u scripts/watch_comments.py` as a Monitor, a background wait on unit crop-regress-2026-10-28m, then follow
+  «AFTER 27m ENDS» in the 01:20 section below (full diff by eye, count crop-tilt-003 pages turned, apply fix F, 27n).
+- Early diff: 29b9 ص 69 and 8109 ص 108 looked at — both right. Only fault so far: 29b9 ص 367 (fix F covers it).
+- Owner told (01:25): the phone's FTP app is off; F then 27n then pilot; the pilot can go before 27n if he wants (F changes
+  none of its 10 books). No reply yet.
+
 ## 2026-10-29 01:20 UTC — 27m DIFF REVIEW STARTED: ONE FAULT → FIX F STAGED; crop_redo HARDENED (Claude, max)
 - 27m (crop-regress-2026-10-28m) still running: 8 of 31 books by 01:12, ≈ 2× 27l's time per book → ends ≈ 03:30–04:00.
   All 31 books have local copies (no phone needed). Watchers: watch_comments.py Monitor; a background wait on the unit.
