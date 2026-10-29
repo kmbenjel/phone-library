@@ -9,6 +9,20 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-29 23:40 UTC — 27n RUNNING, FIRST 2 BOOKS AS PREDICTED; PHONE FTP ON; PILOT READY (Claude, max)
+- 27n (unit crop-regress-2026-10-29n, since 22:31; ends ≈ 02:30–03:00): `pgrep -f crop_regress` does NOT find it (its
+  python reads the script from stdin: «python3 -») — check with `systemctl --user is-active crop-regress-2026-10-29n`.
+- Key books done: 29b9 (صبح الأعشى 05) and 6860 (خزانة 02). vs 27m: only 29b9 ص 367 changed — skew −0.625 → none, owner_flat
+  −0.625, crop [141.2, 90.6, 494.5, 718.9] = 27l exactly (as ftest.py said); 6860 identical. Each book reviewed as it lands:
+  `python3 scripts/crop_recipe_diff.py 4fcdf11f58 a0e20119c2 <hash12>`; still expected: 435b ص 186 back as scanned, 5b21
+  ص 477 turned −0.6°, any page N reaches.
+- PHONE: FTP app found ON at 23:35 (off since 10-28 14:12): 192.168.11.100:2221 answers, login works, Books/ 43 entries. The 10 pilot books
+  (data/crop/pilot-2026-10-26.tsv) checked live: same names (NFC) and sizes as index-now.tsv. Pilot not run (no marker);
+  its header already waits for 27n. Launch after 27n passes + diff explained + FREEZE (line in the 2026-10-29 01:20 section's
+  «AFTER 27m ENDS» is for 27n; pilot line: section 2026-10-26, «READY for item 3»).
+- Watchers: watch_comments.py Monitor; a Monitor on new a0e20119c2 recipes in the cache (+ crash/Traceback/unit end);
+  a background wait on the unit's end.
+
 ## 2026-10-29 22:35 UTC — F + N APPLIED (book_crop a0e20119c2, commit c457b56); REGRESSION 27n RUNNING (Claude, max)
 - 27m diff vs 27l now looked at on ALL 31 books. Last 10: 7 unchanged; الموسوعة الشاملة 38 (2b47) ص 401/418/419/423/432/438 no
   longer shrunk for a top scan line (L); ص 425/430 now centred on their printed page number — 27l had misread ص 423's number
