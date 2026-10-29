@@ -26,7 +26,11 @@ every turn, benched before 26i.
 - KNOWN, NOT FIXED (tell the owner): (1) اللآلئ 02 ص 465 margin speck → edge letter, page scaled 0.954 (fix E rejected twice);
   (2) اللآلئ 02 ص 468 frame cuts ~3 pt of a handwritten margin note's outer strokes; (3) NEW SEEN 10-29: الموسوعة الشاملة 38
   ص 419/431/439 — a thick copier bar's bent part read as text → text block stretched, page scaled 0.82–0.91, bar in view (27l the
-  same: pre-existing; L only drops thin lines). Measuring how common it is across the 31 books.
+  same: pre-existing; L only drops thin lines). MEASURED (/tmp/claude-1000/bars: recbars.py survey + barsheet.py sheets s1/s2):
+  across the 31 books only this book shows copier bars in view — 8 pages, all in one badly photocopied run ص 413–439 (413,
+  415, 419, 427, 431, 434, 436, 439; 434/436 near-blank pages showing only lines); elsewhere the long marks in view are printed
+  rules (frames, table heads, footnote rules) and two ~1-pt edge slivers (435b ص 7, c63a ص 220). Not worth a fix before the
+  freeze; tell the owner.
 
 ## 2026-10-29 ~04:15 UTC — 27m ENDED: 0 FAILURES; DIFF REVIEWED; FIX N READY, E NOT (Claude, max)
 - 27m (crop-regress-2026-10-28m) finished, 0 failures; diffs in logs/crop-regress-diff-2026-10-28m*.log. FIRST after the
