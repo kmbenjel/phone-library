@@ -9,6 +9,25 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-29 ~04:15 UTC — 27m ENDED: 0 FAILURES; DIFF REVIEWED; FIX N READY, E NOT (Claude, max)
+- 27m (crop-regress-2026-10-28m) finished, 0 failures; diffs in logs/crop-regress-diff-2026-10-28m*.log. FIRST after the
+  clear: re-arm `python3 -u scripts/watch_comments.py` as a Monitor. Nothing applied yet; book_crop.py still 4fcdf11f58.
+- Diff vs 27l looked at by eye for 21 books (the 10 last ones — 2a8c 2af9 2b47 3103 51cf 54dc 55d3 83df 8ec1 f03c — NOT yet:
+  run /tmp/claude-1000/r27m/tri.py -v, draw with crop-fixes-2026-10-28m/bsheets.py). L is a big gain (خزانة 01/02/04: scan
+  lines no longer shrink pages; 35fb ص 248 newly turned, right; 9da5 ص 89 now «two angles», right by the owner's rule).
+- Owner-kept pages turned by 27m: 29b9 ص 367 AND 435b ص 186 (both covered by fix F). Count for the last 10 books still to do.
+- FAULTS: (1) إرشاد الساري 10 5b21 ص 477 left 0.55° tilted (tracks unreadable at −0.575, IQR at the 0.3 limit) → FIX N
+  (scratch/crop-fixes-2026-10-29/patch_n.py on code/bc_f.py → code/bc_fn.py a0e20119c2): ntest.py shows 477 → −0.6, level
+  −0.008; القوافي 62 / خريدة 625, 683 unchanged. Add row «5b21 path 477 turn yes». (2) اللآلئ 02 435b ص 465: a margin
+  smudge's speck became an edge letter (1-px knife edge), page scaled 0.954. Fix E tried, BOTH variants REJECTED: line-of-print
+  (patch_e.py) changes 103/474 pages; zones (patch_ez.py, bc_fnz) drops real edge letters in أسرار البلاغة d20f (~90 pages)
+  and سيبويه 9b98 (etest.py, logs /tmp/claude-1000/r27m/etest-*.log). Leave as a known weakness. (3) اللآلئ 02 ص 468: 27m's
+  frame cuts ~3 pt of a handwritten margin note (27l held it by half-margin luck): B3's 4-pt rule applies because the
+  allowed area's right edge (446.5) is >1 % inside the page — the note's outer strokes are not edge letters. Not fixed; decide.
+- NEXT: finish the last 10 books' diff → apply F (+N) per the 01:20 section (stage_f.py --apply, owner_pages label for 0 rows
+  «أبقيتَها كما مُسحت», crop_recipe_diff causes owner_flat + tracks_near) → update scratch/regress_2026-10-29n.sh header (N) →
+  commit → 27n → freeze → pilot. Tell the owner about 465/468 (known, not fixed). Phone FTP still off.
+
 ## 2026-10-29 03:30 UTC — STATE AT THE /clear (Claude, max)
 - 27m still RUNNING: 21 of 31 books by 03:30, no FAIL line so far → ends ≈ 04:30–05:00. FIRST after the clear: re-arm
   `python3 -u scripts/watch_comments.py` as a Monitor, a background wait on unit crop-regress-2026-10-28m, then follow
