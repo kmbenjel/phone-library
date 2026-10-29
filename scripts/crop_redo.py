@@ -8,11 +8,14 @@ crop-review-002/004: «you should be mature enough now to handle all this … Go
   3. the new file = the original + the new revision, or the original alone when the method now leaves the book as it is
      (logged «crop undone»); uploaded beside the old one as «<name>.redo», checked on the phone (size + MD5), the old file
      deleted and the new one renamed into its place, checked again — a dropped connection never leaves a damaged book;
+     each attempt reads first where the last one stopped (put_in_place), and a phone away — out of the house, its FTP
+     app stopped — pauses the run until it answers again (wait_phone, 2026-10-29: a connection lost mid-upload marked
+     the book failed for good and could leave «<name>.redo» in Books/; a phone away made the run walk the whole list);
   4. logged in data/changes/changes.tsv (action «crop», reason «redo …»), the recipe kept, index-now.tsv size updated,
      data/crop/redo-done.tsv (resumable). The earlier sample sheets are kept in crop-sheets-v1/.
 Usage: python3 scripts/crop_redo.py --list-all OUT.tsv          (every book cropped and not undone, current paths)
        python3 scripts/crop_redo.py LIST.tsv BATCH [--workers N] [--dry]   (--dry: everything but the phone write)"""
-import csv, hashlib, os, shutil, sys, time, ftplib
+import csv, hashlib, itertools, os, shutil, sys, time, ftplib
 from concurrent.futures import ProcessPoolExecutor, as_completed
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
@@ -57,6 +60,55 @@ def list_all(out_tsv):
     rows = sorted(set(rows))
     open(out_tsv, 'w', encoding='utf-8').write('\n'.join(rows) + '\n'); print(len(rows), 'books cropped and not undone')
 
+LOST = (OSError, EOFError, ftplib.error_temp)       # a connection lost or refused for now: the phone away, not the book
+
+def wait_phone(why):
+    """until the phone's FTP answers again: its known addresses every minute, the whole network every ten (phone_host);
+    said once every half hour. A phone away — out of the house, its FTP app stopped — pauses the run where it is"""
+    import phone_host
+    for t in itertools.count():
+        hosts = dict.fromkeys(h for h in (cb._HOST, phone_host.HOST, *phone_host.CANDIDATES) if h)
+        h = next((x for x in hosts if phone_host._answers(x)), None) or (phone_host.find() if t % 10 == 9 else None)
+        if h: cb._HOST = h; return h
+        if t % 30 == 0: print(time.strftime('%F %T'), f'phone away ({why}): waiting for it', flush=True)
+        time.sleep(60)
+
+def md5_of(ph, path):
+    """the phone file's MD5, or None when there is no such file"""
+    try: return ph.md5(path)
+    except ftplib.error_perm as e:
+        if str(e).startswith('550'): return None
+        raise
+
+def put_in_place(path, new, n1, m1, m_old, tries=5):
+    """the new file (n1 bytes, md5 m1) into the place of the phone file m_old, safe against a connection lost at any step:
+    uploaded beside it as «<name>.redo», checked (size + MD5), the old file deleted, the new one renamed into its place and
+    checked again. Each attempt reads first where the last one stopped — the new file in place already (renamed), only at
+    «.redo» (the old one deleted: renamed now), or the old file still there (uploaded again) — and a lost connection waits
+    for the phone before the next. Raises on anything else (the phone file changed meanwhile, an upload not verified)"""
+    tmp = path + '.redo'
+    for attempt in range(1, tries + 1):
+        try:
+            with cb.Phone() as ph:
+                now = md5_of(ph, path)
+                if now == m1: pass                     # (an earlier attempt got as far as the rename)
+                elif now is None:
+                    if md5_of(ph, tmp) != m1: raise RuntimeError('the book is gone from the phone and no checked «.redo» copy is there')
+                    ph.f.rename('Books/' + tmp, 'Books/' + path)
+                elif now != m_old: raise RuntimeError('the phone file changed meanwhile')
+                else:
+                    ph.put(tmp, new)
+                    if ph.size(tmp) != n1 or ph.md5(tmp) != m1:
+                        ph.f.delete('Books/' + tmp); raise RuntimeError('upload not verified (the old file is untouched)')
+                    ph.f.delete('Books/' + path)
+                    ph.f.rename('Books/' + tmp, 'Books/' + path)
+                if md5_of(ph, path) != m1: raise RuntimeError('RENAMED FILE NOT VERIFIED — check ' + path)
+                return
+        except LOST as e:
+            print(f'PHONE LOST during the upload (attempt {attempt})', path[:80], repr(e)[:120], flush=True)
+            if attempt < tries: wait_phone('upload')
+    raise RuntimeError(f'the upload did not finish in {tries} attempts (each after the phone came back)')
+
 def stage(path, n0, m0, m1):
     """the original bytes in the staging folder (a copy: the worker writes beside it)"""
     work = os.path.join(cb.STAGE, hashlib.md5(path.encode()).hexdigest()[:12] + '.work.pdf')
@@ -67,6 +119,7 @@ def stage(path, n0, m0, m1):
     if lp and os.path.exists(lp) and os.path.getsize(lp) == n0 and cb.md5_file(lp) == m0:
         shutil.copyfile(lp, work); return work, now
     with cb.Phone() as ph: ph.get(path, work)
+    if os.path.getsize(work) < n0: raise ConnectionError(f'the download stopped short ({os.path.getsize(work)} of ≥ {n0} B)')
     with open(work, 'r+b') as f: f.truncate(n0)
     if cb.md5_file(work) != m0: os.remove(work); raise RuntimeError('the truncated phone file is not the original')
     return work, now
@@ -80,7 +133,6 @@ def finish(fu, meta, batch):
     src = r['src']; new = r.get('dst') or src
     def mark(result):
         with open(DONE, 'a', encoding='utf-8') as f: f.write(f'{path}\t{m0}\t{result}\n')
-    touched = False
     try:
         n1 = os.path.getsize(new); m1 = cb.md5_file(new)
         with open(new, 'rb') as f:
@@ -88,15 +140,7 @@ def finish(fu, meta, batch):
         if m1 == m_old: mark('same as before'); print('SAME', path[:80], flush=True); return
         if DRY:
             print('DRY', r['decision'][:60], path[:70], '| would upload', n1, 'B (was', os.path.getsize(src), '+ old revision)', flush=True); return
-        tmp = path + '.redo'
-        with cb.Phone() as ph:
-            if ph.md5(path) != m_old: raise RuntimeError('the phone file changed meanwhile')
-            touched = True
-            ph.put(tmp, new)
-            if ph.size(tmp) != n1 or ph.md5(tmp) != m1: raise RuntimeError('upload not verified (the old file is untouched)')
-            ph.f.delete('Books/' + path)
-            ph.f.rename('Books/' + tmp, 'Books/' + path)
-            if ph.md5(path) != m1: raise RuntimeError('RENAMED FILE NOT VERIFIED — check ' + path)
+        put_in_place(path, new, n1, m1, m_old)
         if r.get('dst'):
             import json
             json.dump(r['recipe'], open(os.path.join(cb.RECIPES, m0 + '.json'), 'w'), ensure_ascii=False)
@@ -107,9 +151,9 @@ def finish(fu, meta, batch):
             cb.log_change(path, f'crop undone: back to the original ({n0} B md5 {m0}) — the corrected method leaves it as it is: {r["decision"][:120]}', batch)
             mark('original restored'); print('RESTORED', path[:80], '|', r['decision'][:80], flush=True)
         cb.set_index_size(path, n1)
-    except Exception as e:
-        if not touched and (isinstance(e, OSError) or str(e).startswith('530')): print('RETRY LATER (phone away or login refused)', path, e, flush=True)
-        else: mark(f'FAIL {e}'); print('FAIL', path, e, flush=True)
+    except Exception as e:                            # (a refused login: not marked, the book is done in a later run)
+        if str(e).startswith('530'): print('RETRY LATER (login refused — AGENTS.md §2)', path, e, flush=True); return 'later'
+        mark(f'FAIL {e}'); print('FAIL', path, e, flush=True)
     finally:
         for p in {src, r.get('dst')}:
             if p and os.path.exists(p): os.remove(p)
@@ -130,31 +174,38 @@ def main(list_tsv, batch, workers=3):
     v1 = cb.SHEETS + '-v1'; os.makedirs(v1, exist_ok=True); later = []
     with ProcessPoolExecutor(workers) as ex:
         futs = {}
+        def fin(fu):
+            meta = futs.pop(fu)
+            if finish(fu, meta, batch) == 'later': later.append(meta[0])
         for path in paths:
             if not cb.os.path.exists(cb.STAGE): os.makedirs(cb.STAGE, exist_ok=True)
             lg = logged(path, table, back)
             if not lg: print('NOT CROPPED', path, flush=True); continue
             n0, m0, m1 = lg
-            try: work, now = stage(path, n0, m0, m1)
-            except ftplib.error_perm as e:
-                if str(e).startswith('530'): raise SystemExit(f'FTP login refused ({e}) — the login is not set (AGENTS.md §2); nothing marked, rerun later')
-                with open(DONE, 'a', encoding='utf-8') as f: f.write(f'{path}\t{m0}\tSKIP {e}\n')
-                print('SKIP', path, e, flush=True); continue
-            except Exception as e:
-                if isinstance(e, OSError): print('RETRY LATER (phone away)', path, e, flush=True); later.append(path)
-                else:
-                    with open(DONE, 'a', encoding='utf-8') as f: f.write(f'{path}\t{m0}\tSKIP {e}\n')
-                    print('SKIP', path, e, flush=True)
-                continue
+            work = err = None; lost = 0
+            while work is None and err is None:       # (the phone away: the run waits here for it, then stages this book
+                try: work, now = stage(path, n0, m0, m1)   # again — it used to walk the rest of the list, a network scan
+                except ftplib.error_perm as e:        # for each book, and start over two minutes later)
+                    if str(e).startswith('530'): raise SystemExit(f'FTP login refused ({e}) — the login is not set (AGENTS.md §2); nothing marked, rerun later')
+                    err = e
+                except LOST as e:
+                    lost += 1; print('PHONE AWAY while staging', path[:80], repr(e)[:120], flush=True)
+                    if lost >= 5: print('RETRY LATER (lost 5 times while staging)', path, flush=True); later.append(path); break
+                    wait_phone('staging')
+                except Exception as e: err = e
+            if err is not None:
+                with open(DONE, 'a', encoding='utf-8') as f: f.write(f'{path}\t{m0}\tSKIP {err}\n')
+                print('SKIP', path, err, flush=True)
+            if work is None: continue
             sh = os.path.join(cb.SHEETS, hashlib.md5(path.encode()).hexdigest()[:12])
             if os.path.isdir(sh) and not os.path.exists(os.path.join(v1, os.path.basename(sh))): shutil.move(sh, v1)
             futs[ex.submit(cb.analyse, path, work, 1)] = (path, n0, m0, now)
             while futs and (len(futs) >= min(workers, cb.governed(workers)) + 1 or not cb.room()):   # the governor's number,
                                                                    # one staged ahead; a new book only with ≥ 3 GB free
-                for fu in as_completed(list(futs)): finish(fu, futs.pop(fu), batch); break
-        for fu in as_completed(list(futs)): finish(fu, futs.pop(fu), batch)
-    if later:                                         # (books the phone missed: not done — the run ends «not finished», so
-        print(f'{len(later)} books left for later (phone away)', flush=True)   # run_resumable.sh runs it again for them)
+                for fu in as_completed(list(futs)): fin(fu); break
+        for fu in as_completed(list(futs)): fin(fu)
+    if later:                                         # (books not done and not marked — the run ends «not finished», so
+        print(f'{len(later)} books left for later', flush=True)   # run_resumable.sh runs it again for them)
         sys.exit(3)
 
 if __name__ == '__main__':

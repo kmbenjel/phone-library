@@ -9,6 +9,36 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-29 01:20 UTC — 27m DIFF REVIEW STARTED: ONE FAULT → FIX F STAGED; crop_redo HARDENED (Claude, max)
+- 27m (crop-regress-2026-10-28m) still running: 8 of 31 books by 01:12, ≈ 2× 27l's time per book → ends ≈ 03:30–04:00.
+  All 31 books have local copies (no phone needed). Watchers: watch_comments.py Monitor; a background wait on the unit.
+- EARLY DIFF (6 finished books, /tmp/claude-1000/diff27m-early.log; sheets /tmp/claude-1000/cv/sh-27l-27m): 0648 recipe ==
+  bench lbb5 exactly; 6860 == bench lb except the new diagnostic field slant_lines (crop/turn/scale/move identical). خزانة 01
+  ص 268/270/332 recentred off scan lines (L, as predicted); ص 20 «OTHER» = L's grain of a scan line (a 3.5-pt piece was margin
+  in 27l). Looked at by eye: right. NOT yet looked at: 29b9 ص 69 (a 5-pt mark no longer the folio → frame 13 pt higher),
+  8109 ص 108 (last page, 27l had it full height), and the 25 books still to come.
+- FAULT: صبح الأعشى 05 (29b9) ص 367 — crop-tilt-003 row 21, the owner KEPT it as scanned («mark all ok») — is turned −0.625
+  in 27m. Cause (scratch/crop-fixes-2026-10-29/wcheck.py, guard W replayed under both codes): L narrowed the text block as
+  scanned by 3.6 pt, line_tracks read the short foot lines otherwise (y 680 −0.18 → −0.41°: not read alike → dropped; y 654
+  short of «made worse» by 0.007°) → one leaning line instead of three → turn kept. A knife edge, not a rule to tune.
+- FIX F STAGED (NOT APPLIED — book_crop/crop_batch/owner-turns/crop-regression are read by the running 27m; a 0 row in
+  owner-turns.tsv TODAY would make 27m TURN those pages): the owner's «leave as scanned» = a turn of 0 in owner-turns.tsv;
+  verify() undoes any turn on such a page (owner_flat keeps the would-be turn). patch_f.py → code/bc_f.py (1dcf9a2bde);
+  ftest.py: ص 367 back to 27l's exact frame. stage_f.py: 86 owner-turns rows (crop-tilt-002's 4 + crop-tilt-003's 82) and
+  77 «turn no» regression rows (regression path strings: no phone fetch) staged in scratch/crop-fixes-2026-10-29/.
+- AFTER 27m ENDS: (1) full diff by eye + count crop-tilt-003 pages 27m turned; (2) `python3 scratch/crop-fixes-2026-10-29/
+  patch_f.py scripts/book_crop.py scripts/book_crop.py` (check md5 4fcdf11f58 first), crop_batch.owner_pages label for 0
+  rows («أبقيتَها كما مُسحت», not «أجزتَ تدويرها»), crop_recipe_diff cause owner_flat, `stage_f.py --apply`; commit; launch
+  27n: `systemd-run --user --slice=crop.slice --unit=crop-regress-2026-10-29n --nice=10 --working-directory=$PWD
+  scratch/regress_2026-10-29n.sh` (written; expected vs 27m: only the kept pages 27m turned). Then FREEZE → pilot.
+- crop_redo.py HARDENED for the unattended full redo (not run yet): put_in_place (each upload attempt reads where the last
+  stopped: new file in place / only «.redo» / old still there; waits for the phone between attempts) and wait_phone (a
+  phone away pauses the run instead of walking the list with a /24 scan per book); a short download is retried, not
+  skipped. Fake-phone test scratch/crop-fixes-2026-10-29/redo_upload_test.py: a drop at each of the 8 steps + 300 random
+  runs → ALL RIGHT. docs/agents/scripts.md: crop_redo row.
+- PHONE: its FTP server refuses connections since 10-28 14:12 UTC (.100 pings; port 2221 «Connection refused» = the FTP app
+  is off). The pilot needs it on: tell the owner.
+
 ## 2026-10-29 00:50 UTC — STATE AT THE /clear (owner restarts VS Code) (Claude, max)
 - RUNNING (systemd units, survive the restart): crop-regress-2026-10-28m (since 23:40; 3 of 9 key books done by 00:27;
   ends ≈ 02:40–03:00, then writes the diffs vs 27l/26j/26i) and review-x (review_on_demand_x.py: «x» on a review row opens
