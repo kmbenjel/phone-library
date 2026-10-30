@@ -43,6 +43,14 @@ every turn, benched before 26i.
 - 01:34: d20f identical; 5b21 (إرشاد الساري 10): only ص 477 changed, unturned → −0.6 (N's own page; the top frame rule 0.42°
   as scanned → −0.05° at −0.6; sheet looked at: right). TALLY after 18 books: N changed 4 pages — 1 right (477), 2 worse
   (8109 p. 102, 9da5 p. 166), 1 trade-off (4b80 p. 457); N3 keeps 477 and gives the other three back 27m's turn.
+- 01:55: STATE AT THE /clear. 21 of 31 books reviewed, all identical to 27m except the 4 N pages above (f134 ص 101: owner's
+  −0.4 turn confirmed level by rows 0.33° → 0.02°; 1d12, 0e65 identical). Reviewed-books list: /tmp/claude-1000/r27n/reviewed.txt
+  (ls the cache for *.a0e20119c2*.json minus that list = books still to diff). Owner switched the model to Sonnet 5.5 at this
+  point (effort was max for the 27n review; the freeze decision and N3 apply are code-gate work: tell him if it needs max).
+  FIRST after the clear: arm watch_comments.py as a Monitor + a Monitor on new a0e20119c2 recipes/unit end
+  (`systemctl --user is-active crop-regress-2026-10-29n`); diff each new book with crop_recipe_diff.py 4fcdf11f58 a0e20119c2 HASH.
+  At 27n's end (≈ 02:30–03:00 UTC): 0 failures? then apply N3 (patch_n3.py scripts/book_crop.py scripts/book_crop.py after
+  md5 a0e20119c2 check), docs/agents/scripts.md, regression rows, commit, run 27o (copy regress_2026-10-29n.sh), freeze, pilot.
 - STAGED for after 27n (crop_regress.py and data/improve/crop-regression.tsv are in use by 27n's check phase — do not edit
   before it ends): a «skew» case (the turn looked at by eye and measured, ±0.1°) for 8109 p. 102 −0.45, 9da5 p. 166 −0.65,
   4b80 p. 457 −0.629 — the level check cannot hold them (base_angles unread on 102/457, fails both on 166).
