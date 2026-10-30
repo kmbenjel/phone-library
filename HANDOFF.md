@@ -35,6 +35,11 @@ every turn, benched before 26i.
   two_angles(lines_read) is empty (W's own check). ntest f/fn/fn3: 8109 p. 102 −0.45/−0.675/−0.45; 9da5 p. 166
   −0.65/−0.875/−0.65; 5b21 ص 477 unturned/−0.6/−0.6. Reach ⊆ 27n's tracks_near pages (same preconditions + neighbours).
   14 of 31 books reviewed by 01:40 (+ 40ec, 0c32: identical). PREFER N3 over N2 unless 27n's other N pages say otherwise.
+- 02:00: 9b98 identical. 4b80 (الفوائد المحصورة) p. 457, an index page (2 columns, short right-aligned entries), SHEARED:
+  27m −0.629 by its columns (level_by_columns 0; after 1.55 / image 0.55) → N −0.25 by the tracks (5–6 lines read). coledge.py
+  (column right edges): as scanned 0.66/0.50°, at −0.25 0.41/0.36°, at −0.629 0.03/0.00°; the lines (tracks) ≈ 0.27° as
+  scanned, ≈ 0.1° at −0.25, ≈ 0.35° the other way at −0.629. A trade-off, not a gain: the columns' 0.4° over 570 pt (4 pt of
+  drift) shows more than short entries' 0.36° (1 pt) → 27m's turn kept; ntest f/fn/fn3 = −0.629/−0.25/−0.629.
 - NEXT: let 27n end (no stop without the owner's word); list EVERY tracks_near page of 27n, probe each
   (/tmp/claude-1000/r27n/tracksprobe.py HASH PAGE FROM TO STEP; ntest.py HASH PAGE FIRST-TURN f fn fn2), look at each by eye;
   then patch_n2.py scripts/book_crop.py scripts/book_crop.py (check md5 a0e20119c2 first), docs, commit, regression 27o
