@@ -9,6 +9,15 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-30 02:15 UTC — STATE AT THE /clear: 23 of 31 REVIEWED (2b47, 3103 identical to 27m, no tracks_near) (Claude)
+- Owner switched the model to SONNET 5.5 at this /clear (he had kept Opus max at 02:00 for N3; the switch is his). Reviewing the
+  last 8 books is routine (Sonnet is fine: run crop_recipe_diff, probe any tracks_near page, look at it). APPLYING N3 edits
+  book_crop.py = code-gate work: tell him it wants Opus max, and wait for his word/model before applying.
+- FIRST after the clear: re-arm `python3 -u scripts/watch_comments.py` as a Monitor and a Monitor on new a0e20119c2 recipes /
+  unit end (`systemctl --user is-active crop-regress-2026-10-29n`, still active, 0 FAIL at 02:15). Books still to diff =
+  cached a0e20119c2 recipes minus /tmp/claude-1000/r27n/reviewed.txt (sort -u); `python3 scripts/crop_recipe_diff.py 4fcdf11f58
+  a0e20119c2 HASH`. Then «AT 27n's END» below.
+
 ## 2026-10-30 02:10 UTC — 27n AT 21/31 (0 FAIL), ALL 21 REVIEWED; N3 + «skew» CASE + 27o SCRIPT READY (Claude, Opus max)
 - Owner kept the model on Opus max for the rest of the 27n review and N3 (asked 02:00).
 - tracks_near pages in 27n's 21 finished books: exactly the 4 known (4b80 457, 5b21 477, 8109 102, 9da5 166) — all looked at.
