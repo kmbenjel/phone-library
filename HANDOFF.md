@@ -9,6 +9,22 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-30 02:10 UTC — 27n AT 21/31 (0 FAIL), ALL 21 REVIEWED; N3 + «skew» CASE + 27o SCRIPT READY (Claude, Opus max)
+- Owner kept the model on Opus max for the rest of the 27n review and N3 (asked 02:00).
+- tracks_near pages in 27n's 21 finished books: exactly the 4 known (4b80 457, 5b21 477, 8109 102, 9da5 166) — all looked at.
+  F checked: 435b ص 186 and 29b9 ص 367 unturned with owner_flat, 27l's/27m's frames.
+- NAME FIX: 9da5 = معجم تيمور الكبير 02 (PDF metadata + path hash), NOT مشتبهات القرآن (= d319) as the 00:36/00:44 notes and
+  patch_n3's comments said; patch_n3.py corrected (comments only) → code/bc_fn3.py now 1be8d49ae3; ntest fn3 re-run: 102 −0.45,
+  166 −0.65, 457 −0.629 (first turn −0.275), 477 −0.6 — as before.
+- STAGED: scratch/crop-fixes-2026-10-29/stage_skew.py (--apply): crop_regress check «skew» = the turn at X±T°, header lines, rows
+  8109 102 −0.45±0.1, 9da5 166 −0.65±0.1, 4b80 457 −0.629±0.1 (27m passes all three, 27n fails all three). scratch/
+  regress_2026-10-30o.sh written (marker .regress-2026-10-30o, diffs vs a0e20119c2 and 4fcdf11f58).
+- AT 27n's END (0 failures, last 10 books diffed: crop_recipe_diff.py 4fcdf11f58 a0e20119c2 HASH; any new tracks_near page probed
+  with ntest fn fn3 and looked at): md5 book_crop = a0e20119c2 → `python3 scratch/crop-fixes-2026-10-29/patch_n3.py
+  scripts/book_crop.py scripts/book_crop.py` → md5 must be 1be8d49ae3; `stage_skew.py --apply`; crop_recipe_diff docstring
+  (N3); commit; launch `systemd-run --user --slice=crop.slice --unit=crop-regress-2026-10-30o --nice=10
+  --working-directory=$PWD --setenv=PATH="$PATH" scratch/regress_2026-10-30o.sh`. Then FREEZE → pilot after 27o's diff.
+
 ## 2026-10-30 00:36 UTC — 27n DIFF: FIX N MADE ONE PAGE WORSE → FIX N2 BENCHED (NOT APPLIED: 27n still running) (Claude, max)
 - 8 of 31 books done (29b9 6860 0648 8109 0059 35fb d319 acb8); vs 27m all identical but 29b9 ص 367 (F, right) and
   القوافي للتنوخي (8109) p. 102 (printed ١٠٠) [tracks: a turn beside] −0.45 → −0.675: WORSE. A warped page — head prose level
