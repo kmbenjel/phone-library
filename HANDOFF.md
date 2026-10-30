@@ -21,6 +21,14 @@ every turn, benched before 26i.
   turn (refused for their spread, as N's note says); tracks_read() shared with tracks_tilt (same filter). ntest.py f/fn/fn2:
   8109 p. 102 → −0.45 (= 27m); 5b21 ص 477 (34 lines, spread 0.325 at −0.575) → −0.6 as N. N2's reach = only pages with
   tracks_near in 27n whose first turn read < 5 lines; there fn2 = bc_f (27m) by construction.
+- 01:05: 9da5 p. 166 [tracks: a turn beside] −0.65 → −0.875, NOT fixed by N2 (18 lines read at −0.85, spread 0.323: N's
+  own case). −0.875 = a neighbour squeaking under 0.3 (0.299); rows (turnrows.py) mean |angle| 0.155 at −0.65 vs 0.156 at
+  −0.875, median +0.075 vs −0.10, the head rule −0.065° vs −0.286°, max 0.55 vs 0.83 → slightly WORSE; 27m had −0.65
+  confirmed (after_tilt 0.125, image 0.1). Pattern of the 3 N pages: N helped only where the path without N leaves the page
+  tilted (5b21 ص 477: two_angles, unturned); where that path confirms a turn (8109 p. 102, 9da5 p. 166) N overrode it with
+  a squeaking tracks reading. Candidates: (e) N as a LAST RESORT — only when the rest of verify leaves the page unturned/
+  two_angles/unsure; or revert N and list such pages for the owner (his turn as data, like f134 ص 101). Decide on the full
+  list of 27n's tracks_near pages (5b21's whole book shows N's real gains).
 - NEXT: let 27n end (no stop without the owner's word); list EVERY tracks_near page of 27n, probe each
   (/tmp/claude-1000/r27n/tracksprobe.py HASH PAGE FROM TO STEP; ntest.py HASH PAGE FIRST-TURN f fn fn2), look at each by eye;
   then patch_n2.py scripts/book_crop.py scripts/book_crop.py (check md5 a0e20119c2 first), docs, commit, regression 27o
