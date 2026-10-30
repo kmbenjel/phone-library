@@ -9,6 +9,28 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-30 14:25 UTC — 27n PASSED + REVIEWED; N3 APPLIED (1be8d49ae3, commit f6ca7b7); REGRESSION 27o RUNNING (Claude, Opus)
+- 27n (a0e20119c2) ended 05:30: 0 failures (one memory-brake crash at 02:52 — two hifz-warsh align_timings.py jobs of
+  1.6 GB each took the RAM — rerun by the script itself). Diff vs 27m looked at on ALL 31 books: only owner_flat 2 (F) +
+  tracks_near 4 (N: 4b80 457, 5b21 477, 8109 102, 9da5 166) — the last 8 books (2a8c 2af9 51cf 54dc 55d3 83df 8ec1 f03c)
+  identical, no tracks_near page.
+- The laptop restarted (up 12:48; /tmp cleared: /tmp/claude-1000/r27n tools gone — tracksprobe.py, turnrows.py, coledge.py
+  only there). All library services were down: mem-governor, phone-keepalive, phone-watchdog, review-server, reporter-follow
+  started again at 14:19 (start_services.sh's units); the lid/idle INHIBITORS NOT started (they come back at the owner's
+  word; he hibernated the laptop this morning — another agent's «status before hibernation» note, end of this file, 06:02,
+  is about the old 27j and changes nothing).
+- APPLIED: patch_n3.py (md5 a0e20119c2 → 1be8d49ae3, byte-identical to code/bc_fn3.py), stage_skew.py --apply (check «skew»
+  + 3 rows; checked on the cached recipes: 27m passes all 3, 27n fails all 3), crop_recipe_diff docstring, the crop_regress.py
+  line in docs/agents/scripts.md, pilot header → waits for 27o. Commit f6ca7b7.
+- RUNNING: unit crop-regress-2026-10-30o since 14:20 → logs/crop-regress-2026-10-30o.log; diffs at its end:
+  logs/crop-regress-diff-2026-10-30o.log (vs 27n) and …-30o-vs-27m.log. Expected vs 27n: 8109 102 → −0.45, 9da5 166 → −0.65,
+  4b80 457 → −0.629 (27m's turns and frames), 5b21 477 unchanged (−0.6), every other page identical; vs 27m: only F's 2
+  pages and 5b21 477. Slow while the governor allows 1 worker (free ≈ 4 GB with the hifz job).
+- NEXT: 27o 0 failures + diff as expected → FREEZE → pilot (`systemd-run --user --slice=crop.slice --unit=crop-redo-pilot
+  --nice=10 --working-directory=$PWD --setenv=PATH="$PATH" scratch/pilot_redo_2026-10-26.sh`; needs the phone's FTP app ON;
+  check the 10 paths against index-now first). FIRST after a /clear: watch_comments.py Monitor + a Monitor on new
+  1be8d49ae3 recipes / unit end.
+
 ## 2026-10-30 02:15 UTC — STATE AT THE /clear: 23 of 31 REVIEWED (2b47, 3103 identical to 27m, no tracks_near) (Claude)
 - Owner switched the model to SONNET 5.5 at this /clear (he had kept Opus max at 02:00 for N3; the switch is his). Reviewing the
   last 8 books is routine (Sonnet is fine: run crop_recipe_diff, probe any tracks_near page, look at it). APPLYING N3 edits
@@ -1995,3 +2017,8 @@ Background meanwhile: fix_at_scale.py 142 (margins), after_139.sh → 143.
   revert: compare the three DKI copies page by page, keep the best, delete the others (plan 216 was skipped: name taken).
 - «حاشية الدسوقي على الشرح الكبير»: the folder «(دار الفكر)» (4 files, 104 MB) shows the Halabi title page, like the folder
   «مع تقريرات الشيخ عليش (ط عيسى البابي الحلبي)» (5 files, 103 MB): same edition? compare after the revert; keep the better.
+
+## 2026-10-30 06:02Z — status before hibernation
+- crop-regress-2026-10-28j is FINISHED (log last written 2026-10-28 06:12), not running. Result: 3 failures:
+  القوافي للتنوخي p.89 (centring), خزانة 01 p.1 (cover year line cut), صبح الأعشى 05 p.234 (turn -0.425 not applied).
+- Nothing paused in this project; only a leftover `tail -F` watcher (PID 936002) remains.
