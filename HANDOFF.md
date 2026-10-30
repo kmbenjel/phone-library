@@ -9,6 +9,12 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-30 ~20:40 UTC — OWNER: HOLD (Claude)
+- OWNER: «ready for a clear, and don't act until I instruct … let the pc jobs complete». Effort set to medium. Do NOTHING
+  after the /clear until his instruction (no monitors, no diff review, no pilot). 27o (unit crop-regress-2026-10-30o) runs on
+  by itself and writes its diffs at the end; when he instructs: review logs/crop-regress-diff-2026-10-30o*.log (expected:
+  only 4b80 457, 8109 102, 9da5 166 back to 27m; 5b21 477 at −0.6), then freeze → pilot (home network needed).
+
 ## 2026-10-30 20:30 UTC — 27o RESUMED AFTER A SECOND LAPTOP RESTART (Claude)
 - Laptop restarted ≈ 20:04: 27o killed after 16 of 31 books (0 FAIL; first log kept as logs/crop-regress-2026-10-30o.part1.log).
   Marker removed and the unit relaunched 20:25 (same script, book_crop 1be8d49ae3; the 16 cached books are not recomputed).
