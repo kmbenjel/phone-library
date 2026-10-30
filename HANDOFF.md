@@ -9,7 +9,7 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
-## 2026-10-30 00:50 UTC — 27n DIFF: FIX N MADE ONE PAGE WORSE → FIX N2 BENCHED (NOT APPLIED: 27n still running) (Claude, max)
+## 2026-10-30 00:36 UTC — 27n DIFF: FIX N MADE ONE PAGE WORSE → FIX N2 BENCHED (NOT APPLIED: 27n still running) (Claude, max)
 - 8 of 31 books done (29b9 6860 0648 8109 0059 35fb d319 acb8); vs 27m all identical but 29b9 ص 367 (F, right) and
   القوافي للتنوخي (8109) p. 102 (printed ١٠٠) [tracks: a turn beside] −0.45 → −0.675: WORSE. A warped page — head prose level
   as scanned, body 0.2–0.45°, footnotes 0.65–0.75°. First look −0.7 (tracks −0.694 on 5 lines, 4 footnotes); at −0.7 only
@@ -21,7 +21,7 @@ every turn, benched before 26i.
   turn (refused for their spread, as N's note says); tracks_read() shared with tracks_tilt (same filter). ntest.py f/fn/fn2:
   8109 p. 102 → −0.45 (= 27m); 5b21 ص 477 (34 lines, spread 0.325 at −0.575) → −0.6 as N. N2's reach = only pages with
   tracks_near in 27n whose first turn read < 5 lines; there fn2 = bc_f (27m) by construction.
-- 01:05: 9da5 p. 166 [tracks: a turn beside] −0.65 → −0.875, NOT fixed by N2 (18 lines read at −0.85, spread 0.323: N's
+- 00:44: 9da5 p. 166 [tracks: a turn beside] −0.65 → −0.875, NOT fixed by N2 (18 lines read at −0.85, spread 0.323: N's
   own case). −0.875 = a neighbour squeaking under 0.3 (0.299); rows (turnrows.py) mean |angle| 0.155 at −0.65 vs 0.156 at
   −0.875, median +0.075 vs −0.10, the head rule −0.065° vs −0.286°, max 0.55 vs 0.83 → slightly WORSE; 27m had −0.65
   confirmed (after_tilt 0.125, image 0.1). Pattern of the 3 N pages: N helped only where the path without N leaves the page
@@ -29,13 +29,13 @@ every turn, benched before 26i.
   a squeaking tracks reading. Candidates: (e) N as a LAST RESORT — only when the rest of verify leaves the page unturned/
   two_angles/unsure; or revert N and list such pages for the owner (his turn as data, like f134 ص 101). Decide on the full
   list of 27n's tracks_near pages (5b21's whole book shows N's real gains).
-- 01:40: FIX N3 = option (e) BUILT AND BENCHED (patch_n3.py → code/bc_fn3.py 4ecd48be5d, from book_crop a0e20119c2; includes
+- 01:05: FIX N3 = option (e) BUILT AND BENCHED (patch_n3.py → code/bc_fn3.py 4ecd48be5d, from book_crop a0e20119c2; includes
   N2's ≥ 5 lines): at the tracks' turn the turn is only remembered (ncand); after guard W, if the page is left unturned (two
   angles / unsure / disputed / untreated), the turns ±0.025/±0.05 beside it are read, the most level (≤ 0.1) taken if
   two_angles(lines_read) is empty (W's own check). ntest f/fn/fn3: 8109 p. 102 −0.45/−0.675/−0.45; 9da5 p. 166
   −0.65/−0.875/−0.65; 5b21 ص 477 unturned/−0.6/−0.6. Reach ⊆ 27n's tracks_near pages (same preconditions + neighbours).
-  14 of 31 books reviewed by 01:40 (+ 40ec, 0c32: identical). PREFER N3 over N2 unless 27n's other N pages say otherwise.
-- 02:00: 9b98 identical. 4b80 (الفوائد المحصورة) p. 457, an index page (2 columns, short right-aligned entries), SHEARED:
+  14 of 31 books reviewed by 01:05 (+ 40ec, 0c32: identical). PREFER N3 over N2 unless 27n's other N pages say otherwise.
+- 01:17: 9b98 identical. 4b80 (الفوائد المحصورة) p. 457, an index page (2 columns, short right-aligned entries), SHEARED:
   27m −0.629 by its columns (level_by_columns 0; after 1.55 / image 0.55) → N −0.25 by the tracks (5–6 lines read). coledge.py
   (column right edges): as scanned 0.66/0.50°, at −0.25 0.41/0.36°, at −0.629 0.03/0.00°; the lines (tracks) ≈ 0.27° as
   scanned, ≈ 0.1° at −0.25, ≈ 0.35° the other way at −0.629. A trade-off, not a gain: the columns' 0.4° over 570 pt (4 pt of
