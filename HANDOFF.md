@@ -29,6 +29,12 @@ every turn, benched before 26i.
   a squeaking tracks reading. Candidates: (e) N as a LAST RESORT — only when the rest of verify leaves the page unturned/
   two_angles/unsure; or revert N and list such pages for the owner (his turn as data, like f134 ص 101). Decide on the full
   list of 27n's tracks_near pages (5b21's whole book shows N's real gains).
+- 01:40: FIX N3 = option (e) BUILT AND BENCHED (patch_n3.py → code/bc_fn3.py 4ecd48be5d, from book_crop a0e20119c2; includes
+  N2's ≥ 5 lines): at the tracks' turn the turn is only remembered (ncand); after guard W, if the page is left unturned (two
+  angles / unsure / disputed / untreated), the turns ±0.025/±0.05 beside it are read, the most level (≤ 0.1) taken if
+  two_angles(lines_read) is empty (W's own check). ntest f/fn/fn3: 8109 p. 102 −0.45/−0.675/−0.45; 9da5 p. 166
+  −0.65/−0.875/−0.65; 5b21 ص 477 unturned/−0.6/−0.6. Reach ⊆ 27n's tracks_near pages (same preconditions + neighbours).
+  14 of 31 books reviewed by 01:40 (+ 40ec, 0c32: identical). PREFER N3 over N2 unless 27n's other N pages say otherwise.
 - NEXT: let 27n end (no stop without the owner's word); list EVERY tracks_near page of 27n, probe each
   (/tmp/claude-1000/r27n/tracksprobe.py HASH PAGE FROM TO STEP; ntest.py HASH PAGE FIRST-TURN f fn fn2), look at each by eye;
   then patch_n2.py scripts/book_crop.py scripts/book_crop.py (check md5 a0e20119c2 first), docs, commit, regression 27o
