@@ -9,6 +9,14 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-30 20:30 UTC — 27o RESUMED AFTER A SECOND LAPTOP RESTART (Claude)
+- Laptop restarted ≈ 20:04: 27o killed after 16 of 31 books (0 FAIL; first log kept as logs/crop-regress-2026-10-30o.part1.log).
+  Marker removed and the unit relaunched 20:25 (same script, book_crop 1be8d49ae3; the 16 cached books are not recomputed).
+- 16 books vs 27n: only 4b80 457 → −0.629, 8109 102 → −0.45, 9da5 166 → −0.65 (27m's turns) — as predicted; 5b21 not yet.
+- Services + both inhibitors restarted (owner's «yes» 14:3x). Owner away from home: network 192.168.1.x (Wifi_Perso_5G);
+  earlier the conference Wi-Fi with the phone at 10.20.8.127 — NOT used (FTP password in clear on a shared network); the
+  pilot waits for the home network (phone_host finds 192.168.11.100) or his word.
+
 ## 2026-10-30 14:25 UTC — 27n PASSED + REVIEWED; N3 APPLIED (1be8d49ae3, commit f6ca7b7); REGRESSION 27o RUNNING (Claude, Opus)
 - 27n (a0e20119c2) ended 05:30: 0 failures (one memory-brake crash at 02:52 — two hifz-warsh align_timings.py jobs of
   1.6 GB each took the RAM — rerun by the script itself). Diff vs 27m looked at on ALL 31 books: only owner_flat 2 (F) +
