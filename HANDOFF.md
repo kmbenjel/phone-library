@@ -40,6 +40,12 @@ every turn, benched before 26i.
   (column right edges): as scanned 0.66/0.50°, at −0.25 0.41/0.36°, at −0.629 0.03/0.00°; the lines (tracks) ≈ 0.27° as
   scanned, ≈ 0.1° at −0.25, ≈ 0.35° the other way at −0.629. A trade-off, not a gain: the columns' 0.4° over 570 pt (4 pt of
   drift) shows more than short entries' 0.36° (1 pt) → 27m's turn kept; ntest f/fn/fn3 = −0.629/−0.25/−0.629.
+- 01:50: d20f identical; 5b21 (إرشاد الساري 10): only ص 477 changed, unturned → −0.6 (N's own page; the top frame rule 0.42°
+  as scanned → −0.05° at −0.6; sheet looked at: right). TALLY after 18 books: N changed 4 pages — 1 right (477), 2 worse
+  (8109 p. 102, 9da5 p. 166), 1 trade-off (4b80 p. 457); N3 keeps 477 and gives the other three back 27m's turn.
+- STAGED for after 27n (crop_regress.py and data/improve/crop-regression.tsv are in use by 27n's check phase — do not edit
+  before it ends): a «skew» case (the turn looked at by eye and measured, ±0.1°) for 8109 p. 102 −0.45, 9da5 p. 166 −0.65,
+  4b80 p. 457 −0.629 — the level check cannot hold them (base_angles unread on 102/457, fails both on 166).
 - NEXT: let 27n end (no stop without the owner's word); list EVERY tracks_near page of 27n, probe each
   (/tmp/claude-1000/r27n/tracksprobe.py HASH PAGE FROM TO STEP; ntest.py HASH PAGE FIRST-TURN f fn fn2), look at each by eye;
   then patch_n2.py scripts/book_crop.py scripts/book_crop.py (check md5 a0e20119c2 first), docs, commit, regression 27o
