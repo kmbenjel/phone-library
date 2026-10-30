@@ -2,7 +2,7 @@
 page by page — turn, crop box, shown part, scale, move, kind — so that every change a method change brings is explained
 before anything reaches the phone (the redo, a pilot). Each changed page is printed with its cause, read from the flags the
 new recipe carries: the owner's turn, the owner's «leave as scanned» undoing a turn (owner: as scanned — fix F), a turn
-read at the turns beside it when the lines' tracks could not read it at its own (tracks: a turn beside — fix N), a
+read at the turns beside it when the lines' tracks refused it for their spread and the page was left unturned (tracks: a turn beside — fixes N, N3), a
 level-by-both turn taken first, a ruler-certified small tilt, a clear tilt whose
 image reading fell to a third, a turn refused because it made level lines lean, a turn of a page the projection found set
 by its lines' baselines (baselines), a tilt the usual measures' gates left found by them (baselines found), a projection

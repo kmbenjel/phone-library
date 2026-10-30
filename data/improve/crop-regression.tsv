@@ -8,6 +8,8 @@
 # level = the page as the reader sees it, turned or not, reads level by its lines' baselines: |angle| ≤ the expected degrees
 # (book_crop.base_angles at 1,400 px: their median, lines more than 1° from it — two lines run together — left out, at least
 # 6 lines within an IQR of 0.3° — a turn too far fails it as surely as one left undone; 2026-10-27).
+# skew = the page's turn at X±T degrees: a turn looked at by eye and measured, on a page the level check cannot read (too few
+# lines, or lines at two angles; 2026-10-30).
 العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/01 - اللآلئ المصنوعة في الأحاديث الموضوعة (التوحيد - مناقب البلدان والأيام).pdf	4	out	11,265,33,459	the black torn-edge streak on the left
 العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/02 - اللآلئ المصنوعة في الأحاديث الموضوعة (الطهارة - فوائد متفرقة).pdf	236	turn	yes	tilted ≈ 0.95°
 العلل والسؤلات الحديثية/اللآلئ المصنوعة في الأحاديث الموضوعة - الجلال السيوطي (ط دار المعرفة)/02 - اللآلئ المصنوعة في الأحاديث الموضوعة (الطهارة - فوائد متفرقة).pdf	466	turn	yes	tilted ≈ 1.1° (once refused by a too strict guard)
@@ -248,3 +250,6 @@
 كتب اللغة/المثلث - ابن السيد البطليوسي (ت صلاح مهدي الفرطوسي)/1 - المثلَّث للبطليوسي.pdf	291	turn	no	lines at two angles, left as scanned — the owner kept it so (crop-tilt-003 row 81, 2026-10-29 «mark all ok»); fix F holds it
 كتب اللغة/المثلث - ابن السيد البطليوسي (ت صلاح مهدي الفرطوسي)/1 - المثلَّث للبطليوسي.pdf	461	turn	no	lines at two angles, left as scanned — the owner kept it so (crop-tilt-003 row 82, 2026-10-29 «mark all ok»); fix F holds it
 كتب اللغة/معجم تيمور الكبير في الألفاظ العامية - أحمد تيمور باشا/02 - معجم تيمور الكبير (الألف - التاء).pdf	226	turn	no	lines at two angles, left as scanned — the owner kept it so (crop-tilt-003 row 83, 2026-10-29 «mark all ok»); fix F holds it
+العروض والقوافي/القوافي للتنوخي - أبو يعلى التنوخي/1824 كتاب اقرا اونلاين pdf القوافي للتنوخي.pdf	102	skew	-0.45±0.1	a warped page — head prose level as scanned, body 0.2–0.45°, footnotes 0.65–0.75°: at −0.45° the rule under the text reads −0.06°; fix N (27n) took −0.675° (4 footnotes of 5 lines read level), the rule then −0.29° — worse, looked at by eye (2026-10-30)
+كتب اللغة/معجم تيمور الكبير في الألفاظ العامية - أحمد تيمور باشا/02 - معجم تيمور الكبير (الألف - التاء).pdf	166	skew	-0.65±0.1	18 lines: at −0.65° the head rule −0.07° (27m: after 0.125°, image 0.1°); fix N (27n) took −0.875° (the lines' spread squeaking under 0.3°), the head rule then −0.29° — worse (2026-10-30)
+الأدب/الفوائد المحصورة في شرح المقصورة لابن هشام اللخمي/الفوائد المحصورة في شرح المقصورة لابن هشام اللخمي.pdf	457	skew	-0.629±0.1	a sheared index page, two columns of short entries: at −0.629° the columns' right edges 0.03/0.00°; fix N (27n) took −0.25° by the lines (≈ 0.1°), the columns then 0.41/0.36° — 4 pt of drift over 570 pt shows more than the short entries' 1 pt: 27m's turn kept (2026-10-30)

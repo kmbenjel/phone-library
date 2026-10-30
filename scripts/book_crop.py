@@ -795,12 +795,17 @@ def base_tilt(a, paper, tb, z, robust=False):
     iq = float(np.subtract(*np.percentile(an, [75, 25])))
     return (round(float(np.median(an)), 3), len(an), round(iq, 3)) if iq < 0.3 else None
 
+def tracks_read(T):
+    """(tracks_tilt) the angles of the lines read well: ≤ 1 px from their straight line at 1,000 px, ≥ 6 strips, ≥ 30 % of
+    the block, printed rules left out"""
+    return [t[1] for t in T if t[3] <= 1.0 and t[4] >= 6 and t[2] >= 0.3 and not t[5]]
+
 def tracks_tilt(T):
     """the page's tilt by its lines followed across it (line_tracks): the median of the lines read well (≤ 1 px from their
     straight line at 1,000 px, ≥ 6 strips, ≥ 30 % of the block; printed rules left out) when at least 5 are read and agree —
     their interquartile range below 0.3° → (angle, lines, IQR), else None (2026-10-27: where base_tilt reads too, the two
     agree to a median 0.023°, 96 % within 0.1°)"""
-    an = [t[1] for t in T if t[3] <= 1.0 and t[4] >= 6 and t[2] >= 0.3 and not t[5]]
+    an = tracks_read(T)
     if len(an) < 5: return None
     iq = float(np.subtract(*np.percentile(an, [75, 25])))
     return (round(float(np.median(an)), 3), len(an), round(iq, 3)) if iq < 0.3 else None
@@ -2782,25 +2787,15 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         # A TURN THE LINES FOLLOWED ACROSS THE PAGE SET (tilt_by_tracks: the baselines could not read it): read again by them on
         # the page as the reader sees it (this look's line_tracks), corrected once, kept when they read ≤ 0.1°; when they
         # cannot read the turned page, the shear's ≤ 0.2° below, as for the baselines' turns
-        tk = None
+        tk = ncand = None
         if not lbr and p.get('skew') and p.get('tilt_by_tracks') is not None:
             tk = tracks_tilt(mk['tracks']()) if mk.get('paper') else None
-            # (no reading at this turn, and the shear cannot confirm it either: the turns beside it — fix N, 2026-10-29,
-            # إرشاد الساري 10 ص 477: text and margin commentary side by side, the lines' spread at the 0.3° limit — unread
-            # at −0.575° and −0.55°, level at −0.6°; left 0.55° tilted when the shear, which calls −1.5° level there, had
-            # the last word)
-            if tk is None and mk.get('paper') and not (
+            # (lines read at this turn but refused for their spread, and the shear cannot confirm it either: the turn is
+            # remembered for the turns beside it, read only if the page is left unturned below — fix N3)
+            if tk is None and mk.get('paper') and len(tracks_read(mk['tracks']())) >= 5 and not (
                     p.get('tilt_by_proj') is not None and mk.get('xy') is not None
                     and (p.get('tilt_by_base') is None or base(i, p, mk, rb) is None) and abs(skew_of(mk['xy'], raw=True)[0]) <= 0.2):
-                nb = []
-                for k_ in (0.025, -0.025, 0.05, -0.05):
-                    d_ = round(p['skew'] + k_, 3)
-                    if abs(d_) < SKEW_MIN - 1e-9: continue
-                    m_ = look(i, dict(p, skew=d_)); t_ = tracks_tilt(m_['tracks']()) if m_.get('paper') else None
-                    if t_ is not None and abs(t_[0]) <= 0.1 + 1e-6: nb.append((abs(t_[0]), abs(k_), d_, m_, t_))
-                if nb:
-                    _, _, d_, m_, t_ = min(nb, key=lambda v: (v[0], v[1]))
-                    p['tracks_near'] = p['skew']; p['skew'], mk, tk = d_, m_, t_
+                ncand = p['skew']
             if tk is not None and abs(tk[0]) > 0.05:
                 d2 = round(round((p['skew'] + tk[0]) / 0.025) * 0.025, 3)
                 if abs(d2) >= SKEW_MIN:
@@ -2936,6 +2931,27 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                     p['after_tilt'] = round(abs(skew_of(m2['xy'], raw=True)[0]), 3); p['after_tilt_image'] = m2['proj'](); mk = m2
                 else:
                     p['two_angles'] = d0; p['lines_lean'] = [list(v) for v in tw]; mk = mz
+        # THE TURNS BESIDE THE LINES' OWN, A LAST RESORT (fixes N 2026-10-29, N3 2026-10-30): a turn the lines' tracks set,
+        # read there but refused for their spread, that the shear could not confirm (ncand) is read at the turns 0.025° and
+        # 0.05° beside it — only when the page is left unturned (two angles, unsure, disputed, untreated): إرشاد الساري 10
+        # ص 477, text and margin commentary side by side, unread at −0.575°, level at −0.6° (the loop's −1.5° undone by guard
+        # W). Read before the other measures (fix N), they overrode turns those confirm: القوافي للتنوخي p. 102 −0.45° →
+        # −0.675°, معجم تيمور 02 p. 166 −0.65° → −0.875° — readings squeaking under the 0.3° spread, the rules then leaning
+        # 0.29°. The most level of them (≤ 0.1°) is taken if it makes no lines lean (two_angles, as guard W)
+        if ncand is not None and not p.get('skew') and (owner_turns or {}).get(i + 1) is None and any(
+                p.get(k) is not None for k in ('two_angles', 'unsure_tilt', 'tilt_disputed', 'untreated_tilt')):
+            mz = look(i, {k: v for k, v in p.items() if k != 'skew'}); nb = []
+            for k_ in (0.025, -0.025, 0.05, -0.05):
+                d_ = round(ncand + k_, 3)
+                if abs(d_) < SKEW_MIN - 1e-9 or not mz.get('paper'): continue
+                m_ = look(i, dict(p, skew=d_)); t_ = tracks_tilt(m_['tracks']()) if m_.get('paper') else None
+                if t_ is not None and abs(t_[0]) <= 0.1 + 1e-6 and not two_angles(lines_read(mz['tracks'](), m_['tracks'](), d_)):
+                    nb.append((abs(t_[0]), abs(k_), d_, m_, t_))
+            if nb:
+                _, _, d_, m_, t_ = min(nb, key=lambda v: (v[0], v[1]))
+                for k in ('two_angles', 'lines_lean', 'unsure_tilt', 'tilt_disputed', 'untreated_tilt', 'loop_fallback', 'level_by_proj'):
+                    p.pop(k, None)
+                p.update(skew=d_, tracks_near=ncand, level_by_tracks=t_[0]); mk = m_
         # THE OWNER'S TURN (data/crop/owner-turns.tsv, owner 2026-10-25 on crop-tilt-001: «أجيز هذا وجميع ما سبق»): a page he
         # ruled «turn» after seeing it turned by its measured tilt, which the measures above leave as it is, is turned by
         # that tilt — u measured here, on the page as it is (sign and size); the readings after it are kept for the record

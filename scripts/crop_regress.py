@@ -103,6 +103,10 @@ def check(row, rec, pdf):
         iq = float(np.subtract(*np.percentile(an, [75, 25]))) if len(an) >= 6 else None   # is two lines run together, left out
         b = (round(float(np.median(an)), 3), len(an), round(iq, 3)) if iq is not None and iq < 0.3 else None   # (خزانة 01
         return b is not None and abs(b[0]) <= float(expect) + 1e-6, f'turned {p.get("skew")}, the baselines then read {b} (angle, lines, spread)'   # ص 110 at −0.8°: 4 of 16 such lines, base_tilt's spread 0.325°)
+    if what == 'skew':                                 # the page's turn at X ± T° (a turn looked at by eye and measured, on a
+        x, t = (float(v) for v in expect.split('±'))   # page the level check cannot read: too few lines, or lines at two
+        d = p.get('skew') or 0                         # angles — القوافي للتنوخي p. 102, 2026-10-30)
+        return abs(d - x) <= t + 1e-6, f'turned {p.get("skew")} (expected {x}±{t}), tracks beside {p.get("tracks_near")}'
     if what == 'cropped':                              # cropped, not left whole (a book without print in its margins)
         got = 'yes' if p.get('crop') else 'no'
         return got == expect, f'crop {p.get("crop")}, enlarged {p.get("enlarged")}, book clean margins {rec.get("clean_margins")}'
