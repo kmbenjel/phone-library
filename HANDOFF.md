@@ -9,6 +9,26 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-30 00:50 UTC — 27n DIFF: FIX N MADE ONE PAGE WORSE → FIX N2 BENCHED (NOT APPLIED: 27n still running) (Claude, max)
+- 8 of 31 books done (29b9 6860 0648 8109 0059 35fb d319 acb8); vs 27m all identical but 29b9 ص 367 (F, right) and
+  القوافي للتنوخي (8109) p. 102 (printed ١٠٠) [tracks: a turn beside] −0.45 → −0.675: WORSE. A warped page — head prose level
+  as scanned, body 0.2–0.45°, footnotes 0.65–0.75°. First look −0.7 (tracks −0.694 on 5 lines, 4 footnotes); at −0.7 only
+  3 lines read (< 5: unread for their COUNT, not their spread); N took −0.675 (5 lines, 4 footnotes, median −0.025; the body
+  line +0.44). Measured (/tmp/claude-1000/r27n/turnrows.py: rows + the printed rule under the text, line fit): the rule 0.41°
+  as scanned, −0.06° at −0.45, −0.29° at −0.675; rows mean |angle| 0.275 / 0.216 / 0.334. tracksprobe.py: the tracks at
+  every turn −0.75…−0.4.
+- FIX N2 (scratch/crop-fixes-2026-10-29/patch_n2.py → code/bc_fn2.py 0c7346ffca): N only when ≥ 5 lines were read at the
+  turn (refused for their spread, as N's note says); tracks_read() shared with tracks_tilt (same filter). ntest.py f/fn/fn2:
+  8109 p. 102 → −0.45 (= 27m); 5b21 ص 477 (34 lines, spread 0.325 at −0.575) → −0.6 as N. N2's reach = only pages with
+  tracks_near in 27n whose first turn read < 5 lines; there fn2 = bc_f (27m) by construction.
+- NEXT: let 27n end (no stop without the owner's word); list EVERY tracks_near page of 27n, probe each
+  (/tmp/claude-1000/r27n/tracksprobe.py HASH PAGE FROM TO STEP; ntest.py HASH PAGE FIRST-TURN f fn fn2), look at each by eye;
+  then patch_n2.py scripts/book_crop.py scripts/book_crop.py (check md5 a0e20119c2 first), docs, commit, regression 27o
+  (expected vs 27n: only the N pages N2 drops, back to 27m), then FREEZE → pilot.
+- Pre-existing, for the owner: 8109 p. 102 at −0.45 (27l/27m) levels the rule and the body but tips the head lines ≈ 0.4°
+  (as scanned they are level) — a two-angle page guard W lets through; his «leave as scanned» (a 0 in owner-turns, fix F)
+  would hold it.
+
 ## 2026-10-29 23:40 UTC — 27n RUNNING, FIRST 2 BOOKS AS PREDICTED; PHONE FTP ON; PILOT READY (Claude, max)
 - 27n (unit crop-regress-2026-10-29n, since 22:31; ends ≈ 02:30–03:00): `pgrep -f crop_regress` does NOT find it (its
   python reads the script from stdin: «python3 -») — check with `systemctl --user is-active crop-regress-2026-10-29n`.
