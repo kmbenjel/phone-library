@@ -10,6 +10,9 @@ photocopy, lines set one by one) is NOT turned by any path and is listed for him
 every turn, benched before 26i.
 
 ## 2026-10-31 17:00 UTC — OWNER REVIEWED THE PILOT; FIX IN; REGRESSION 27p RUNNING (book_crop ee9333a1e2) (Claude, Opus)
+- FIRST AFTER THE /clear (owner set effort medium, «ready for a clear»): the session's watchers are gone. Arm watch_comments.py again, and a background wait on the end of unit
+  crop-regress-2026-10-31p (it runs on by itself). At its end read the «N failures» line, each book's «rims painted» list and the diff log. Reading them is medium work; any further
+  edit of book_crop.py or the redo of 277 + خزانة ج 1 wants xhigh: say so first (memory effort-levels). The full redo waits for the owner's word.
 - OWNER 16:50–16:58 ticked 9 of the 10 pilot books; his only remark, 277 p. 1: «i dont understand the change in p1, old seems the right
   one, others are ok». All 10 closed (data/names/review-closed.tsv); crop-doubts.html now shows 0 books. His «continue» (twice) = do not wait.
 - THE FIX (supersedes «FIX PLANNED» below; measured on all 36 records, each patch looked at, rimlook sheets):
