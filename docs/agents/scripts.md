@@ -54,6 +54,7 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `buckets.py`, `textnorm.py`, `report_lib.py` | helpers |
 | `phone_host.py` | the phone's FTP address: first answering of the known addresses (§2); `PHONE_HOST` overrides |
 | `phone_watchdog.sh` | runs detached (`setsid nohup … >> logs/phone-watchdog.log &`): pauses (SIGSTOP) crop_library/crop_batch/inspect_files/ocr_clean while the FTP port is silent, resumes when it is back on the same address; another address → stays paused, written to data/phone/new-address.txt |
+| `battery_guard.sh` | runs as the user unit `battery-guard` (`logs/battery-guard.log`): on battery at ≤ 7 % it freezes the running transient units and SIGSTOPs jobs outside a unit (never kills), then suspends past the inhibitors with sudo; jobs resume when the charger is back |
 | `publish.py` | uploads `site/`, `reports/`, data tables and this guide to the phone (copy, never deletes) — only when the owner asks |
 | `publish_web.sh` | copies `site/0*.html` to the GitHub Pages copy (benjelloun.dev/library), commits only changes, pushes (`NO_WEB=1` skips) |
 | `watch_comments.py` | one line per settled owner comment on the review pages (and lasting phone up/away): an agent watches it and acts on each comment as it comes |
