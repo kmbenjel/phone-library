@@ -9,6 +9,43 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-31 12:45 UTC — PILOT DONE (10 redone, 0 failed) BUT 2 NEW FAULTS; FULL REDO WAITS; METHOD STILL 1be8d49ae3 (Claude, Opus)
+- Pilot ended 06:11, commit de145df; all 10 checked on the phone (size = index, no .redo). refresh.sh done, web published.
+  67 doubt pages on site/crop-doubts.html, all looked at by Claude. Owner's خزانة الأدب pp. 26, 164, 307 are right.
+- FAULT 1, RIM PAINT (marks_to_erase, book_crop.py:3224; since 10-18): a dense row of print is read as a dropped rule; lines 2229–2239
+  pull the box back to 1 pt from it, so it passes as a rim «beyond the content», and the frame from there out is painted.
+  277 هذا هو علم البيولوجيا p. 286: lower half of the LAST TEXT LINE hidden on the phone. Its p. 1: a colour cover classed text (gap 6.9 pt,
+  paper 253), the art's lower band painted white. خزانة الأدب ج 1 pp. 177, 223, 477: the same on the last footnote (from the
+  frozen records, the phone file not yet seen). In the 31 regression books: 26 such rules ≤ 1.5 pt from the box (footnote lines, frames, heads, plates).
+- FAULT 2, PAGE-NUMBER SQUARES READ AS STAMPS (stamps_of + to_rule in erase_stamp): 277 prints its folio in a grey square, solid black
+  in this scan. ~255 of 301 pages: top 60 % painted, a black bar left. Phone holds 515 عالم المعرفة files; how many share it is unmeasured.
+- Why regressions missed it: they diff version against version, and these patches never changed; doubts do not list painted pages.
+- Audit of the other books: محاضرة, المجلد 26 no patches at all (phone files); مواد البيان, الإعلام 09, المغازي, روضة no rim paint (re-planned from
+  originals; الإعلام's 454 stamps are the real doraghawas one). المعسول 01, قصة الحضارة 29 UNMEASURED: no original on the laptop →
+  run scratch/audit_crop_patches.py on them when the phone is back. Originals' bytes are all still in the phone files, so nothing is lost.
+- FIX PLANNED, NOT APPLIED (Claude's decision: one regression for this and the owner's remarks): skip a rule ≤ 1.5 pt from the box (benched:
+  93 → 72 pages patched in the 31 books, 277 p. 286 cleared); paint only over paper-coloured area (needed for the cover, not yet benched);
+  a solid square in the footer is no stamp, kept as the printed number; list every page with a rim patch on the doubts page.
+  THEN: regression 27p → redo 277 + خزانة الأدب ج 1 (and any of the two unmeasured) → then the full redo.
+- Smaller notes for the owner: خزانة الأدب p. 236 scan streak inside an enlarged frame; المجلد 26 p. 1 half a blog-stamp line at the cover's foot;
+  مواد البيان p. 2 near-blank with specks; محاضرة pp. 3, 147 side notes tight but whole. Evidence: site/crop-faults-2026-10-31.jpg.
+- The phone left at 06:22; laptop now on 10.20.x.x. Rclone host and current-address.txt still say .119 until the watchdog finds it at home.
+
+## 2026-10-31 04:33 UTC — HOLD LIFTED; 27o PASSED; METHOD FROZEN (1be8d49ae3); PILOT RUNNING (Claude, Opus)
+- 27o ended 10-31 00:22: 0 failures. Diff vs 27n: only 4b80 457 → −0.629, 8109 102 → −0.45, 9da5 166 → −0.65; vs 27m: only F's 2
+  pages + 5b21 477 at −0.6; 0 pages for another cause. As predicted (diff logs read, the page images not looked at again).
+- OWNER 10-31 ~04:30: «you can go ahead and pilot now», on the Wi-Fi «Terasse», NOT home: laptop 192.168.3.120, phone 192.168.3.119
+  (his word covers the FTP password in clear on this network). The 10 pilot paths checked live: names, sizes = index-now; no .redo.
+- Unit crop-redo-pilot since 04:33 with --setenv=PHONE_HOST=192.168.3.119 → logs/crop-redo-pilot.log; marker
+  data/crop/.pilot-redo-2026-10-26 (never rerun: resume with crop_redo.py itself). Written at its end: site/crop-doubts.html,
+  WORKLOG line, commit. The owner reviews the doubts page; only his remarks or a new kind of fault change the method.
+- ADDRESS: phone_host's scan covers only 192.168.11.x, so nothing finds the phone here by itself. Set by hand: rclone `phone:` host
+  and data/phone/current-address.txt → .119 (the running keepalive reads that file). Back home the keepalive and watchdog find
+  .100 and the watchdog rewrites both. phone_watchdog runs with no address (log «on ?»), never pauses the pilot; crop_redo's
+  own wait_phone does (with PHONE_HOST set, a new address here would need a restart with the new value).
+- AFTER THE PILOT: scripts/refresh.sh outside the pen's busy hours, then the owner's review. FIRST after a /clear: watch_comments.py
+  Monitor + a Monitor on the unit's end.
+
 ## 2026-10-30 ~20:40 UTC — OWNER: HOLD (Claude)
 - OWNER: «ready for a clear, and don't act until I instruct … let the pc jobs complete». Effort set to medium. Do NOTHING
   after the /clear until his instruction (no monitors, no diff review, no pilot). 27o (unit crop-regress-2026-10-30o) runs on
