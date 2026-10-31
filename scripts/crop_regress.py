@@ -121,6 +121,11 @@ def check(row, rec, pdf):
     if what == 'parity':
         got = 'yes' if any(float(v) for v in (rec.get('parity_offsets') or {}).values()) else 'no'
         return got == expect, f'offsets {rec.get("parity_offsets")}'
+    if what == 'stamp':                                # read as an uploader's stamp (covered), or left as print
+        return bool(p.get('stamp')) == (expect == 'yes'), f'stamp {p.get("stamp")}'
+    if what == 'rim':                                  # a rim really painted on this page, erase_stamp's colour test included
+        got = bool(bc.rim_pages(pdf, rec, {page - 1}))
+        return got == (expect == 'yes'), f'painted {got}, rules dropped {p.get("rules_dropped")}, box {p.get("box")}'
     if rec.get('decision') != 'crop': return False, rec.get('decision')
     if what == 'xcentre':                              # the shown part's centre lies at X ± T pt (a measured anchor: the page
         if not p.get('show'): return False, 'no frame'   # number, a centred heading)
@@ -186,6 +191,8 @@ def main():
             if os.path.exists(out): os.remove(out)
         cut = [i + 1 for i, p in enumerate(rec['pages']) if p.get('notes_cut')]
         if cut: ok = False; why += f' | marginal notes cut on pages {cut[:12]}'
+        rims = [i + 1 for i in bc.rim_pages(pdf, rec)]   # (what the patches paint, shown every run: a diff of versions cannot
+        if rims: why += f' | rims painted on {len(rims)} pages {rims[:40]}'   # show a fault that never changed, 2026-10-31)
         fails += not ok
         print(('PASS' if ok else 'FAIL'), os.path.basename(pdf), 'one page size:', why, flush=True)
     for pdf in recs:                                 # whole books: no tilt kept after turning, none left that both measures see

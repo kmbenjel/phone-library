@@ -1931,6 +1931,9 @@ def corner_signatures(found):
     4–20 % of the height tall, on at least 4 pages. A printed ornament repeats too, but at a chapter's head (روضة المستبين's
     arches, left alone) or as a frame's corners — the same piece at the mirrored corner of the same page (روضة المستبين
     ص 17، 49، 63، 97: a chapter page's frame): a group with such a twin on half its pages is print, not a signature.
+    So is a SOLID BLOCK (2026-10-31, pilot audit, هذا هو علم البيولوجيا: the page number printed in a square, black in this
+    scan, in the outer corner of ~250 pages; its top painted, a black bar left): a signature is strokes, ink over at most
+    21 % of its box in the books measured, those squares ~70 %: a group of median ink ≥ 50 % stays on the page.
     `found`: _stamp_chunk's candidates → {page index: [boxes (pt)]}"""
     corner = lambda f: in_corner(f[1], f[2], f[3])
     def twin(f, page):                                # the same size at the mirrored place of its page
@@ -1947,6 +1950,7 @@ def corner_signatures(found):
                and abs((f[1][3] - f[1][1]) / hk - 1) <= 0.1 and float((fk[5] * f[5]).mean()) >= 0.8]
         for j in grp: used[j] = True
         if len({cand[j][0] for j in grp}) < 4 or sum(twin(cand[j], on[cand[j][0]]) for j in grp) >= 0.5 * len(grp): continue
+        if np.median([cand[j][8] for j in grp]) >= 0.5: continue
         for j in grp: out.setdefault(cand[j][0], []).append([round(float(v), 1) for v in cand[j][1]])
     return out
 
@@ -1981,7 +1985,7 @@ def _stamp_grey(ink):
 
 def _stamp_chunk(args):
     """the candidates of some pages: (page, box, page width, height, shape (band only), grey image (band and foot
-    corner only), band, number on its page)"""
+    corner only), band, number on its page, share of its box in ink)"""
     path, idx, px = args
     doc = pymupdf.open(path); out = []
     for i in idx:
@@ -1989,7 +1993,7 @@ def _stamp_chunk(args):
         if page.rotation: continue
         W, H = page.rect.width, page.rect.height
         for j, b, band, ink in _stamp_groups(page, px):
-            out.append((i, b, W, H, _stamp_shape(ink) if band else None, _stamp_grey(ink) if band or in_corner(b, W, H) else None, band, j))
+            out.append((i, b, W, H, _stamp_shape(ink) if band else None, _stamp_grey(ink) if band or in_corner(b, W, H) else None, band, j, float(ink.mean())))
     doc.close()
     return out
 
@@ -3227,24 +3231,29 @@ def marks_to_erase(doc, i, p):
     content, from it out to the frame's edge — covered with the paper's white (the scan stays byte for byte). NOTHING ELSE:
     stains and loose lines are only kept out by the frame — a running head the first look took for a stain (نظم تنقيح فتح
     الكريم ص 93: title, rule and page number as «blots») must never be painted over. Never on two opposite sides (a printed
-    frame). Boxes in the page's own coordinates"""
-    if p.get('kind') != 'text' or p.get('paper', 0) < 235 or not p.get('crop') or not p.get('box'): return []
+    frame). NOT A ROW OF PRINT (2026-10-31, pilot audit, هذا هو علم البيولوجيا ص 286, خزانة الأدب ج 1 ص 177، 223، 477: an
+    Arabic baseline reads as a rule, the dropped rule pulls the box back to 1 pt from it, and the lower half of the last line
+    was painted): a rule across the page less than 3 pt from the content is left; a side rim (no baseline runs that way)
+    stays, its patch stopping at the content. Returns (rims, dots), boxes in the page's own coordinates; erase_stamp decides
+    whether a rim is drawn"""
+    if p.get('kind') != 'text' or p.get('paper', 0) < 235 or not p.get('crop') or not p.get('box'): return [], []
     deg = p.get('skew') or 0; mv = p.get('move') or [0, 0]; crop, box = p['crop'], p['box']
     unturn = lambda b: fwd_box(doc, i, {'skew': -deg}, b) if deg else b
     hit = lambda r, q_, e=0: r[2] > q_[0] - e and r[0] < q_[2] + e and r[3] > q_[1] - e and r[1] < q_[3] + e
     sh = lambda b, k=1: [b[0] + k * mv[0], b[1] + k * mv[1], b[2] + k * mv[0], b[3] + k * mv[1]]
-    rims, sides = [], set()
+    rims, sides, e = [], set(), 1.5
     for r_ in p.get('rules_dropped') or []:
         r_ = sh(r_); v = r_[3] - r_[1] >= r_[2] - r_[0]
         if (r_[2] - r_[0] if v else r_[3] - r_[1]) > 0.025 * (p['w'] if v else p['h']): continue   # not a thin band
         if v:
-            if r_[0] >= box[2]: long_ = [r_[0], crop[1], crop[2], crop[3]]; sides.add('R')
-            elif r_[2] <= box[0]: long_ = [crop[0], crop[1], r_[2], crop[3]]; sides.add('L')
+            if r_[0] >= box[2]: long_ = [max(r_[0], box[2] + e), crop[1], crop[2], crop[3]]; sides.add('R')
+            elif r_[2] <= box[0]: long_ = [crop[0], crop[1], min(r_[2], box[0] - e), crop[3]]; sides.add('L')
             else: continue
         else:
-            if r_[3] <= box[1]: long_ = [crop[0], crop[1], crop[2], r_[3]]; sides.add('T')
-            elif r_[1] >= box[3]: long_ = [crop[0], r_[1], crop[2], crop[3]]; sides.add('B')
+            if r_[3] <= box[1]: long_ = [crop[0], crop[1], crop[2], r_[3]]; gap = box[1] - r_[3]; sides.add('T')
+            elif r_[1] >= box[3]: long_ = [crop[0], r_[1], crop[2], crop[3]]; gap = r_[1] - box[3]; sides.add('B')
             else: continue
+            if gap < 3: continue                      # (its side still counts: a printed frame's other rule stays too)
         others = [sh(x) for x in (p.get('lines') or []) + (p.get('rules') or [])] + list(p.get('blots') or []) + list(p.get('edge') or [])
         if hit(long_, box, -0.5) or any(hit(long_, o) for o in others): continue   # print (or anything) out there: left
         rims.append(long_)
@@ -3252,16 +3261,17 @@ def marks_to_erase(doc, i, p):
     out = []
     for b in rims:
         if not hit(b, crop): continue
-        o = unturn(sh(b, -1)); e = 1.5
+        o = unturn(sh(b, -1))
         out.append([o[0] - e, o[1] - e, o[2] + e, o[3] + e])
     # A SHADOW PRINTED AS DOTS (dot_fields, already in the page's own coordinates; 4 pt from any stroke by construction):
     # covered too, never inside the content box nor over a printed rule (owner: «أرنيها مصلحة»)
+    dots = []
     if p.get('dots'):
         cr = unturn(sh(crop, -1))
         keep = [unturn(sh(x, -1)) for x in [box] + list(p.get('rules') or [])]
         keep = [[k[0] - 1.5, k[1] - 1.5, k[2] + 1.5, k[3] + 1.5] for k in keep]
-        out += [q for d in p['dots'] if hit(d, cr, 2) for q in rect_minus(d, keep)]
-    return out
+        dots = [q for d in p['dots'] if hit(d, cr, 2) for q in rect_minus(d, keep)]
+    return out, dots
 
 def rect_minus(r, cuts):
     """the parts of rect r outside every rect of cuts (a stamp's patch kept off anything printed)"""
@@ -3288,6 +3298,8 @@ def hide_stamp_annots(page):
             a.set_flags(a.flags | pymupdf.PDF_ANNOT_IS_HIDDEN); n += 1
     return n
 
+RIM_PAPER = 0.05                                      # (of full white: the patch's colour against the paper under it)
+
 def erase_stamp(doc, page, inv, p):
     """an uploader's stamp on white paper (owner 2026-10-09: «or even: erase it»): a white patch drawn over it after the
     page's own content — inside the page's turn, so it follows the page; the scan itself stays byte for byte"""
@@ -3296,7 +3308,7 @@ def erase_stamp(doc, page, inv, p):
     # (a stamp is covered in THE COLOUR OF THE PAGE AROUND IT — the median of a ring 8 pt wide around the patch — on any
     # paper: owner 2026-10-18, نظم تنقيح فتح الكريم «لو تستعمل أداة تجعل مكان الطابع مثل الخلفية»; the other marks only
     # on white paper, in its white)
-    er = marks_to_erase(doc, page.number, p)
+    er, dots = marks_to_erase(doc, page.number, p)
     # (a «rule» thicker than 1.2 % of the page is no rule — ص 93: the stamp and the running head read as one 52 pt band,
     # and the stamp's patch stopped at it, the stamp left in view)
     thin = lambda r: min(r[2] - r[0], r[3] - r[1]) <= 0.012 * max(p['w'], p['h'])
@@ -3310,7 +3322,7 @@ def erase_stamp(doc, page, inv, p):
         for k in range(int(0.6 * (Y1 - Y0)), Y1 - Y0):
             if dark[k] >= 0.4: return [b[0], b[1], b[2], (Y0 + k) / z - 2]
         return b
-    if not p.get('stamp') and not er and not (p.get('sheet_fill') and p.get('kind') == 'text'): return False
+    if not p.get('stamp') and not er and not dots and not (p.get('sheet_fill') and p.get('kind') == 'text'): return False
     z = 100 / 72; pix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), colorspace=pymupdf.csRGB, alpha=False)
     img = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width * 3].reshape(pix.height, pix.width, 3)
     stamps_ = [to_rule(pad_box(st, p['w'])) for st in p.get('stamp') or []]
@@ -3325,7 +3337,7 @@ def erase_stamp(doc, page, inv, p):
         if len(ring) < 10: return (1.0, 1.0, 1.0)
         bright = ring[ring.sum(1) >= np.percentile(ring.sum(1), 40)]   # the paper, not a stray letter beside it
         return tuple(float(v) / 255 for v in np.median(bright, axis=0))
-    if p.get('paper', 0) < 225: er = []
+    if p.get('paper', 0) < 225: er, dots = [], []
     # BEYOND THE SHEET'S EDGE (owner 2026-10-18, نظم تنقيح فتح الكريم ص 50: «في الحافة، ولك أن تملأها بنفس الخلفية» — the
     # grey page photographed a little askew on a white bed: its slanted edge inside the frame read as a tilt): the page
     # outside the sheet's inner rectangle is filled with the sheet's own colour, never over the content or anything printed
@@ -3366,7 +3378,16 @@ def erase_stamp(doc, page, inv, p):
         x0, y0, x1, y1 = min(a_.x, b_.x), min(a_.y, b_.y), max(a_.x, b_.x), max(a_.y, b_.y)
         cmd += f'{col[0]:.3f} {col[1]:.3f} {col[2]:.3f} rg {x0:.2f} {y0:.2f} {x1 - x0:.2f} {y1 - y0:.2f} re f '
     rim = col_s or (min(1.0, p.get('paper', 255) / 255),) * 3   # (a page on a bed: its rims in its own colour, not the bed's)
-    for b, col in [(b, side_col(b) if col_s else around(b)) for b in sts] + [(b, rim) for b in er]:   # (on a bed: the page's own colour —
+    # A RIM IS COVERED ONLY WHERE THE PATCH CANNOT SHOW (2026-10-31, pilot audit: هذا هو علم البيولوجيا ص 1, a colour cover
+    # classed text, its art's lower band painted white; نظم تنقيح فتح الكريم ص 3, a grey sheet with no sheet_fill, white
+    # patches leaving a slab of it around the title): three quarters of the area under it must already be the patch's colour
+    def on_paper(b):
+        X0, Y0, X1, Y1 = [max(0, int(round(v * z))) for v in b]
+        q = img[Y0:Y1, X0:X1].reshape(-1, 3)
+        return len(q) >= 20 and float(np.abs(np.percentile(q, 75, axis=0) / 255 - np.array(rim)).max()) <= RIM_PAPER
+    if not col_s: er = [b for b in er if on_paper(b)]
+    p['rims_painted'] = len(er)
+    for b, col in [(b, side_col(b) if col_s else around(b)) for b in sts] + [(b, rim) for b in er + dots]:   # (on a bed: the page's own colour —
                                                       # «أريد أن تملأ بما يشبه الورقة تماما»)
         a_, b_ = pymupdf.Point(b[0], b[1]) * inv, pymupdf.Point(b[2], b[3]) * inv
         x0, y0, x1, y1 = min(a_.x, b_.x), min(a_.y, b_.y), max(a_.x, b_.x), max(a_.y, b_.y)
@@ -3375,6 +3396,19 @@ def erase_stamp(doc, page, inv, p):
     # it), so the patches can reach beyond the photographed page (نظم تنقيح فتح الكريم ص 4 و88: the fill was clipped away)
     wrap_contents(doc, page, b'q\n')
     return append_contents(doc, page, f'q {cmd}Q\n'.encode())
+
+def rim_pages(src, rec, only=None):
+    """the pages (indices) on which erase_stamp really draws a rim, its colour test included: a one-page copy of each page
+    with a candidate is patched, the page itself untouched (the doubts page and crop_regress: a painted page is listed, so
+    a fault that never changes between versions can still be seen — pilot audit 2026-10-31)"""
+    doc = pymupdf.open(src); out = []
+    for i, p in enumerate(rec['pages']):
+        if (only is None or i in only) and p.get('rules_dropped') and marks_to_erase(doc, i, p)[0]:
+            t = pymupdf.open(); t.insert_pdf(doc, from_page=i, to_page=i); q = dict(p)
+            erase_stamp(t, t[0], ~t[0].transformation_matrix, q); t.close()
+            if q.get('rims_painted'): out.append(i)
+    doc.close()
+    return out
 
 def images_of(doc):
     return [[(x[0], x[2], x[3], len(doc.xref_stream_raw(x[0]) or b'')) for x in p.get_images(full=True)] for p in doc]

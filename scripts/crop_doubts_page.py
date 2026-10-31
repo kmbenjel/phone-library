@@ -11,6 +11,7 @@ J = lambda *p: os.path.join(ROOT, *p)
 SHEETS = os.path.expanduser('~/.cache/phone-library/crop-sheets')
 WHY = {'tilt': 'ميل لم تحسمه المقاييس (اختلفت أو لم تُعالجه)', 'whole': 'صفحة بقيت كاملة لم تُقص',
        'stain': 'بقعة أُبقيت داخل الإطار حفاظا على توازن الهامشين', 'stamp': 'ختم غُطّي بلون الصفحة',
+       'rim': 'حافة صوّرها الماسح خارج النص غُطّيت بلون الورق',
        'larger': 'صفحة عُرضت بإطار أكبر قليلا ليسع ما فيها', 'sheet': 'صفحة على سطح الماسح: مُلئ ما وراء حافتها بلونها',
        'third': 'ميل واضح رأته المقاييس كلها: قُوِّمت الصفحة ولم يبق من قراءة الصورة إلا ثلثها أو أقل',
        'side': 'إطار أُزيح جانبا أكثر من ٢٪ ليسع عنوانا جانبيا أو حرفا عند حافة الورقة (النص غير متوسط تماما)',
@@ -50,6 +51,8 @@ def main(batches):
         summ = '، '.join(f'{WHY[k].split(" (")[0]}: {v}' for k, v in n.items() if k in WHY)
         two = book.get('two') or []                   # (every page left as scanned for its two angles, named — owner 2026-10-27)
         tw = f'<p class="meta">صفحات تُركت كما مُسحت لأن سطورها على زاويتين: ص {"، ".join(map(str, two))}</p>' if two else ''
+        rims = book.get('rims') or []                 # (every page with a rim painted out, named — pilot audit 2026-10-31)
+        tw += f'<p class="meta">صفحات غُطّيت فيها حافة بلون الورق: ص {"، ".join(map(str, rims))}</p>' if rims else ''
         cards.append(f'<article><h2>{E(book["path"])}</h2><p class="meta">مواضع الشك في الكتاب كله — {E(summ)}</p>{tw}{"".join(figs)}'
                      f'<div class="review" data-n="{E(h)}"><label><input type="checkbox" class="chk"> سليم</label>'
                      f'<textarea class="cmt" rows="2" placeholder="ملاحظتك"></textarea><span class="st"></span></div></article>')

@@ -9,6 +9,26 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-10-31 17:00 UTC — OWNER REVIEWED THE PILOT; FIX IN; REGRESSION 27p RUNNING (book_crop ee9333a1e2) (Claude, Opus)
+- OWNER 16:50–16:58 ticked 9 of the 10 pilot books; his only remark, 277 p. 1: «i dont understand the change in p1, old seems the right
+  one, others are ok». All 10 closed (data/names/review-closed.tsv); crop-doubts.html now shows 0 books. His «continue» (twice) = do not wait.
+- THE FIX (supersedes «FIX PLANNED» below; measured on all 36 records, each patch looked at, rimlook sheets):
+  (1) marks_to_erase: a rule ACROSS the page < 3 pt from the content is left (1.5 was too small: خزانة ج 4 p. 460 is 1.9 pt); its side still
+  counts for the two-opposite-sides guard. A side rim stays (no baseline runs that way) but its patch stops at the content.
+  (2) erase_stamp, a WHITE rim (no sheet colour) only where three quarters of the area under it is already that colour, RIM_PAPER 0.05: real
+  rims read 0.000, فتح الكريم p. 3 0.067–0.075, 277's cover 0.271. Sheet-colour fills unchanged (that book's patches cover show-through, reviewed).
+  (3) corner_signatures, NOT stamps_of as written below (the squares alternate sides, the band rule never fired): a group of median ink ≥ 50 %
+  of its box is print. Signatures measured ≤ 21 %, 277's squares ~70 %. 277: stamp pages 252 → 0, frame 583 → 589 pt tall, no rim page left.
+  (4) rim_pages: every painted page named on the doubts card and in each regression's «one page size» line, so a constant fault can be seen.
+- 277 p. 1 needs nothing more: rendered, the whole cover is back on white bands. A cover classifier was tried and DROPPED: «fills the frame»
+  would cut 22 % of its width (title, the number 277), this book's frame being 0.58 against the cover's 0.74. Kind stays text.
+- Patches went 78 (49 pages) → 33 candidate pages, 31 painted, all side rims or that book's sheet colour. Also hit, not known before: خزانة ج 2 p. 278, ج 4 pp. 394, 460.
+- 17 cases added (kinds rim, stamp; 277 is the 32nd book, its original put in the regression cache by hand). Smoke test 17/17 on the frozen records.
+- 27p: unit crop-regress-2026-10-31p, scratch/regress_2026-10-31p.sh, marker data/crop/.regress-2026-10-31p, log logs/crop-regress-2026-10-31p.log,
+  diff logs/crop-regress-diff-2026-10-31p.log. EXPECTED: the 31 books' recipes identical to 27o's (rims are decided at apply time). Do NOT edit book_crop.py while it runs.
+- NEXT: 27p passes → when the phone is back: audit المعسول 01 + قصة الحضارة 29 (no original on the laptop; he ticked them, the audit is still owed), redo 277 + خزانة ج 1
+  → then the FULL REDO, on the owner's word. The laptop was on battery at 81 % at launch (10.33.92.x, phone away); battery_guard freezes jobs at 7 %.
+
 ## 2026-10-31 12:45 UTC — PILOT DONE (10 redone, 0 failed) BUT 2 NEW FAULTS; FULL REDO WAITS; METHOD STILL 1be8d49ae3 (Claude, Opus)
 - Pilot ended 06:11, commit de145df; all 10 checked on the phone (size = index, no .redo). refresh.sh done, web published.
   67 doubt pages on site/crop-doubts.html, all looked at by Claude. Owner's خزانة الأدب pp. 26, 164, 307 are right.

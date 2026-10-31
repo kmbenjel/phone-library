@@ -201,10 +201,10 @@ def analyse(path, src, jobs=1):
     # THE DOUBTFUL PAGES for the owner's review (owner 2026-10-18: «show me what would be better reviewed manually»; the review
     # page shows only them — «hope my remarks will be rare»): every page the method itself is unsure of, in every book —
     # a tilt measured differently by its measures or left untreated, a stain kept inside to keep the margins balanced, a
-    # page left whole or shown larger, a stamp covered, a page on the scanner bed filled beyond its edge. Up to 6 a book
+    # page left whole or shown larger, a rim painted out, a stamp covered, a page on the scanner bed filled beyond its edge. Up to 6 a book
     try:
         P = rec['pages']; untreated = {k - 1 for k in rec.get('untreated_tilt') or []}; whole = {k - 1 for k in rec.get('whole') or []}
-        flags = []
+        rims = bc.rim_pages(src, rec); flags = []
         for i, p in enumerate(P):
             # (a page whose lines lie at two angles, left as scanned — owner 2026-10-27 on crop-tilt-002: «Leave as scanned»,
             # listed for him: every such page of the book is named on its card, the first ones shown)
@@ -212,6 +212,7 @@ def analyse(path, src, jobs=1):
                    'tilt' if p.get('unsure_tilt') or p.get('tilt_disputed') or i in untreated else
                    'whole' if i in whole or (p['kind'] == 'text' and not p.get('crop') and rec.get('decision') == 'crop') else
                    'stain' if p.get('stain_kept') else
+                   'rim' if i in rims else
                    'stamp' if p.get('stamp') else
                    'sheet' if p.get('sheet_fill') and p.get('crop') else
                    'larger' if (p.get('enlarged') or 1) >= 1.05 else
@@ -232,8 +233,8 @@ def analyse(path, src, jobs=1):
                    # (a turn that made lines worse, set again by the angle the lines take — two_angles, 2026-10-27)
                    'tracks' if p.get('turn_by_tracks') is not None and p.get('skew') else None)
             if why: flags.append((i, why))
-        order = {'two': 0, 'tilt': 1, 'whole': 2, 'stain': 3, 'stamp': 4, 'larger': 5, 'sheet': 6, 'third': 7, 'side': 8, 'edge': 9,
-                 'cut': 10, 'folio': 11, 'orn': 12, 'base': 13, 'tracks': 14}
+        order = {'two': 0, 'tilt': 1, 'whole': 2, 'stain': 3, 'rim': 4, 'stamp': 5, 'larger': 6, 'sheet': 7, 'third': 8, 'side': 9, 'edge': 10,
+                 'cut': 11, 'folio': 12, 'orn': 13, 'base': 14, 'tracks': 15}
         seen, sp = set(), []
         for i, why in sorted(flags, key=lambda x: (order[x[1]], x[0])):   # each kind of doubt first, then more of them
             if why in seen: continue
@@ -251,7 +252,7 @@ def analyse(path, src, jobs=1):
             bc.sheet(src, rec, d, shown)
         json.dump({'path': path, 'decision': rec.get('decision'), 'reasons': rec.get('reasons'), 'gain': rec.get('gain'),
                    'doubts': {w: sum(1 for _, x in flags if x == w) for w in order}, 'shown': shown,
-                   'two': [i + 1 for i, x in flags if x == 'two'],
+                   'two': [i + 1 for i, x in flags if x == 'two'], 'rims': [i + 1 for i in rims],
                    'owner': {str(i + 1): w for i, w in own.items()}},
                   open(os.path.join(d, 'book.json'), 'w') if os.makedirs(d, exist_ok=True) is None else None, ensure_ascii=False)
     except Exception as e: print('SHEET FAIL', path[:60], repr(e)[:120], flush=True)

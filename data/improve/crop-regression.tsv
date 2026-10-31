@@ -5,6 +5,7 @@
 # page's content centred in its box (±2 %); xcentre = the shown part's centre at X±T pt (a measured anchor: page number, heading);
 # ycentre = the shown part's middle at Y±T pt (a page placed where its neighbours are: its page number where theirs is);
 # parity = the book's odd/even pages get different horizontal places (yes/no).
+# rim = a rim is really painted on the page (yes/no); stamp = the page carries a stamp to cover (yes/no).
 # level = the page as the reader sees it, turned or not, reads level by its lines' baselines: |angle| ≤ the expected degrees
 # (book_crop.base_angles at 1,400 px: their median, lines more than 1° from it — two lines run together — left out, at least
 # 6 lines within an IQR of 0.3° — a turn too far fails it as surely as one left undone; 2026-10-27).
@@ -253,3 +254,20 @@
 العروض والقوافي/القوافي للتنوخي - أبو يعلى التنوخي/1824 كتاب اقرا اونلاين pdf القوافي للتنوخي.pdf	102	skew	-0.45±0.1	a warped page — head prose level as scanned, body 0.2–0.45°, footnotes 0.65–0.75°: at −0.45° the rule under the text reads −0.06°; fix N (27n) took −0.675° (4 footnotes of 5 lines read level), the rule then −0.29° — worse, looked at by eye (2026-10-30)
 كتب اللغة/معجم تيمور الكبير في الألفاظ العامية - أحمد تيمور باشا/02 - معجم تيمور الكبير (الألف - التاء).pdf	166	skew	-0.65±0.1	18 lines: at −0.65° the head rule −0.07° (27m: after 0.125°, image 0.1°); fix N (27n) took −0.875° (the lines' spread squeaking under 0.3°), the head rule then −0.29° — worse (2026-10-30)
 الأدب/الفوائد المحصورة في شرح المقصورة لابن هشام اللخمي/الفوائد المحصورة في شرح المقصورة لابن هشام اللخمي.pdf	457	skew	-0.629±0.1	a sheared index page, two columns of short entries: at −0.629° the columns' right edges 0.03/0.00°; fix N (27n) took −0.25° by the lines (≈ 0.1°), the columns then 0.41/0.36° — 4 pt of drift over 570 pt shows more than the short entries' 1 pt: 27m's turn kept (2026-10-30)
+علوم أخرى/سلسلة عالم المعرفة (المجلس الوطني للثقافة - الكويت)/الأعداد 201 - 300/277 - هذا هو علم البيولوجيا.pdf	286	rim	no	pilot audit 2026-10-31: the last line's baseline read as a rule, its lower half painted
+علوم أخرى/سلسلة عالم المعرفة (المجلس الوطني للثقافة - الكويت)/الأعداد 201 - 300/277 - هذا هو علم البيولوجيا.pdf	1	rim	no	pilot audit 2026-10-31: colour cover classed text, the art's lower band painted white
+علوم أخرى/سلسلة عالم المعرفة (المجلس الوطني للثقافة - الكويت)/الأعداد 201 - 300/277 - هذا هو علم البيولوجيا.pdf	286	stamp	no	pilot audit 2026-10-31: page number printed in a solid square, read as a signature, a black bar left
+علوم أخرى/سلسلة عالم المعرفة (المجلس الوطني للثقافة - الكويت)/الأعداد 201 - 300/277 - هذا هو علم البيولوجيا.pdf	146	stamp	no	the same square with its digits legible
+علوم أخرى/سلسلة عالم المعرفة (المجلس الوطني للثقافة - الكويت)/الأعداد 201 - 300/277 - هذا هو علم البيولوجيا.pdf	10	stamp	no	the same square
+الأدب/خزانة الأدب للبغدادي/01 - خزانة الأدب للبغدادي.pdf	177	rim	no	pilot audit 2026-10-31: last footnote's baseline read as a rule
+الأدب/خزانة الأدب للبغدادي/01 - خزانة الأدب للبغدادي.pdf	223	rim	no	the same
+الأدب/خزانة الأدب للبغدادي/01 - خزانة الأدب للبغدادي.pdf	477	rim	no	the same
+الأدب/خزانة الأدب للبغدادي/02 - خزانة الأدب للبغدادي.pdf	278	rim	no	the same (found in the pilot audit)
+الأدب/خزانة الأدب للبغدادي/04 - خزانة الأدب للبغدادي.pdf	394	rim	no	the same (found in the pilot audit)
+الأدب/خزانة الأدب للبغدادي/04 - خزانة الأدب للبغدادي.pdf	460	rim	no	the same, 1.9 pt from the box: why the limit is 3 pt, not 1.5
+الأدب/خزانة الأدب للبغدادي/02 - خزانة الأدب للبغدادي.pdf	104	rim	yes	a real side rim of specks: still painted
+التجويد والقراءات/نظم تنقيح فتح الكريم في تحرير أوجه القرآن العظيم - الزيات والسمنودي وعامر عثمان - ضبطه وصححه وراجعه تميم الزعبي وياسر المزروعي.pdf	3	rim	no	pilot audit 2026-10-31: grey sheet, no sheet_fill: white patches left a slab around the title
+التجويد والقراءات/نظم تنقيح فتح الكريم في تحرير أوجه القرآن العظيم - الزيات والسمنودي وعامر عثمان - ضبطه وصححه وراجعه تميم الزعبي وياسر المزروعي.pdf	10	rim	yes	sheet_fill page: show-through covered in the sheet's own colour, reviewed by the owner: stays
+التجويد والقراءات/نظم تنقيح فتح الكريم في تحرير أوجه القرآن العظيم - الزيات والسمنودي وعامر عثمان - ضبطه وصححه وراجعه تميم الزعبي وياسر المزروعي.pdf	28	stamp	yes	a true signature (strokes) in the foot corner: still covered
+الأدب/الفوائد المحصورة في شرح المقصورة لابن هشام اللخمي/الفوائد المحصورة في شرح المقصورة لابن هشام اللخمي.pdf	4	stamp	yes	a true stamp in the foot corner: still covered
+الفقه المالكي/روضة المستبين في شرح كتاب التلقين لابن بزيزة/1 - روضة المستبين في شرح كتاب التلقين لابن بزيزة.pdf	10	stamp	yes	a true signature in the foot corner: still covered
