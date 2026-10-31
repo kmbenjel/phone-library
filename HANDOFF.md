@@ -28,6 +28,9 @@ every turn, benched before 26i.
   diff logs/crop-regress-diff-2026-10-31p.log. EXPECTED: the 31 books' recipes identical to 27o's (rims are decided at apply time). Do NOT edit book_crop.py while it runs.
 - NEXT: 27p passes → when the phone is back: audit المعسول 01 + قصة الحضارة 29 (no original on the laptop; he ticked them, the audit is still owed), redo 277 + خزانة ج 1
   → then the FULL REDO, on the owner's word. The laptop was on battery at 81 % at launch (10.33.92.x, phone away); battery_guard freezes jobs at 7 %.
+- MUST, BEFORE ANY SECOND REDO: crop_redo.main skips every path in data/crop/redo-done.tsv under any of its names, and the 10 pilot books are all there, so the
+  full redo would silently leave the faulty 277 and خزانة ج 1 on the phone. Remove the rows of the books to redo first (a redo of a redo is otherwise fine: crops() reads the
+  pilot's own log rows; a book that comes out identical is marked SAME and not uploaded).
 
 ## 2026-10-31 12:45 UTC — PILOT DONE (10 redone, 0 failed) BUT 2 NEW FAULTS; FULL REDO WAITS; METHOD STILL 1be8d49ae3 (Claude, Opus)
 - Pilot ended 06:11, commit de145df; all 10 checked on the phone (size = index, no .redo). refresh.sh done, web published.
