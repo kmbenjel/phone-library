@@ -9,6 +9,11 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-01 — STATE AT THE /clear (Claude, Opus): the 09:20 section below is the plan
+- FIRST after the clear: arm `python3 -u scripts/watch_comments.py` as a Monitor; background waits on units crop-regress-2026-11-01q and crop-survey2-2026-11-01 (they run on by themselves; crop-survey-2026-11-01 hands over to survey2).
+- Crop work wants XHIGH: say so first if the session is lower. The full redo is NOT ready and stays the owner's word. Order: survey2 → sheets by eye → band rule fix → regression 27r (27q checks fix S only) → redo 277 alone → the owner.
+- Phone 192.168.100.118 on «KIF KIF 5G», not home; a new address must be set by hand once (rclone + current-address) and in PHONE_HOST of a restarted unit.
+
 ## 2026-11-01 09:20 UTC — FIX S IN (book_crop d770ec2e1b); REGRESSION 27q + SERIES SURVEY RUNNING (Claude, Opus)
 - OWNER «phone on 118 now, go» (phone 192.168.100.118, laptop .120, Wi-Fi «KIF KIF 5G», not home; his word covers the clear FTP password here). Rclone host + current-address set by hand.
 - THE 02:40 NOTE'S CAUSE WAS INCOMPLETE. (1) stamps_of's result depended on the WORKERS: corner groups grow from the first candidate left, and the order of `found` followed the chunks: 277 = 5 stamp pages at 1 or 4 workers, 0 at 2, 3, 5, 6. crop_redo runs at 1; crop_regress at the governor's 1–3. Regression 27p's cached 277 recipe HELD those 5 pages (stamp_pages 5, run at 1); no case looked at them and its log never listed stamps. The older note «277: stamp pages 252 → 0» came from a bench at other workers. (2) A SECOND KIND: 039 ارتقاء الإنسان (35 pages), 048 التنبؤ العلمي (23): a lighter scan's grey square is not ink, only its outline, each ring alike (ink 0.115, digits a group apart) → read as a signature; the patch would hide the number. Solid ink cannot catch it. (3) The signature's ink is 24–34 %, not ≤ 21 % as the docstring said.
