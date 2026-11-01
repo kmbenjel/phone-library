@@ -7,6 +7,7 @@ Moved verbatim from AGENTS.md (2026-10-28) to keep that guide short; AGENTS.md p
 - The phone runs an FTP server app on port `2221`, anonymous login. The IP is DHCP; known addresses: `192.168.11.100` — reserved for the phone in the router by the owner (2026-10-17; before that it wandered .100/.102/.104/.109 with a randomized MAC), `192.168.11.104` (2026-10-17 evening), `192.168.11.102` (2026-10-11 evening: it switched .100 ↔ .102 several times;
   owner: «keep up with 102»; a DHCP reservation in the router would stop it),
   `192.168.11.103` (2026-10-05 noon), `192.168.11.102` (2026-10-04 and again 2026-10-05 afternoon) and `192.168.11.100` (before). The scripts try them, then scan the /24 for port 2221 (`phone_host.find()`)
+  Away from home (the laptop not on 192.168.11.x; since 2026-11-01) those addresses count as strangers and are never tried: `find()` uses the last address in `data/phone/current-address.txt` when it answers. On a new network write the phone's address there and in rclone (`rclone config update phone host …`) by hand, once.
   (`scripts/phone_host.py`; `PHONE_HOST=<ip>` overrides). If neither answers, find it with `ip neigh` and
   `nc -z <ip> 2221`, add it to the top of `CANDIDATES` in `phone_host.py` and run
   `rclone config update phone host <ip>` (rclone takes one fixed host).
