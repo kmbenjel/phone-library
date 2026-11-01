@@ -193,6 +193,8 @@ def main():
         if cut: ok = False; why += f' | marginal notes cut on pages {cut[:12]}'
         rims = [i + 1 for i in bc.rim_pages(pdf, rec)]   # (what the patches paint, shown every run: a diff of versions cannot
         if rims: why += f' | rims painted on {len(rims)} pages {rims[:40]}'   # show a fault that never changed, 2026-10-31)
+        stamps = [i + 1 for i, p in enumerate(rec['pages']) if p.get('stamp')]   # (277: five of them passed unseen, 2026-11-01)
+        if stamps: why += f' | stamps on {len(stamps)} pages {stamps[:40]}'
         fails += not ok
         print(('PASS' if ok else 'FAIL'), os.path.basename(pdf), 'one page size:', why, flush=True)
     for pdf in recs:                                 # whole books: no tilt kept after turning, none left that both measures see

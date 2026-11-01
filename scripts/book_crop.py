@@ -1876,7 +1876,8 @@ def stamps_of(path, jobs=1, px=400):
         with ProcessPoolExecutor(jobs) as ex:
             for part in ex.map(_stamp_chunk, [(path, idx[k::jobs], px) for k in range(jobs)]): found += part
     else: found = _stamp_chunk((path, idx, px))
-    out = corner_signatures(found)
+    found.sort(key=lambda f: (f[0], f[7]))            # (groups grow from the first candidate left: the workers' order must not decide them)
+    out = corner_signatures(found, n)
     band = [f for f in found if f[6]]
     if not band: return out
     C = np.array([[f[1][0], f[1][1], f[1][2], f[1][3], f[2], f[3]] for f in band], float)
@@ -1923,7 +1924,9 @@ def stamps_of(path, jobs=1, px=400):
                 out.setdefault(f[0], []).append([round(float(v), 1) for v in box]); break
     return out
 
-def corner_signatures(found):
+SOLID = 0.40                                          # corner_signatures: a mark inked over this share of its box is print
+
+def corner_signatures(found, n):
     """A SIGNATURE IN A FOOT CORNER (owner 2026-10-14, روضة المستبين ج 1 ص 16: «أزل الطابع في 1 لتتسق الصفحات كلها» — an
     uploader's calligraphic signature at the foot of pages 8–18, about 13 % of the page tall, a little off from page to
     page: too tall, too rare and too unsteady for the footer rule of stamps_of): the same picture (grey image correlation
@@ -1931,18 +1934,28 @@ def corner_signatures(found):
     4–20 % of the height tall, on at least 4 pages. A printed ornament repeats too, but at a chapter's head (روضة المستبين's
     arches, left alone) or as a frame's corners — the same piece at the mirrored corner of the same page (روضة المستبين
     ص 17، 49، 63، 97: a chapter page's frame): a group with such a twin on half its pages is print, not a signature.
-    So is a SOLID BLOCK (2026-10-31, pilot audit, هذا هو علم البيولوجيا: the page number printed in a square, black in this
-    scan, in the outer corner of ~250 pages; its top painted, a black bar left): a signature is strokes, ink over at most
-    21 % of its box in the books measured, those squares ~70 %: a group of median ink ≥ 50 % stays on the page.
-    `found`: _stamp_chunk's candidates → {page index: [boxes (pt)]}"""
+    So is a PAGE NUMBER IN A SQUARE (عالم المعرفة; 2026-10-31, pilot audit, هذا هو علم البيولوجيا: black in this scan, its top
+    painted, a black bar left; 2026-11-01: five paler ones, 277 pp. 138–220, painted with their numbers, and the same square
+    in a lighter scan, ارتقاء الإنسان, where only its thin outline is ink, digits apart, each ring alike). A mark inked over
+    ≥ SOLID of its box stays (the true signature 24–34 %, those squares 46–85 %). A group stays when it swaps sides with the
+    pages, odd on one side and even on the other (ارتقاء الإنسان 35 of 35; the signature 6 of 6 on one side), or when marks of its
+    size stand in the foot corners of ≥ a quarter of the book (277 79–86 %, the signature 0.8 %): the group of a pale square
+    may be small, its row is not. A stamp left in view costs little, a page number hidden does not.
+    `found`: _stamp_chunk's candidates, `n`: the book's pages → {page index: [boxes (pt)]}"""
     corner = lambda f: in_corner(f[1], f[2], f[3])
     def twin(f, page):                                # the same size at the mirrored place of its page
         b, W, H = f[1], f[2], f[3]; w, h = b[2] - b[0], b[3] - b[1]; mx, cy = W - (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
         return any(abs((c[1][0] + c[1][2]) / 2 - mx) <= 0.03 * W and abs((c[1][1] + c[1][3]) / 2 - cy) <= 0.03 * H
                    and abs((c[1][2] - c[1][0]) / w - 1) <= 0.15 and abs((c[1][3] - c[1][1]) / h - 1) <= 0.15 for c in page)
-    cand = [f for f in found if corner(f)]; used = [False] * len(cand); out = {}
     on = {}
-    for f in cand: on.setdefault(f[0], []).append(f)
+    for f in found:
+        if corner(f): on.setdefault(f[0], []).append(f)
+    cand = [f for f in found if corner(f) and f[8] < SOLID]; used = [False] * len(cand); out = {}
+    def folio(grp):                                   # a page number: it swaps sides with the pages, or its row runs through the book
+        left = [cand[j][0] % 2 for j in grp if cand[j][1][0] + cand[j][1][2] < cand[j][2]]; right = [cand[j][0] % 2 for j in grp if cand[j][1][0] + cand[j][1][2] >= cand[j][2]]
+        if min(len(left), len(right)) >= 0.25 * len(grp) and max(sum(left) + len(right) - sum(right), sum(right) + len(left) - sum(left)) >= 0.9 * len(grp): return True
+        w = np.median([cand[j][1][2] - cand[j][1][0] for j in grp]); h = np.median([cand[j][1][3] - cand[j][1][1] for j in grp])
+        return sum(any(abs((f[1][2] - f[1][0]) / w - 1) <= 0.25 and abs((f[1][3] - f[1][1]) / h - 1) <= 0.25 for f in page) for page in on.values()) >= 0.25 * n
     for k, fk in enumerate(cand):
         if used[k]: continue
         wk, hk = fk[1][2] - fk[1][0], fk[1][3] - fk[1][1]
@@ -1950,7 +1963,7 @@ def corner_signatures(found):
                and abs((f[1][3] - f[1][1]) / hk - 1) <= 0.1 and float((fk[5] * f[5]).mean()) >= 0.8]
         for j in grp: used[j] = True
         if len({cand[j][0] for j in grp}) < 4 or sum(twin(cand[j], on[cand[j][0]]) for j in grp) >= 0.5 * len(grp): continue
-        if np.median([cand[j][8] for j in grp]) >= 0.5: continue
+        if folio(grp): continue
         for j in grp: out.setdefault(cand[j][0], []).append([round(float(v), 1) for v in cand[j][1]])
     return out
 
