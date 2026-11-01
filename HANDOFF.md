@@ -10,6 +10,7 @@ photocopy, lines set one by one) is NOT turned by any path and is listed for him
 every turn, benched before 26i.
 
 ## 2026-11-01 02:40 UTC — REDO OF 3 DONE; 277 HAS 5 PAGE NUMBERS HIDDEN; FIX WANTS XHIGH (Claude, Opus)
+- FIRST AFTER THE /clear: re-arm watch_comments.py as a Monitor. No job is running. The phone's FTP went away at 02:32 (needed again for 277's redo). Tell the owner the folio fix wants xhigh and wait for his level before touching book_crop.py.
 - REDONE, on the phone, 0 failed: 277, قصة الحضارة 29, خزانة ج 1. refresh.sh done, web cf94260. Phone still on hotspot 10.133.182.121.
 - CHECKED: audit + eye on fetched phone files: خزانة ج 1 and قصة الحضارة 29 no patches; pp. 177/223/477, 337/339 whole; 277 pp. 1, 286 whole.
 - FAULT (book_crop ee9333a1e2 corner_signatures, line 1953): 277 pp. 138, 142, 158, 160, 220 a white patch over the folio square (x 20–52 pt, printed 137, 141?, 157, 159, 219); evidence site/crop-faults-2026-11-01.jpg (left patched, right without). Squares split by correlation into groups; the solid-block rule tests each group's MEDIAN ink ≥ 50 %, and a paler group falls under it and is read as a signature. The original bytes stay in the phone file. Patches on pp. 53, 57, 147, 187 hide no dark ink.
