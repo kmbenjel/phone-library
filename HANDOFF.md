@@ -9,6 +9,15 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-02 17:40 UTC — STATE AT THE /clear: SURVEY2 DONE; BAND RULE MEASUREMENT RUNNING (Claude, Opus): READ THIS FIRST
+- FIRST after the clear: arm `python3 -u scripts/watch_comments.py` as a Monitor (re-arm at each 30-min expiry). Phone 172.26.156.17 (its hotspot, «خالد بنجّلون»), FTP up, charger in. Battery guard on. book_crop.py still d770ec2e1b, free to edit once crop-bandstats ends. The owner confirmed xhigh is due for this fix: say so if the session is lower.
+- SURVEY2 ENDED 12:16: 1,083 books, 1 error (المغرب في حلى المغرب 01, «not the original», the known rejoined book), 138 with stamp pages, 52,274 pages: 82 at ≥ 95 % of the book, 32 at 30–95 %, 24 under 30 %.
+- WHAT THE LIST SHOWS: (1) 31 books with ≥ 1.5 boxes a page (شرح طيبة النشر 02 ≈ 11 a page): words matched in the text, surely «the same stamp elsewhere» from a word-sized ref. erase_stamp's rect_minus keeps a patch off p['box'] and printed lines, so the harm should sit at the edges of the content, but a stamp also leaves the content box: unproven, check. (2) running heads read as stamps: «القرطبي» ابن زرب 98 %, «الكتب» 461 إبادة الكتب 63 %. (3) a real 60×32 logo at only 48 % (05 الروض الأنف). So the book's share fails BOTH ways.
+- THE IDEA, UNMEASURED: a digital stamp sits at the same pixel on every page, print moves with the scan: iqr of x/y, overlap and correlation of the group should split them where share cannot. Also the taller-variant case (494: the stamp swallowing the page number).
+- RUNNING: unit crop-bandstats (crop.slice, read-only, resumable, its own PHONE_HOST), scratch/band-2026-11-02/bandstats.py on sample.txt (58 books: the 31, one of each kind, calibration 302, 371, 373, 486, 494, غانشف, أخلاقية مركزية). 51 of 58 at 17:37. Out: scratch/band-2026-11-02/stats.jsonl (one book a line, `groups`: passed, share, odd, box, iqr_x/y/w/h, ov50, ov10, cor10, ink, sample), originals kept in ~/.cache/phone-library/crop-band/ for retesting (keep until 27r). Sheets are in the OLD session's scratchpad, /tmp/claude-1000/-home-k-projects-phone-library/398e0b68-a30c-43fe-99c5-febffdf99364/scratchpad/band/NN.jpg (NN = line of sample.txt), crops of each group with a red box; if gone, rerun: delete stats.jsonl, it refetches nothing.
+- NEXT: read stats.jsonl against the sheets by eye → choose the rule on that evidence (bench it on crop-band/, including the running «same stamp elsewhere» step and 302's «مناسبة») → patch book_crop (not while a regression runs) → case rows → regression 27r → redo 277 alone (remove its row from redo-done.tsv) → the owner. Full redo = his word; البداية 21 + المغرب 01 want crop_batch.py --again after it. Disk 9.4 GB free: look before it.
+- ALSO OPEN, not urgent: 8 possible Fez lithographs (see 10:25 below), 14 manuscripts' libraries unknown, 13 «piece» rows. decisions.html has no open row.
+
 ## 2026-11-02 10:50 UTC — OWNER ANSWERED ALL THREE: SURVEY RESTARTED, ROW 82 KEPT, HIBERNATE SET (Claude, Opus)
 - «restart the survey»: done 10:45 by restart_survey2.sh, PHONE_HOST=172.26.156.17, 186 books left. The «SURVEY2 IS STUCK» line below is over.
 - Row 82 «keep»: the manuscript stays, closed. decisions.html has no open row.
@@ -39,7 +48,7 @@ every turn, benched before 26i.
 - LEFT ON THE PAGE: 82-ask (his answer), 438-replace (not ticked).
 - zsh here: `g()` clashes with an alias and `echo ======` fails: bash -c. Curling page images needs -L.
 
-## 2026-11-02 06:10 UTC — STATE AT THE /clear (Claude, Opus): THEN «2026-11-01 09:20» BELOW
+## 2026-11-02 06:10 UTC — (old) state at an earlier /clear (Claude, Opus): superseded above
 - FIRST after the clear: arm `python3 -u scripts/watch_comments.py` as a Monitor (re-arm at each 30-min expiry) and a background wait on unit crop-survey2-2026-11-01. Regression 27q is over (0 failures); nothing else of mine runs. The owner's review comments may keep coming.
 - RUNNING: crop-survey2-2026-11-01: 786 of 1083 at 06:07, 1 error row (read it at the end), resumable, waits by itself if the phone goes. Phone 192.168.100.118 on «KIF KIF 5G», FTP up. A book that makes it retry for ever: see «SURVEY 2 STALLED» below.
 - CROP ORDER, unchanged: survey2 ends → classify its stamped books, sheets by eye → band rule fix (book_crop free to edit; WANTS XHIGH, say so first; read «LOOKED AT 372–375» below: judge each box's own share, and a stamp's box can swallow the page number) → regression 27r → redo 277 alone (remove its row from redo-done.tsv first) → the owner. The full redo stays his word, and البداية 21 + المغرب 01 want crop_batch.py --again after it.
