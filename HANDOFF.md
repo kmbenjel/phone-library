@@ -9,6 +9,12 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-02 10:50 UTC — OWNER ANSWERED ALL THREE: SURVEY RESTARTED, ROW 82 KEPT, HIBERNATE SET (Claude, Opus)
+- «restart the survey»: done 10:45 by restart_survey2.sh, PHONE_HOST=172.26.156.17, 186 books left. The «SURVEY2 IS STUCK» line below is over.
+- Row 82 «keep»: the manuscript stays, closed. decisions.html has no open row.
+- «done»: he ran the command: /etc/systemd/sleep.conf.d/battery-guard.conf, HibernateMode=shutdown, active (systemd-analyze). Not yet seen at 7 %. The «NOT DONE» in the guard line below is over.
+- NEXT, unchanged: survey2 ends → classify its stamped books, sheets by eye → band rule fix (WANTS XHIGH, say so first) → regression 27r → redo 277 alone → the owner.
+
 ## 2026-11-02 10:25 UTC — MANUSCRIPTS READ; LAPTOP FOLDED ON THE PHONE'S HOTSPOT; SURVEY STUCK, HIS WORD NEEDED (Claude, Opus)
 - OWNER: «feel free to commit any time» (memory commit-any-time). «ftp on, laptop now shares my phone network, laptop will be fold but running. I have the 7% battery watcher, make sure it's optimal and use it.»
 - NETWORK: phone = gateway 172.26.156.17, laptop .245, Wi-Fi «خالد بنجّلون». rclone host + current-address set by hand.

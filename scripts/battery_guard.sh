@@ -9,7 +9,8 @@
 # proves nothing: a sleep counts only if the wall clock jumped by HELD seconds. Hibernate can fail too («Device or resource
 # busy», xhci, 4 times in October): anything short of a real sleep is retried at the next reading, without GRACE.
 # It bounces from S4 as well (2026-11-01 at 7 %: back 129 s later, then 1 % at the next try, which held 3.9 h), so HELD
-# stands above the 129 s a full round trip takes. `HibernateMode=shutdown` in sleep.conf should stop that bounce: NOT set.
+# stands above the 129 s a full round trip takes, and /etc/systemd/sleep.conf.d/battery-guard.conf sets HibernateMode=shutdown
+# (owner 2026-11-02): the laptop powers off after writing the image, which should stop that bounce (not yet seen at 7 %).
 # The page cache is dropped first: preparing the image took 46 s with it, 5 s without.
 # Paused = `systemctl --user freeze` for running transient units (phone_watchdog's SIGCONT cannot undo a freeze), SIGSTOP
 # for the jobs started outside a unit. The always-on helpers in KEEP are left alone (the sleep stops them anyway).
