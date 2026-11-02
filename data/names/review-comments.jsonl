@@ -1035,3 +1035,47 @@
 {"time": "2026-10-31 16:54:33", "report": "crop-doubts", "n": "816413b0e765", "checked": true, "comment": ""}
 {"time": "2026-10-31 16:54:44", "report": "crop-doubts", "n": "c994a226a963", "checked": true, "comment": ""}
 {"time": "2026-10-31 16:55:01", "report": "crop-doubts", "n": "d2e6995099bc", "checked": true, "comment": ""}
+{"time": "2026-11-02 05:50:07", "report": "unreadable", "n": "180", "checked": false, "comment": "نسخة"}
+{"time": "2026-11-02 05:50:17", "report": "unreadable", "n": "180", "checked": false, "comment": "يحذف فقط، ق"}
+{"time": "2026-11-02 05:50:19", "report": "unreadable", "n": "180", "checked": false, "comment": "يحذف فقط، قد"}
+{"time": "2026-11-02 05:50:23", "report": "unreadable", "n": "180", "checked": false, "comment": ""}
+{"time": "2026-11-02 05:50:25", "report": "unreadable", "n": "180", "checked": false, "comment": ""}
+{"time": "2026-11-02 05:50:28", "report": "unreadable", "n": "180", "checked": false, "comment": "نسخة م"}
+{"time": "2026-11-02 05:50:30", "report": "unreadable", "n": "180", "checked": false, "comment": "نسخ"}
+{"time": "2026-11-02 05:50:34", "report": "unreadable", "n": "180", "checked": false, "comment": "ن"}
+{"time": "2026-11-02 05:50:35", "report": "unreadable", "n": "180", "checked": false, "comment": "نعم"}
+{"time": "2026-11-02 05:51:03", "report": "unreadable", "n": "153", "checked": false, "comment": "حمل نخ"}
+{"time": "2026-11-02 05:51:04", "report": "unreadable", "n": "153", "checked": false, "comment": "حمل نس"}
+{"time": "2026-11-02 05:51:13", "report": "unreadable", "n": "153", "checked": false, "comment": "حمل نسخة كاملة مكانه"}
+{"time": "2026-11-02 05:51:44", "report": "unreadable", "n": "12", "checked": false, "comment": "هذا هو ذلك النظم كاملا، فدعه على "}
+{"time": "2026-11-02 05:51:46", "report": "unreadable", "n": "12", "checked": false, "comment": "هذا هو ذلك النظم كاملا، فدعه على ح"}
+{"time": "2026-11-02 05:51:50", "report": "unreadable", "n": "12", "checked": false, "comment": "هذا هو ذلك النظم كاملا"}
+{"time": "2026-11-02 05:52:00", "report": "unreadable", "n": "12", "checked": false, "comment": "هذا هو ذلك النظم كاملا دع العنوان كما هو"}
+{"time": "2026-11-02 06:03:36", "report": "decisions", "n": "709-stray", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:03:37", "report": "decisions", "n": "762-fix", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:03:40", "report": "decisions", "n": "709-stray", "checked": true, "comment": "d"}
+{"time": "2026-11-02 06:03:42", "report": "decisions", "n": "709-stray", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:03:57", "report": "decisions", "n": "709-stray", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:04:03", "report": "decisions", "n": "804-stray", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:04:06", "report": "decisions", "n": "71-remove", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:04:08", "report": "decisions", "n": "103-remove", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:04:09", "report": "decisions", "n": "729-remove", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:04:11", "report": "decisions", "n": "741-remove", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:04:13", "report": "decisions", "n": "747-remove", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:04:46", "report": "decisions", "n": "758-remove", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:04:48", "report": "decisions", "n": "772-remove", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:04:49", "report": "decisions", "n": "802-remove", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:04:53", "report": "decisions", "n": "27-replace", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:04:55", "report": "decisions", "n": "31-replace", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:04:56", "report": "decisions", "n": "82-replace", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:04:58", "report": "decisions", "n": "713-replace", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:04:59", "report": "decisions", "n": "47-replace-whole", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:05:01", "report": "decisions", "n": "0-ask", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:05:06", "report": "decisions", "n": "116-ask", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:05:13", "report": "decisions", "n": "5-check-file", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:05:41", "report": "decisions", "n": "5-check-file", "checked": true, "comment": "دعه "}
+{"time": "2026-11-02 06:05:43", "report": "decisions", "n": "7-check-file", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:05:45", "report": "decisions", "n": "24-check-file", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:05:51", "report": "decisions", "n": "26-set", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:05:57", "report": "decisions", "n": "86-index", "checked": true, "comment": ""}
+{"time": "2026-11-02 06:06:00", "report": "decisions", "n": "631-set", "checked": true, "comment": ""}

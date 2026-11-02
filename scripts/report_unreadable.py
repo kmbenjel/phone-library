@@ -65,6 +65,8 @@ def add(n, why):
 def build():
     sb, rd = sheet_books(), readings()
     rows = list(csv.reader(open(LOG, encoding='utf-8'), delimiter='\t')) if os.path.exists(LOG) else []
+    closed = {l.split('\t')[1] for l in open(J('data', 'names', 'review-closed.tsv'), encoding='utf-8') if l.startswith('unreadable\t')}
+    rows = [r for r in rows if r[0] not in closed]   # (rows he has answered: owner 2026-10-18)
     E, cards = html.escape, []
     for n, when, rel, why in rows:
         r, b = rd.get(n, {}), sb.get(n, ['', '', '', ''])
