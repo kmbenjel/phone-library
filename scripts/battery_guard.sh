@@ -2,11 +2,15 @@
 # Keeps a dying battery from killing the jobs (owner 2026-10-31: «upon 7%, pause running jobs without killing them and
 # suspend»; the laptop died of an empty battery on 2026-10-12 and 2026-10-17, and again under this guard's first version).
 #   on battery at ≤ LIMIT % (2 readings) → notice, WARN seconds to plug in, jobs paused, hibernate
-#   charger back → jobs resumed. Woken without the charger: they stay paused, and it hibernates again after GRACE seconds.
+#   charger back → jobs resumed. Woken without the charger: they stay paused; lid open, it hibernates again after GRACE
+#   seconds (someone is at it); lid closed, at the next reading (owner 2026-11-02: it runs folded, nobody is there).
 # HIBERNATE, NOT SUSPEND: this HP EliteBook comes back from S3 in about 11 s on battery at ≤ 7 % (23 of 23 in the journal,
 # 2026-10-30 and 31, lid closed; held on the charger and at 63 %), and `systemctl suspend` still exits 0. So the exit code
 # proves nothing: a sleep counts only if the wall clock jumped by HELD seconds. Hibernate can fail too («Device or resource
 # busy», xhci, 4 times in October): anything short of a real sleep is retried at the next reading, without GRACE.
+# It bounces from S4 as well (2026-11-01 at 7 %: back 129 s later, then 1 % at the next try, which held 3.9 h), so HELD
+# stands above the 129 s a full round trip takes. `HibernateMode=shutdown` in sleep.conf should stop that bounce: NOT set.
+# The page cache is dropped first: preparing the image took 46 s with it, 5 s without.
 # Paused = `systemctl --user freeze` for running transient units (phone_watchdog's SIGCONT cannot undo a freeze), SIGSTOP
 # for the jobs started outside a unit. The always-on helpers in KEEP are left alone (the sleep stops them anyway).
 # The phone jobs' systemd-inhibit and gnome-session-inhibit block sleep, and polkit asks a password to pass them: hence
@@ -23,14 +27,16 @@ NEAR=${NEAR:-15}
 NEAR_POLL=${NEAR_POLL:-60}
 WARN=${WARN:-30}
 GRACE=${GRACE:-300}
-HELD=${HELD:-120}
+HELD=${HELD:-300}
 SETTLE=${SETTLE:-20}
+LID=${LID:-/proc/acpi/button/lid/LID/state}
 SLEEP_CMD=${SLEEP_CMD:-sudo -n systemctl hibernate --check-inhibitors=no}
 KEEP='^(battery-guard|mem-governor|phone-keepalive|phone-watchdog|reporter-follow|review-server)\.service$'
 PAT='^(nice (-n ?[0-9]+ )?)?(python3|bash) (\S*/)?scripts/(crop_|book_crop|fetch_queue|inspect_files|ocr_clean|refresh\.sh|publish_web)|^aria2c |^rclone (copy|copyto|sync|move|moveto|delete)'
 log() { echo "$(date '+%F %T') $*"; }
 notice() { notify-send -u critical "Battery guard" "$1" 2>/dev/null; }
 on_ac() { [ "$(cat "$AC/online" 2>/dev/null)" = 1 ]; }
+lid_open() { ! grep -q closed "$LID" 2>/dev/null; }     # (unreadable counts as open: the longer wait, not the shorter)
 job_units() {
   systemctl --user list-units --type=service --state=running --no-legend --plain | awk '{print $1}' | grep -Ev "$KEEP" |
     while read -r u; do [ "$(systemctl --user show -P Transient "$u")" = yes ] && echo "$u"; done
@@ -52,6 +58,7 @@ resume_jobs() {
 }
 sleep_held() {     # the command returns at once: the wall clock has to jump while a short sleep runs
   local t0 gap
+  sudo -n sh -c 'sync; echo 1 > /proc/sys/vm/drop_caches'
   t0=$(date +%s)
   $SLEEP_CMD
   sleep "$SETTLE"
@@ -68,7 +75,7 @@ while :; do
     [ $paused = 1 ] && { resume_jobs; paused=0; }
   elif [ -n "$pct" ] && [ "$pct" -le "$LIMIT" ]; then
     low=$((low + 1))
-    if [ $wait -gt 0 ]; then
+    if [ $wait -gt 0 ] && lid_open; then
       wait=$((wait - 1))
     elif [ $low -ge 2 ]; then
       if [ $paused = 0 ]; then
