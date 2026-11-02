@@ -9,6 +9,15 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-02 21:30 UTC — BAND RULE: ALL 145 READ BY EYE, NO FAULT; SECOND BENCH + REPLAY RUNNING; FIX U NOT YET IN book_crop (Claude, Opus)
+- OWNER after the /clear: «continue»: taken as his word; the 19:05 stop's reason is still unknown, he did not raise it.
+- FIRST after a clear: arm `python3 -u scripts/watch_comments.py` as a Monitor. Phone 172.26.156.17, FTP up.
+- READ BY EYE, ALL CLEAR: n0–n3, sheets 125–144, the feet of 1, 5, 14, 20, 36, 44, and EVERY hit the fix keeps on the 145: 97 picture, 131 home (hits.py in this session's scratchpad). All true marks or printers' slugs (371, 373), nothing of a book's own print. 133's and 20's kept group is a piece of the Alukah logo, harmless.
+- patch_u.py now EXACT 0.82; bc_u.py rebuilt (md5 6c88b500e2). test_u.py rewritten: recomputes the rule from the bench's numbers, usage `test_u.py FIRST LAST JOBS STATS...`.
+- RUNNING, read-only: unit crop-bandstats3 (38 books, sheets in <this session's scratchpad>/band3, /tmp/claude-1000/-home-k-projects-phone-library/2c6d4aff-beb3-4d28-9894-7cf4dbaaf6a6/scratchpad), then unit crop-band-test (run_test_u.sh: bc_u.stamps_of on all 183 at 3 workers, log logs/crop-band-test.log, last line «bad N»).
+- CASES: 32 rows added to data/improve/crop-regression.tsv on 10 new books, originals hard-linked into crop-regress. Not bench-checked yet: `08 - الذخائر` (share 0.79, HEAD_SHARE) and the p. 105 row of 302 are the ones to doubt if a case fails.
+- NEXT: read stats3 + band3 sheets by eye → crop-band-test «bad 0» (a DIFF: look, the replay counts differ where a ref the bench refused at TOP_SHARE 0.8 is kept at HEAD_SHARE 0.6) → apply: `python3 scratch/band-2026-11-02/patch_u.py scripts/book_crop.py scripts/book_crop.py` → commit → regression 27r: scratch/regress_2026-11-02r.sh is written, launch as a unit in crop.slice (--nice=10) → diff by eye → redo 277 alone → the owner. Full redo = his word. Disk 8 GB free.
+
 ## 2026-11-02 20:35 UTC — STATE AT THE /clear: FIRST BENCH DONE, SECOND NEVER STARTED, FIX U NOT APPLIED (Claude, Opus): READ THIS FIRST
 - FIRST after the clear: arm `python3 -u scripts/watch_comments.py` as a Monitor (re-arm at each 30-min expiry). Session at xhigh (settings), as the owner wants for this fix. book_crop.py still d770ec2e1b. Phone was 172.26.156.17 (its hotspot): check it first.
 - THE OWNER STOPPED ME at about 19:05: my reads of the four montages (scratchpad of session 3f483d3a…, n0–n3.jpg) were refused with «stop and wait»; I did not find out why, and then he said «ready for a clear». Tell him where it stands and take his word before going on.
