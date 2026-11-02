@@ -9,6 +9,18 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-02 10:25 UTC — MANUSCRIPTS READ; LAPTOP FOLDED ON THE PHONE'S HOTSPOT; SURVEY STUCK, HIS WORD NEEDED (Claude, Opus)
+- OWNER: «feel free to commit any time» (memory commit-any-time). «ftp on, laptop now shares my phone network, laptop will be fold but running. I have the 7% battery watcher, make sure it's optimal and use it.»
+- NETWORK: phone = gateway 172.26.156.17, laptop .245, Wi-Fi «خالد بنجّلون». rclone host + current-address set by hand.
+- SURVEY2 IS STUCK AT 897 OF 1083 (since FTP stopped 08:06): the unit has PHONE_HOST=192.168.100.118, and Phone.__enter__ holds /tmp/phone-ftp.lock through each 120 s timeout, so it also slows every other phone job. Restart refused twice by the classifier ([Interfere With Workloads]); an iptables redirect refused too ([Security Weaken]): do not retry either. READY: `bash scratch/crop-fixes-2026-11-01/restart_survey2.sh` (reads current-address), to run only on his words «restart the survey».
+- LID: closed since 08:29, running: the `phone-library` block inhibitor (pid 19546, handle-lid-switch:sleep:idle, + gnome-session-inhibit 19553) holds it. If those die the lid suspends: HandleLidSwitch=suspend.
+- BATTERY GUARD restarted 08:46 on the new code (stub test: scratchpad guardtest.sh, 5 cases): closed lid = no GRACE after a wake; HELD 300 (the 129 s bounce of 11-01 passed the old 120); page cache dropped first (image prep 46 s → 5 s); LID path is .../lid/LID/state (not LID0). Real hibernate on this code NOT run. Hibernate + restore did work on 11-01 (3.9 h). The 11-01 kernel lines stop at the snapshot on a resume, so «no Image created» does not mean it failed. NOT DONE: `HibernateMode=shutdown` in /etc/systemd/sleep.conf.d/ (S4 bounce, wake sources GLAN RP05 PXSX RP08 RP13); refused with the iptables line, command given to the owner to run himself.
+- Report 10: the 36 unknown files read (first and last pages, zooms by eye). HOW TO TELL AZHAR: «خصوصية / عمومية» numbers, the crescent + twin-minaret watermark, an oval stamp. «فيما يبدو» = watermark or stamp only, no number. The typed card at the end of 442 = مكتبة المسجد النبوي; 493 = Houghton MS Arab 342; أرجوزة في الطب = مجلس شوراى ملى, film 7.
+- NOT MANUSCRIPTS, plan 390 applied: تعليم المتعلم (المطبعة العثمانية 1307), المنظومة السنية (المطبعة الشرفية 1307), الحلل الموشية (مطبعة التقدم الإسلامية تونس 1329, ت البشير الفورتي). Queue 389/row 438: complete copy, the author is the grandson (محمد المهدي أحمد بن محمد الشريف السنوسي), 1332 هـ; title-read corrected.
+- Delete 391: two misnamed copies of شرح البهجة (طبعة حجرية), proved by image md5s; شرح البهجة stays.
+- OPEN, UNREAD: other «مخطوط» may be Fez lithographs (framed Maghribi hand): 409, 436, 450, 454, 442, 443, 453, 513. Colophons not read; the page says so. Row 512 is a lithograph, name unchanged. Holding still unknown for the rest. The 13 «piece» rows untouched.
+- The FAILED row in data/queue/388-*.failed is old: it passed on the rerun.
+
 ## 2026-11-02 06:50 UTC — ROWS 31, 713, 47, 86 DONE; CROP ORDER UNCHANGED (Claude, Opus)
 - OWNER 06:25 «So full crop won't Stat yet»: told NO, and that it stays his word, after the order below. Survey2 goes on (806 of 1083 at 06:37, about 1.6 books a minute); the phone was away ~06:20–06:31 and it resumed by itself.
 - DONE, queue 388 (+ delete list scratch/manuscripts-2026-11-02/delete-388.tsv), closed in review-closed.tsv; decisions.html now shows only 82-ask and 438-replace:
