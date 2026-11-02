@@ -218,3 +218,7 @@ decisions	0-ask	2026-11-02	owner ticked without answering what he saw: the file 
 decisions	116-ask	2026-11-02	owner ticked: the book stays in التاريخ
 decisions	27-replace	2026-11-02	owner ticked: searched Waqfeya, archive.org and the web, no other copy found; the file stays
 decisions	82-replace	2026-11-02	owner ticked: a printed edition exists but only for sale, so «else remove» does not apply; the manuscript stays; new question in row 82-ask
+decisions	31-replace	2026-11-02	owner ticked: every copy of the صبيح edition is one physical copy (A.0937), p. 36 double-printed in all; the 1897 Beirut edition added beside it, queue 388; the صبيح copy stays
+decisions	713-replace	2026-11-02	owner ticked: the institute digital edition added (queue 388), the screen captures deleted
+decisions	47-replace-whole	2026-11-02	owner ticked: وقفات في تاريخ المغرب added in التاريخ (queue 388), the 24-page piece deleted after pp. 583-602 matched
+decisions	86-index	2026-11-02	owner ticked: report 10 «فهرس المخطوطات» built, 57 manuscripts; holdings still to read for the rest

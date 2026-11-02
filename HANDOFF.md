@@ -9,7 +9,19 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
-## 2026-11-02 06:10 UTC — STATE AT THE /clear (Claude, Opus): READ THIS, THEN «2026-11-01 09:20» BELOW
+## 2026-11-02 06:50 UTC — ROWS 31, 713, 47, 86 DONE; CROP ORDER UNCHANGED (Claude, Opus)
+- OWNER 06:25 «So full crop won't Stat yet»: told NO, and that it stays his word, after the order below. Survey2 goes on (806 of 1083 at 06:37, about 1.6 books a minute); the phone was away ~06:20–06:31 and it resumed by itself.
+- DONE, queue 388 (+ delete list scratch/manuscripts-2026-11-02/delete-388.tsv), closed in review-closed.tsv; decisions.html now shows only 82-ask and 438-replace:
+  - 47: «وقفات في تاريخ المغرب» in التاريخ (712 pp., md5 9466c9e4). The piece's pp. 4–23 = book pp. 583–602 in order (ink-trimmed correlation 0.32–0.72; pp. 10, 16, 19 scored low, seen by eye: same pages), its covers are the book's; piece deleted.
+  - 713: ajeeba.pdf added (md5 19fb7f56, 40 pp., same edition, no browser frames), screen captures deleted. Name keeps «ت حمزة أبو توهة» + publisher + 2019: «حمزة مصطفى» pushes it over 240 and the publisher would go first.
+  - 31: NOT replaced. maktabah2000 and AAlexandrina-164226 are scans of ONE physical copy of the صبيح print (A.0937, same handwritten note), the phone file too: p. 36 is double-printed in all. The 1897 Beirut print (المطبعة الأدبية, طبعت ثانية, ت شكيب أرسلان, 54 pp., clean) added beside it. Different editions stay. دار النجاح 1974 (ت أحمد رفعت البدراوي, adorah_yatema) left out.
+  - 86: report 10 «فهرس المخطوطات» (scripts/report_manuscripts.py, data/names/manuscripts.tsv kept by hand; in refresh.sh). 57 manuscripts in 60 files; ONLY WHAT THE BOOK SHOWS is written as holding, ~34 say «لم يُعرف بعد». NEXT WHEN THE PHONE IS FREE (after survey2, one bulk transfer at a time): read first and last pages of those, ~600 MB in all; the 13 «piece» rows in owner-actions.tsv are also the agent's own backlog (row 47's «look for other files»).
+  - Found while building it: book 515 was byte-identical to 498 (md5 b7b59efe, cmp): the النحو والصرف copy deleted, the البلاغة one stays. Book 512 is named «مخطوط» but is 5 spreads of a lithograph: the note says so, the name is unchanged.
+- refresh.sh done 06:46, web fe7b9df, tab «فهرس المخطوطات» in; report: 57 works, 60 files, 23 with a holding. Index 16,756 files (3 in, 3 out). This session's edits are NOT committed (nobody asked): they are mine, not another agent's.
+- LEFT ON THE PAGE: 82-ask (his answer), 438-replace (not ticked).
+- zsh here: `g()` clashes with an alias and `echo ======` fails: bash -c. Curling page images needs -L.
+
+## 2026-11-02 06:10 UTC — STATE AT THE /clear (Claude, Opus): THEN «2026-11-01 09:20» BELOW
 - FIRST after the clear: arm `python3 -u scripts/watch_comments.py` as a Monitor (re-arm at each 30-min expiry) and a background wait on unit crop-survey2-2026-11-01. Regression 27q is over (0 failures); nothing else of mine runs. The owner's review comments may keep coming.
 - RUNNING: crop-survey2-2026-11-01: 786 of 1083 at 06:07, 1 error row (read it at the end), resumable, waits by itself if the phone goes. Phone 192.168.100.118 on «KIF KIF 5G», FTP up. A book that makes it retry for ever: see «SURVEY 2 STALLED» below.
 - CROP ORDER, unchanged: survey2 ends → classify its stamped books, sheets by eye → band rule fix (book_crop free to edit; WANTS XHIGH, say so first; read «LOOKED AT 372–375» below: judge each box's own share, and a stamp's box can swallow the page number) → regression 27r → redo 277 alone (remove its row from redo-done.tsv first) → the owner. The full redo stays his word, and البداية 21 + المغرب 01 want crop_batch.py --again after it.

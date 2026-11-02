@@ -19153,63 +19153,6 @@
   "note": null
  },
  {
-  "work": "الجواهر الثمان بشرح تبصره",
-  "title": "الجواهر الثمان بشرح تبصرة الأذهان في نكت المعاني والبيان",
-  "author": "عبد القادر المجلسي",
-  "bytes": 17614106,
-  "editions": [
-   {
-    "folder": "الجواهر الثمان بشرح تبصرة الأذهان في نكت المعاني والبيان - عبد القادر المجلسي - مخطوط",
-    "cat": "البلاغة",
-    "edition": "مخطوط",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 8807053,
-    "quality": {
-     "files": 1,
-     "pages": 113,
-     "kbpp": 77,
-     "px": 650,
-     "colour": "ملون",
-     "width_used": null,
-     "text": false
-    },
-    "score": 37.2,
-    "waqfeya": [],
-    "same_edition": true,
-    "best_scan": true
-   },
-   {
-    "folder": "الجواهر الثمان بشرح تبصرة الأذهان في نكت المعاني والبيان - عبد القادر المجلسي - مخطوط",
-    "cat": "النحو والصرف",
-    "edition": "مخطوط",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 8807053,
-    "quality": {
-     "files": 1,
-     "pages": 113,
-     "kbpp": 77,
-     "px": 650,
-     "colour": "ملون",
-     "width_used": null,
-     "text": false
-    },
-    "score": 37.2,
-    "waqfeya": [],
-    "same_edition": true,
-    "best_scan": false
-   }
-  ],
-  "note": null
- },
- {
   "work": "الزاهر في غريب الفاظ",
   "title": "الزاهر في غريب ألفاظ الشافعي الذي",
   "author": "الأزهري",
@@ -24198,6 +24141,53 @@
     ],
     "same_edition": true,
     "best_scan": true
+   }
+  ],
+  "note": null
+ },
+ {
+  "work": "الدره اليتيمه من حكم",
+  "title": "الدرة اليتيمة من حكم الأديب المصقع عبد الله بن المقفع الكاتب المشهور",
+  "author": "ابن المقفع",
+  "bytes": 5787529,
+  "editions": [
+   {
+    "folder": "الدرة اليتيمة من حكم الأديب المصقع عبد الله بن المقفع الكاتب المشهور - ابن المقفع - ت شكيب أرسلان - المطبعة الأدبية بيروت 1897",
+    "cat": "الأدب",
+    "edition": "ت شكيب أرسلان - المطبعة الأدبية بيروت 1897",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 4275704,
+    "quality": null,
+    "score": -1,
+    "waqfeya": []
+   },
+   {
+    "folder": "الدرة اليتيمة من حكم الكاتب البليغ الأشهر عبد الله بن المقفع ومعها مقدمة بقلم شكيب أرسلان - ابن المقفع",
+    "cat": "الأدب",
+    "edition": "ط محمود علي صبيح",
+    "researcher": "",
+    "publisher": "محمود علي صبيح",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 1511825,
+    "quality": {
+     "files": 1,
+     "pages": 71,
+     "kbpp": 21,
+     "px": 1401,
+     "colour": "أبيض وأسود",
+     "width_used": 0.75,
+     "text": false
+    },
+    "score": 80.0,
+    "waqfeya": [
+     "https://waqfeya.net/books/الدرة-اليتيمة-من-حكم-الكاتب-البليغ-الأشهر-عبد-الله-بن-المقفع-ومعها-مقدمة-شكيب-أرسلان--ط-صبيح-615ccbdbb028489294d516869d7c2588"
+    ]
    }
   ],
   "note": null
