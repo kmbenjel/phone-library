@@ -9,7 +9,7 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
-## 2026-11-03 04:00 UTC — OWNER'S «PIECE» ROWS: 4 WHOLE BOOKS FOUND, QUEUE 393 READY, NOT RUN (DISK) (Claude, Opus)
+## 2026-11-03 03:30 UTC — OWNER'S «PIECE» ROWS: 4 WHOLE BOOKS FOUND, QUEUE 393 READY, NOT RUN (DISK) (Claude, Opus)
 - Searched archive.org for the 13 open «piece» rows of data/names/owner-actions.tsv; title pages read by eye on page previews (no downloads).
 - FOUND, SAME EDITION: 827 المنازل والديار ج 1 (same uploader and series as our ج 2; introduction: «تولى تحقيق الكتاب … شعيب الأرنؤوط … المكتب الإسلامي، غرة المحرم 1385»); 819 أمثال العوام القسم الأول (ت محمد بن شريفة, same bytes in 3 uploads); 773 the whole volume «رسالة في أن القرآن غير مخلوق للحربي ويليه رسالة الإمام أحمد» (دار العاصمة ط 1 1416, ت علي الشبل; 2412Pdf = 2811Pdf bytes); 795 الفوائد الجنية vols 1 and 2 (دار البشائر 1417, اعتنى به رمزي دمشقية; two uploads, same bytes).
 - NOT FOUND: 823 (الإمتاع: only the دار مكتبة الحياة reprint of the أمين/الزين text, 0843pdf_201912 and 20220906_20220906_1321, 3 vols; not the لجنة التأليف print: ASK THE OWNER whether a reprint counts); 779 (only دار الكتب العلمية and دار ابن حزم editions); 750, 803, 727, 720, 620, 568, 507: no archive.org title match, not searched elsewhere yet.
