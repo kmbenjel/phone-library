@@ -9,6 +9,13 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-03 04:00 UTC — OWNER'S «PIECE» ROWS: 4 WHOLE BOOKS FOUND, QUEUE 393 READY, NOT RUN (DISK) (Claude, Opus)
+- Searched archive.org for the 13 open «piece» rows of data/names/owner-actions.tsv; title pages read by eye on page previews (no downloads).
+- FOUND, SAME EDITION: 827 المنازل والديار ج 1 (same uploader and series as our ج 2; introduction: «تولى تحقيق الكتاب … شعيب الأرنؤوط … المكتب الإسلامي، غرة المحرم 1385»); 819 أمثال العوام القسم الأول (ت محمد بن شريفة, same bytes in 3 uploads); 773 the whole volume «رسالة في أن القرآن غير مخلوق للحربي ويليه رسالة الإمام أحمد» (دار العاصمة ط 1 1416, ت علي الشبل; 2412Pdf = 2811Pdf bytes); 795 الفوائد الجنية vols 1 and 2 (دار البشائر 1417, اعتنى به رمزي دمشقية; two uploads, same bytes).
+- NOT FOUND: 823 (الإمتاع: only the دار مكتبة الحياة reprint of the أمين/الزين text, 0843pdf_201912 and 20220906_20220906_1321, 3 vols; not the لجنة التأليف print: ASK THE OWNER whether a reprint counts); 779 (only دار الكتب العلمية and دار ابن حزم editions); 750, 803, 727, 720, 620, 568, 507: no archive.org title match, not searched elsewhere yet.
+- READY, NOT RUN: data/queue/393-owner-pieces-whole.tsv (5 files, 79 MB, names by name_compose) and plans/394-owner-pieces-sets.tsv (the two existing parts renamed 02 with their sets, to apply AFTER 393 uploads). fetch_queue waits while the disk has < MIN_FREE_GB 8 (7.2 GB now): after 27r, clear ~/.cache/phone-library/crop-band (1.4 GB, its 10 case books are hard-linked into crop-regress), then `scripts/wait_calm.py 10 && python3 scripts/fetch_queue.py data/queue/393-owner-pieces-whole.tsv 393-owner-pieces-whole`, then apply 394.
+- AFTER: the pieces of 773 (588,047 B, العقيدة/رسالة الإمام أحمد إلى الخليفة المتوكل …) and 795 (1,013,838 B, علوم الفقه والقواعد الفقهية/الفوائد الجنية … اعتنى به رمزي دمشقية.pdf) are deleted only once their pages are matched in order inside the whole (as row 47), then close the rows in owner-actions/review-closed, refresh.sh, WORKLOG.
+
 ## 2026-11-03 02:25 UTC — OWNER: NETWORK BACK TO USUAL (Claude, Opus)
 - Laptop 192.168.11.110 on «i5», phone 192.168.11.100, FTP up. rclone host set back by hand, listing tested; current-address already right. Every «172.26.156.17» below is over. Unit crop-regress-2026-11-02r still has that PHONE_HOST: harmless, all its books are cached; a NEW unit must not copy it. Home rules are back: bulk transfers after wait_calm.py, pause while someone games.
 
