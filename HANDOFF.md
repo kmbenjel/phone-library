@@ -9,7 +9,29 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
-## 2026-11-03 08:30 UTC — STATE AT THE /clear: COLOUR FIX WRITTEN, NOT YET BENCHED (Claude, Opus, xhigh): READ THIS FIRST
+## 2026-11-03 08:45 UTC — COLOUR FIX BENCHED AND REFINED; REGRESSION 27t NEXT, THEN THE REDO (Claude, Opus): READ THIS FIRST
+- OWNER 08:05: «be autonomous … go ahead. I'll have a 2h rest. ftp on.» (he saw the evidence image: «good sight»).
+- FIRST: arm `python3 -u scripts/watch_comments.py` as a Monitor.
+- BENCH of b6780f6897 (new0..2.jsonl, 55 books) vs what the old code really painted (old colour_stamps returned nothing on a
+  page whose coloured ink > 30 %): الرسالة 204→0, نظم 2→0, 039 3→0, ابن زرب 1→0, إرشاد 1→0, خريدة 14→10 (the 10 = scan-bed
+  corners at the top, outside the page: seen, harmless); the real stamps kept (الذخائر, الإعلام, مجمع, خزانة ج 4) except
+  خزانة ج 2 p. 477 (the octagon at the top edge, at no other page's height).
+- REFINED (book_crop 511f6d7a5e, not committed yet): COLOUR_SAME — a large mark (≥ 10 % wide, ≥ 4 % tall) also recurs as
+  the same image anywhere (size ± 3 %, coloured share ± 0.03, colour ± 25); a page mostly in colour (> 30 %) keeps only
+  the same image as a kept mark (never counts) → خزانة ج 2 gains 19, 474, 477, 480, ج 4 gains 508, 511 (all the octagon,
+  seen by eye). 27s was stopped 5 min in (nothing saved) for this; its marker stays. Bench of the 12 fired books with
+  511f6d7a5e: unit colour-new3 → scratch/colour-2026-11-03/new3.jsonl.
+- CASE ROWS ADDED (14, data/improve/crop-regression.tsv, «colour 2026-11-03»): 88a5a7a has 11, +3 (ج 2 pp. 477, 19; ج 4 p. 508).
+- NEXT: commit book_crop → `systemd-run --user --slice=crop.slice --unit=crop-regress-2026-11-03t --nice=10
+  --working-directory=$PWD --setenv=PATH="$PATH" scratch/regress_2026-11-03t.sh` (~4 h) → 0 failures and the diff
+  (logs/crop-regress-diff-2026-11-03t.log) only on colour pages → keep only 277's row in data/crop/redo-done.tsv (the 14
+  crop-redo-2026-11-03 rows out) → launch scratch/redo_2026-11-03b.sh as unit crop-redo-2026-11-03b (crop.slice,
+  --setenv=PATH, --setenv=PHONE_HOST=192.168.11.100) → its end: crop_batch.py --again for البداية 21 + المغرب 01, refresh,
+  WORKLOG, the owner.
+- Rim patches of 3 redone books (الفصول p. 330, الموافقات 03 p. 72, المدخل المفصل 6 pages): ≤ 273 px at 80 dpi hidden, frame
+  lines only (p. 615 seen): harmless.
+
+## 2026-11-03 08:30 UTC — STATE AT THE /clear: COLOUR FIX WRITTEN, NOT YET BENCHED (Claude, Opus, xhigh)
 - FIRST: arm `python3 -u scripts/watch_comments.py` as a Monitor. Phone FTP went away 07:59 (nothing needs it yet). Nothing of the redo runs.
 - OLD-RULE BENCH DONE (scratch/colour-2026-11-03/bench.py → bench0..2.jsonl, 55 books = regression-cache originals + الرسالة; group crops + sheets read by eye in the old session's scratchpad colour/): fires on 12 books. REAL: «www.dar-alkotob.com» octagon + its inner pieces (خزانة ج 2, ج 4 pp. 7–25, 476–479, 507), «wadod.org» (الذخائر 01, 08 every page), «www.dorat-ghawas.com» (الإعلام 09, مجمع الآداب 03, foot of every page). WRONG: الرسالة (204 pp.), نظم تنقيح (2 pp., colour print), عالم المعرفة 039 ارتقاء الإنسان (pieces of colour illustrations, pp. 16, 36, 83), ابن زرب p. 3 (publisher's blue imprint block), إرشاد الساري p. 289 (scan edge line), خريدة القصر (yellow edge strips touching the page edge, 14 pp., harmless). Firing pages of real-stamp books: 0 coloured words in the text column; colour-print pages ≥ 5.
 - FIX WRITTEN in scripts/book_crop.py (md5 b6780f6897, was fee81519ef), COMMITTED UNTESTED: colour_stamps(page, words=True) also says whether the page prints in colour (≥ COLOUR_WORDS 5 coloured words in the black text's extent, ink ≥ 0.5 %) → no boxes; new colour_marks_of(path, jobs) = a book pass: none if ≥ COLOUR_BOOK 20 % of pages print in colour; a mark kept only if its like (place ± 2.5 %, size ± 20 %) is on ≥ COLOUR_REPEAT 3 pages; analyse_pages(…, colour=None) reads it once and passes it to its chunks (no per-page colour_stamps call any more).

@@ -1598,17 +1598,20 @@ def colour_stamps(page, px=500, words=False):
     inside the text column stays, and a page printed mostly in colour (coloured ink > 30 % of all ink) is left alone.
     Left out of every measure like an uploader's stamp. Returns their boxes (pt) — and, with words=True, (boxes, whether
     the page prints in colour: COLOUR_WORDS coloured words or more inside the black text's extent, their ink ≥ 0.5 % of the
-    black ink there); a page printed in colour gives no boxes (2026-11-03, see colour_marks_of)"""
+    black ink there, each box's image (width, height as page fractions, coloured share of its box, mean colour), whether
+    the coloured ink is > 30 % of all ink); a page printed in colour gives no boxes (2026-11-03, see colour_marks_of), a
+    page mostly in colour gives its boxes only here, for colour_marks_of to keep those that are a recurring stamp"""
     z = px / page.rect.width
     pix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), colorspace=pymupdf.csRGB, alpha=False)
-    none = ([], False) if words else []
+    none = ([], False, [], False) if words else []
     if pix.n < 3: return none
     a = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width * 3].reshape(pix.height, pix.width, 3).astype(np.int16)
     g = a.mean(axis=2); paper = float(np.percentile(g, 90))
     if paper < 150: return none
     ink = g < paper - 40; sat = (a.max(axis=2) - a.min(axis=2)) >= 60
     col = ink & sat; black = ink & ~sat; ni = int(ink.sum())
-    if ni == 0 or col.sum() == 0 or col.sum() > 0.30 * ni or black.sum() < 200: return none
+    mostly = bool(col.sum() > 0.30 * ni)
+    if ni == 0 or col.sum() == 0 or (mostly and not words) or black.sum() < 200: return none
     H, W = g.shape
     lab, k = ndimage.label(ndimage.binary_dilation(col, iterations=max(1, int(0.005 * W))))
     groups = ndimage.find_objects(lab)
@@ -1620,22 +1623,26 @@ def colour_stamps(page, px=500, words=False):
     ins = col[int(y0):int(y1), int(x0):int(x1)]       # coloured words among the black lines: the page prints in colour
     if ins.sum() >= 0.005 * black[int(y0):int(y1), int(x0):int(x1)].sum() and \
             ndimage.label(ndimage.binary_dilation(ins, iterations=2))[1] >= COLOUR_WORDS:
-        return ([], True) if words else []
-    out = []
-    for sl in groups:
+        return ([], True, [], mostly) if words else []
+    out = []; sig = []
+    for j, sl in enumerate(groups):
         h_, w_ = sl[0].stop - sl[0].start, sl[1].stop - sl[1].start
         if not (w_ >= 0.03 * W or h_ >= 0.02 * H): continue
         if sl[0].stop <= y0 or sl[0].start >= y1 or sl[1].stop <= x0 or sl[1].start >= x1:
             e_ = 0.015 * W                           # its faint, anti-aliased edge too (خزانة الأدب ج 2 ص 18: a corner was left)
             out.append([round(max(0, sl[1].start - e_) / z, 1), round(max(0, sl[0].start - e_) / z, 1),
                         round(min(W, sl[1].stop + e_) / z, 1), round(min(H, sl[0].stop + e_) / z, 1)])
-    return (out, False) if words else out
+            m = (lab[sl] == j + 1) & col[sl]
+            sig.append([round(w_ / W, 4), round(h_ / H, 4), round(float(m.sum()) / (w_ * h_), 3)] + [int(v) for v in a[sl][m].mean(axis=0)])
+    return (out, False, sig, mostly) if words else out
 
 COLOUR_WORDS = 5           # coloured words inside the text column that make a page «printed in colour» (bench 2026-11-03:
                            # pages of الرسالة, نظم تنقيح, عالم المعرفة ≥ 5 — up to 50; every page with a real colour stamp 0)
 COLOUR_BOOK = 0.20         # the share of a book's pages printed in colour that makes the whole book so (الرسالة 97 %, نظم
                            # تنقيح 78 %; books with a real colour stamp 0, a colour scan with yellow edges 1 %)
 COLOUR_REPEAT = 3          # pages a coloured mark must stand on, at the same place and of the same size
+COLOUR_SAME = 0.03         # the same image elsewhere: width and height within 3 %, coloured share ± 0.03, colour ± 25 —
+                           # for a mark ≥ 10 % of the page wide and ≥ 4 % tall (خزانة ج 2 p. 477: the octagon higher up)
 
 def _colour_chunk(args):
     path, idx = args
@@ -1643,8 +1650,8 @@ def _colour_chunk(args):
     for i in idx:
         pg = doc[i]
         if pg.rotation: continue
-        bx, inc = colour_stamps(pg, words=True)
-        out[i] = ([[round(v / s, 4) for v, s in zip(b, (pg.rect.width, pg.rect.height) * 2)] for b in bx], inc, bx)
+        bx, inc, sig, mostly = colour_stamps(pg, words=True)
+        out[i] = ([[round(v / s, 4) for v, s in zip(b, (pg.rect.width, pg.rect.height) * 2)] for b in bx], inc, bx, sig, mostly)
     return out
 
 def colour_marks_of(path, jobs=1):
@@ -1656,21 +1663,31 @@ def colour_marks_of(path, jobs=1):
     library's mark set at one place on many pages: «www.dar-alkotob.com» (خزانة الأدب ج 2, ج 4: pp. 7–25 and the last
     pages), «wadod.org» (الذخائر), «www.dorat-ghawas.com» (الإعلام, مجمع الآداب). So: a page printed in colour (coloured
     words in its text column) has none; a book with ≥ COLOUR_BOOK of its pages so has none; a mark stays only when its like
-    (same place ± 2.5 % of the page, same size ± 20 %) stands on ≥ COLOUR_REPEAT pages. A real mark set once is left in
-    view (it costs little). Returns {page: [boxes in pt]}"""
+    (same place ± 2.5 % of the page, same size ± 20 %; or a large mark's same image anywhere, COLOUR_SAME) stands on
+    ≥ COLOUR_REPEAT pages. A page whose coloured ink is > 30 % of all its ink (a short page under the octagon, خزانة ج 2
+    p. 19, ج 4 p. 508) neither counts nor keeps a mark of its own: only the same image as a mark kept on the others. A real
+    mark set once is left in view (it costs little). Returns {page: [boxes in pt]}"""
     n = pymupdf.open(path).page_count; idx = list(range(n)); got = {}
     if jobs > 1 and n > 20:
         with ProcessPoolExecutor(jobs) as ex:
             for part in ex.map(_colour_chunk, [(path, idx[k::jobs]) for k in range(jobs)]): got.update(part)
     else: got = _colour_chunk((path, idx))
     if not got or sum(1 for v in got.values() if v[1]) >= COLOUR_BOOK * len(got): return {}
-    marks = [(i, j, f) for i, (fr, _, _) in got.items() for j, f in enumerate(fr)]
-    like = lambda a, b: (abs(a[0] - b[0]) <= 0.025 and abs(a[1] - b[1]) <= 0.025 and
-                         abs((a[2] - a[0]) - (b[2] - b[0])) <= 0.2 * max(a[2] - a[0], b[2] - b[0]) and
-                         abs((a[3] - a[1]) - (b[3] - b[1])) <= 0.2 * max(a[3] - a[1], b[3] - b[1]))
-    out = {}
-    for i, j, f in marks:
-        if len({i2 for i2, _, f2 in marks if like(f, f2)}) >= COLOUR_REPEAT: out.setdefault(i, []).append(got[i][2][j])
+    marks = [(i, j, f, got[i][3][j], got[i][4]) for i, v in got.items() for j, f in enumerate(v[0])]
+    place = lambda a, b: (abs(a[0] - b[0]) <= 0.025 and abs(a[1] - b[1]) <= 0.025 and
+                          abs((a[2] - a[0]) - (b[2] - b[0])) <= 0.2 * max(a[2] - a[0], b[2] - b[0]) and
+                          abs((a[3] - a[1]) - (b[3] - b[1])) <= 0.2 * max(a[3] - a[1], b[3] - b[1]))
+    big = lambda s: s[0] >= 0.10 and s[1] >= 0.04
+    same = lambda s, t: (big(s) and big(t) and abs(s[0] - t[0]) <= COLOUR_SAME * max(s[0], t[0]) and
+                         abs(s[1] - t[1]) <= COLOUR_SAME * max(s[1], t[1]) and abs(s[2] - t[2]) <= COLOUR_SAME and
+                         max(abs(u - v) for u, v in zip(s[3:], t[3:])) <= 25)
+    out = {}; kept = []; ordinary = [(i, f, s) for i, _, f, s, mo in marks if not mo]
+    for i, j, f, s, mo in marks:
+        if mo: continue
+        if len({i2 for i2, f2, s2 in ordinary if place(f, f2) or same(s, s2)}) >= COLOUR_REPEAT:
+            out.setdefault(i, []).append(got[i][2][j]); kept.append(s)
+    for i, j, f, s, mo in marks:
+        if mo and any(same(s, s2) for s2 in kept): out.setdefault(i, []).append(got[i][2][j])
     return out
 
 def analyse_pages(path, stamps=None, only=None, jobs=1, colour=None):
