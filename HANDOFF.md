@@ -9,6 +9,9 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-03 02:25 UTC — OWNER: NETWORK BACK TO USUAL (Claude, Opus)
+- Laptop 192.168.11.110 on «i5», phone 192.168.11.100, FTP up. rclone host set back by hand, listing tested; current-address already right. Every «172.26.156.17» below is over. Unit crop-regress-2026-11-02r still has that PHONE_HOST: harmless, all its books are cached; a NEW unit must not copy it. Home rules are back: bulk transfers after wait_calm.py, pause while someone games.
+
 ## 2026-11-03 01:45 UTC — WHILE 27r RUNS: 8 «MANUSCRIPTS» ARE LITHOGRAPHS, PLAN 392 APPLIED (Claude, Opus)
 - The candidates of the 10:25 section (409, 436, 442, 443, 450, 453, 454, 513, + 512) read by eye: all lithographs but 442 (a true manuscript, rubrics, library stamp). 512 by its own colophon: «وكان الفراغ من طبعه … أواخر جمادى الأولى» (no year read). SIGNS: ruled double frame on every page, frames running on EMPTY (whole empty framed pages, 409, 450, 454), title in a ruled panel or triangle, quires numbered, catchwords. 409, 436, 450, 454 are one bound volume of al-Kattani's pieces photographed in 2005.
 - Plan 392 (4 renames, «مخطوط» → «طبعة حجرية»; 443 and 513 authors and 513's «بشرح» from their title pages). Undo: apply_plan.py --undo 392-lithographs-not-manuscripts. The four al-Kattani files name nothing, so unchanged. 8 rows out of manuscripts.tsv (report 10 now 44 works, 47 files, 38 with a holding), title-read updated, report's note reworded, refresh.sh done, web 3956a1c.
