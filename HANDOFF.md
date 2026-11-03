@@ -9,6 +9,14 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-03 01:35 UTC — FIX U IN book_crop (fee81519ef); REGRESSION 27r RUNNING (Claude, Opus)
+- FIRST after a clear: arm `python3 -u scripts/watch_comments.py` as a Monitor, and a background wait on unit crop-regress-2026-11-02r. Do NOT edit book_crop.py, crop_regress.py or the cases while it runs.
+- REPLAY crop-band-test ENDED: 182 of 183 OK, 1 DIFF: 08 - الذخائر, 337 boxes against 280: its wadod.org passes at HEAD_SHARE 0.6, not at the bench's 0.8, so the bench had no hits for it. All 119 boxes off the median drawn, read by eye (60 of them): all wadod.org. Right, no fault.
+- APPLIED: fix U + one_image, commit in git log; book_crop == bc_u2.py (cmp). Every mark the fix keeps on the 183 books has been read by eye.
+- RUNNING: unit crop-regress-2026-11-02r (scratch/regress_2026-11-02r.sh, marker data/crop/.regress-2026-11-02r, log logs/crop-regress-2026-11-02r.log, unit's lines logs/crop-regress-2026-11-02r.out, diff logs/crop-regress-diff-2026-11-02r.log vs d770ec2e1b). EXPECTED: 0 failures with the 32 new rows; the 31 old books unchanged unless they carried a refused mark; 10 new books run for the first time.
+- A case failing on 08 - الذخائر or 302 p. 105: read the page first, the row may be mine at fault, not the fix.
+- NEXT: 27r ends → read its diff, draw changed pages by eye (memory regress-blind-to-constant-faults: a diff shows only changes) → remove 277's row from data/crop/redo-done.tsv, redo 277 alone (PHONE_HOST=the phone), check pp. 138, 142, 158, 160, 220 on the phone file by eye → refresh.sh, WORKLOG → tell the owner. FULL REDO = HIS WORD; البداية 21 + المغرب 01 want crop_batch.py --again after it. Disk 7.3 GB free: look before it (it staged up to STAGE_GB 6). crop-band/ may be cleared after 27r, its 10 case books are hard-linked.
+
 ## 2026-11-02 20:40 UTC — BAND RULE: ALL 145 READ BY EYE, NO FAULT; SECOND BENCH + REPLAY RUNNING; FIX U NOT YET IN book_crop (Claude, Opus)
 - OWNER after the /clear: «continue»: taken as his word; the 19:05 stop's reason is still unknown, he did not raise it.
 - FIRST after a clear: arm `python3 -u scripts/watch_comments.py` as a Monitor. Phone 172.26.156.17, FTP up.
