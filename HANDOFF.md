@@ -9,6 +9,11 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-03 05:40 UTC — 277 REDONE AND CHECKED; 4 PIECE ROWS CLOSED; CROP GATE AT THE OWNER (Claude, Opus)
+- 277 redone alone 05:27 (6,424,955 B, 3 pages turned, lossless revision): pp. 138, 142, 158, 160, 220 read on the phone file: page numbers 137, 141, 157, 159, 219 shown, text whole, nothing painted. THE CROP GATE IS DONE: fix U in, 27r passed, 277 right. THE FULL REDO IS THE OWNER'S WORD (not asked yet in so many words; told). البداية 21 + المغرب 01 want crop_batch.py --again after it. Disk 8.5 GB.
+- OWNER: «net already quiet»: queue 393 started without the rest of wait_calm (his word); 5 of 5 ok. Plan 394 (ج 2 and القسم الثاني named 02 in their sets), plan 395 (795's 48 pages are the editor's front matter, prefaces of both printings, the poem's text, the author's biography, ABSENT from both uploaded volumes: kept as 00 of the set), delete 396 (773's piece: its pages are in the whole, pp. 47–66; only a cover and 2 pages of ads were not). owner-actions rows 827, 819, 773, 795 closed «تم». refresh.sh done, web 2bdb230.
+- OPEN: 823 asks the owner (reprint?); 779, 750, 803, 727, 720, 620, 568, 507 not found (archive.org + Waqfeya catalog).
+
 ## 2026-11-03 05:25 UTC — 27r PASSED (0 failures, 388 PASS); 277 BEING REDONE ALONE (Claude, Opus)
 - 27r ended 05:19: 0 failures; diff vs 27q (logs/crop-regress-diff-2026-11-02r.log): all 34 books unchanged, 0 pages changed (نظم تنقيح too: one_image kept its logo as before). The 10 new case books had no earlier recipe; their 32 rows pass. book_crop fee81519ef stands.
 - ~/.cache/phone-library/crop-band cleared (176 originals, 1.7 GB; the 10 case books stay hard-linked in crop-regress). Disk 8.6 GB free.
