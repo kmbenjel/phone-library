@@ -1854,6 +1854,24 @@ def band_mask(doc, i, p, b, shape, z):
             out |= (ys[:, None] < (ye + e)[None, :] if k == 1 else ys[:, None] > (ye - e)[None, :]).astype(np.uint8) << k
     return out
 
+STEADY, EXACT, HEAD_SHARE, PICTURE = 0.004, 0.82, 0.6, 3.0   # stamps_of: its rule's numbers (the docstring says what each one parts)
+
+def one_image(path, boxes):
+    """Are these boxes [(page, box)] one image of the file, set on each page? An uploader's logo placed as an image of its own stands
+    once in the file and on every page (نظم تنقيح: 100 times); print is part of each page's own scan. The box must be the picture, not
+    a word on a background that repeats."""
+    doc = pymupdf.open(path); seen = {}
+    for q, b in boxes:
+        ims = doc.get_page_images(q)
+        if len(ims) > 20: continue                    # (a file whose pages all list all its images)
+        for im in ims:
+            for r in doc[q].get_image_rects(im[0]):
+                w, h = min(r.x1, b[2]) - max(r.x0, b[0]), min(r.y1, b[3]) - max(r.y0, b[1])
+                if w > 0 and h > 0 and w * h >= 0.6 * r.width * r.height:
+                    seen[im[0]] = seen.get(im[0], 0) + 1; break
+    doc.close()
+    return bool(seen) and max(seen.values()) >= 0.8 * len(boxes)
+
 def stamps_of(path, jobs=1, px=400):
     """UPLOADERS' STAMPS (owner 2026-10-09, الفوائد المحصورة: «neglect that رفع المساهم stamp in every page's footer, don't
     consider it text. or even: erase it»; «generalize this for when we have such a stamp across the book»): the same small
@@ -1865,6 +1883,20 @@ def stamps_of(path, jobs=1, px=400):
     page number in the outer corner alternates sides). Then THE SAME STAMP ELSEWHERE (owner, ص 2: «you could have removed
     the stamp in p2 and centered the text»): on any page, a group of the stamp's proportions (± 15 %), at least 0.8 of its
     size, whose grey image matches the stamp's (correlation ≥ 0.7) — with the small line set right under it (a date).
+    (2026-11-02, the 1,083 books of the redo: 138 carried «stamps», 52,274 pages of them: a footnote's number at the same
+    place of a quarter of the pages, شرح طيبة النشر 11 boxes a page; running heads; numbers in squares, الإسلام شريكاً, and from
+    that «ref» the word «مناسبة» inside the text. A book's share decides nothing: a logo stood on 48 % of a book, a head on
+    98 %.) SO A STAMP IS ONE PICTURE AT ONE PLACE: an uploader's tool writes the same pixels on each page, print moves with
+    the scan. The middle half of its boxes within STEADY of the page's width and height (stamps ≤ 0.3 %, print ≥ 0.5 %) and
+    the median overlap ≥ EXACT (stamps 0.84–1, a typeset book's page numbers ≤ 0.79; t.me/megallat at 0.79 stays in view).
+    Or one image object of the file, set on page after page (one_image): نظم تنقيح's logo moves ±4 pt with its scan. A typeset book's running head is the
+    same picture too, so ABOVE THE PAGE'S MIDDLE a group must touch the top edge (Tiff Combine's line) or stand alone in its
+    row on ≥ HEAD_SHARE of the pages (wadod.org): heads stand on half the pages, or beside other words. A group as wide as
+    another, on the same foot and taller, has swallowed something (عالم المعرفة 494: «Arabi» grown over the page number): it
+    stays. THE SAME STAMP ELSEWHERE takes a picture only (at most PICTURE as wide as tall): a stamp in the shape of a line of
+    type has the proportions of any printed line, and blurred it matches them (الرسالة: «oldbookz@gmail.com» on lines of its
+    text, 155; النموذج النرويجي: a printer's slug on the running head, 334); such a stamp is looked for at its own place only
+    (home, correlation ≥ 0.85: wadod.org a point off). A stamp left in view costs little, print painted does not.
     Returns {page index: [boxes (pt)]}
     (MEMORY, 2026-10-25: every group of ink is a candidate — a word, at 400 px — and its two small images used to be kept
     for all of them: 3.6 GB for a book of 1,531 pages, the memory brake twice. Now only a candidate a test reads keeps
@@ -1883,7 +1915,13 @@ def stamps_of(path, jobs=1, px=400):
     C = np.array([[f[1][0], f[1][1], f[1][2], f[1][3], f[2], f[3]] for f in band], float)
     cxs, cys = (C[:, 0] + C[:, 2]) / 2, (C[:, 1] + C[:, 3]) / 2; bw, bh = C[:, 2] - C[:, 0], C[:, 3] - C[:, 1]
     T = np.array([f[4] for f in band], float); pg = np.array([f[0] for f in band])
-    used, refs = np.zeros(len(band), bool), []
+    on = {}
+    for f in found: on.setdefault(f[0], []).append(f)
+    def in_a_row(f):                                  # another group of ink beside it
+        b = f[1]; h = b[3] - b[1]
+        return any(c[7] != f[7] and min(b[3], c[1][3]) - max(b[1], c[1][1]) >= 0.5 * min(h, c[1][3] - c[1][1]) for c in on[f[0]])
+    spread = lambda v: float(np.percentile(v, 75) - np.percentile(v, 25))
+    used, kept, refs = np.zeros(len(band), bool), [], []
     for k in range(len(band)):
         if used[k]: continue
         g = (~used) & (np.abs(cxs - cxs[k]) <= 0.025 * C[:, 4]) & (np.abs(cys - cys[k]) <= 0.025 * C[:, 5]) & \
@@ -1894,14 +1932,22 @@ def stamps_of(path, jobs=1, px=400):
         same = np.nonzero(g)[0][ov >= 0.7]
         P = set(pg[same])
         if len(P) < max(5, 0.25 * n) or min(sum(1 for q in P if q % 2 == 0), sum(1 for q in P if q % 2)) < 0.3 * len(P): continue
+        used[g] = True
+        W_, H_ = C[same[0], 4], C[same[0], 5]
+        if (spread(C[same, 0]) > STEADY * W_ or spread(C[same, 1]) > STEADY * H_ or np.median(ov[ov >= 0.7]) < EXACT) \
+                and not one_image(path, [(int(pg[j]), C[j, :4]) for j in same[:: max(1, len(same) // 12)]]): continue
+        y0 = float(np.median(C[same, 1]))
+        if 0.01 * H_ < y0 < 0.5 * H_ and (len(P) < HEAD_SHARE * n or np.mean([in_a_row(band[j]) for j in same]) > 0.5): continue
+        kept.append((same, np.median(C[same, :4], axis=0)))
+    for same, b in kept:
+        if any(abs(c[0] - b[0]) <= 1.5 and abs(c[2] - b[2]) <= 1.5 and abs(c[3] - b[3]) <= 1.5 and b[3] - b[1] > 1.2 * (c[3] - c[1]) for _, c in kept): continue
         for j in same: out.setdefault(int(pg[j]), []).append([round(float(v), 1) for v in C[j, :4]])
         G = np.mean([band[j][5] for j in same], axis=0); G = (G - G.mean()) / (G.std() + 1e-6)
-        refs.append((G, float(np.median(bw[same] / bh[same])), float(np.median(bw[same]))))
-        used[g] = True
+        refs.append((G, float(np.median(bw[same] / bh[same])), float(np.median(bw[same])), b))
     want = {}                                         # the candidates of a stamp's proportions without their grey image
     for f in found:
         b = f[1]; w_, h_ = b[2] - b[0], b[3] - b[1]
-        if f[5] is None and any(abs((w_ / max(h_, 1e-6)) / asp - 1) <= 0.15 and w_ >= 0.8 * sw for _, asp, sw in refs):
+        if f[5] is None and any(abs((w_ / max(h_, 1e-6)) / asp - 1) <= 0.15 and w_ >= 0.8 * sw for _, asp, sw, _ in refs):
             want.setdefault(f[0], {})[f[7]] = b
     if want:
         gs, pgs = {}, sorted(want)
@@ -1913,8 +1959,11 @@ def stamps_of(path, jobs=1, px=400):
     for f in found:                                   # the same stamp at another size or place (a title page)
         b = f[1]; w_, h_ = b[2] - b[0], b[3] - b[1]
         if any(inside(b, q, 2.0) for q in out.get(f[0], [])): continue
-        for G, asp, sw in refs:
-            if abs((w_ / max(h_, 1e-6)) / asp - 1) <= 0.15 and w_ >= 0.8 * sw and float((f[5] * G).mean()) >= 0.7:
+        for G, asp, sw, rb in refs:
+            if abs((w_ / max(h_, 1e-6)) / asp - 1) > 0.15 or w_ < 0.8 * sw: continue
+            cor = float((f[5] * G).mean())
+            home = abs(b[0] + b[2] - rb[0] - rb[2]) <= 0.05 * f[2] and abs(b[1] + b[3] - rb[1] - rb[3]) <= 0.05 * f[3] and w_ <= 1.1 * sw
+            if (asp <= PICTURE and cor >= 0.7) or (home and cor >= 0.85):
                 box = list(b)
                 for f2 in found:                      # a small line right under it (the stamp's date) belongs to it
                     c = f2[1]
@@ -1931,9 +1980,12 @@ def corner_signatures(found, n):
     uploader's calligraphic signature at the foot of pages 8–18, about 13 % of the page tall, a little off from page to
     page: too tall, too rare and too unsteady for the footer rule of stamps_of): the same picture (grey image correlation
     ≥ 0.8, size ± 10 %) in the bottom 30 % of the page and its outer 30 % on either side, 5–25 % of the width wide and
-    4–20 % of the height tall, on at least 4 pages. A printed ornament repeats too, but at a chapter's head (روضة المستبين's
+    10–20 % of the height tall, on at least 4 pages. A printed ornament repeats too, but at a chapter's head (روضة المستبين's
     arches, left alone) or as a frame's corners — the same piece at the mirrored corner of the same page (روضة المستبين
     ص 17، 49، 63، 97: a chapter page's frame): a group with such a twin on half its pages is print, not a signature.
+    (TALLER THAN A WORD, 2026-11-02: the floor was 4 %, and the last words of a page, or the numbers of two or three footnotes
+    one under the other, «1786 / 1787 / 1788», read as signatures: 4.0–9.4 % tall; the true ones are 12.3 % and up. They move
+    about as much as words do, so only their size parts them.)
     So is a PAGE NUMBER IN A SQUARE (عالم المعرفة; 2026-10-31, pilot audit, هذا هو علم البيولوجيا: black in this scan, its top
     painted, a black bar left; 2026-11-01: five paler ones, 277 pp. 138–220, painted with their numbers, and the same square
     in a lighter scan, ارتقاء الإنسان, where only its thin outline is ink, digits apart, each ring alike). A mark inked over
@@ -1970,7 +2022,7 @@ def corner_signatures(found, n):
 def in_corner(b, W, H):
     """a candidate for a signature in a foot corner (corner_signatures): its box b (pt) on a page W × H (pt)"""
     w, h = b[2] - b[0], b[3] - b[1]; cx, cy = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
-    return 0.05 * W <= w <= 0.25 * W and 0.04 * H <= h <= 0.2 * H and (cx <= 0.3 * W or cx >= 0.7 * W) and cy >= 0.7 * H
+    return 0.05 * W <= w <= 0.25 * W and 0.1 * H <= h <= 0.2 * H and (cx <= 0.3 * W or cx >= 0.7 * W) and cy >= 0.7 * H
 
 def _stamp_groups(page, px):
     """the groups of ink of one page that may be a stamp (stamps_of), in order: (number, box (pt), band, ink mask)"""
