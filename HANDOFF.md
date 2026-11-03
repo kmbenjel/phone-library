@@ -9,7 +9,22 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
-## 2026-11-03 08:45 UTC — COLOUR FIX BENCHED AND REFINED; REGRESSION 27t NEXT, THEN THE REDO (Claude, Opus): READ THIS FIRST
+## 2026-11-03 13:45 UTC — 27t PASSED; FULL REDO RESUMED (Claude, Opus): READ THIS FIRST
+- FIRST after a clear: arm `python3 -u scripts/watch_comments.py` as a Monitor, and a Monitor on logs/crop-redo-2026-11-03.log
+  (FAIL|Traceback|stopped|ended with exit|RETRY LATER|redo finished|SKIP).
+- 27t (book_crop 511f6d7a5e) ended 13:38: 0 failures, the 14 colour rows pass. Diff vs 27r (logs/crop-regress-diff-2026-11-03t.log)
+  only on colour pages, every one seen by eye: خزانة ج 2 (octagon now out of pp. 19, 474, 480 → book box 364.5 → 362.1 pt
+  tall, every page ±1.2 pt), ج 4 pp. 508, 511; نظم تنقيح p. 29 (its red last line was painted out, now kept), p. 60 («دون»
+  kept), p. 59 no 0.25° turn (digital print, level); 039 p. 83 now a picture page (its illustration was painted in pieces),
+  p. 16 0.8 pt; ابن زرب p. 3 box holds the publisher's blue imprint block (was painted out, box cut it). الرسالة: no stamp,
+  no rim on any page.
+- RUNNING: unit crop-redo-2026-11-03b (scratch/redo_2026-11-03b.sh, started 13:39, wait_calm first) on the same 1,122-book
+  list; redo-done.tsv = 277's row only (backup redo-done.before-2026-11-03b.tsv): the 14 books of 07:00 are redone too.
+  Same log and batch name crop-redo-2026-11-03. Do NOT edit book_crop.py while it runs. ~13 books an hour → ~3.5 days.
+- AT ITS END: its page is built by the script; crop_batch.py --again for البداية والنهاية 21 + المغرب في حلى المغرب 01;
+  refresh.sh; WORKLOG; tell the owner. Check الرسالة on the phone by eye once redone (pp. 11, 64, 100: nothing painted).
+
+## 2026-11-03 08:45 UTC — COLOUR FIX BENCHED AND REFINED; REGRESSION 27t NEXT, THEN THE REDO (Claude, Opus)
 - OWNER 08:05: «be autonomous … go ahead. I'll have a 2h rest. ftp on.» (he saw the evidence image: «good sight»).
 - FIRST: arm `python3 -u scripts/watch_comments.py` as a Monitor.
 - BENCH of b6780f6897 (new0..2.jsonl, 55 books) vs what the old code really painted (old colour_stamps returned nothing on a
