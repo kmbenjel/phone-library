@@ -23,12 +23,15 @@ WHY = {'tilt': 'ميل لم تحسمه المقاييس (اختلفت أو لم 
        'tracks': 'تدوير أمال بعض السطور فرُدّ، ثم قُوِّمت الصفحة بالزاوية التي تتفق عليها سطورها (كل سطر مقيس وحده)'}
 
 def main(batches):
-    logged = {}
-    for r in csv.reader(open(J('data', 'changes', 'changes.tsv'), encoding='utf-8'), delimiter='\t'):
-        if len(r) > 5 and r[1] == 'crop' and (not batches or r[5].strip() in batches): logged[r[2].removeprefix('Books/')] = r[5].strip()
-    closed = set()
+    logged = {}                                       # path → (day, tag) of its latest crop: a card's id is «<hash>-<tag>», the
+    for r in csv.reader(open(J('data', 'changes', 'changes.tsv'), encoding='utf-8'), delimiter='\t'):   # crop's own md5,
+        if len(r) > 5 and r[1] == 'crop' and (not batches or r[5].strip() in batches):          # so a redone book comes back
+            m = r[4].rsplit('→ md5 ', 1)[1][:7] if '→ md5 ' in r[4] else r[0][2:10].replace('-', '')  # (2026-11-03: ids
+            logged[r[2].removeprefix('Books/')] = (r[0][:10], m)                                # were the path's hash alone)
+    closed = {}
     if os.path.exists(J('data', 'names', 'review-closed.tsv')):
-        closed = {l.split('\t')[1] for l in open(J('data', 'names', 'review-closed.tsv'), encoding='utf-8') if l.startswith('crop-doubts\t')}
+        closed = {l.split('\t')[1]: l.split('\t')[2] for l in open(J('data', 'names', 'review-closed.tsv'), encoding='utf-8')
+                  if l.startswith('crop-doubts\t')}
     out = J('site', 'crop-doubts'); os.makedirs(out, exist_ok=True)
     E, cards, clean = html.escape, [], 0
     for h in sorted(os.listdir(SHEETS)) if os.path.isdir(SHEETS) else []:
@@ -37,7 +40,8 @@ def main(batches):
         except (OSError, ValueError): continue
         if book.get('path') not in logged or 'shown' not in book: continue
         if not book['shown']: clean += 1; continue
-        if h in closed: continue
+        day, tag = logged[book['path']]; key = f'{h}-{tag}'
+        if key in closed or closed.get(h, '') >= day: continue   # (an old row, the hash alone: closes crops up to its day)
         figs = []; own = book.get('owner') or {}
         for i, why in book['shown']:
             b, a = f'p{i + 1:04d}-before.jpg', f'p{i + 1:04d}-after.jpg'
@@ -54,7 +58,7 @@ def main(batches):
         rims = book.get('rims') or []                 # (every page with a rim painted out, named — pilot audit 2026-10-31)
         tw += f'<p class="meta">صفحات غُطّيت فيها حافة بلون الورق: ص {"، ".join(map(str, rims))}</p>' if rims else ''
         cards.append(f'<article><h2>{E(book["path"])}</h2><p class="meta">مواضع الشك في الكتاب كله — {E(summ)}</p>{tw}{"".join(figs)}'
-                     f'<div class="review" data-n="{E(h)}"><label><input type="checkbox" class="chk"> سليم</label>'
+                     f'<div class="review" data-n="{E(key)}"><label><input type="checkbox" class="chk"> سليم</label>'
                      f'<textarea class="cmt" rows="2" placeholder="ملاحظتك"></textarea><span class="st"></span></div></article>')
     page = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>مواضع الشك في القص</title><style>
