@@ -29,6 +29,7 @@ Single-volume books are stored as plain files in the category folder without the
   «الجمع والفرق أو كتاب الفروق - الجويني - …»). A title's
   own «(مخطوط)», «(رسالة ماجستير)» go after the edition («… - مخطوط»); a one- or two-word aside is written inline
   («ابن رشد (الجد)» → «ابن رشد الجد»); a longer aside becomes a «، …» subtitle.
+- A lithograph is `… - طبعة حجرية` in the publisher's place, never `مخطوط`, with a press or city only if the book states one. Its signs (plan 392): a ruled double frame on every page that runs on empty (whole empty framed pages), a title in a ruled panel or triangle, numbered quires, «طبعه» in the colophon.
 - **Only when the name is too long**, the combination that keeps the most information is chosen. What gives way, first
   to last: the year, the city; a subtitle that came from parentheses; the publisher (owner: when the whole title and the publisher cannot
   both fit, the publisher goes); editors after the second; the words after the title's head — joined titles keep their

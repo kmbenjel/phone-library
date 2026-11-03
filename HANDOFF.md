@@ -9,7 +9,13 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
-## 2026-11-03 01:35 UTC — FIX U IN book_crop (fee81519ef); REGRESSION 27r RUNNING (Claude, Opus)
+## 2026-11-03 01:45 UTC — WHILE 27r RUNS: 8 «MANUSCRIPTS» ARE LITHOGRAPHS, PLAN 392 APPLIED (Claude, Opus)
+- The candidates of the 10:25 section (409, 436, 442, 443, 450, 453, 454, 513, + 512) read by eye: all lithographs but 442 (a true manuscript, rubrics, library stamp). 512 by its own colophon: «وكان الفراغ من طبعه … أواخر جمادى الأولى» (no year read). SIGNS: ruled double frame on every page, frames running on EMPTY (whole empty framed pages, 409, 450, 454), title in a ruled panel or triangle, quires numbered, catchwords. 409, 436, 450, 454 are one bound volume of al-Kattani's pieces photographed in 2005.
+- Plan 392 (4 renames, «مخطوط» → «طبعة حجرية»; 443 and 513 authors and 513's «بشرح» from their title pages). Undo: apply_plan.py --undo 392-lithographs-not-manuscripts. The four al-Kattani files name nothing, so unchanged. 8 rows out of manuscripts.tsv (report 10 now 44 works, 47 files, 38 with a holding), title-read updated, report's note reworded, refresh.sh done, web 3956a1c.
+- 513's file also holds pp. 328–330 of the next books of the bound volume (the «تسهيل الفوائد» title page is p. 330). A volume is never split: left alone. No press or city in any name: none is stated. Not read: 513's own colophon (not on the pages looked at).
+- Still open, not urgent: 6 manuscripts' libraries unknown, 13 «piece» rows.
+
+## 2026-11-03 01:30 UTC — FIX U IN book_crop (fee81519ef); REGRESSION 27r RUNNING (Claude, Opus)
 - FIRST after a clear: arm `python3 -u scripts/watch_comments.py` as a Monitor, and a background wait on unit crop-regress-2026-11-02r. Do NOT edit book_crop.py, crop_regress.py or the cases while it runs.
 - REPLAY crop-band-test ENDED: 182 of 183 OK, 1 DIFF: 08 - الذخائر, 337 boxes against 280: its wadod.org passes at HEAD_SHARE 0.6, not at the bench's 0.8, so the bench had no hits for it. All 119 boxes off the median drawn, read by eye (60 of them): all wadod.org. Right, no fault.
 - APPLIED: fix U + one_image, commit in git log; book_crop == bc_u2.py (cmp). Every mark the fix keeps on the 183 books has been read by eye.
@@ -52,7 +58,7 @@ every turn, benched before 26i.
 - THE IDEA, UNMEASURED: a digital stamp sits at the same pixel on every page, print moves with the scan: iqr of x/y, overlap and correlation of the group should split them where share cannot. Also the taller-variant case (494: the stamp swallowing the page number).
 - RUNNING: unit crop-bandstats (crop.slice, read-only, resumable, its own PHONE_HOST), scratch/band-2026-11-02/bandstats.py on sample.txt (58 books: the 31, one of each kind, calibration 302, 371, 373, 486, 494, غانشف, أخلاقية مركزية). 51 of 58 at 17:37. Out: scratch/band-2026-11-02/stats.jsonl (one book a line, `groups`: passed, share, odd, box, iqr_x/y/w/h, ov50, ov10, cor10, ink, sample), originals kept in ~/.cache/phone-library/crop-band/ for retesting (keep until 27r). Sheets are in the OLD session's scratchpad, /tmp/claude-1000/-home-k-projects-phone-library/398e0b68-a30c-43fe-99c5-febffdf99364/scratchpad/band/NN.jpg (NN = line of sample.txt), crops of each group with a red box; if gone, rerun: delete stats.jsonl, it refetches nothing.
 - NEXT: read stats.jsonl against the sheets by eye → choose the rule on that evidence (bench it on crop-band/, including the running «same stamp elsewhere» step and 302's «مناسبة») → patch book_crop (not while a regression runs) → case rows → regression 27r → redo 277 alone (remove its row from redo-done.tsv) → the owner. Full redo = his word; البداية 21 + المغرب 01 want crop_batch.py --again after it. Disk 9.4 GB free: look before it.
-- ALSO OPEN, not urgent: 8 possible Fez lithographs (see 10:25 below), 14 manuscripts' libraries unknown, 13 «piece» rows. decisions.html has no open row.
+- ALSO OPEN, not urgent: (lithographs done, 01:45 section above) 6 manuscripts' libraries unknown, 13 «piece» rows. decisions.html has no open row.
 
 ## 2026-11-02 10:50 UTC — OWNER ANSWERED ALL THREE: SURVEY RESTARTED, ROW 82 KEPT, HIBERNATE SET (Claude, Opus)
 - «restart the survey»: done 10:45 by restart_survey2.sh, PHONE_HOST=172.26.156.17, 186 books left. The «SURVEY2 IS STUCK» line below is over.
