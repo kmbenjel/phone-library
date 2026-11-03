@@ -13646,6 +13646,71 @@
   "note": null
  },
  {
+  "work": "الامتاع والموانسه",
+  "title": "الإمتاع والمؤانسة",
+  "author": "أبو حيان التوحيدي",
+  "bytes": 35502832,
+  "editions": [
+   {
+    "folder": "الإمتاع والمؤانسة - أبو حيان التوحيدي (ت أحمد أمين وأحمد الزين - لجنة التأليف والترجمة والنشر)",
+    "cat": "الأدب",
+    "edition": "ت أحمد أمين وأحمد الزين - لجنة التأليف والترجمة والنشر",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 4330393,
+    "quality": {
+     "files": 1,
+     "pages": 242,
+     "kbpp": 17,
+     "px": 1210,
+     "colour": "أبيض وأسود",
+     "width_used": 0.79,
+     "text": false
+    },
+    "score": 59.0,
+    "waqfeya": [],
+    "same_edition": true,
+    "best_scan": true
+   },
+   {
+    "folder": "الإمتاع والمؤانسة - أبو حيان التوحيدي - ت أحمد أمين وأحمد الزين - دار مكتبة الحياة",
+    "cat": "الأدب",
+    "edition": "ت أحمد أمين وأحمد الزين - دار مكتبة الحياة",
+    "researcher": "",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "",
+    "complete": false,
+    "bytes": 19271637,
+    "quality": null,
+    "score": -1,
+    "waqfeya": [],
+    "same_edition": true,
+    "best_scan": false
+   },
+   {
+    "folder": "كتاب الإمتاع والمؤانسة - أبو حيان التوحيدي - اعتنى به وراجعه هيثم خليفة الطعيمي - المكتبة العصرية صيدا بيروت",
+    "cat": "الأدب",
+    "edition": "ت هيثم خليفة الطعيمي - 1424 - 2004",
+    "researcher": "هيثم خليفة الطعيمي",
+    "publisher": "",
+    "files": 1,
+    "vols_edition": "1",
+    "complete": true,
+    "bytes": 11900802,
+    "quality": null,
+    "score": -1,
+    "waqfeya": [
+     "https://waqfeya.net/books/الإمتاع-والمؤانسة-ط-العصرية-ت-الطعيمي-539943d8d3a44604b35226d2b88a8e60"
+    ]
+   }
+  ],
+  "note": null
+ },
+ {
   "work": "ديوان جرير بشرح محمد",
   "title": "ديوان جرير بشرح محمد بن حبيب",
   "author": "جرير",
@@ -19686,53 +19751,6 @@
     "score": 80.2,
     "waqfeya": [
      "https://waqfeya.net/books/بستان-العارفين-ط-التراث-7012127f858244559dd24c551e4e59f7"
-    ]
-   }
-  ],
-  "note": null
- },
- {
-  "work": "الامتاع والموانسه",
-  "title": "الإمتاع والمؤانسة",
-  "author": "أبو حيان التوحيدي",
-  "bytes": 16231195,
-  "editions": [
-   {
-    "folder": "الإمتاع والمؤانسة - أبو حيان التوحيدي (ت أحمد أمين وأحمد الزين - لجنة التأليف والترجمة والنشر)",
-    "cat": "الأدب",
-    "edition": "ت أحمد أمين وأحمد الزين - لجنة التأليف والترجمة والنشر",
-    "researcher": "",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "",
-    "complete": false,
-    "bytes": 4330393,
-    "quality": {
-     "files": 1,
-     "pages": 242,
-     "kbpp": 17,
-     "px": 1210,
-     "colour": "أبيض وأسود",
-     "width_used": 0.79,
-     "text": false
-    },
-    "score": 59.0,
-    "waqfeya": []
-   },
-   {
-    "folder": "كتاب الإمتاع والمؤانسة - أبو حيان التوحيدي - اعتنى به وراجعه هيثم خليفة الطعيمي - المكتبة العصرية صيدا بيروت",
-    "cat": "الأدب",
-    "edition": "ت هيثم خليفة الطعيمي - 1424 - 2004",
-    "researcher": "هيثم خليفة الطعيمي",
-    "publisher": "",
-    "files": 1,
-    "vols_edition": "1",
-    "complete": true,
-    "bytes": 11900802,
-    "quality": null,
-    "score": -1,
-    "waqfeya": [
-     "https://waqfeya.net/books/الإمتاع-والمؤانسة-ط-العصرية-ت-الطعيمي-539943d8d3a44604b35226d2b88a8e60"
     ]
    }
   ],
