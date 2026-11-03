@@ -1590,30 +1590,37 @@ def by_rules(mk, ang, gain, rec):
     if abs(r_ - md) <= 0.6 and g_ >= 1.02: rec['tilt_by_rules'] = round(md, 2); return r_, g_
     return ang, gain
 
-def colour_stamps(page, px=500):
+def colour_stamps(page, px=500, words=False):
     """A COLOURED STAMP ON A PAGE PRINTED IN BLACK (owner 2026-10-14, خزانة الأدب ص 18: «لم تزل الطابع في الأولى لتحصل على
     نفس التكبير في غيرها» — a purple «dar-alkotob» octagon above the text): ink of a clear colour (channels differing by ≥ 60);
     its groups (marks within 0.5 % of the width) at least 3 % of the width or 2 % of the height, lying wholly outside the
     black text's extent (2–98 % of the grey ink, rows or columns) — above, below or beside it. A coloured heading or word
     inside the text column stays, and a page printed mostly in colour (coloured ink > 30 % of all ink) is left alone.
-    Left out of every measure like an uploader's stamp. Returns their boxes (pt)"""
+    Left out of every measure like an uploader's stamp. Returns their boxes (pt) — and, with words=True, (boxes, whether
+    the page prints in colour: COLOUR_WORDS coloured words or more inside the black text's extent, their ink ≥ 0.5 % of the
+    black ink there); a page printed in colour gives no boxes (2026-11-03, see colour_marks_of)"""
     z = px / page.rect.width
     pix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), colorspace=pymupdf.csRGB, alpha=False)
-    if pix.n < 3: return []
+    none = ([], False) if words else []
+    if pix.n < 3: return none
     a = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width * 3].reshape(pix.height, pix.width, 3).astype(np.int16)
     g = a.mean(axis=2); paper = float(np.percentile(g, 90))
-    if paper < 150: return []
+    if paper < 150: return none
     ink = g < paper - 40; sat = (a.max(axis=2) - a.min(axis=2)) >= 60
     col = ink & sat; black = ink & ~sat; ni = int(ink.sum())
-    if ni == 0 or col.sum() == 0 or col.sum() > 0.30 * ni or black.sum() < 200: return []
+    if ni == 0 or col.sum() == 0 or col.sum() > 0.30 * ni or black.sum() < 200: return none
     H, W = g.shape
     lab, k = ndimage.label(ndimage.binary_dilation(col, iterations=max(1, int(0.005 * W))))
     groups = ndimage.find_objects(lab)
     bl = black.copy(); e = int(0.01 * W)             # the stamp's own black lettering is not the page's text
     for sl in groups: bl[max(0, sl[0].start - e):sl[0].stop + e, max(0, sl[1].start - e):sl[1].stop + e] = False
-    if bl.sum() < 200: return []
+    if bl.sum() < 200: return none
     by, bx = np.nonzero(bl)
     y0, y1 = np.percentile(by, [2, 98]); x0, x1 = np.percentile(bx, [2, 98])
+    ins = col[int(y0):int(y1), int(x0):int(x1)]       # coloured words among the black lines: the page prints in colour
+    if ins.sum() >= 0.005 * black[int(y0):int(y1), int(x0):int(x1)].sum() and \
+            ndimage.label(ndimage.binary_dilation(ins, iterations=2))[1] >= COLOUR_WORDS:
+        return ([], True) if words else []
     out = []
     for sl in groups:
         h_, w_ = sl[0].stop - sl[0].start, sl[1].stop - sl[1].start
@@ -1622,17 +1629,61 @@ def colour_stamps(page, px=500):
             e_ = 0.015 * W                           # its faint, anti-aliased edge too (خزانة الأدب ج 2 ص 18: a corner was left)
             out.append([round(max(0, sl[1].start - e_) / z, 1), round(max(0, sl[0].start - e_) / z, 1),
                         round(min(W, sl[1].stop + e_) / z, 1), round(min(H, sl[0].stop + e_) / z, 1)])
+    return (out, False) if words else out
+
+COLOUR_WORDS = 5           # coloured words inside the text column that make a page «printed in colour» (bench 2026-11-03:
+                           # pages of الرسالة, نظم تنقيح, عالم المعرفة ≥ 5 — up to 50; every page with a real colour stamp 0)
+COLOUR_BOOK = 0.20         # the share of a book's pages printed in colour that makes the whole book so (الرسالة 97 %, نظم
+                           # تنقيح 78 %; books with a real colour stamp 0, a colour scan with yellow edges 1 %)
+COLOUR_REPEAT = 3          # pages a coloured mark must stand on, at the same place and of the same size
+
+def _colour_chunk(args):
+    path, idx = args
+    doc = pymupdf.open(path); out = {}
+    for i in idx:
+        pg = doc[i]
+        if pg.rotation: continue
+        bx, inc = colour_stamps(pg, words=True)
+        out[i] = ([[round(v / s, 4) for v, s in zip(b, (pg.rect.width, pg.rect.height) * 2)] for b in bx], inc, bx)
     return out
 
-def analyse_pages(path, stamps=None, only=None, jobs=1):
+def colour_marks_of(path, jobs=1):
+    """THE BOOK'S COLOURED STAMPS (2026-11-03): colour_stamps page by page took coloured PRINT for a stamp — الرسالة (دار
+    المنهاج, printed in black, red and blue): its red paragraph numbers, red footnote references and, where blue words at
+    the lines' ends joined them, a band over the text lines' ends, painted out on 204 of 221 pages by the full redo
+    (owner: «Stop now, fix, resume»); in other books a colour illustration's pieces (عالم المعرفة 039), a publisher's blue
+    imprint block (ابن زرب p. 3), a scan's edge. The real ones read on the 54 regression books are all an uploader's or a
+    library's mark set at one place on many pages: «www.dar-alkotob.com» (خزانة الأدب ج 2, ج 4: pp. 7–25 and the last
+    pages), «wadod.org» (الذخائر), «www.dorat-ghawas.com» (الإعلام, مجمع الآداب). So: a page printed in colour (coloured
+    words in its text column) has none; a book with ≥ COLOUR_BOOK of its pages so has none; a mark stays only when its like
+    (same place ± 2.5 % of the page, same size ± 20 %) stands on ≥ COLOUR_REPEAT pages. A real mark set once is left in
+    view (it costs little). Returns {page: [boxes in pt]}"""
+    n = pymupdf.open(path).page_count; idx = list(range(n)); got = {}
+    if jobs > 1 and n > 20:
+        with ProcessPoolExecutor(jobs) as ex:
+            for part in ex.map(_colour_chunk, [(path, idx[k::jobs]) for k in range(jobs)]): got.update(part)
+    else: got = _colour_chunk((path, idx))
+    if not got or sum(1 for v in got.values() if v[1]) >= COLOUR_BOOK * len(got): return {}
+    marks = [(i, j, f) for i, (fr, _, _) in got.items() for j, f in enumerate(fr)]
+    like = lambda a, b: (abs(a[0] - b[0]) <= 0.025 and abs(a[1] - b[1]) <= 0.025 and
+                         abs((a[2] - a[0]) - (b[2] - b[0])) <= 0.2 * max(a[2] - a[0], b[2] - b[0]) and
+                         abs((a[3] - a[1]) - (b[3] - b[1])) <= 0.2 * max(a[3] - a[1], b[3] - b[1]))
+    out = {}
+    for i, j, f in marks:
+        if len({i2 for i2, _, f2 in marks if like(f, f2)}) >= COLOUR_REPEAT: out.setdefault(i, []).append(got[i][2][j])
+    return out
+
+def analyse_pages(path, stamps=None, only=None, jobs=1, colour=None):
     """the first look at every page (or the pages `only`, in parallel over `jobs` processes); `stamps`: {page: box} of an
-    uploader's stamp, left out of every measure"""
+    uploader's stamp, left out of every measure; `colour`: the book's coloured stamps (colour_marks_of; read here when not
+    given)"""
     stamps = stamps or {}
+    if colour is None: colour = colour_marks_of(path, jobs)
     if jobs > 1 and only is None:
         n = pymupdf.open(path).page_count; idx = list(range(n))
         out = {}
         with ProcessPoolExecutor(jobs) as ex:
-            for part in ex.map(_analyse_chunk, [(path, stamps, idx[k::jobs]) for k in range(jobs)]): out.update(part)
+            for part in ex.map(_analyse_chunk, [(path, stamps, idx[k::jobs], colour) for k in range(jobs)]): out.update(part)
         return [out[i] for i in idx]
     doc = pymupdf.open(path)
     pages = []; done = {}
@@ -1645,7 +1696,7 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
             cv = cover_rect(page)
             if cv: rec.update(kind='cover', cover=cv, box=cv, cover_marks=cover_marks(page, cv)); pages.append(rec); done[i] = rec; continue
         st = list(stamps.get(i) or stamps.get(str(i)) or [])
-        cs = colour_stamps(page)                       # a coloured stamp on a page printed in black: left out like the others
+        cs = colour.get(i)                             # a coloured stamp on a page printed in black: left out like the others
         if cs: st += cs; rec['colour_stamp'] = cs
         if st: rec['stamp'] = st
         ex0 = [pad_box(b, r.width) for b in st] if st else None
@@ -1805,8 +1856,8 @@ def analyse_pages(path, stamps=None, only=None, jobs=1):
     return done if only is not None else pages
 
 def _analyse_chunk(args):
-    path, stamps, idx = args
-    return analyse_pages(path, stamps, only=set(idx))
+    path, stamps, idx, colour = args
+    return analyse_pages(path, stamps, only=set(idx), colour=colour)
 
 def pad_box(b, w):
     d = 1.5 + 0.004 * w; return [b[0] - d, b[1] - d, b[2] + d, b[3] + d]
