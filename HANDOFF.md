@@ -9,6 +9,11 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-03 05:25 UTC — 27r PASSED (0 failures, 388 PASS); 277 BEING REDONE ALONE (Claude, Opus)
+- 27r ended 05:19: 0 failures; diff vs 27q (logs/crop-regress-diff-2026-11-02r.log): all 34 books unchanged, 0 pages changed (نظم تنقيح too: one_image kept its logo as before). The 10 new case books had no earlier recipe; their 32 rows pass. book_crop fee81519ef stands.
+- ~/.cache/phone-library/crop-band cleared (176 originals, 1.7 GB; the 10 case books stay hard-linked in crop-regress). Disk 8.6 GB free.
+- RUNNING: unit crop-redo-277-2026-11-03 (crop_redo.py scratch/redo-277-2026-11-03.tsv redo-277-2026-11-03 --workers 1, log logs/crop-redo-277-2026-11-03.log); its row was removed from data/crop/redo-done.tsv first. THEN: check pp. 138, 142, 158, 160, 220 on the phone file by eye; queue 393 (wait_calm first) and plan 394; refresh.sh; WORKLOG; the owner. FULL REDO = HIS WORD.
+
 ## 2026-11-03 03:30 UTC — OWNER'S «PIECE» ROWS: 4 WHOLE BOOKS FOUND, QUEUE 393 READY, NOT RUN (DISK) (Claude, Opus)
 - Searched archive.org for the 13 open «piece» rows of data/names/owner-actions.tsv; title pages read by eye on page previews (no downloads).
 - FOUND, SAME EDITION: 827 المنازل والديار ج 1 (same uploader and series as our ج 2; introduction: «تولى تحقيق الكتاب … شعيب الأرنؤوط … المكتب الإسلامي، غرة المحرم 1385»); 819 أمثال العوام القسم الأول (ت محمد بن شريفة, same bytes in 3 uploads); 773 the whole volume «رسالة في أن القرآن غير مخلوق للحربي ويليه رسالة الإمام أحمد» (دار العاصمة ط 1 1416, ت علي الشبل; 2412Pdf = 2811Pdf bytes); 795 الفوائد الجنية vols 1 and 2 (دار البشائر 1417, اعتنى به رمزي دمشقية; two uploads, same bytes).
