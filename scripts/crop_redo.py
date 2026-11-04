@@ -13,10 +13,15 @@ crop-review-002/004: «you should be mature enough now to handle all this … Go
      the book failed for good and could leave «<name>.redo» in Books/; a phone away made the run walk the whole list);
   4. logged in data/changes/changes.tsv (action «crop», reason «redo …»), the recipe kept, index-now.tsv size updated,
      data/crop/redo-done.tsv (resumable). The earlier sample sheets are kept in crop-sheets-v1/.
+  --remote (owner 2026-11-04 «optimize for speed … more powerful CPU/memory (cloud)»): step 2 runs on the cloud VM
+     (VM_NAME in VM_ZONE, scripts/crop_remote.py there), N books at once (default 14 — its 16 processors); the laptop
+     stages, uploads each original to it (paced, one bulk transfer at a time with the phone's: §7.9), gets back the new
+     revision's bytes and the review sheets, and does steps 3–4 as before. The VM away (a spot VM stopped by Google) pauses
+     the run and starts it again (wait_vm).
 Usage: python3 scripts/crop_redo.py --list-all OUT.tsv          (every book cropped and not undone, current paths)
-       python3 scripts/crop_redo.py LIST.tsv BATCH [--workers N] [--dry]   (--dry: everything but the phone write)"""
-import csv, hashlib, itertools, os, shutil, sys, time, ftplib
-from concurrent.futures import ProcessPoolExecutor, as_completed
+       python3 scripts/crop_redo.py LIST.tsv BATCH [--workers N] [--dry] [--remote]   (--dry: everything but the phone write)"""
+import csv, hashlib, io, itertools, json, os, shlex, shutil, subprocess, sys, tarfile, threading, time, ftplib
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 import crop_batch as cb
@@ -73,6 +78,150 @@ def wait_phone(why):
         if t % 30 == 0: print(time.strftime('%F %T'), f'phone away ({why}): waiting for it', flush=True)
         time.sleep(60)
 
+# ---- the cloud VM (--remote) ----
+VM_NAME, VM_ZONE, VM_USER = (os.environ.get('CROP_VM', 'crop-vm'), os.environ.get('CROP_VM_ZONE', 'europe-southwest1-b'),
+                             os.environ.get('CROP_VM_USER', 'k'))
+VM_KEY = os.path.expanduser('~/.ssh/google_compute_engine')
+VM_REPO = 'phone-library'                             # the repo copy in the VM user's home
+VM_DATA = ['data/crop/owner-turns.tsv', 'data/crop/owner-pages.tsv', 'data/changes/changes.tsv', 'data/phone/index-now.tsv']
+VM = None                                             # «user@address» once --remote has found it
+NET = threading.Lock()                                # one bulk transfer at a time, the phone's and the VM's (AGENTS.md §7.9)
+STAGE_GB = float(os.environ.get('STAGE_GB', '6'))     # (§7.5: the staged originals waiting for the VM, at most this much)
+BC = None                                             # book_crop.py's MD5: the VM must run the same
+
+def vm_address():
+    r = subprocess.run(['gcloud', 'compute', 'instances', 'describe', VM_NAME, f'--zone={VM_ZONE}',
+                        '--format=value(status,networkInterfaces[0].accessConfigs[0].natIP)'], capture_output=True, text=True, timeout=120)
+    if r.returncode: raise RuntimeError(f'gcloud: {r.stderr.strip()[:200]}')
+    st, ip = (r.stdout.split() + ['', ''])[:2]
+    return st, ip
+
+def ssh_args():
+    return ['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=20', '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=4',
+            '-o', 'StrictHostKeyChecking=accept-new', '-i', VM_KEY, VM]
+
+def ssh(cmd, data=None, timeout=900):
+    """one command on the VM → its output (bytes); ConnectionError when ssh itself fails (exit 255: the VM away)"""
+    try: r = subprocess.run(ssh_args() + [cmd], input=data, capture_output=True, timeout=timeout)
+    except subprocess.TimeoutExpired: raise ConnectionError(f'ssh timed out after {timeout} s: {cmd[:80]}')
+    if r.returncode == 255: raise ConnectionError(f'ssh: {r.stderr.decode(errors="replace").strip()[:200]}')
+    if r.returncode: raise RuntimeError(f'on the VM: {cmd[:100]} → exit {r.returncode}: {r.stderr.decode(errors="replace").strip()[-300:]}')
+    return r.stdout
+
+VM_WAIT = threading.Lock()
+
+def wait_vm(why):
+    """until the VM answers again; a spot VM stopped by Google is started again (its address may change). One thread
+    waits, the others behind it find the VM back at once"""
+    with VM_WAIT: _wait_vm(why)
+
+def _wait_vm(why):
+    global VM
+    for t in itertools.count():
+        try: ssh('true', timeout=60); return
+        except (ConnectionError, RuntimeError): pass
+        if t % 5 == 0:
+            try:
+                st, ip = vm_address()
+                if ip: VM = f'{VM_USER}@{ip}'
+                if st in ('TERMINATED', 'STOPPED'):
+                    print(time.strftime('%F %T'), f'VM {VM_NAME} {st} ({why}): starting it again', flush=True)
+                    subprocess.run(['gcloud', 'compute', 'instances', 'start', VM_NAME, f'--zone={VM_ZONE}'], capture_output=True, timeout=600)
+                    continue
+            except Exception as e: print(time.strftime('%F %T'), 'gcloud:', repr(e)[:160], flush=True)
+        if t % 30 == 0: print(time.strftime('%F %T'), f'VM away ({why}): waiting for it', flush=True)
+        time.sleep(60)
+
+def sync_vm():
+    """the scripts and the data analyse reads, to the VM's repo copy; the same book_crop.py or nothing runs"""
+    global VM, BC
+    st, ip = vm_address()
+    if st in ('TERMINATED', 'STOPPED'):              # (stopped when idle, or by Google: started for the run)
+        print(time.strftime('%F %T'), f'VM {VM_NAME} {st}: starting it', flush=True)
+        subprocess.run(['gcloud', 'compute', 'instances', 'start', VM_NAME, f'--zone={VM_ZONE}'], capture_output=True, timeout=600)
+        for _ in range(20):
+            st, ip = vm_address()
+            if st == 'RUNNING' and ip:
+                VM = f'{VM_USER}@{ip}'
+                try: ssh('true', timeout=60); break
+                except (ConnectionError, RuntimeError): pass
+            time.sleep(15)
+    if st != 'RUNNING' or not ip: raise SystemExit(f'VM {VM_NAME} is {st}: start it first (gcloud compute instances start {VM_NAME} --zone={VM_ZONE})')
+    VM = f'{VM_USER}@{ip}'
+    rsh = ' '.join(shlex.quote(x) for x in ssh_args()[:-1])
+    for src, dst, extra in ((J('scripts') + '/', f'{VM}:{VM_REPO}/scripts/', ['--delete', '--exclude=__pycache__']),
+                            (None, f'{VM}:{VM_REPO}/', ['--relative'])):
+        cmd = ['rsync', '-a', '-e', rsh, *extra] + ([src] if src else [f'./{p}' for p in VM_DATA]) + [dst]
+        r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=1800)
+        if r.returncode: raise SystemExit(f'rsync to the VM failed: {r.stderr.strip()[:300]}')
+    BC = cb.md5_file(J('scripts', 'book_crop.py'))
+    there = ssh(f'md5sum {VM_REPO}/scripts/book_crop.py').decode().split()[0]
+    if there != BC: raise SystemExit(f'book_crop.py on the VM ({there}) is not the laptop\'s ({BC})')
+    print(f'VM {VM_NAME} at {ip}: scripts and data synced, book_crop {BC[:10]}', flush=True)
+    cb.pacer()                                        # (one pacer for every thread: made here, before them)
+
+def vm_put(local, remote):
+    """the file to the VM (written as «.part», renamed when whole), paced like the phone's transfers and alone on the network"""
+    q = shlex.quote(remote)
+    with NET:
+        p = subprocess.Popen(ssh_args() + [f'mkdir -p "$(dirname {q})" && cat > {q}.part && mv {q}.part {q}'], stdin=subprocess.PIPE,
+                             stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+        pc = cb.pacer()
+        try:
+            with open(local, 'rb') as f:
+                for b in iter(lambda: f.read(1 << 16), b''): p.stdin.write(b); pc.wait(len(b))
+            p.stdin.close()
+        except BrokenPipeError: pass
+        rc = p.wait(); err = p.stderr.read().decode(errors='replace').strip()
+    if rc: raise ConnectionError(f'upload to the VM failed (exit {rc}): {err[:200]}')
+
+def remote_analyse(path, work, m0):
+    """crop_batch.analyse on the VM → its dict with the laptop's paths: the new file = the original + the revision's bytes
+    fetched back (checked against the VM's MD5), the review sheets copied into the laptop's crop-sheets folder"""
+    hx = path.encode('utf-8').hex(); h = hashlib.md5(path.encode()).hexdigest()[:12]
+    d = f'redo/{h}-{m0[:10]}-{BC[:10]}'; tool = f'python3 -I {VM_REPO}/scripts/crop_remote.py'
+    n0 = os.path.getsize(work); uploaded = False; again = 0
+    while True:
+        try:
+            s = ssh(f'mkdir -p {d} && {tool} start {d} {hx} {m0}').decode().strip()
+            if s == 'nosrc':
+                if uploaded: raise RuntimeError('the original on the VM is not the staged one after its upload')
+                vm_put(work, f'{d}/src.pdf'); uploaded = True; continue
+            while s in ('started', 'running'):
+                s = ssh(f'{tool} wait {d} 600', timeout=900).decode().strip()
+            if s == 'none':                           # (the VM was stopped mid-analysis: started again — three times at
+                again += 1                            # most: an analysis killed with no word, e.g. out of memory)
+                if again > 3: ssh(f'{tool} clean {d} {hx}'); raise RuntimeError('the analysis on the VM ended 4 times with no result')
+                continue
+            if s == 'error':
+                err = ssh(f'cat {d}/error.txt; {tool} clean {d} {hx} >/dev/null').decode(errors='replace')
+                raise RuntimeError('on the VM: ' + err.strip().splitlines()[-1][:300] if err.strip() else 'on the VM: failed')
+            out = json.loads(ssh(f'cat {d}/out.json'))
+            for l in (out.pop('log', '') or '').splitlines():
+                if l.strip(): print('  VM |', l[:200], flush=True)
+            if out.get('n0') != n0: raise RuntimeError(f'the VM analysed {out.get("n0")} B, not the staged {n0} B')
+            new = work
+            if out.get('dst'):
+                with NET: tail = ssh(f'tail -c +{n0 + 1} {d}/src.cropped.pdf', timeout=3600)
+                new = work[:-4] + '.cropped.pdf'
+                shutil.copyfile(work, new)
+                with open(new, 'ab') as f: f.write(tail)
+            if os.path.getsize(new) != out['n1'] or cb.md5_file(new) != out['m1']:
+                raise RuntimeError(f'the new file rebuilt here is not the VM\'s (size {os.path.getsize(new)} vs {out["n1"]})')
+            sheets = ssh(f'cd .cache/phone-library/crop-sheets 2>/dev/null && [ -d {h} ] && tar -cf - {h} || true')
+            if sheets:
+                shutil.rmtree(os.path.join(cb.SHEETS, h), ignore_errors=True)
+                with tarfile.open(fileobj=io.BytesIO(sheets)) as t: t.extractall(cb.SHEETS, filter='data')
+            ssh(f'{tool} clean {d} {hx}')
+            out.update(src=work, dst=new if out.get('dst') else None)
+            return out
+        except ConnectionError as e:
+            print('VM LOST', path[:80], repr(e)[:160], flush=True); wait_vm('analysis')
+
+def staged_gb():
+    try: return sum(e.stat().st_size for e in os.scandir(cb.STAGE) if e.is_file()) / 2 ** 30
+    except OSError: return 0.0
+
 def md5_of(ph, path):
     """the phone file's MD5, or None when there is no such file"""
     try: return ph.md5(path)
@@ -97,7 +246,7 @@ def put_in_place(path, new, n1, m1, m_old, tries=5):
                     ph.f.rename('Books/' + tmp, 'Books/' + path)
                 elif now != m_old: raise RuntimeError('the phone file changed meanwhile')
                 else:
-                    ph.put(tmp, new)
+                    with NET: ph.put(tmp, new)
                     if ph.size(tmp) != n1 or ph.md5(tmp) != m1:
                         ph.f.delete('Books/' + tmp); raise RuntimeError('upload not verified (the old file is untouched)')
                     ph.f.delete('Books/' + path)
@@ -118,7 +267,7 @@ def stage(path, n0, m0, m1):
     lp = local.get(path)
     if lp and os.path.exists(lp) and os.path.getsize(lp) == n0 and cb.md5_file(lp) == m0:
         shutil.copyfile(lp, work); return work, now
-    with cb.Phone() as ph: ph.get(path, work)
+    with cb.Phone() as ph, NET: ph.get(path, work)
     if os.path.getsize(work) < n0: raise ConnectionError(f'the download stopped short ({os.path.getsize(work)} of ≥ {n0} B)')
     with open(work, 'r+b') as f: f.truncate(n0)
     if cb.md5_file(work) != m0: os.remove(work); raise RuntimeError('the truncated phone file is not the original')
@@ -158,7 +307,8 @@ def finish(fu, meta, batch):
         for p in {src, r.get('dst')}:
             if p and os.path.exists(p): os.remove(p)
 
-def main(list_tsv, batch, workers=3):
+def main(list_tsv, batch, workers=3, remote=False):
+    if remote: sync_vm()
     table = crops(); fwd, back = cb.moves()
     idx = {l.split('\t')[0] for l in open(J('data', 'phone', 'index-now.tsv'), encoding='utf-8') if l.strip()}
     def follow(p):                                    # ONLY a path no longer on the phone is followed, to the first path
@@ -172,7 +322,7 @@ def main(list_tsv, batch, workers=3):
     paths = [p for p in paths if not any(n in done for n in cb.names_of(p, back))]   # (done under any of its names)
     print(f'{len(paths)} books to redo', flush=True)
     v1 = cb.SHEETS + '-v1'; os.makedirs(v1, exist_ok=True); later = []
-    with ProcessPoolExecutor(workers) as ex:
+    with (ThreadPoolExecutor(workers) if remote else ProcessPoolExecutor(workers)) as ex:
         futs = {}
         def fin(fu):
             meta = futs.pop(fu)
@@ -199,8 +349,10 @@ def main(list_tsv, batch, workers=3):
             if work is None: continue
             sh = os.path.join(cb.SHEETS, hashlib.md5(path.encode()).hexdigest()[:12])
             if os.path.isdir(sh) and not os.path.exists(os.path.join(v1, os.path.basename(sh))): shutil.move(sh, v1)
-            futs[ex.submit(cb.analyse, path, work, 1)] = (path, n0, m0, now)
-            while futs and (len(futs) >= min(workers, cb.governed(workers)) + 1 or not cb.room()):   # the governor's number,
+            if remote: futs[ex.submit(remote_analyse, path, work, m0)] = (path, n0, m0, now)
+            else: futs[ex.submit(cb.analyse, path, work, 1)] = (path, n0, m0, now)
+            while futs and ((len(futs) >= workers + 1 or staged_gb() > STAGE_GB) if remote else   # (the VM: N at once, one staged
+                            (len(futs) >= min(workers, cb.governed(workers)) + 1 or not cb.room())):   # ahead) the governor's number,
                                                                    # one staged ahead; a new book only with ≥ 3 GB free
                 for fu in as_completed(list(futs)): fin(fu); break
         for fu in as_completed(list(futs)): fin(fu)
@@ -211,5 +363,7 @@ def main(list_tsv, batch, workers=3):
 if __name__ == '__main__':
     a = sys.argv[1:]
     if '--dry' in a: DRY = True; a.remove('--dry'); DONE = DONE + '.dry'
+    remote = '--remote' in a
+    if remote: a.remove('--remote')
     if a and a[0] == '--list-all': list_all(a[1])
-    else: main(a[0], a[1], int(a[a.index('--workers') + 1]) if '--workers' in a else 3)
+    else: main(a[0], a[1], int(a[a.index('--workers') + 1]) if '--workers' in a else (14 if remote else 3), remote)
