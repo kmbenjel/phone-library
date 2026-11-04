@@ -20,6 +20,12 @@ every turn, benched before 26i.
   (2) Scripts/watchdog still FTP-only; moving them to SSH (hash-based dup checks, more connections) waits for a quiet phone
   (no crop job) and the owner's go. (3) Developer options may be switched off (adb no longer needed).
 
+## 2026-11-04 14:00 UTC — REDO STOPPED, ON HOLD (Claude, Opus): READ THIS FIRST
+- OWNER (on 4G, the phone's hotspot): «just cancel the three so i redo them later». crop-redo-2026-11-03b and
+  crop-hold-2026-11-04 stopped; the 3 books in progress were not marked and nothing was uploaded (phone unreachable from the
+  hotspot); their staged copies in downloads/crop-batch deleted. redo-done.tsv = 192 rows: a relaunch on the same list
+  skips them and redoes the rest (1,122 − 192). Relaunch ONLY on the owner's word; command below.
+
 ## 2026-11-04 12:45 UTC — REDO ON HOLD BY THE OWNER'S WORD (Claude, Opus)
 - 10:38 the laptop moved to the phone's hotspot (phone 172.26.156.17; off home phone_host only tries 192.168.11.x, so the
   watchdog paused the redo at 192/1,122). OWNER: «complete current books and hold on». The 3 workers were resumed by hand
