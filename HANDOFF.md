@@ -9,6 +9,16 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-04 20:30 UTC — REDO RUNNING ON THE CLOUD VM (Claude, Opus): READ THIS FIRST
+- OWNER: «should go from now … laptop will no longer be drained»; «Go now over 4G», «ok with mobile data» (~12 GB).
+- Unit crop-redo-2026-11-04-vm (scratch/redo_2026-11-04-vm.sh): crop_redo.py --remote --workers 14, same list/batch/log
+  (logs/crop-redo-2026-11-03.log), 930 left. PHONE_HOST=NETPACE_ROUTER=172.31.125.100 (the phone's hotspot gateway; back
+  home: stop nothing — but the phone moves to 192.168.11.100: restart the unit's job with crop_redo.py --remote and the home
+  address, or it waits for the phone). Its end stops the VM.
+- PROVEN before launch: VM output = laptop output byte for byte except the trailer /ID's 2nd half (random at every save,
+  laptop vs laptop too) on Perrault and فيض الخاطر 01 (67 turns); sheets identical; remote_analyse end to end OK (267 s).
+- Monitor the log (VM LOST|phone away|FAIL|REDONE). VM side: ~/redo/<dir> per book, cleaned after each.
+
 ## 2026-11-04 11:30 local — PHONE SSH ADDED (Claude, Opus); the crop redo state below is unchanged
 - Termux (F-Droid 0.118.3) on the phone runs `sshd` on port 8022, key login only (`~/.config/phone-library/phone_ssh`,
   user `u0_a543`, storage granted). rclone remote `phonessh:/sdcard/Books` with real md5/sha1 on the phone; rsync installed;
