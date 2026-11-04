@@ -37,7 +37,8 @@ text of each section is in `docs/agents/` (open the one your task touches):
 - FTP on port `2221`. Address reserved in the router: `192.168.11.100`; `scripts/phone_host.py` tries the known
   addresses, then scans the /24 (`PHONE_HOST=<ip>` overrides). rclone remote `phone:` (library `phone:Books`).
 - Also SSH/SFTP (Termux `sshd`, port `8022`, key `~/.config/phone-library/phone_ssh`): rclone `phonessh:/sdcard/Books`, real
-  md5/sha1 and rsync on the phone; scripts still use FTP (`docs/agents/phone.md`).
+  md5/sha1 and rsync on the phone. **`scripts/phone_proto.sh ssh|ftp` switches every script** (`phone_host.connect()`,
+  `read_range()`, rclone `phone:`); new scripts use those, never a bare `ftplib.FTP()` or `curl ftp://` (`docs/agents/phone.md`).
 - Login: every script uses `phone_host.login(ftp)`; the user name and password live only in
   `~/.config/phone-library/ftp.env` and rclone's config — NEVER write them in this repo (it is pushed and copied to the phone).
 - Moves and renames are server-side (RNFR/RNTO), instant. FTP has no checksums: duplicates are proven by size +

@@ -53,7 +53,9 @@ Markdown copies are in `فهارس الويب/md/` and the data tables in `فه�
 | `recat_plan.py` | section-correction planner (rules in §4b) |
 | `rename_plan.py` | the rename/merge/split planner (evidence-based; writes `plans/NNN-*.tsv` + review list) |
 | `buckets.py`, `textnorm.py`, `report_lib.py` | helpers |
-| `phone_host.py` | the phone's FTP address: first answering of the known addresses (§2); `PHONE_HOST` overrides |
+| `phone_host.py` | the phone's address (known ones, the gateway, the /24; `PHONE_HOST` overrides), the protocol (`PROTO`), `connect()` and `read_range()` for every script (§2) |
+| `phone_ssh.py` | `SSHPhone`: the phone over Termux SSH with the ftplib calls the scripts use; `phone_ssh.py pin <ip>` trusts a new address only with the pinned key |
+| `phone_proto.sh` | `ssh`/`ftp`: the one switch (proto file + rclone `phone:` alias); no argument prints the current one |
 | `phone_watchdog.sh` | runs detached (`setsid nohup … >> logs/phone-watchdog.log &`): pauses (SIGSTOP) crop_library/crop_batch/inspect_files/ocr_clean while the FTP port is silent, resumes when it is back on the same address; another address → stays paused, written to data/phone/new-address.txt |
 | `battery_guard.sh` | runs as the user unit `battery-guard` (`logs/battery-guard.log`): on battery at ≤ 7 % it freezes the running transient units and SIGSTOPs jobs outside a unit (never kills), then HIBERNATES past the inhibitors with sudo, because this laptop bounces out of suspend in about 11 s at ≤ 7 %; a sleep counts only if the wall clock jumped; jobs resume when the charger is back; reads the battery every 5 min, every 1 min at ≤ 15 % |
 | `publish.py` | uploads `site/`, `reports/`, data tables and this guide to the phone (copy, never deletes) — only when the owner asks |

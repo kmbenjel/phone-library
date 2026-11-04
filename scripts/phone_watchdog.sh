@@ -12,29 +12,35 @@
 cd "$(dirname "$0")/.."
 PAT='^(nice )?(python3 scripts/(crop_batch|crop_redo|inspect_files|ocr_clean)\.py|bash .*scripts/crop_library\.sh)'
 log() { echo "$(date '+%F %T') $*"; }
-answers() { nc -z -w5 "$1" 2221 2>/dev/null; }
+# the protocol (scripts/phone_proto.sh, 2026-11-04): ssh → the Termux port 8022, else the FTP app's 2221
+PORT=$([ "$(cat ~/.config/phone-library/proto 2>/dev/null)" = ssh ] && echo 8022 || echo 2221)
+answers() { nc -z -w5 "$1" $PORT 2>/dev/null; }
 locate() { PHONE_HOST= timeout 120 python3 -c "import sys; sys.path.insert(0,'scripts'); import phone_host as p; print(p.find() or '')" 2>/dev/null; }
+follow() {   # rclone's remotes to the new address: the FTP one («phone», or «phoneftp» under ssh) and «phonessh» (its key
+             # pinned for the address first, scripts/phone_ssh.py pin: only the phone's own key)
+  for r in phone phoneftp; do [ "$(rclone config show $r 2>/dev/null | awk '/^type/{print $3}')" = ftp ] && rclone config update $r host "$1" >/dev/null 2>&1; done
+  python3 scripts/phone_ssh.py pin "$1" >/dev/null 2>&1 && rclone config update phonessh host "$1" >/dev/null 2>&1; }
 pids() { pgrep -f "$PAT"; }
-HOST=$(locate); [ -z "$HOST" ] && HOST=$(rclone config show phone 2>/dev/null | awk '/^host/{print $3}')
-log "watchdog on ${HOST:-?}:2221 (pid $$)"
+HOST=$(locate); [ -z "$HOST" ] && HOST=$(rclone config show phonessh 2>/dev/null | awk '/^host/{print $3}')
+log "watchdog on ${HOST:-?}:$PORT (pid $$)"
 paused=0
 while true; do
   if [ -n "$HOST" ] && answers "$HOST"; then
     if [ $paused = 1 ]; then
       sleep 60
       if answers "$HOST"; then
-        P=$(pids); [ -n "$P" ] && kill -CONT $P; paused=0; log "FTP back on $HOST — resumed: $(echo $P | wc -w) processes"
+        P=$(pids); [ -n "$P" ] && kill -CONT $P; paused=0; log "phone back on $HOST — resumed: $(echo $P | wc -w) processes"
       fi
     fi
   else
     sleep 20
     if [ -z "$HOST" ] || ! answers "$HOST"; then
       if [ $paused = 0 ]; then
-        P=$(pids); [ -n "$P" ] && kill -STOP $P; paused=1; log "FTP silent on ${HOST:-?} — paused: $(echo $P | wc -w) processes"
+        P=$(pids); [ -n "$P" ] && kill -STOP $P; paused=1; log "phone silent on ${HOST:-?} — paused: $(echo $P | wc -w) processes"
       fi
       NEW=$(locate)
       if [ -n "$NEW" ] && [ "$NEW" != "$HOST" ]; then
-        rclone config update phone host "$NEW" >/dev/null 2>&1
+        follow "$NEW"
         echo "$NEW" > data/phone/current-address.txt
         log "the phone moved: $HOST → $NEW (rclone updated)"; HOST=$NEW
       fi

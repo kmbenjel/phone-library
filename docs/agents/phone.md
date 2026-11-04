@@ -19,12 +19,25 @@ Moved verbatim from AGENTS.md (2026-10-28) to keep that guide short; AGENTS.md p
   `rclone mount phone:Books ~/phone-books --daemon --vfs-cache-mode writes --dir-cache-time 1h`.
 - Moves and renames are server-side (FTP RNFR/RNTO): nothing is re-uploaded, so they are instant.
 - FTP has no checksums. Duplicates are verified with a head+tail 64 KB fingerprint plus the exact
-  size (`scripts/dup_check.py`).
+  size (`scripts/dup_check.py`). Over ssh `md5sum`/`sha1sum` run on the phone (`SSHPhone.md5()`, `rclone md5sum phone:…`).
 - **SSH/SFTP too (2026-11-04):** Termux (F-Droid 0.118.3) runs `sshd` on port `8022`, key login only: key
   `~/.config/phone-library/phone_ssh` (never in the repo), user `u0_a543`, storage permission granted (`/sdcard/Books` =
   the library). rclone remote `phonessh:` (library = `phonessh:/sdcard/Books`) with real `md5sum`/`sha1sum` on the phone, so
   duplicates can be proven by full hashes; `rsync` is installed. 8 parallel sessions tested fine (the FTP app is the narrow one).
   Same IP as the FTP server; on the phone's hotspot it is the gateway (`172.26.156.17` on 2026-11-04): `rclone config update
-  phonessh host <ip>`. The scripts and `phone_watchdog.sh` still use FTP only. After a phone reboot, open Termux and run `sshd`.
-  Test: `ssh -i ~/.config/phone-library/phone_ssh -p 8022 <ip> true`.
+  phonessh host <ip>`. After a phone reboot, open Termux and run `sshd` (or Termux:Boot with `~/.termux/boot/start-sshd`).
+  Test: `ssh -i ~/.config/phone-library/phone_ssh -p 8022 -o HostKeyAlias=phone-termux <ip> true`.
+- **One switch for every script (2026-11-04): `scripts/phone_proto.sh ssh|ftp`** (no argument: prints the current one).
+  It writes `~/.config/phone-library/proto`, which `phone_host.py` reads (`PHONE_PROTO=` overrides per command), and
+  turns the rclone remote `phone:` into an alias of `phonessh:/sdcard` (the FTP remote kept as `phoneftp:`), so the
+  rclone scripts' `phone:Books/...` paths work unchanged; `ftp` undoes it. Only while no phone job runs.
+  - Scripts connect with `phone_host.connect(timeout, host)`: an `ftplib.FTP`, or a `phone_ssh.SSHPhone` that answers the
+    same calls (nlst mkd rmd delete rename size retrbinary storbinary sendcmd XMD5/MD5) by running coreutils on the phone
+    over one shared OpenSSH connection; its errors are ftplib's (`error_perm` = missing/refused, `OSError` = connection).
+    Byte ranges: `phone_host.read_range(path, start, n)` (curl logged in over FTP, `dd` over ssh). Never `ftplib.FTP()`
+    or a bare `curl ftp://` in a new script: since the FTP account (2026-10-18) an anonymous curl gets `530`.
+  - The host key is pinned as `phone-termux` in `~/.ssh/known_hosts` (the address changes with each hotspot, the key
+    does not); rclone checks keys by address, so `scripts/phone_ssh.py pin <ip>` adds the new address only when its key
+    is the pinned one (`phone_proto.sh`, the watchdog and `fix_at_scale.py` call it).
+  - `phone_host.find()` also tries the default gateway: on the phone's own hotspot the phone is the gateway.
 

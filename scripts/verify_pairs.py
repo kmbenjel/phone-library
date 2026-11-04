@@ -14,7 +14,7 @@ def sample(f, path, size, off):
         f.close(); f2 = conn(); return bytes(out[:65536]), f2
     return bytes(out[:65536]), f
 def conn():
-    f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(H, 2221, timeout=60); phone_host.login(f); return f
+    f = phone_host.connect(60, H); return f
 f = conn()
 for a, b in csv.reader(open(sys.argv[1]), delimiter='\t'):
     sa, sb = f.size(a), f.size(b)

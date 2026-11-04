@@ -24,7 +24,7 @@ def connect(tries=8):
     import time
     for i in range(tries):
         try:
-            f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=60); phone_host.login(f); return f
+            f = phone_host.connect(60, HOST); return f
         except (OSError, EOFError, ftplib.Error) as e:
             if i == tries - 1: raise
             print(f'phone FTP not answering ({type(e).__name__}); retry {i + 1}/{tries - 1} in 30 s', flush=True); time.sleep(30)

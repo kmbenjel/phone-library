@@ -39,7 +39,12 @@ def phone_up():
     sys.path.insert(0, J('scripts'))
     import phone_host
     h = phone_host.find()
-    if h: subprocess.run(['rclone', 'config', 'update', 'phone', 'host', h], capture_output=True)
+    if h:                                            # the FTP remote («phone», «phoneftp» under ssh) and «phonessh»
+        for r in ('phone', 'phoneftp'):
+            t = subprocess.run(['rclone', 'config', 'show', r], capture_output=True, text=True).stdout
+            if 'type = ftp' in t: subprocess.run(['rclone', 'config', 'update', r, 'host', h], capture_output=True)
+        if subprocess.run(['python3', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'phone_ssh.py'), 'pin', h]).returncode == 0:
+            subprocess.run(['rclone', 'config', 'update', 'phonessh', 'host', h], capture_output=True)
     return h
 
 def wait_phone():

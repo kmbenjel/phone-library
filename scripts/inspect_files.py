@@ -167,7 +167,7 @@ def main():
     ths = [threading.Thread(target=worker, daemon=True) for _ in range(WORKERS)]
     for t in ths: t.start()
     def connect():
-        f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=300); phone_host.login(f); return f
+        f = phone_host.connect(300, HOST); return f
     f, t0, nbytes = connect(), time.time(), 0
     pacer = Pacer()                      # Wi-Fi is shared (games, calls): back off when the router's latency rises
     for i, (path, size) in enumerate(todo):

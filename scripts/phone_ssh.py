@@ -130,3 +130,23 @@ class SSHPhone:
         if pr.returncode == 255: raise OSError('ssh: ' + err.decode('utf-8', 'replace').strip())
         if pr.returncode: raise ftplib.error_perm('553 ' + err.decode('utf-8', 'replace').strip())
         return '226 done'
+
+
+def pin(ip, port=PORT):
+    """rclone's sftp checks host keys by address, which changes with every hotspot: add «[ip]:port key» to known_hosts
+    only when the key the phone offers is the one pinned as «phone-termux». True when pinned (or already there)."""
+    kh = os.path.expanduser('~/.ssh/known_hosts')
+    known = next((l.split()[1:3] for l in open(kh) if l.startswith('phone-termux ')), None)
+    if not known: return False
+    got = subprocess.run(['ssh-keyscan', '-p', str(port), '-t', known[0], ip], capture_output=True, text=True, timeout=20).stdout.split()
+    if got[1:3] != known: return False
+    entry = f'[{ip}]:{port}'
+    if subprocess.run(['ssh-keygen', '-F', entry, '-f', kh], capture_output=True).returncode == 0: return True
+    with open(kh, 'a') as o: o.write(f'{entry} {known[0]} {known[1]}\n')
+    return True
+
+
+if __name__ == '__main__':
+    import sys
+    if sys.argv[1:2] == ['pin']: sys.exit(0 if pin(sys.argv[2]) else 1)
+    print(__doc__)

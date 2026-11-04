@@ -17,7 +17,7 @@ rows = [r for r in csv.reader(open(sys.argv[1], encoding='utf-8'), delimiter='\t
 plan = sys.argv[2]
 pacer = Pacer()
 def connect():
-    f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=300); phone_host.login(f); return f
+    f = phone_host.connect(300, HOST); return f
 def mkdirs(f, path):
     cur = ''
     for part in path.split('/'):

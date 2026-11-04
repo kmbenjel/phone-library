@@ -156,20 +156,18 @@ class Phone:
         import phone_host
         global _HOST
         self.lk = open(LOCK, 'w'); fcntl.flock(self.lk, fcntl.LOCK_EX)
-        self.f = ftplib.FTP()
-        try: self.f.connect(_HOST or phone_host.HOST, phone_host.PORT, timeout=120)
+        try: self.f = phone_host.connect(120, _HOST or phone_host.HOST)      # FTP or ssh (phone_host.PROTO)
         except OSError:                                  # the phone moved (it switched .100 ↔ .102 on 2026-10-11)
             _HOST = phone_host.find()
             if not _HOST: raise
-            self.f = ftplib.FTP(); self.f.connect(_HOST, phone_host.PORT, timeout=120)
-        phone_host.login(self.f); self.f.encoding = 'utf-8'
+            self.f = phone_host.connect(120, _HOST)
         return self
     def __exit__(self, *a):
         try: self.f.quit()
         except Exception: pass
         fcntl.flock(self.lk, fcntl.LOCK_UN); self.lk.close()
     def md5(self, path):
-        r = self.f.sendcmd('XMD5 Books/' + path)            # 251 "path" HEX
+        r = self.f.sendcmd('XMD5 Books/' + path)            # 251 "path" HEX (ssh: md5sum on the phone, same answer)
         return r.rsplit(' ', 1)[-1].strip().lower()
     def size(self, path): return self.f.size('Books/' + path)
     def get(self, path, dst):                       # paced: the home Wi-Fi stays free for games and calls (AGENTS.md §7.9)

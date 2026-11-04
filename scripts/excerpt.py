@@ -63,7 +63,7 @@ def fetch(loc, p):
     if loc == 'local': return os.path.join(LB, p)
     dst = os.path.join(CACHE, p.replace('/', '__'))
     if not os.path.exists(dst):
-        f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=300); phone_host.login(f)
+        f = phone_host.connect(300, HOST)
         with open(dst + '.part', 'wb') as o: f.retrbinary('RETR /Books/' + p, o.write, blocksize=1 << 16)
         f.quit(); os.replace(dst + '.part', dst)
     return dst
@@ -126,7 +126,7 @@ def main():
     if '--open' in a:
         for t in tabs: subprocess.Popen(['brave-browser', t], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     if '--phone' in a:
-        f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=300); phone_host.login(f)
+        f = phone_host.connect(300, HOST)
         try: f.mkd('/Download/مقتطفات')
         except ftplib.error_perm: pass
         with open(dst, 'rb') as i: f.storbinary(f'STOR /Download/مقتطفات/{name}.pdf', i)

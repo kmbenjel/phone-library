@@ -20,7 +20,7 @@ todo = [(p, s) for p, s in rows if done.get(p) != s]
 todo.sort(key=lambda r: (n_by_size[r[1]] == 1, r[0]))
 
 def connect():
-    f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(HOST, PORT, timeout=600); phone_host.login(f); return f
+    f = phone_host.connect(600, HOST); return f
 
 f = connect(); t0 = time.time(); ok = 0
 with open(OUT, 'a', newline='', encoding='utf-8') as o:
