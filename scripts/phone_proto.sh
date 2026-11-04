@@ -23,7 +23,7 @@ if [ "$want" = ssh ]; then
   H=$(PHONE_PROTO=ssh python3 scripts/phone_host.py); timeout 20 ssh -i ~/.config/phone-library/phone_ssh -p 8022 \
     -o BatchMode=yes -o HostKeyAlias=phone-termux "$H" true || { echo "ssh does not answer on $H — is sshd running in Termux?" >&2; exit 1; }
   python3 scripts/phone_ssh.py pin "$H" || { echo "the key on $H is not the phone's (phone-termux in ~/.ssh/known_hosts)" >&2; exit 1; }
-  rclone config update phonessh host "$H" >/dev/null
+  rclone config update phonessh host "$H" host_key_algorithms ssh-ed25519 >/dev/null   # only the pinned key type (else «key mismatch»)
   if [ "$(type_of phone)" = ftp ]; then
     [ -z "$(type_of phoneftp)" ] || rclone config delete phoneftp
     rename_remote phone phoneftp
