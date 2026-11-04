@@ -9,6 +9,25 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-04 22:15 local — SSH MIGRATION READY, REDO FASTER (Claude, Opus): READ THIS FIRST
+- **Crop redo** runs on the VM (unit crop-redo-2026-11-04-vm, run_resumable → crop_redo.py --remote --workers 14), restarted
+  22:05 by the owner: netpace now turns itself off on the phone's hotspot (scripts/netpace.py; it sat at 0.4 MB/s there),
+  phone reads 3–4 MB/s, all VM CPUs busy. 878 books left at 22:05. Give the owner a new ETA from redo-done.tsv growth.
+- **SSH migration prepared, NOT switched** (commits 7b836f7, d98334a, netpace after): every script goes through
+  phone_host.connect()/read_range(); `scripts/phone_proto.sh ssh` switches everything (proto file + rclone phone: → alias of
+  phonessh:/sdcard, FTP kept as phoneftp:); `phone_proto.sh ftp` undoes. All tested against the phone (sizes, md5, listings,
+  ranges, writes in Download/, crop_batch.Phone, rclone). **Owner said yes to switching once the redo is done** — then run
+  `scripts/phone_proto.sh ssh`, check `rclone lsf phone:Books --max-depth 1`, and start the watchdog. docs/agents/phone.md.
+- Found and fixed: check_magic/check_pdf_tail/dup_check/verify_dups_deep/verify_provenance used anonymous curl, refused (530)
+  since the FTP account of 10-18; dup_check would have fingerprinted every failed read alike. It last ran 10-03: no deletion
+  rested on it.
+- rclone `phone:` host was still 192.168.11.100 while on the hotspot: set to 172.31.125.100. The watchdog is NOT running.
+- To do after the redo: rename the folders «البدء والتاريخ - المطهر بن طاهر المقدسي (ط مكتبة الثقافة الدينية)» and
+  «المغرب في حلى المغرب - قسم الأندلس - ابن سعيد المغربي (ت شوقي ضيف - دار المعارف)» (parentheses, «ط»: §4);
+  investigate the redo SKIP of المغرب في حلى المغرب/01 (phone md5 2f1b0956… ≠ the crop's 2e941143…: changed since the crop?).
+- Phone: owner to install Termux:Boot (F-Droid) + ~/.termux/boot/start-sshd, termux-wake-lock, battery «No restrictions»
+  for Termux; he won't reboot the phone for the test.
+
 ## 2026-11-04 20:30 UTC — REDO RUNNING ON THE CLOUD VM (Claude, Opus): READ THIS FIRST
 - OWNER: «should go from now … laptop will no longer be drained»; «Go now over 4G», «ok with mobile data» (~12 GB).
 - Unit crop-redo-2026-11-04-vm (scratch/redo_2026-11-04-vm.sh): crop_redo.py --remote --workers 14, same list/batch/log
