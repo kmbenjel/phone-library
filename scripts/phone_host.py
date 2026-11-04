@@ -6,7 +6,13 @@ import os, socket
 from concurrent.futures import ThreadPoolExecutor
 
 CANDIDATES = ['192.168.11.100', '192.168.11.104', '192.168.11.102', '192.168.11.103']   # .100 reserved for the phone in the router (owner 2026-10-17); it wandered .100/.102/.104/.109 before; phone_watchdog.sh follows it
-PORT = int(os.environ.get('PHONE_PORT', '2221'))
+PORT = int(os.environ.get('PHONE_PORT', '2221'))          # the FTP app
+SSH_PORT = int(os.environ.get('PHONE_SSH_PORT', '8022'))  # Termux sshd (2026-11-04)
+# THE PROTOCOL: PHONE_PROTO=ftp|ssh, else ~/.config/phone-library/proto (one word, written by scripts/phone_proto.sh),
+# else ftp. connect() and read_range() follow it; the address is found by the port of that protocol.
+PROTO_FILE = os.path.expanduser('~/.config/phone-library/proto')
+PROTO = os.environ.get('PHONE_PROTO') or (open(PROTO_FILE).read().strip() if os.path.exists(PROTO_FILE) else '') or 'ftp'
+PROBE = SSH_PORT if PROTO == 'ssh' else PORT
 HOME_NET = CANDIDATES[0].rsplit('.', 1)[0]
 ADDR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'phone', 'current-address.txt')
 
@@ -28,7 +34,7 @@ def _answers(host, timeout=3):
     if host.startswith(HOME_NET + '.') and not _home():
         return False
     try:
-        socket.create_connection((host, PORT), timeout=timeout).close()
+        socket.create_connection((host, PROBE), timeout=timeout).close()
         return True
     except OSError:
         return False
@@ -42,10 +48,24 @@ def _scan():
     return None
 
 
+def _gateway():
+    """the default gateway: the phone itself when the laptop is on the phone's hotspot (172.x, a new /24 each time)"""
+    try:
+        for line in open('/proc/net/route'):
+            f = line.split()
+            if f[1] == '00000000' and f[2] != '00000000':
+                return socket.inet_ntoa(bytes.fromhex(f[2])[::-1])
+    except (OSError, IndexError, ValueError):
+        pass
+    return None
+
+
 def find():
-    """the answering address (known ones first, then a scan of the /24; away from home the last address written), or None"""
+    """the answering address (known ones first, then the gateway, then a scan of the /24; away from home the last
+    address written), or None"""
     if os.environ.get('PHONE_HOST'): return os.environ['PHONE_HOST']
-    h = next((h for h in CANDIDATES if _answers(h)), None) or _scan()
+    gw = _gateway()
+    h = next((h for h in CANDIDATES if _answers(h)), None) or (gw if gw and not gw.startswith(HOME_NET + '.') and _answers(gw) else None) or _scan()
     if h or not os.path.exists(ADDR): return h
     last = open(ADDR).read().strip()
     return last if last and _answers(last) else None
@@ -75,5 +95,33 @@ def login(f):
 HOST = find() or CANDIDATES[0]
 FTP = os.environ.get('PHONE_FTP', f'ftp://{HOST}:{PORT}/Books/')
 
+
+def connect(timeout=60, host=None):
+    """a logged-in connection to the phone by the chosen protocol: ftplib.FTP (utf-8) or phone_ssh.SSHPhone, which
+    answers the same calls (nlst mkd rmd delete rename size retrbinary storbinary sendcmd XMD5/MD5 voidcmd quit)"""
+    if PROTO == 'ssh':
+        import phone_ssh
+        return phone_ssh.SSHPhone(host or HOST, SSH_PORT, timeout)
+    import ftplib
+    f = ftplib.FTP(); f.encoding = 'utf-8'; f.connect(host or HOST, PORT, timeout=timeout); login(f); return f
+
+
+def read_range(path, start, n, timeout=90):
+    """n bytes of Books/<path> from offset start (fewer at the end): curl over FTP, dd over ssh. b'' when unreadable."""
+    if PROTO == 'ssh':
+        import phone_ssh
+        for _ in range(3):
+            try: return phone_ssh.SSHPhone(HOST, SSH_PORT, timeout).read_range('Books/' + path, start, n)
+            except Exception: pass
+        return b''
+    import subprocess, urllib.parse
+    u, p = creds()                                   # given on stdin, never on the command line (ps shows it)
+    cfg = ('user = "%s:%s"\n' % (u.replace('"', '\\"'), p.replace('"', '\\"'))) if u else ''
+    for _ in range(3):
+        r = subprocess.run(['curl', '-s', '-K', '-', '--max-time', str(timeout), '-r', f'{start}-{start + n - 1}',
+                            FTP + urllib.parse.quote(path)], input=cfg.encode(), capture_output=True)
+        if r.returncode == 0 and r.stdout: return r.stdout
+    return b''
+
 if __name__ == '__main__':
-    print(HOST)
+    print(HOST, PROTO, PROBE) if '-v' in os.sys.argv else print(HOST)

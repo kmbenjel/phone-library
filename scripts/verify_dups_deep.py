@@ -3,16 +3,14 @@ Input: a dedup plan (from, to, 'duplicate of: <kept path>'). Output: data/phone/
 import csv, hashlib, os, subprocess, sys, urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-from phone_host import FTP
+import phone_host
 size = {p: int(s) for p, s in csv.reader(open(sys.argv[2]), delimiter='\t')}
 def chunks(path):
     n = size[path]; out = []
     for frac in (0.25, 0.5, 0.75):
-        a = int(n * frac); rng = f'{a}-{min(n - 1, a + 65535)}'
-        for _ in range(3):
-            r = subprocess.run(['curl', '-s', '--max-time', '90', '-r', rng, FTP + urllib.parse.quote(path)], capture_output=True)
-            if r.returncode == 0 and r.stdout: out.append(hashlib.sha1(r.stdout).hexdigest()); break
-        else: return None
+        b = phone_host.read_range(path, int(n * frac), 65536, 90)
+        if not b: return None
+        out.append(hashlib.sha1(b).hexdigest())
     return out
 def check(row):
     aside, kept = row[0][6:], row[2].split('duplicate of: ', 1)[1]

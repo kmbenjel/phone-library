@@ -5,13 +5,13 @@ provenance.py drops 'different' pairs on its next run."""
 import csv, hashlib, os, subprocess, urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-from phone_host import FTP
+import phone_host
 def head(url, extra=()):
     r = subprocess.run(['curl', '-s', '-L', '--max-time', '90', '-r', '0-65535', *extra, url], capture_output=True)
     return r.stdout[:65536] if r.returncode == 0 else b''
 def check(row):
     path, size, aid, orig = row
-    a = head(FTP + urllib.parse.quote(path))
+    a = phone_host.read_range(path, 0, 65536, 90)
     b = head(f'https://archive.org/download/{urllib.parse.quote(aid)}/{urllib.parse.quote(orig)}', ('-A', 'personal-library-catalog/1.0', '--fail', '--retry', '2'))
     if not a or not b: return [path, aid, orig, 'error']
     return [path, aid, orig, 'same' if hashlib.sha1(a).digest() == hashlib.sha1(b).digest() else 'different']

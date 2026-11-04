@@ -4,22 +4,19 @@ import csv, hashlib, subprocess, sys, os, urllib.parse
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-from phone_host import FTP
+import phone_host
 index = sys.argv[1]
 by_size = defaultdict(list)
 for path, size in csv.reader(open(index), delimiter='\t'):
     if int(size) > 0: by_size[int(size)].append(path)
 cands = [(s, p) for s, ps in by_size.items() if len(ps) > 1 for p in ps]
-def chunk(path, rng):
-    url = FTP + urllib.parse.quote(path)
-    for _ in range(3):
-        r = subprocess.run(['curl', '-s', '--max-time', '60', '-r', rng, url], capture_output=True)
-        if r.returncode == 0 and r.stdout: return r.stdout
-    return b''
 def fp(item):
+    """an unreadable file gets «error-<path>», never a shared fingerprint (before 2026-11-04 two failed reads gave every
+    same-size file sha1(b'|') — one fingerprint, «duplicates» — when the phone refused curl's anonymous login)"""
     size, path = item
-    h = hashlib.sha1(chunk(path, '0-65535') + b'|' + chunk(path, '-65536')).hexdigest()
-    return size, path, h
+    a, b = phone_host.read_range(path, 0, 65536, 60), phone_host.read_range(path, max(0, size - 65536), 65536, 60)
+    if not a or not b: return size, path, 'error-' + hashlib.sha1(path.encode()).hexdigest()
+    return size, path, hashlib.sha1(a + b'|' + b).hexdigest()
 out = os.path.join(ROOT, 'data/phone/dup-fingerprints.tsv')
 with ThreadPoolExecutor(4) as ex, open(out, 'w') as w:
     for i, (size, path, h) in enumerate(ex.map(fp, cands), 1):
