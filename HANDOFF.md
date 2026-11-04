@@ -9,6 +9,17 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-04 11:30 local — PHONE SSH ADDED (Claude, Opus); the crop redo state below is unchanged
+- Termux (F-Droid 0.118.3) on the phone runs `sshd` on port 8022, key login only (`~/.config/phone-library/phone_ssh`,
+  user `u0_a543`, storage granted). rclone remote `phonessh:/sdcard/Books` with real md5/sha1 on the phone; rsync installed;
+  8 parallel sessions OK. Details: docs/agents/phone.md (SSH bullet).
+- Laptop is on the phone's 4G hotspot now: phone = gateway `172.26.156.17` (FTP 2221 and SSH 8022). Back home: update
+  `rclone config update phonessh host <ip>` (and `phone`, the watchdog does that one).
+- OPEN: (1) after a phone reboot open Termux and run `sshd`; the owner may add
+  `pgrep sshd >/dev/null || sshd; termux-wake-lock` to Termux ~/.bashrc himself (the classifier refused it from here).
+  (2) Scripts/watchdog still FTP-only; moving them to SSH (hash-based dup checks, more connections) waits for a quiet phone
+  (no crop job) and the owner's go. (3) Developer options may be switched off (adb no longer needed).
+
 ## 2026-11-03 13:45 UTC — 27t PASSED; FULL REDO RESUMED (Claude, Opus): READ THIS FIRST
 - FIRST after a clear: arm `python3 -u scripts/watch_comments.py` as a Monitor, and a Monitor on logs/crop-redo-2026-11-03.log
   (FAIL|Traceback|stopped|ended with exit|RETRY LATER|redo finished|SKIP).
