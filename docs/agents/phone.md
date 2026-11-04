@@ -20,4 +20,11 @@ Moved verbatim from AGENTS.md (2026-10-28) to keep that guide short; AGENTS.md p
 - Moves and renames are server-side (FTP RNFR/RNTO): nothing is re-uploaded, so they are instant.
 - FTP has no checksums. Duplicates are verified with a head+tail 64 KB fingerprint plus the exact
   size (`scripts/dup_check.py`).
+- **SSH/SFTP too (2026-11-04):** Termux (F-Droid 0.118.3) runs `sshd` on port `8022`, key login only: key
+  `~/.config/phone-library/phone_ssh` (never in the repo), user `u0_a543`, storage permission granted (`/sdcard/Books` =
+  the library). rclone remote `phonessh:` (library = `phonessh:/sdcard/Books`) with real `md5sum`/`sha1sum` on the phone, so
+  duplicates can be proven by full hashes; `rsync` is installed. 8 parallel sessions tested fine (the FTP app is the narrow one).
+  Same IP as the FTP server; on the phone's hotspot it is the gateway (`172.26.156.17` on 2026-11-04): `rclone config update
+  phonessh host <ip>`. The scripts and `phone_watchdog.sh` still use FTP only. After a phone reboot, open Termux and run `sshd`.
+  Test: `ssh -i ~/.config/phone-library/phone_ssh -p 8022 <ip> true`.
 
