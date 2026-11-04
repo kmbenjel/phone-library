@@ -37,6 +37,23 @@ every turn, benched before 26i.
   logs/crop-redo-2026-11-03.log -- python3 scripts/crop_redo.py data/crop/redo-all-2026-11-03.tsv crop-redo-2026-11-03
   --workers 3` (check run_resumable's usage in scratch/redo_2026-11-03b.sh first; the end steps below still apply).
 
+## 2026-11-04 ~11:00 UTC — CLOUD VM FOR THE CROP REDO, BEING SET UP (Claude, Opus): READ THIS FIRST
+- OWNER: «optimize for speed … I would let you pause the process … more powerful CPU/memory (cloud)». Plan agreed: run ONLY
+  cb.analyse remotely; the laptop keeps the phone, changes.tsv, redo-done.tsv, recipes and does put_in_place as now. The VM sends
+  back the output (only ~1.2 % new bytes: appended) + the sheets dir (~/.cache/phone-library/crop-sheets/<hash>/).
+- GCP: project project-f69103b4-70cb-4e85-a98, gcloud login ibrahimhassaniidrissi@gmail.com (billing reopened by the owner).
+  Quota CPUS_ALL_REGIONS = 16 → VM crop-vm, europe-southwest1-b, c2d-standard-16 (16 vCPU, 62 GB), SPOT, stop on termination,
+  Ubuntu 24.04, 60 GB; IP 34.175.201.246, user k, key ~/.ssh/google_compute_engine (bash -c for "$RS": zsh does not split).
+  IT IS RUNNING AND BILLED (~$0.2/h): stop it (gcloud compute instances stop crop-vm --zone=europe-southwest1-b) if idle.
+- On the VM: python 3.12.3, numpy 1.26.4, scipy 1.11.4 (apt), ~/.local/share/phone-library-tools/site copied (pymupdf 1.28.2,
+  pypdf 6.19.0); ~/phone-library has scripts/, data/crop, data/changes, data/phone/index-now.tsv (synced 11:00 — resync before use).
+- 3-BOOK TEST (byte identity) was started and INTERRUPTED by the owner: ~/test/{vmtest.py,test3.tsv,t0..t2.pdf} on the VM (also in
+  the session scratchpad); it runs cb.analyse on 3 books the laptop already redone (Perrault, فيض الخاطر 01, الموافقات) and compares
+  the output md5 with the m1 in changes.tsv. Check first that no vmtest.py is still running on the VM (pgrep), then rerun it.
+- NEXT: test passes → add a remote mode to crop_redo.py (submit = upload staged original to VM, ssh analyse, fetch dst + sheets,
+  ~14 workers there; one upload at a time, after wait_calm) → ASK the owner before stopping crop-redo-2026-11-03b, then switch.
+  Ask Google for 32 CPUs later. The laptop redo (crop-redo-2026-11-03b) keeps running meanwhile.
+
 ## 2026-11-03 13:45 UTC — 27t PASSED; FULL REDO RESUMED (Claude, Opus): READ THIS FIRST
 - FIRST after a clear: arm `python3 -u scripts/watch_comments.py` as a Monitor, and a Monitor on logs/crop-redo-2026-11-03.log
   (FAIL|Traceback|stopped|ended with exit|RETRY LATER|redo finished|SKIP).
