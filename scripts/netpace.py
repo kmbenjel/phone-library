@@ -4,9 +4,25 @@ when it stays under LOW ms it grows by 15 % (between MIN and MAX bytes/s). Trans
 Env: NETPACE=0 disables; NETPACE_MAX / NETPACE_MIN (MB/s), NETPACE_LOW / NETPACE_HIGH (ms), NETPACE_ROUTER."""
 import os, re, statistics, subprocess, threading, time
 
+def _on_hotspot():
+    try:
+        for line in open('/proc/net/route'):
+            f = line.split()
+            if f[1] == '00000000' and f[2] != '00000000':
+                import socket
+                return not socket.inet_ntoa(bytes.fromhex(f[2])[::-1]).startswith('192.168.11.')
+    except (OSError, IndexError, ValueError):
+        pass
+    return False
+
+
 class Pacer:
     def __init__(self):
-        self.on = os.environ.get('NETPACE', '1') != '0'
+        # on the phone's own hotspot (default gateway outside the home 192.168.11.x) the phone↔laptop transfers go
+        # between those two devices only: nobody else on that Wi-Fi, no internet used → off (owner 2026-11-04 «yes»;
+        # the home-router ping got no answer there and held the rate at its minimum). NETPACE=1/0 still forces it.
+        self.hotspot = _on_hotspot()
+        self.on = os.environ.get('NETPACE', '0' if self.hotspot else '1') != '0'
         self.max = float(os.environ.get('NETPACE_MAX', '6')) * 1e6       # ceiling: other devices game and call
         self.wan_slack = float(os.environ.get('NETPACE_WAN_SLACK', '15'))   # ms above the internet baseline
         self.wan_rtt = None
@@ -53,4 +69,4 @@ class Pacer:
 
     def status(self):
         return (f'pace {self.rate / 1e6:.1f} MB/s, wifi {self.rtt if self.rtt is None else round(self.rtt, 1)} ms, '
-                f'internet {self.wan_rtt if self.wan_rtt is None else round(self.wan_rtt)}/{self.wan_base if self.wan_base is None else round(self.wan_base)} ms') if self.on else 'pace off'
+                f'internet {self.wan_rtt if self.wan_rtt is None else round(self.wan_rtt)}/{self.wan_base if self.wan_base is None else round(self.wan_base)} ms') if self.on else ('pace off (phone hotspot)' if self.hotspot else 'pace off')
