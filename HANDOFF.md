@@ -20,6 +20,17 @@ every turn, benched before 26i.
   (2) Scripts/watchdog still FTP-only; moving them to SSH (hash-based dup checks, more connections) waits for a quiet phone
   (no crop job) and the owner's go. (3) Developer options may be switched off (adb no longer needed).
 
+## 2026-11-04 12:45 UTC — REDO ON HOLD BY THE OWNER'S WORD (Claude, Opus)
+- 10:38 the laptop moved to the phone's hotspot (phone 172.26.156.17; off home phone_host only tries 192.168.11.x, so the
+  watchdog paused the redo at 192/1,122). OWNER: «complete current books and hold on». The 3 workers were resumed by hand
+  (kill -CONT): their books are analysed now; their uploads wait in wait_phone until the phone answers at 192.168.11.100
+  (home). Unit crop-hold-2026-11-04 (scratch/hold_after_current_2026-11-04.sh) stops crop-redo-2026-11-03b after 3 more
+  result lines in the log, and writes a «HOLD:» line. A DNAT redirect of .100 to the hotspot was refused (no firewall changes).
+- RESUME only on the owner's word: `systemd-run --user --slice=crop.slice --unit=crop-redo-2026-11-04 --nice=10
+  --working-directory=$PWD --setenv=PATH="$PATH" --setenv=PHONE_HOST=<address> scripts/run_resumable.sh
+  logs/crop-redo-2026-11-03.log -- python3 scripts/crop_redo.py data/crop/redo-all-2026-11-03.tsv crop-redo-2026-11-03
+  --workers 3` (check run_resumable's usage in scratch/redo_2026-11-03b.sh first; the end steps below still apply).
+
 ## 2026-11-03 13:45 UTC — 27t PASSED; FULL REDO RESUMED (Claude, Opus): READ THIS FIRST
 - FIRST after a clear: arm `python3 -u scripts/watch_comments.py` as a Monitor, and a Monitor on logs/crop-redo-2026-11-03.log
   (FAIL|Traceback|stopped|ended with exit|RETRY LATER|redo finished|SKIP).
