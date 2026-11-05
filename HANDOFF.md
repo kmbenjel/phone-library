@@ -11,9 +11,8 @@ every turn, benched before 26i.
 
 ## 2026-11-05 00:30 UTC — REDO ON THE 32-vCPU VM (Claude, Opus): READ THIS FIRST
 - **08:30 STATE**: REDO DONE (1,119 redone, 1 original, 2 SKIP). VM stopped. Phone on SSH (phone_proto.sh ssh), watchdog up.
-  LEFT: crop_batch --again for البداية 21 + المغرب 01 (needs mem-governor/crop.slice — governor still off, owner asked);
-  the two folder renames WAIT: their inner files also carry parentheses and المغرب has two «02» files (02 + 02 المقدمة) → a
-  reading-pass item, not a mechanical rename (owner 10-26). Name with «؟»: ماذا خسر العالم بانحطاط المسلمين؟ (كتب عامة).
+  DONE 09:15: the 2 first crops, plan 396 (the two set names), services restarted. phone_ssh.nlst now find -H.
+  Name with «؟»: ماذا خسر العالم بانحطاط المسلمين؟ (كتب عامة).
   معجم البابطين (شعراء القرنين 19-20) logged gain None on 2 volumes — look in the review. SHEET FAIL النحو الكوفي p. 258.
 - **06:47 UPDATE**: unit now crop-redo-2026-11-05-vm32c (scratch/redo_2026-11-05-vm32c.sh), 31 workers (owner «yes»), 205 left at
   06:47, ~125+ books/h → ETA ~08:30 UTC. VM is CPU-bound (load ≈ workers), not network-bound.

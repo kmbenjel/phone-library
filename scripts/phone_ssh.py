@@ -66,7 +66,7 @@ class SSHPhone:
         return int(self._run('stat -c %s -- ' + self._q(p)))
 
     def nlst(self, d):
-        out = self._run(f'find {self._q(d)} -mindepth 1 -maxdepth 1 -printf "%f\\0"')
+        out = self._run(f'find -H {self._q(d)} -mindepth 1 -maxdepth 1 -printf "%f\\0"')
         return [posixpath.join(d, n) for n in out.decode('utf-8', 'surrogateescape').split('\0') if n]
 
     def mkd(self, p): self._run('mkdir -- ' + self._q(p)); return p
