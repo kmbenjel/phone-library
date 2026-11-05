@@ -10,6 +10,8 @@ photocopy, lines set one by one) is NOT turned by any path and is listed for him
 every turn, benched before 26i.
 
 ## 2026-11-05 00:30 UTC — REDO ON THE 32-vCPU VM (Claude, Opus): READ THIS FIRST
+- **06:47 UPDATE**: unit now crop-redo-2026-11-05-vm32c (scratch/redo_2026-11-05-vm32c.sh), 31 workers (owner «yes»), 205 left at
+  06:47, ~125+ books/h → ETA ~08:30 UTC. VM is CPU-bound (load ≈ workers), not network-bound.
 - **06:05 UPDATE**: the unit is now crop-redo-2026-11-05-vm32b (scratch/redo_2026-11-05-vm32b.sh, same end steps): restarted
   under the phone lock at 840/1,122 so crop_redo runs 3 bulk transfers at once on the hotspot (owner «yes»; one at home).
 - AFTER A CLEAR: arm `python3 -u scripts/watch_comments.py` as a Monitor and a POLLED monitor on logs/crop-redo-2026-11-03.log
