@@ -9,6 +9,23 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-05 00:30 UTC — REDO ON THE 32-vCPU VM (Claude, Opus): READ THIS FIRST
+- **Crop redo**: unit crop-redo-2026-11-04-vm32 (scratch/redo_2026-11-04-vm32.sh → crop_redo.py --remote --workers 28), crop-vm
+  resized to c2d-highcpu-32 at 22:54 (Google CPUS_ALL_REGIONS now 32). 391/1,122 done at 00:28, ~125 books/h steady, ETA
+  ~05:30–06:15 UTC. Its end writes the review page and stops the VM. Log logs/crop-redo-2026-11-03.log.
+- «VM LOST» lines = the LAPTOP's link (4G blips, Wi-Fi change, suspend), never the VM (up since 22:54, no preemption). Each
+  worker retries its book after wait_vm; nothing to do.
+- netpace (3a357b1): hotspot = the gateway IS the phone (2221/8022 answers), re-checked every 30 s; any other Wi-Fi paces with
+  its own gateway as router. Owner may move to somebody else's home Wi-Fi: if the PHONE joins it too, the run waits «phone
+  away» (no scan of a stranger's /24) — find the phone there (ssh key-pinned, phone_ssh.py pin) and tell the owner.
+- The laptop rebooted 2026-11-04 18:39 and start_services.sh was not rerun → it slept 23:21–23:56 mid-redo. 00:25: lid + idle
+  inhibitors and battery-guard started again. STILL OFF: mem-governor, phone-keepalive, phone-watchdog, review-server,
+  reporter-follow (owner not asked yet; watchdog waits for the SSH switch anyway).
+- vm-monitor (owner's btop window) now reconnects by itself (ServerAlive 5 s ×3); «the VM dies» from him meant that window.
+- AFTER THE REDO: scripts/phone_proto.sh ssh (owner yes), check `rclone lsf phone:Books --max-depth 1`, start the watchdog;
+  crop_batch.py --again for البداية والنهاية 21 and المغرب في حلى المغرب 01; the two folder renames below (parentheses/«ط»);
+  refresh.sh; WORKLOG; tell the owner.
+
 ## 2026-11-04 22:15 local — SSH MIGRATION READY, REDO FASTER (Claude, Opus): READ THIS FIRST
 - **Crop redo** runs on the VM (unit crop-redo-2026-11-04-vm, run_resumable → crop_redo.py --remote --workers 14), restarted
   22:05 by the owner: netpace now turns itself off on the phone's hotspot (scripts/netpace.py; it sat at 0.4 MB/s there),
