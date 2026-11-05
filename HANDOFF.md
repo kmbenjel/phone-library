@@ -13,7 +13,7 @@ every turn, benched before 26i.
 - **08:30 STATE**: REDO DONE (1,119 redone, 1 original, 2 SKIP). VM stopped. Phone on SSH (phone_proto.sh ssh), watchdog up.
   DONE 09:15: the 2 first crops, plan 396 (the two set names), services restarted. phone_ssh.nlst now find -H.
   Name with «؟»: ماذا خسر العالم بانحطاط المسلمين؟ (كتب عامة).
-  معجم البابطين (شعراء القرنين 19-20) logged gain None on 2 volumes — look in the review. SHEET FAIL النحو الكوفي p. 258.
+  معجم البابطين gain None = decision «level» (pages turned, no crop): fine. SHEET FAIL النحو الكوفي p. 258.
 - **06:47 UPDATE**: unit now crop-redo-2026-11-05-vm32c (scratch/redo_2026-11-05-vm32c.sh), 31 workers (owner «yes»), 205 left at
   06:47, ~125+ books/h → ETA ~08:30 UTC. VM is CPU-bound (load ≈ workers), not network-bound.
 - **06:05 UPDATE**: the unit is now crop-redo-2026-11-05-vm32b (scratch/redo_2026-11-05-vm32b.sh, same end steps): restarted
