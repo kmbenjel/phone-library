@@ -12,6 +12,12 @@ every turn, benched before 26i.
 ## 2026-11-05 00:30 UTC — REDO ON THE 32-vCPU VM (Claude, Opus): READ THIS FIRST
 - **06:05 UPDATE**: the unit is now crop-redo-2026-11-05-vm32b (scratch/redo_2026-11-05-vm32b.sh, same end steps): restarted
   under the phone lock at 840/1,122 so crop_redo runs 3 bulk transfers at once on the hotspot (owner «yes»; one at home).
+- AFTER A CLEAR: arm `python3 -u scripts/watch_comments.py` as a Monitor and a POLLED monitor on logs/crop-redo-2026-11-03.log
+  (stat size every 15 s, print new lines, grep -v "^VM LOST", grep -iE fail|traceback|stopped|ended with exit|redo finished|skip|away):
+  `tail -F` on that log delivered nothing in the Monitor tool (2026-11-05). gcloud «TimeoutExpired / VM away» = the laptop link.
+- Phone FTP app was down 02:26–05:07 (SSH 8022 stayed up); owner told to set its battery use to Unrestricted. Compare the pace
+  after 06:05 (3 transfers) with ~80–150 books/h before. STILL ASKED, NO ANSWER: restart mem-governor, phone-keepalive,
+  review-server, reporter-follow now or after the redo (watchdog waits for the SSH switch).
 - **Crop redo**: unit crop-redo-2026-11-04-vm32 (scratch/redo_2026-11-04-vm32.sh → crop_redo.py --remote --workers 28), crop-vm
   resized to c2d-highcpu-32 at 22:54 (Google CPUS_ALL_REGIONS now 32). 391/1,122 done at 00:28, ~125 books/h steady, ETA
   ~05:30–06:15 UTC. Its end writes the review page and stops the VM. Log logs/crop-redo-2026-11-03.log.
