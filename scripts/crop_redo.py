@@ -85,7 +85,22 @@ VM_KEY = os.path.expanduser('~/.ssh/google_compute_engine')
 VM_REPO = 'phone-library'                             # the repo copy in the VM user's home
 VM_DATA = ['data/crop/owner-turns.tsv', 'data/crop/owner-pages.tsv', 'data/changes/changes.tsv', 'data/phone/index-now.tsv']
 VM = None                                             # «user@address» once --remote has found it
-NET = threading.Lock()                                # one bulk transfer at a time, the phone's and the VM's (AGENTS.md §7.9)
+class _Net:
+    """bulk transfers, the phone's and the VM's: one at a time (AGENTS.md §7.9), but NET_HOTSPOT (3) at once on the phone's
+    own hotspot, where no one else's network can lag and one ssh stream over 4G leaves most of the link idle (owner
+    2026-11-05 «yes»). The phone's own transfers stay one at a time anyway: cb.Phone holds /tmp/phone-ftp.lock throughout.
+    The network is looked at on every acquire (the pacer re-checks it every 30 s): back home it is one again."""
+    def __init__(self): self.c = threading.Condition(); self.n = 0
+    def limit(self):
+        p = cb.pacer(); return NET_HOTSPOT if getattr(p, 'hotspot', False) and not getattr(p, 'on', True) else 1
+    def __enter__(self):
+        with self.c:
+            while self.n >= self.limit(): self.c.wait(5)
+            self.n += 1
+    def __exit__(self, *a):
+        with self.c: self.n -= 1; self.c.notify_all()
+NET_HOTSPOT = int(os.environ.get('NET_HOTSPOT', '3'))
+NET = _Net()
 STAGE_GB = float(os.environ.get('STAGE_GB', '6'))     # (§7.5: the staged originals waiting for the VM, at most this much)
 BC = None                                             # book_crop.py's MD5: the VM must run the same
 
