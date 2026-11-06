@@ -44,7 +44,8 @@ every turn, benched before 26i.
   data/crop/owner-turns.tsv (path, 221, 0.95, turn) and the case passes; else change the case to «left as scanned».
   Bench logs: vm3 (f3ed545be4) + vm8 (its tilt path = f3ed) on the VM; recipes *.f3ed545be4*.json in the laptop cache.
   crop-vm2 STOPPED 20:25 (crop_redo starts it).
-- REDO RUNNING since 21:08 UTC: unit crop-redo-2026-11-06 (scratch/redo_2026-11-06-vm2.sh → crop_redo.py --remote --workers 31
+- REDO RUNNING: unit crop-redo-2026-11-06b in app.slice (scratch/redo_2026-11-06b.sh — the first unit, in crop.slice, was
+  killed by the governor's brake at 10 books: a remote redo's coordinator never goes in the pen); started 21:08 UTC (unit crop-redo-2026-11-06 → crop_redo.py --remote --workers 31
   on crop-vm2, project phone-library-crop-261106), 1,114 books, ~125/h → ETA ~06:00 UTC 11-07; log logs/crop-redo-2026-11-06.log,
   progress = lines of data/crop/redo-done.tsv (the 11-05 list is data/crop/redo-done.before-2026-11-06.tsv). Its end:
   crop_doubts_page.py crop-redo-2026-11-06 → site/crop-doubts.html, then the VM stopped. Resume after a break: crop_redo.py
