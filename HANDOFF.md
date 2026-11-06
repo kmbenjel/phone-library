@@ -31,11 +31,18 @@ every turn, benched before 26i.
   head is in the block; the 11-05 crop rested on «sways 2.5 %» alone) — crop_regress passes an «in» region under «level».
   Bench logs on the VM: logs/crop-regress-2026-11-06-vm6-part{0,1,2}.log; vm5 had 2 FAILs (those two), vm3 2 (سيبويه +
   اللصوص — part 0's end was missed at first: ALWAYS read every part's «N failures» line, the monitor repeats parts 1–2's).
-- BENCH vm7 CLEAN 19:53 — METHOD FINAL aa692d067e (commit c7d07c5): 416 PASS, 0 FAIL; turn audit vs the 11-05 method over
-  the 49 books: 0 turns lost, 23 gained (0.4–1.6°, certified), decisions unchanged. (vm6's c5a81781fc had widened the halves
-  gate in the page analysis too — خريدة القصر lost 22 turns; now wide=True only in the level check's first look.) Audit
-  tool: compare *.<hash>.json in the cache by page skew — scratch of this session, redo in a script if needed.
-  crop-vm2 STOPPED 19:58 (crop_redo starts it).
+- METHOD FINAL = f3ed545be4 (book_crop.py of commit e198170, restored 20:30): the 11-06 blocks + the three bench fixes
+  (head line within the core's columns; print's height and off the sheet's edge; own folio by sheet place). EVERY change to
+  the tilt path tried after it was withdrawn: the halves-gate widening (±0.2° for agreeing halves) turned the LEVEL index page
+  المثلث ص 489 by 1.575° (keep() certifies index pages — the halves test is the only guard, owner 10-08); scoped to the
+  level check it still did; in the page analysis it re-routed خريدة القصر's 22 turns to «unsure»; listing refused clear
+  reads as «disputed» marked 127 index-page false reads. Lesson: no change to skew_of/the first look without a turn
+  audit (compare page skews of two hashes' recipes — the bench's cases alone did not see the index page turned).
+- KNOWN FAIL: سيبويه ج 2 ص 221 «turn yes» — a colophon whose 0.85° read the halves (0.725/0.625) do not confirm by 0.025°;
+  the box 1.4 pt lower than 11-05 (Th from typical pages) flipped it. OWNER ASKED 20:15: «turn» → add the line to
+  data/crop/owner-turns.tsv (path, 221, 0.95, turn) and the case passes; else change the case to «left as scanned».
+  Bench logs: vm3 (f3ed545be4) + vm8 (its tilt path = f3ed) on the VM; recipes *.f3ed545be4*.json in the laptop cache.
+  crop-vm2 STOPPED 20:25 (crop_redo starts it).
 - NEXT: redo all cropped books with the new method — list data/crop/redo-all-2026-11-06.tsv (1,114, current
   paths; crop_redo.py --list-all) — `CROP_VM=crop-vm2 CROP_VM_PROJECT=phone-library-crop-261106 crop_redo.py
   data/crop/redo-all-2026-11-06.tsv crop-redo-2026-11-06 --remote --workers 31` in a launcher like
