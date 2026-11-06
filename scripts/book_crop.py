@@ -3393,8 +3393,18 @@ def frames(rec):
             lim = 1.0 if own_cover else 0.08          # يؤثر من حواف الغلاف»; مواد البيان: «هل العرض مستو مع جميع الصفحات؟ يمكن
             if (cw / chh > A and (cw - chh * A) / cw <= lim     # القص من الجوانب … فهو غلاف فقط»): the book's own covers (its
                     or cw / chh < A and (chh - cw / A) / chh <= lim):   # first two and last four pages) always; a cover
-                c = cover_window(c, A, p.get('cover_marks') or [])     # picture inside the book only when ≤ 4 % a side
+                c2 = cover_window(c, A, p.get('cover_marks') or [])    # picture inside the book only when ≤ 4 % a side
                 # goes (فهرسة ابن خير ص 380 «دون قصّ صورة الغلاف»); the cut placed where it takes no print (cover_window)
+                # (a cover-like TEXT page — read as text, no cover marks to steer the cut — is cut only where the cut takes no
+                # line of print: a cover's ground, pattern or edge may go, as the owner allows («OK to take a line of print
+                # when it's safe … just some background color of a cover», 2026-11-06); a dense first or last text page
+                # whose lines reach the cut keeps its frame — up to 8 % of its lines would have gone, revisit 2026-11-06)
+                text_cut = cover_like and not own_cover and p['kind'] != 'cover' and any(abs(a_ - b_) > 0.5 for a_, b_ in zip(c, c2))
+                if text_cut and any(inside(l, c, 0) and not inside(l, c2, 1.0) for l in p.get('lines') or []):
+                    p['cover_like_kept'] = [round(v, 1) for v in c2]
+                else:
+                    if text_cut: p['cover_like'] = [round(v, 1) for v in c2]
+                    c = c2
         if c and abs(c[2] - c[0] - W) <= 1.0 and abs(c[3] - c[1] - H) <= 1.0:      # the book's box
             x, y, rw, rh = (c[0] + c[2]) / 2, (c[1] + c[3]) / 2, W, H
         else:
