@@ -621,7 +621,7 @@ def marks(a, scale, width, exclude=None, band=None):
     out['xy'] = tuple(reversed(np.nonzero(kl[lab]))) if len(with_lines) != len(content) else (xs, ys)
     return out
 
-def skew_of(xy, raw=False):
+def skew_of(xy, raw=False, wide=False):
     """the angle (degrees) that makes the text lines level: shear the ink by tan(a) and keep the angle whose row profile is
     sharpest. Measured on the whole text and on its right and left halves: a real tilt is the same everywhere (owner,
     2026-10-08: index pages and verse turned by mistake — their whole-page angle disagreed with their halves'). Accepted when
@@ -659,10 +659,13 @@ def skew_of(xy, raw=False):
     # (± 1e-6: a whole-page angle exactly on the limit once read as outside it — الفوائد المحصورة ص 16, −0.9 vs −0.8 − 0.1)
     # (2026-11-06, سيبويه ج 2 ص 221: halves 0.725 / 0.625, whole 0.85 — the same tilt everywhere, the whole profile 0.025°
     # past the ±0.1 — read level when the box moved 1.4 pt. Halves that agree within 0.2° are a real tilt by this test's own
-    # purpose: the whole may then lie within ±0.2° of their range; an index page's whole lies far outside its halves)
-    # (for a clear tilt only, ≥ 0.4°: near the eye's limit the strict gate stays — معجم تيمور ج 2 ص 145 read −0.325 by the
-    # widened gate against +0.35 by its image, and was listed untreated where the baselines had read it level)
-    tol = 0.2 if len(parts) == 2 and abs(parts[0] - parts[1]) <= 0.2 + 1e-6 and abs(a) >= 0.4 - 1e-6 else 0.1
+    # purpose: the whole may then lie within ±0.2° of their range; an index page's whole lies far outside its halves.
+    # wide=True asks for that, and ONLY the level check's first look asks (verify): there a turn is certified by keep() or
+    # third() before it stands. The page analysis keeps the strict gate — widened there, خريدة القصر's pages read a shear
+    # tilt at the first look and left the projection → tracks route that had found their turns: 22 of them «unsure».
+    # And for a clear tilt only, ≥ 0.4°: near the eye's limit the strict gate stays — معجم تيمور ج 2 ص 145 read −0.325
+    # by the widened gate against +0.35 by its image, and was listed untreated where the baselines had read it level)
+    tol = 0.2 if wide and len(parts) == 2 and abs(parts[0] - parts[1]) <= 0.2 + 1e-6 and abs(a) >= 0.4 - 1e-6 else 0.1
     if len(parts) < 2 or abs(parts[0] - parts[1]) > 0.6 + 1e-6 or not (min(parts) - tol - 1e-6 <= a <= max(parts) + tol + 1e-6): return 0.0, 1.0
     return a, gain
 
@@ -3064,7 +3067,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                 if m2 is not None: mk = m2
                 else: p.pop('skew', None); p['unsure_tilt'] = True; mk = look(i, p)
         elif mk['xy'] is not None and ct is None:
-            u, g = skew_of(mk['xy'])
+            u, g = skew_of(mk['xy'], wide=True)
             # (no turn when the halves disagree, even if the whole page and its image agree on a tilt: index pages fool
             # all of them alike — 2026-10-09, الفوائد المحصورة ص 432 and 446, «فهرس اللغة», turned 3° by mistake) — unless
             # the lines' edge, a ruler of its own, reads the same clear tilt as the whole page (≥ 0.4°, within 0.2°):
