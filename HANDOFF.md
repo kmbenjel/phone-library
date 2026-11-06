@@ -35,7 +35,7 @@ every turn, benched before 26i.
   books (at least the 140 + 17 + 63 above; better all 1,124) with crop_redo.py --remote. Nothing applied to the phone yet.
 - COMPUTE: the default gcloud project is capped at 64 CPUs (crop-vm + align-1, both the owner's hifz job — crop-vm is
   NOT free: load 21). New project phone-library-crop-261106 (cap 12; a request for 32 filed 16:55, pending) with
-  crop-vm2 (c2d-highcpu-8, spot, 34.175.47.4 at creation; image crop-img-20261106 of crop-vm's disk — pymupdf was
+  crop-vm2 (c2d-highcpu-8 at creation, quota for 32 APPROVED 17:30 → resize to c2d-highcpu-32 for the bench/redo; spot, 34.175.47.4; image crop-img-20261106 of crop-vm's disk — pymupdf was
   missing on it: install it). crop_redo.py takes CROP_VM=crop-vm2 CROP_VM_PROJECT=phone-library-crop-261106 (new env).
   ~/.config/agents/MACHINE.md updated. Codespace silver-guide (musammi, 4 cores) exists but was not needed.
 - QUIRK: in the Claude tool shell (sandbox) `python3 -c "import pymupdf"` fails while scripts run fine — being checked.
