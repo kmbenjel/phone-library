@@ -3069,6 +3069,11 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                 if abs(r_) >= 0.4 and g_ >= 1.02:
                     es = [e for e in mk['edges']() if e is not None and abs(e - r_) <= 0.2]
                     if es: u, g = r_, g_; p['tilt_by_edge'] = round(min(es, key=lambda e: abs(e - r_)), 3)
+                    # (2026-11-06, سيبويه ج 2 ص 221 again: with the box 1.4 pt lower the halves' reads parted and the whole
+                    # page's 0.85° never reached the trial — third() was never asked. A clear whole-page tilt whose halves
+                    # disagree is tried too, certified by third() alone — never by keep(): an index page that fools the
+                    # whole-page measures alike does not read level after the turn)
+                    else: u, g = r_, g_; p['halves_apart'] = round(r_, 3)
             if abs(u) >= 1.0 and mk.get('level_frame'): p['frame_level'] = round(u, 3); u = 0.0   # a level frame: not turned
             if abs(u) >= SKEW_MIN and g >= 1.02:
                 if mk['proj'](-3.0, 3.0, 0.25) < SKEW_MIN - 0.05: p['tilt_disputed'] = round(u, 3)   # the image shows no tilt
@@ -3083,11 +3088,11 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                     done = False
                     if tries:
                         d, r, im, m2 = best_turn(i, p, min(tries)[1])
-                        if keep(p, d, r, im, u, m2, mk) or third(p, r, im, u, mk, m2, i, d):
+                        if (keep(p, d, r, im, u, m2, mk) and not p.get('halves_apart')) or third(p, r, im, u, mk, m2, i, d):
                             p['skew'] = d; p['after_tilt'] = round(r, 3); p['after_tilt_image'] = im; p['turned_in_check'] = True
                             mk = m2; done = True
                     if not done:                      # (a page found by its edge alone whose turn is not certified: the
-                        if p.get('tilt_by_edge') is not None or p.get('lines_lean'): p['tilt_disputed'] = round(u, 3)   # measures
+                        if p.get('tilt_by_edge') is not None or p.get('lines_lean') or p.get('halves_apart'): p['tilt_disputed'] = round(u, 3)   # measures
                         else: p['untreated_tilt'] = round(u, 3)   # disagree; or its lines do — lines_lean)
         # A TILT THE MEASURES' GATES LEFT (2026-10-27): of 478 sampled pages of the regression books left as scanned whose lines
         # agree, 26 read ≥ 0.25° by their baselines, the other rulers mostly reading the same — the halves' test refused a whole
