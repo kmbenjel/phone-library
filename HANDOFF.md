@@ -31,7 +31,8 @@ every turn, benched before 26i.
   head is in the block; the 11-05 crop rested on «sways 2.5 %» alone) — crop_regress passes an «in» region under «level».
   Bench logs on the VM: logs/crop-regress-2026-11-06-vm6-part{0,1,2}.log; vm5 had 2 FAILs (those two), vm3 2 (سيبويه +
   اللصوص — part 0's end was missed at first: ALWAYS read every part's «N failures» line, the monitor repeats parts 1–2's).
-- AFTER 0 FAILURES: redo all cropped books with the new method — list data/crop/redo-all-2026-11-06.tsv (1,114, current
+- BENCH vm6 CLEAN 19:24 (c5a81781fc: 416 PASS, 0 FAIL). THE METHOD IS READY. crop-vm2 STOPPED 19:28 (crop_redo starts it).
+- NEXT: redo all cropped books with the new method — list data/crop/redo-all-2026-11-06.tsv (1,114, current
   paths; crop_redo.py --list-all) — `CROP_VM=crop-vm2 CROP_VM_PROJECT=phone-library-crop-261106 crop_redo.py
   data/crop/redo-all-2026-11-06.tsv crop-redo-2026-11-06 --remote --workers 31` in a launcher like
   scratch/redo_2026-11-05-vm32c.sh (its end: crop_doubts_page.py, VM stop). NEEDS THE PHONE: sshd 8022 and FTP 2221 both
