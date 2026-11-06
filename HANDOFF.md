@@ -31,12 +31,14 @@ every turn, benched before 26i.
   1. frames() cover-like cut of a first-2/last-4 TEXT page: the «line of print» guard reads p['lines'] (thin marks, not
      print) → a text page whose box is wider than the book's proportion is shaved ≤ 4 % a side. CONFIRMED IN THE REDO:
      الطبقات الكبرى (Sachau) 71436c9358e3 p0291 (the Arabic title page, 'larger'): the two widest imprint lines cross the
-     dashed window by ~4 pt a side (sheet p0291-before.jpg). Fix sketch in the report (decide by the page's print, not by
-     'lines'). scratch/redo_audit_2026-11-06.py flags first-2/last-4 pages shown narrower than their crop: 12 of 47 books so
-     far — most are real covers (معجم تيمور 05 p1, المحرر الوجيز p1 checked by eye: fine); to check when their files are at
-     hand: مختار الأغاني a2167d651424 pp. 594–597 (14–16 pt a side, scale 0.84 — 169 MB, not fetched), فوائد الظهيرية مخطوط
-     6c9bb3ccc5a9 pp. 1–2 (180 pt a side at scale 1.66 — probably a two-page spread: look), الاشتقاق db043b8db794 p1 (27 pt)
-     and p768 (36 pt a side), فتح الوصيد 4be7551c0034 p1 — the three small ones were being fetched to the scratchpad fetch/.
+     dashed window by ~4 pt a side (sheet p0291-before.jpg; the 11-05 recipe showed it whole with bands, show y −7…675).
+     Fix sketch in the report (decide by the page's print, not by 'lines'). scratch/redo_audit_2026-11-06.py (run it at the
+     end over all recipes) flags a first-2/last-4 page NEWLY shown narrower than in the 11-05 recipe — the old cover rule's
+     cuts (identical in both: الاشتقاق p1/p768 = covers, فوائد الظهيرية مخطوط pp. 1–2 = the leather binding, Der
+     Struwwelpeter p2) are not this run's doing. 4 of 47 books so far: الطبقات الكبرى (Sachau) 71436c9358e3 p291 and
+     c8935d2899f8 p217 (title pages: HARMFUL, 4 pt a side), المحرر الوجيز 766cb6a40dd6 p1 (title page, print well inside:
+     harmless), مختار الأغاني a2167d651424 pp. 594–595 (14 pt a side, scale 0.84 — 169 MB, not fetched: LOOK at the end).
+     The partial redo after the fix = the books this audit lists (plus any the fix changes in the bench).
   2. _lines() (band_print) tests the group's bounding box: a row of specks passes as a line of print (89 of 718 groups had
      no letter-sized member; one made halftone dots the folio; moves ≤ 2.8 pt). Fix: require a letter-sized member.
   3. the «where the book prints its head» reference is nearly vacuous (core.top − text.top ≥ 1 % h holds on ~all pages).
