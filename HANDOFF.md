@@ -44,7 +44,7 @@ every turn, benched before 26i.
   data/crop/owner-turns.tsv (path, 221, 0.95, turn) and the case passes; else change the case to «left as scanned».
   Bench logs: vm3 (f3ed545be4) + vm8 (its tilt path = f3ed) on the VM; recipes *.f3ed545be4*.json in the laptop cache.
   crop-vm2 STOPPED 20:25 (crop_redo starts it).
-- REDO RUNNING IN THREE PARTS since 21:46 UTC (method 002b4f3ec1 = f3ed545be4 + the cover-like lines guard, f6f3b78): units
+- REDO RUNNING IN THREE PARTS since 21:31 UTC (relaunched 21:34 after stale host keys) (method 002b4f3ec1 = f3ed545be4 + the cover-like lines guard, f6f3b78): units
   crop-redo-2026-11-06-{crop-vm2,align-1,crop-vm} (app.slice; scratch/redo_2026-11-06-part.sh VM WORKERS [PROJECT]; lists
   data/crop/redo-part-2026-11-06-<vm>.tsv 466/468/180 books; crop-vm carries the owner's hifz job → 12 workers) + the end unit
   crop-redo-2026-11-06-end (review page from the batch, then stops crop-vm2 ONLY — crop-vm and align-1 are the owner's).
