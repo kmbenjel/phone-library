@@ -9,15 +9,37 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
-## 2026-11-06 16:30 — OWNER'S FIRST crop-doubts REMARKS (Claude): OPEN, method fixes needed
-- 0022362994e5 (الفن ومذاهبه — شوقي ضيف) ص 1 «في الأولى لم تطابق النتيجة الإطار الموضوع على القديمة»: the front cover was not
-  taken as a cover (kind ≠ cover/picture → frames() own_cover false): its crop is wider than the book's ratio, so `show` grew in
-  height beyond the page → blank bands (bands=True, enlarged 1.302) instead of the cover rule (cut the sides ~3 %). The sheet
-  draws `crop` in red but renders `show`. 80 of 1,124 recipes have bands on p. 1–2 (same fault). Fix in frames(): the book's
-  first pages with bands → cover_window; then redo those books.
-- 01435c38ee4b (الإعلام بنوازل الأحكام — أبو الأصبغ) «ترقيم الصفحات تم إهماله فجاء ضيقا أو منقوصا»: e.g. ص 178 the folio sits on
-  the box's bottom edge (box centred on the text without the folio). Fix: the folio counts in the box/margins.
-- Not yet fixed: crop method work (owner sets effort: xhigh for crop). Both cards stay on the page until a new round.
+## 2026-11-06 18:30 — SELF-REVIEW OF crop-doubts; METHOD FIXED (unbenched); crop-vm2 (Claude, Fable): READ THIS FIRST
+- OWNER 16:50: «لا أستطيع مراجعة الجميع، فراجعه بنفسك حتى التمام، غالب ما رأيته بعيني لم يكن به أي بأس» + use the Codespace or a
+  new gcloud project for compute. His remarks: 0022362994e5 (الفن ومذاهبه) ص 1 «لم تطابق النتيجة الإطار الموضوع على القديمة»;
+  01435c38ee4b (الإعلام بنوازل الأحكام) «ترقيم الصفحات تم إهماله فجاء ضيقا أو منقوصا»; 03395eb74040 (آثار ابن المقفع) «الأخير نازل»
+  (p. 273 — not yet probed: no laptop copy, the phone has been silent since 12:38); 02f9b959eabb ticked → review-closed.tsv.
+- SELF-REVIEW DONE (scratch: contact sheets of 8 random shown pages per doubt kind, all 17 kinds; a scan of all 6,163
+  «after» images for ink at the frame's edges): the kinds themselves look right; the faults cluster in VERTICAL PLACEMENT:
+  212 results (140 books) with print on the top or bottom edge and the other margin > 4 %; 23 (17 books) tight at both;
+  63 first pages shown with blank bands (recipes: bands on p. 1–2).
+- CAUSES (probes = book_crop.plan on ±20-page extracts, scratch probe.py): (a) a running head or the page number lying in
+  the scan's outer 4 % is taken by marks() for the sheet's edge («edge»: inband/zoned) → the text block starts under it, the
+  rule under the head is dodged, the frame cuts the head (الأغاني ج 8 ص 111, ديوان اللصوص ص 5) or the number (الإعلام ص 272);
+  (b) the book's box height Th was the MAX box height (q 1.0) → one tall page made the box as tall as the sheet, pinned at
+  its edges; (c) a light grey cover on a white sheet is «paper» to cover_rect → a wide text box → bands (الفن ومذاهبه ص 1).
+- FIXES in scripts/book_crop.py (decide(): the folio_specks block now also takes EDGE marks and matches the folio place
+  relative to the text block; a new block puts back edge marks making a short line where the book prints its head/number
+  line on ≥ 30 % of pages (place read on the sheet, not from the core — a chapter's first page has a lower core);
+  Th from typical pages (≤ 1.15 × median); frames(): a first/last page whose box ≥ 80 % of the page is cut to the book's
+  proportions like a cover (≤ 8 % a side); sheet(): the shown area drawn in dashed blue when it differs from the box).
+  Probe results (v3): الإعلام ص 178 margins 3 → 15 pt, ص 272 number back and inside; الأغاني ص 111/132 head inside with
+  22 pt; اللصوص ص 5/196 head inside; no new bands (ديوان اللصوص: 1 → 2 pages, the new one 0.6 pt). Four regression cases
+  appended (data/improve/crop-regression.tsv, originals copied into ~/.cache/phone-library/crop-regress/).
+- NOT YET: the full regression bench (crop_regress.py, 329 cases) — being set up on crop-vm2; then redo the affected
+  books (at least the 140 + 17 + 63 above; better all 1,124) with crop_redo.py --remote. Nothing applied to the phone yet.
+- COMPUTE: the default gcloud project is capped at 64 CPUs (crop-vm + align-1, both the owner's hifz job — crop-vm is
+  NOT free: load 21). New project phone-library-crop-261106 (cap 12; a request for 32 filed 16:55, pending) with
+  crop-vm2 (c2d-highcpu-8, spot, 34.175.47.4 at creation; image crop-img-20261106 of crop-vm's disk — pymupdf was
+  missing on it: install it). crop_redo.py takes CROP_VM=crop-vm2 CROP_VM_PROJECT=phone-library-crop-261106 (new env).
+  ~/.config/agents/MACHINE.md updated. Codespace silver-guide (musammi, 4 cores) exists but was not needed.
+- QUIRK: in the Claude tool shell (sandbox) `python3 -c "import pymupdf"` fails while scripts run fine — being checked.
+- Review page: 02f9b959eabb closed; the page not rebuilt yet (crop_doubts_page.py) — rebuild after the redo.
 
 ## 2026-11-06 — CROP REDO CLOSED; READY FOR /clear (Claude, Opus): READ THIS FIRST
 - DONE: full crop redo (1,119 redone with the corrected method, 1 original, 2 first crops after: البداية 21, المغرب 01);

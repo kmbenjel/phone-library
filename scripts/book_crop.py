@@ -2327,9 +2327,20 @@ def decide(pages, wq=0.95):
     # stain above — are that number when the page's own was not found there: print again, the page's folio, part of the
     # text block when it lies within the text's columns
     fols = [(j, pages[j]['folio']) for j in text if pages[j].get('folio')]
+    # (2026-11-06, الإعلام بنوازل الأحكام ص 272, owner «ترقيم الصفحات تم إهماله فجاء ضيقا أو منقوصا في النتيجة»: the number
+    # under the text lay in the sheet's outer zone, marks() read it as an edge mark and the box cut it off — edge marks are
+    # candidates too; and the place is read relative to the page's text block (its centre across, the core's foot or head
+    # down), since scans shift from page to page: 23 pt across between pp. 178 and 272, beyond same_place's 3 %)
+    def rel(j, f):
+        p_ = pages[j]; t_, c_ = p_.get('text') or p_['box'], p_.get('core') or p_['box']
+        return ((f[0] + f[2]) / 2 - (t_[0] + t_[2]) / 2, (f[1] + f[3]) / 2 - (c_[3] if f[4] == 'foot' else c_[1]))
+    def same_rel(i, u, j, f, w, h):
+        ru, rf = rel(i, list(u[:4]) + [f[4]]), rel(j, f)
+        return abs(ru[0] - rf[0]) <= 0.03 * w and abs(ru[1] - rf[1]) <= 0.03 * h \
+            and 0.5 <= (u[2] - u[0] + 1) / (f[2] - f[0] + 1) <= 2 and 0.5 <= (u[3] - u[1] + 1) / (f[3] - f[1] + 1) <= 2
     for i in text:
-        p = pages[i]; w, h = p['w'], p['h']; sp = p.get('specks') or []
-        at = lambda u: [f for j, f in fols if j != i and same_place(u, f, w, h)]
+        p = pages[i]; w, h = p['w'], p['h']; sp = (p.get('specks') or []) + (p.get('edge') or [])
+        at = lambda u: [f for j, f in fols if j != i and (same_place(u, f, w, h) or same_rel(i, u, j, f, w, h))]
         if not sp or (p.get('folio') and len(at(p['folio'])) >= max(3, int(0.03 * len(text)))): continue
         g_, groups = M * w / REF, []
         for s in sp:
@@ -2339,11 +2350,64 @@ def decide(pages, wq=0.95):
         for gr in groups:
             u = union(gr); f_ = at(u)
             if len(f_) < max(3, int(0.03 * len(text))): continue
-            for s in gr: p['specks'].remove(s)
+            if u[2] - u[0] > 0.08 * w or u[3] - u[1] > 0.025 * h: continue   # (a page number's size, as marks() reads one)
+            for s in gr:
+                for key in ('specks', 'edge'):
+                    if any(s is x for x in p.get(key) or []): p[key] = [x for x in p[key] if x is not s]
             p['box'] = union([p['box'], u]); t = p.get('text'); p['folio_specks'] = [round(v, 1) for v in u]
             if t and t[0] <= (u[0] + u[2]) / 2 <= t[2]: p['text'] = union([t, u])
             k_ = [f[4] for f in f_]; p['folio'] = list(u) + [max(set(k_), key=k_.count)]
+            al = p.get('allowed')                     # (the band it was taken for no longer keeps the box off it)
+            if al: al[1] = min(al[1], u[1] - 0.01 * h); al[3] = max(al[3], u[3] + 0.01 * h)
             break
+    # A RUNNING HEAD (A NUMBER LINE) IN THE SHEET'S BORDER ZONE (owner 2026-11-06, crop-doubts — الأغاني ج 8 ص 111, ديوان
+    # اللصوص ص 5: the head in the scan's outer 4 % was taken by marks() for the sheet's edge (a band or the border zone),
+    # the text block began under it, the rule under the head was then a line to dodge, and the frame cut the head at its
+    # top edge; 80 results on the review page with print on the top edge): edge marks that together make a short line in
+    # the text's columns, above the core (below it), lying where the book prints its head (its number line) — on ≥ 30 % of
+    # the text pages (at least 3) such a line of edge marks, or the text block's own top (bottom), lies within 3 % of the
+    # page of it — are print: back into the text block, the box and the allowed area; a short one at the foot the folio.
+    # (The place is read on the sheet, not from the core: on a chapter's first page the core starts lower.)
+    def _lines(i):
+        p_ = pages[i]; w, h = p_['w'], p_['h']; t_, c_ = p_.get('text'), p_.get('core'); ed = p_.get('edge') or []
+        if not t_ or not c_: return []
+        cand = [e for e in ed if t_[0] - 0.02 * w <= (e[0] + e[2]) / 2 <= t_[2] + 0.02 * w and (e[3] <= c_[1] + 1 or e[1] >= c_[3] - 1)
+                and e[3] - e[1] <= 0.035 * h]
+        groups = []
+        for e in sorted(cand, key=lambda e: e[1]):
+            for gr in groups:
+                u = union(gr)
+                if e[1] <= u[3] + 0.005 * h and e[3] >= u[1] - 0.005 * h: gr.append(e); break
+            else: groups.append([e])
+        out = []
+        for gr in groups:
+            u = union(gr)
+            if u[3] - u[1] <= 0.035 * h and u[2] - u[0] >= 0.02 * w: out.append((gr, u, 'head' if u[3] <= c_[1] + 1 else 'foot'))
+        return out
+    L = {i: _lines(i) for i in text}
+    need_ = max(3, int(0.3 * len(text)))
+    for kind in ('head', 'foot'):
+        k0, k1 = (1, 1) if kind == 'head' else (3, 3)          # the edge compared: the line's top (bottom) with the text's
+        ref = {}                                                # page → the y of its head (number line), from either source
+        for j in text:
+            p_ = pages[j]; t_, c_ = p_.get('text'), p_.get('core')
+            ys = [u[k0] for gr, u, k in L[j] if k == kind]
+            if t_ and c_ and (c_[1] - t_[1] >= 0.01 * p_['h'] if kind == 'head' else t_[3] - c_[3] >= 0.01 * p_['h']): ys.append(t_[k1])
+            if ys: ref[j] = ys
+        if len(ref) < need_: continue
+        for i in text:
+            p = pages[i]; h, w = p['h'], p['w']
+            for gr, u, k in L[i]:
+                if k != kind or not any(e in p['edge'] for e in gr): continue
+                if sum(1 for j, ys in ref.items() if j != i and any(abs(y - u[k0]) <= 0.03 * h for y in ys)) < need_ - 1: continue
+                p['edge'] = [e for e in p['edge'] if not any(e is x for x in gr)]
+                p['text'] = union([p['text'], u]); p['box'] = union([p['box'], u])
+                p.setdefault('band_print', []).append([round(v, 1) for v in u] + [kind])
+                al = p.get('allowed')
+                if al:
+                    if kind == 'head': al[1] = min(al[1], u[1] - 0.01 * h)
+                    else: al[3] = max(al[3], u[3] + 0.01 * h)
+                if kind == 'foot' and not p.get('folio') and u[2] - u[0] <= 0.08 * w: p['folio'] = [round(v, 1) for v in u] + ['foot']
     # PRINTED RULES AND FRAMES belong to the page when the book prints them (marks() leaves every line out): a rule on the
     # same side of the text block at the same distance (± 2 % of the page) on ≥ 40 % of the text pages (at least 3); a rule
     # inside the text block's span stays; a rule further than 6 % of the page from the text is the scanner's or the sheet's
@@ -2383,7 +2447,10 @@ def decide(pages, wq=0.95):
     # a plate — 6 % of the book — held the box at the full page): a page whose box is > 25 % wider than the median page is
     # not typical; it gets the book's size all the same (its content shrunk to fit / centred on its own content)
     _mw = q(bw.values(), 0.5)
-    Tw, Th = q([v for v in bw.values() if v <= 1.25 * _mw] or list(bw.values()), wq), q(bh.values(), 1.0)
+    # (the height likewise from typical pages — 2026-11-06: one page with a box > 15 % taller than the median (a plate, a
+    # deep footnote) made the book's box as tall as the sheet, pinned at its edges and no longer centred on the text)
+    _mh = q(bh.values(), 0.5)
+    Tw, Th = q([v for v in bw.values() if v <= 1.25 * _mw] or list(bw.values()), wq), q([v for v in bh.values() if v <= 1.15 * _mh] or list(bh.values()), 1.0)
     full_w = [i for i in text if cw[i] >= 0.9 * q(cw.values(), 0.5)]
     full_h = [i for i in text if bh[i] >= 0.9 * q(bh.values(), 0.5)]
     # an ornament (above) joins its page's box and text block only now: a page ending in a section's fleuron stays a short
@@ -3305,7 +3372,12 @@ def frames(rec):
         k_ = rec['pages'].index(p); n_ = len(rec['pages'])
         own_cover = (k_ < 2 or k_ >= n_ - 4) and p['kind'] in ('cover', 'picture')
         if own_cover and not c: c = [0.0, 0.0, pw, ph]
-        if p['kind'] == 'cover' and c or own_cover:   # A COVER FILLS THE FRAME, cut to the book's proportions (owner
+        # a front or back page printed nearly to its edges that cover_rect did not read as a cover (a light grey cover on a
+        # white sheet is «paper» to it — owner 2026-11-06, الفن ومذاهبه ص 1 «لم تطابق النتيجة الإطار الموضوع على القديمة»:
+        # its box, wider than the book's proportions, was shown whole with blank bands above and below; 63 first pages):
+        # a box ≥ 80 % of the page is a cover, cut to the book's proportions like one inside the book (≤ 8 % a side)
+        cover_like = (k_ < 2 or k_ >= n_ - 4) and p['kind'] == 'text' and bool(c) and (c[2] - c[0]) * (c[3] - c[1]) >= 0.8 * pw * ph
+        if p['kind'] == 'cover' and c or own_cover or cover_like:   # A COVER FILLS THE FRAME, cut to the book's proportions (owner
             cw, chh = c[2] - c[0], c[3] - c[1]        # 2026-10-18, دلائل الإعجاز ص 1: «الملاحظة على حالها … ولو نقص شيء لا
             lim = 1.0 if own_cover else 0.08          # يؤثر من حواف الغلاف»; مواد البيان: «هل العرض مستو مع جميع الصفحات؟ يمكن
             if (cw / chh > A and (cw - chh * A) / cw <= lim     # القص من الجوانب … فهو غلاف فقط»): the book's own covers (its
@@ -3692,6 +3764,10 @@ def sheet(src, rec, outdir, pages=None, px=480):
         sh = tp.new_shape()
         poly = lambda r: [bk(r[0], r[1]), bk(r[2], r[1]), bk(r[2], r[3]), bk(r[0], r[3]), bk(r[0], r[1])]
         if p.get('crop'): sh.draw_polyline(poly(p['crop'])); sh.finish(color=(0.85, 0, 0), width=2.5)
+        # (what the reader shows when it is not the box — a cover cut to the book's proportions, a page shrunk or shown
+        # with bands — in blue, so that the result matches a frame on the page: owner 2026-11-06, الفن ومذاهبه ص 1)
+        if p.get('show') and (not p.get('crop') or any(abs(a - b) > 1 for a, b in zip(p['show'], p['crop']))):
+            sh.draw_polyline(poly(p['show'])); sh.finish(color=(0, 0.35, 1), width=1.5, dashes='[6 4] 0')
         for b in p.get('blots', []): sh.draw_polyline(poly([b[0] - 3, b[1] - 3, b[2] + 3, b[3] + 3])); sh.finish(color=(1, 0.55, 0), width=2.5)
         for b in p.get('edge', []):
             if p.get('crop') and not inside(b, p['crop'], 0): sh.draw_polyline(poly([b[0] - 2, b[1] - 2, b[2] + 2, b[3] + 2])); sh.finish(color=(0.6, 0, 0.8), width=1.5)

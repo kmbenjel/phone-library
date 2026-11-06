@@ -81,7 +81,8 @@ def wait_phone(why):
 # ---- the cloud VM (--remote) ----
 VM_NAME, VM_ZONE, VM_USER = (os.environ.get('CROP_VM', 'crop-vm'), os.environ.get('CROP_VM_ZONE', 'europe-southwest1-b'),
                              os.environ.get('CROP_VM_USER', 'k'))
-VM_KEY = os.path.expanduser('~/.ssh/google_compute_engine')
+VM_PROJ = [f'--project={os.environ["CROP_VM_PROJECT"]}'] if os.environ.get('CROP_VM_PROJECT') else []   # (a VM in another
+VM_KEY = os.path.expanduser('~/.ssh/google_compute_engine')                                                  # gcloud project, 2026-11-06)
 VM_REPO = 'phone-library'                             # the repo copy in the VM user's home
 VM_DATA = ['data/crop/owner-turns.tsv', 'data/crop/owner-pages.tsv', 'data/changes/changes.tsv', 'data/phone/index-now.tsv']
 VM = None                                             # «user@address» once --remote has found it
@@ -105,7 +106,7 @@ STAGE_GB = float(os.environ.get('STAGE_GB', '6'))     # (§7.5: the staged origi
 BC = None                                             # book_crop.py's MD5: the VM must run the same
 
 def vm_address():
-    r = subprocess.run(['gcloud', 'compute', 'instances', 'describe', VM_NAME, f'--zone={VM_ZONE}',
+    r = subprocess.run(['gcloud', 'compute', 'instances', 'describe', VM_NAME, f'--zone={VM_ZONE}', *VM_PROJ,
                         '--format=value(status,networkInterfaces[0].accessConfigs[0].natIP)'], capture_output=True, text=True, timeout=120)
     if r.returncode: raise RuntimeError(f'gcloud: {r.stderr.strip()[:200]}')
     st, ip = (r.stdout.split() + ['', ''])[:2]
@@ -141,7 +142,7 @@ def _wait_vm(why):
                 if ip: VM = f'{VM_USER}@{ip}'
                 if st in ('TERMINATED', 'STOPPED'):
                     print(time.strftime('%F %T'), f'VM {VM_NAME} {st} ({why}): starting it again', flush=True)
-                    subprocess.run(['gcloud', 'compute', 'instances', 'start', VM_NAME, f'--zone={VM_ZONE}'], capture_output=True, timeout=600)
+                    subprocess.run(['gcloud', 'compute', 'instances', 'start', VM_NAME, f'--zone={VM_ZONE}', *VM_PROJ], capture_output=True, timeout=600)
                     continue
             except Exception as e: print(time.strftime('%F %T'), 'gcloud:', repr(e)[:160], flush=True)
         if t % 30 == 0: print(time.strftime('%F %T'), f'VM away ({why}): waiting for it', flush=True)
@@ -153,7 +154,7 @@ def sync_vm():
     st, ip = vm_address()
     if st in ('TERMINATED', 'STOPPED'):              # (stopped when idle, or by Google: started for the run)
         print(time.strftime('%F %T'), f'VM {VM_NAME} {st}: starting it', flush=True)
-        subprocess.run(['gcloud', 'compute', 'instances', 'start', VM_NAME, f'--zone={VM_ZONE}'], capture_output=True, timeout=600)
+        subprocess.run(['gcloud', 'compute', 'instances', 'start', VM_NAME, f'--zone={VM_ZONE}', *VM_PROJ], capture_output=True, timeout=600)
         for _ in range(20):
             st, ip = vm_address()
             if st == 'RUNNING' and ip:
