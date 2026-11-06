@@ -9,6 +9,29 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-06 17:45 — BENCH OF THE SELF-REVIEW FIXES ON crop-vm2; 3 MORE FIXES (Claude, Fable): READ THIS FIRST
+- crop-vm2 is c2d-highcpu-32 (resized 17:10; spot; project phone-library-crop-261106; ssh alias
+  crop-vm2.europe-southwest1-b.phone-library-crop-261106 after `gcloud compute config-ssh --project …`). Its repo copy
+  ~/phone-library has scripts/ (rsync --delete from the laptop before each run), data/improve, data/phone/index-now.tsv,
+  data/changes/changes.tsv, and the 58 regression PDFs in ~/.cache/phone-library/crop-regress/ (same bytes as the laptop's).
+  Its data/crop/workers said 1 (crop-vm image) → set to 30; no governor runs there. STOP IT when the bench/redo is over.
+- BENCH: crop_regress.py now takes CASES=part.tsv; scratch/regress_2026-11-06-vm3.sh runs 3 parts × JOBS=10 at once
+  (owner 17:30 «more cpu room»; load ~60 on 32 vCPUs, 49 books in ~20 min). Logs on the VM:
+  logs/crop-regress-2026-11-06-vm3-part{0,1,2}.log, each ends «N failures». Method under test f3ed545be4 (commits
+  2e1c997, 3beff88, e198170 on top of 564e390). Three failures of the first benches, all from the 11-06 blocks, fixed:
+  القوافي (photocopy's top band passed as a head line → crop lost) → a head/number line lies within the core's columns ± 4 %;
+  مشتبهات ص 8 (1.2-pt sliver on the top edge as a head) → print's height ≥ 0.6 % h and off the edge; فهرسة ابن خير ص 4
+  (the «(١)» confirmed as folio by relative place) → own folio confirmed by sheet place only. Probes of the owner's pages
+  (الأغاني ج 8 ص 111, اللصوص ص 5, الإعلام ص 178/272) still right. Baseline hash for a recipe diff: 511f6d7a5e
+  (scripts/crop_recipe_diff.py 511f6d7a5e f3ed545be4 after scp of the VM's *.f3ed545be4*.json into the laptop cache).
+- AFTER 0 FAILURES: redo all cropped books with the new method — list data/crop/redo-all-2026-11-06.tsv (1,114, current
+  paths; crop_redo.py --list-all) — `CROP_VM=crop-vm2 CROP_VM_PROJECT=phone-library-crop-261106 crop_redo.py
+  data/crop/redo-all-2026-11-06.tsv crop-redo-2026-11-06 --remote --workers 31` in a launcher like
+  scratch/redo_2026-11-05-vm32c.sh (its end: crop_doubts_page.py, VM stop). NEEDS THE PHONE: sshd 8022 and FTP 2221 both
+  down since 12:38 (the phone answers ping at 192.168.11.100) — the owner must start Termux sshd. ابن المقفع ص 273
+  («الأخير نازل», 03395eb74040: a two-angle page left as scanned, the last one) also waits for the phone (no laptop copy).
+- Monitors armed each session: watch_comments.py; the bench's part logs over ssh.
+
 ## 2026-11-06 18:30 — SELF-REVIEW OF crop-doubts; METHOD FIXED (unbenched); crop-vm2 (Claude, Fable): READ THIS FIRST
 - OWNER 16:50: «لا أستطيع مراجعة الجميع، فراجعه بنفسك حتى التمام، غالب ما رأيته بعيني لم يكن به أي بأس» + use the Codespace or a
   new gcloud project for compute. His remarks: 0022362994e5 (الفن ومذاهبه) ص 1 «لم تطابق النتيجة الإطار الموضوع على القديمة»;
