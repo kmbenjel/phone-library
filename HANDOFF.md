@@ -51,6 +51,18 @@ every turn, benched before 26i.
   Logs logs/crop-redo-2026-11-06-<vm>.log; progress = data/crop/redo-done.tsv (shared). Resume a part: crop_redo.py with
   that part's list and env (CROP_VM=<vm> [CROP_VM_PROJECT=phone-library-crop-261106] STAGE_GB=3), never the launcher.
   ETA ~4 h (74 workers; the phone's I/O may become the limit).
+- AFTER A /clear (owner may clear at ~35 % context): (1) arm `python3 -u scripts/watch_comments.py` as a Monitor (30 min, re-arm);
+  (2) arm a polled Monitor on logs/crop-redo-2026-11-06-{crop-vm2,align-1,crop-vm}.log (stat size every 15 s, new lines
+  grep -v "^VM LOST", grep -iE fail|traceback|stopped|ended with exit|finished|skip|away) and on the end unit
+  (`systemctl --user is-active crop-redo-2026-11-06-end`); (3) progress = `wc -l data/crop/redo-done.tsv` (10 before the run;
+  1,114 at the end); (4) a max-effort SUBAGENT (general-purpose) is reviewing the 11-06 diff read-only — its report lands in
+  /tmp/claude-1000/-home-k-projects-phone-library/review-max/report.md (read it; findings only, nothing applied; any fix goes
+  through the bench + a turn audit, then a partial redo of the affected books); (5) when the end unit has run (log says
+  «redo finished», crop-vm2 stopped): `python3 scratch/doubts_compare_2026-11-06.py` (old vs new counts by kind), then the
+  self-review of site/crop-doubts.html to the end (owner 16:50) — subagents allowed at xhigh, e.g. one per doubt kind over
+  random sheets in ~/.cache/phone-library/crop-sheets/<hash>/ (reasons.json is 0-based) — then scripts/refresh.sh, WORKLOG.
+  crop-vm and align-1 are the owner's: never stop them; align-1's hifz startup script shuts it down an hour after any boot
+  (owner may lift it: gcloud compute instances remove-metadata align-1 --keys startup-script --zone europe-southwest1-b).
 - (earlier) unit crop-redo-2026-11-06b in app.slice (scratch/redo_2026-11-06b.sh — the first unit, in crop.slice, was
   killed by the governor's brake at 10 books: a remote redo's coordinator never goes in the pen); started 21:08 UTC (unit crop-redo-2026-11-06 → crop_redo.py --remote --workers 31
   on crop-vm2, project phone-library-crop-261106), 1,114 books, ~125/h → ETA ~06:00 UTC 11-07; log logs/crop-redo-2026-11-06.log,
