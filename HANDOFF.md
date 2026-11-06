@@ -9,6 +9,16 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-06 16:30 — OWNER'S FIRST crop-doubts REMARKS (Claude): OPEN, method fixes needed
+- 0022362994e5 (الفن ومذاهبه — شوقي ضيف) ص 1 «في الأولى لم تطابق النتيجة الإطار الموضوع على القديمة»: the front cover was not
+  taken as a cover (kind ≠ cover/picture → frames() own_cover false): its crop is wider than the book's ratio, so `show` grew in
+  height beyond the page → blank bands (bands=True, enlarged 1.302) instead of the cover rule (cut the sides ~3 %). The sheet
+  draws `crop` in red but renders `show`. 80 of 1,124 recipes have bands on p. 1–2 (same fault). Fix in frames(): the book's
+  first pages with bands → cover_window; then redo those books.
+- 01435c38ee4b (الإعلام بنوازل الأحكام — أبو الأصبغ) «ترقيم الصفحات تم إهماله فجاء ضيقا أو منقوصا»: e.g. ص 178 the folio sits on
+  the box's bottom edge (box centred on the text without the folio). Fix: the folio counts in the box/margins.
+- Not yet fixed: crop method work (owner sets effort: xhigh for crop). Both cards stay on the page until a new round.
+
 ## 2026-11-06 — CROP REDO CLOSED; READY FOR /clear (Claude, Opus): READ THIS FIRST
 - DONE: full crop redo (1,119 redone with the corrected method, 1 original, 2 first crops after: البداية 21, المغرب 01);
   review page site/crop-doubts.html (1,095 with doubts, 23 without) — the OWNER reviews it; his comments arrive by
