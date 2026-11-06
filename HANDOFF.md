@@ -9,6 +9,43 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-06 23:25 — REDO RUNNING; THE MAX-EFFORT REVIEW IS IN; PACE DIAGNOSED (Claude, Fable): READ THIS FIRST
+- REDO: three parts as before (units crop-redo-2026-11-06-{crop-vm2,align-1,crop-vm} + -end); ~140 of 1,114 done at 23:19,
+  ~130 books/h. THE PACE IS THE PHONE LINK, NOT THE VMs (owner 22:50 asked for «all the cpu room»): 47 analyses on 96 vCPUs
+  wait for the laptop — every phone transfer holds /tmp/phone-ftp.lock exclusively, the lock is held 100 % of the time by one
+  part at a time (1.5 MB/s each way), so the three parts take turns. ETA ~01:00–01:30 UTC as it is.
+  READY, NOT APPLIED (waits for the owner's word — §7.9): a patch making the lock SHARED over ssh when a run sets
+  PHONE_PARALLEL=1 (crop_batch.Phone), the upload to the phone paced like the download, + scratch/redo_2026-11-06-restart.sh
+  (stops the end unit first, kills the parts while the lock is held, relaunches them as crop-redo-2026-11-06b-<vm> with
+  PHONE_PARALLEL=1 STAGE_GB=4, re-arms the end unit on the b-names). Patch file: scratchpad patch/phone-parallel.patch
+  (/tmp/claude-1000/-home-k-projects-phone-library/1e050430-f6ac-4fcb-91d9-2a49009df750/scratchpad/patch/) — the stage()
+  part of it is already in (below). Still ≤ 3 transfers at once; the difference is that all three may be phone transfers.
+- FIXED 23:13 (committed): mem_governor.brake() no longer kills a «--remote» coordinator (it killed crop-vm2's at 23:10:59:
+  with no local worker the 136-MB coordinator was «the largest crop process»; the part restarted by itself 23:13 via
+  run_resumable). crop_redo.stage() reuses a staged original left by a stopped run (first n0 bytes = m0) instead of
+  downloading it again (the 23:13 restart ran 11 s before the edit landed: that one still re-downloaded).
+- THE MAX-EFFORT SUBAGENT REVIEW (read-only, 64 tool uses, 27 min) is saved VERBATIM in data/improve/crop-review-2026-11-06.md.
+  Five findings, nothing applied; the method of the running redo (002b4f3ec1) stays — a book_crop.py edit during the run would
+  re-key the VM analyses (redo/<h>-<m0>-<BC>) and mix two methods in one batch. AFTER THE RUN, at max effort: fix → bench →
+  turn audit → partial redo of the affected books. The findings in one line each:
+  1. frames() cover-like cut of a first-2/last-4 TEXT page: the «line of print» guard reads p['lines'] (thin marks, not
+     print) → a text page whose box is wider than the book's proportion is shaved ≤ 4 % a side. CONFIRMED IN THE REDO:
+     الطبقات الكبرى (Sachau) 71436c9358e3 p0291 (the Arabic title page, 'larger'): the two widest imprint lines cross the
+     dashed window by ~4 pt a side (sheet p0291-before.jpg). Fix sketch in the report (decide by the page's print, not by
+     'lines'). scratch/redo_audit_2026-11-06.py flags first-2/last-4 pages shown narrower than their crop: 12 of 47 books so
+     far — most are real covers (معجم تيمور 05 p1, المحرر الوجيز p1 checked by eye: fine); to check when their files are at
+     hand: مختار الأغاني a2167d651424 pp. 594–597 (14–16 pt a side, scale 0.84 — 169 MB, not fetched), فوائد الظهيرية مخطوط
+     6c9bb3ccc5a9 pp. 1–2 (180 pt a side at scale 1.66 — probably a two-page spread: look), الاشتقاق db043b8db794 p1 (27 pt)
+     and p768 (36 pt a side), فتح الوصيد 4be7551c0034 p1 — the three small ones were being fetched to the scratchpad fetch/.
+  2. _lines() (band_print) tests the group's bounding box: a row of specks passes as a line of print (89 of 718 groups had
+     no letter-sized member; one made halftone dots the folio; moves ≤ 2.8 pt). Fix: require a letter-sized member.
+  3. the «where the book prints its head» reference is nearly vacuous (core.top − text.top ≥ 1 % h holds on ~all pages).
+  4. folio_specks: dust at the folio's relative place becomes the folio; own folio tested more strictly than candidates.
+  5. Th from «typical» pages: wrong when the typical page is the short one (full pages then shrunk). No case in the cache;
+     the audit's H/shrunk checks saw none in the redo so far (معجم تيمور 04/05: H −11 % is the intended fix, 2 pages shrunk).
+  Der Struwwelpeter p2 (a cover cut 21 % a side, the lettering touched) is the OLD cover rule, identical in the 11-05 recipe.
+- Monitors this session: watch_comments.py; scratchpad redo_watch.sh (the three logs, units, progress every 20 min).
+
 ## 2026-11-06 19:05 — BENCH OF THE SELF-REVIEW FIXES ON crop-vm2; 5 MORE FIXES (Claude, Fable): READ THIS FIRST
 - crop-vm2 is c2d-highcpu-32 (resized 17:10; spot; project phone-library-crop-261106; ssh alias
   crop-vm2.europe-southwest1-b.phone-library-crop-261106 after `gcloud compute config-ssh --project …`). Its repo copy

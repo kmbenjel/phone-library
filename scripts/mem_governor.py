@@ -70,6 +70,9 @@ def brake():
         try:
             cmd = open(f'/proc/{pid}/cmdline', 'rb').read().decode(errors='ignore')
             if not any(j in cmd for j in JOBS): continue
+            # (a remote redo's coordinator, crop_redo --remote: ~140 MB, the work on the VM — killing it frees nothing and
+            # stalls the run; it was the «largest crop process» twice on 2026-11-06 with no local worker around)
+            if '--remote' in cmd: continue
             rss = int(next(l for l in open(f'/proc/{pid}/status') if l.startswith('VmRSS:')).split()[1])
         except (OSError, StopIteration, ValueError): continue
         if not best or rss > best[1]: best = (int(pid), rss, cmd.replace('\0', ' ')[:80])

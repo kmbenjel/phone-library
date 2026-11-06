@@ -280,6 +280,10 @@ def stage(path, n0, m0, m1):
     local = dict(l.rstrip('\n').split('\t')[:2] for l in open(LOCAL_MAP, encoding='utf-8')) if os.path.exists(LOCAL_MAP) else {}
     with cb.Phone() as ph: now = ph.md5(path)
     if m1 and now != m1: raise RuntimeError(f'the phone file is not the one the crop wrote (md5 {now} ≠ {m1})')
+    if os.path.exists(work) and os.path.getsize(work) >= n0:   # (staged by a run that was stopped: kept when it is the original)
+        with open(work, 'r+b') as f: f.truncate(n0)
+        if cb.md5_file(work) == m0: return work, now
+        os.remove(work)
     lp = local.get(path)
     if lp and os.path.exists(lp) and os.path.getsize(lp) == n0 and cb.md5_file(lp) == m0:
         shutil.copyfile(lp, work); return work, now
