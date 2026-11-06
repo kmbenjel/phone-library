@@ -155,7 +155,11 @@ class Phone:
     def __enter__(self):
         import phone_host
         global _HOST
-        self.lk = open(LOCK, 'w'); fcntl.flock(self.lk, fcntl.LOCK_EX)
+        # (PHONE_PARALLEL=1 over ssh: the lock is SHARED — the parts of one run move their files at once, each still
+        # paced and one transfer at a time per process (NET); FTP keeps the exclusive lock: §7.3's connection limit.
+        # Owner 2026-11-06 23:45 «go»: the exclusive lock, held 100 % by one part at a time, was the redo's pace)
+        shared = os.environ.get('PHONE_PARALLEL') == '1' and phone_host.PROTO == 'ssh'
+        self.lk = open(LOCK, 'w'); fcntl.flock(self.lk, fcntl.LOCK_SH if shared else fcntl.LOCK_EX)
         try: self.f = phone_host.connect(120, _HOST or phone_host.HOST)      # FTP or ssh (phone_host.PROTO)
         except OSError:                                  # the phone moved (it switched .100 ↔ .102 on 2026-10-11)
             _HOST = phone_host.find()
@@ -176,8 +180,9 @@ class Phone:
             def w(chunk): o.write(chunk); pc.wait(len(chunk))
             self.f.retrbinary('RETR Books/' + path, w, blocksize=1 << 16)
     def append(self, path, data): self.f.storbinary('APPE Books/' + path, io.BytesIO(data), blocksize=1 << 16)
-    def put(self, path, src):
-        with open(src, 'rb') as i: self.f.storbinary('STOR Books/' + path, i, blocksize=1 << 16)
+    def put(self, path, src):                       # paced like get() (it ran unpaced: a full-speed stream on the home Wi-Fi)
+        pc = pacer()
+        with open(src, 'rb') as i: self.f.storbinary('STOR Books/' + path, i, blocksize=1 << 16, callback=lambda b: pc.wait(len(b)))
 
 def analyse(path, src, jobs=1):
     """CPU part, in a worker process: plan + apply to a copy; returns what the phone step needs (jobs > 1: the book's pages
