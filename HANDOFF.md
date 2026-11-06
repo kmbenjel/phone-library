@@ -44,7 +44,14 @@ every turn, benched before 26i.
   data/crop/owner-turns.tsv (path, 221, 0.95, turn) and the case passes; else change the case to «left as scanned».
   Bench logs: vm3 (f3ed545be4) + vm8 (its tilt path = f3ed) on the VM; recipes *.f3ed545be4*.json in the laptop cache.
   crop-vm2 STOPPED 20:25 (crop_redo starts it).
-- REDO RUNNING: unit crop-redo-2026-11-06b in app.slice (scratch/redo_2026-11-06b.sh — the first unit, in crop.slice, was
+- REDO RUNNING IN THREE PARTS since 21:46 UTC (method 002b4f3ec1 = f3ed545be4 + the cover-like lines guard, f6f3b78): units
+  crop-redo-2026-11-06-{crop-vm2,align-1,crop-vm} (app.slice; scratch/redo_2026-11-06-part.sh VM WORKERS [PROJECT]; lists
+  data/crop/redo-part-2026-11-06-<vm>.tsv 466/468/180 books; crop-vm carries the owner's hifz job → 12 workers) + the end unit
+  crop-redo-2026-11-06-end (review page from the batch, then stops crop-vm2 ONLY — crop-vm and align-1 are the owner's).
+  Logs logs/crop-redo-2026-11-06-<vm>.log; progress = data/crop/redo-done.tsv (shared). Resume a part: crop_redo.py with
+  that part's list and env (CROP_VM=<vm> [CROP_VM_PROJECT=phone-library-crop-261106] STAGE_GB=3), never the launcher.
+  ETA ~4 h (74 workers; the phone's I/O may become the limit).
+- (earlier) unit crop-redo-2026-11-06b in app.slice (scratch/redo_2026-11-06b.sh — the first unit, in crop.slice, was
   killed by the governor's brake at 10 books: a remote redo's coordinator never goes in the pen); started 21:08 UTC (unit crop-redo-2026-11-06 → crop_redo.py --remote --workers 31
   on crop-vm2, project phone-library-crop-261106), 1,114 books, ~125/h → ETA ~06:00 UTC 11-07; log logs/crop-redo-2026-11-06.log,
   progress = lines of data/crop/redo-done.tsv (the 11-05 list is data/crop/redo-done.before-2026-11-06.tsv). Its end:
