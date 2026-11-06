@@ -9,6 +9,23 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-06 — CROP REDO CLOSED; READY FOR /clear (Claude, Opus): READ THIS FIRST
+- DONE: full crop redo (1,119 redone with the corrected method, 1 original, 2 first crops after: البداية 21, المغرب 01);
+  review page site/crop-doubts.html (1,095 with doubts, 23 without) — the OWNER reviews it; his comments arrive by
+  watch_comments.py. Plan 396 (two set names). Index + web refreshed (benjelloun.dev/library). VM crop-vm STOPPED (not billed).
+- PHONE ON SSH (scripts/phone_proto.sh → ssh; Termux sshd 8022; FTP app com.medhaapps.wififtpserver dies by itself — no longer
+  needed). phone_ssh.nlst fixed (find -H: /sdcard is a symlink). Other SSH-path bugs may exist in scripts not yet run over SSH:
+  dry-run first.
+- SERVICES UP (owner «ahead» 11-05): mem-governor, phone-keepalive, phone-watchdog (:8022), review-server, reporter-follow,
+  inhibitors. After a reboot: scripts/start_services.sh (watchdog needs --setenv=PATH, see 11-05 unit).
+- AFTER A CLEAR: arm `python3 -u scripts/watch_comments.py` as a Monitor (30 min, re-arm). No long job runs.
+- DISK: 3 GB free of 234 GB (99 %). Caches: ~/.cache/phone-library/crop-regress 2.8 G, crop-minitest 1.8 G, dark-pages 0.5 G —
+  ask the owner before deleting any; check df before any download/crop job.
+- OPEN (owner): «ماذا خسر العالم بانحطاط المسلمين؟» has «؟» (§4: no «?») — waits for the reading pass unless he says;
+  SHEET FAIL النحو الكوفي (ط عالم الكتب) «page 258 not in document» (review sheet only; the crop itself applied);
+  faster next time: ask Google for > 32 vCPU quota; split each big book over cores at the end of a run (crop_redo jobs > 1).
+- Older open items further down (queue 393/394 owner pieces, 620 المنح الوهبية, Termux:Boot) — read their sections.
+
 ## 2026-11-05 00:30 UTC — REDO ON THE 32-vCPU VM (Claude, Opus): READ THIS FIRST
 - **08:30 STATE**: REDO DONE (1,119 redone, 1 original, 2 SKIP). VM stopped. Phone on SSH (phone_proto.sh ssh), watchdog up.
   DONE 09:15: the 2 first crops, plan 396 (the two set names), services restarted. phone_ssh.nlst now find -H.
