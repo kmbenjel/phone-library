@@ -660,7 +660,9 @@ def skew_of(xy, raw=False):
     # (2026-11-06, سيبويه ج 2 ص 221: halves 0.725 / 0.625, whole 0.85 — the same tilt everywhere, the whole profile 0.025°
     # past the ±0.1 — read level when the box moved 1.4 pt. Halves that agree within 0.2° are a real tilt by this test's own
     # purpose: the whole may then lie within ±0.2° of their range; an index page's whole lies far outside its halves)
-    tol = 0.2 if len(parts) == 2 and abs(parts[0] - parts[1]) <= 0.2 + 1e-6 else 0.1
+    # (for a clear tilt only, ≥ 0.4°: near the eye's limit the strict gate stays — معجم تيمور ج 2 ص 145 read −0.325 by the
+    # widened gate against +0.35 by its image, and was listed untreated where the baselines had read it level)
+    tol = 0.2 if len(parts) == 2 and abs(parts[0] - parts[1]) <= 0.2 + 1e-6 and abs(a) >= 0.4 - 1e-6 else 0.1
     if len(parts) < 2 or abs(parts[0] - parts[1]) > 0.6 + 1e-6 or not (min(parts) - tol - 1e-6 <= a <= max(parts) + tol + 1e-6): return 0.0, 1.0
     return a, gain
 

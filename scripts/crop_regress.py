@@ -127,7 +127,8 @@ def check(row, rec, pdf):
     if what == 'rim':                                  # a rim really painted on this page, erase_stamp's colour test included
         got = bool(bc.rim_pages(pdf, rec, {page - 1}))
         return got == (expect == 'yes'), f'painted {got}, rules dropped {p.get("rules_dropped")}, box {p.get("box")}'
-    if rec.get('decision') != 'crop': return False, rec.get('decision')
+    if rec.get('decision') == 'level' and what == 'in': return True, 'level: the page left whole'   # (a region of print is
+    if rec.get('decision') != 'crop': return False, rec.get('decision')   # inside when nothing is cut — ديوان اللصوص, 2026-11-06)
     if what == 'xcentre':                              # the shown part's centre lies at X ± T pt (a measured anchor: the page
         if not p.get('show'): return False, 'no frame'   # number, a centred heading)
         x, t = (float(v) for v in expect.split('±')); s = p['show']; c = (s[0] + s[2]) / 2
