@@ -657,9 +657,6 @@ def skew_of(xy, raw=False):
     # ≤ 0.6° (a slightly curved page: halves −0.375 / +0.075, whole −0.25 — the owner's p. 387). Index pages, two columns
     # and verse fool the whole-page profile: there the whole lies outside its halves (p. 98: +0.9 vs −1.0 / −0.4)
     # (± 1e-6: a whole-page angle exactly on the limit once read as outside it — الفوائد المحصورة ص 16, −0.9 vs −0.8 − 0.1)
-    # (2026-11-06: a wider gate for halves agreeing within 0.2° — سيبويه ج 2 ص 221, whole 0.85 vs halves 0.725/0.625 —
-    # was tried and withdrawn the same day: scoped to the level check it still turned the index page المثلث ص 489 by
-    # 1.575°, keep() certifying it. The strict test stands; that colophon's turn is the owner's, data/crop/owner-turns.tsv)
     if len(parts) < 2 or abs(parts[0] - parts[1]) > 0.6 + 1e-6 or not (min(parts) - 0.1 - 1e-6 <= a <= max(parts) + 0.1 + 1e-6): return 0.0, 1.0
     return a, gain
 
@@ -3072,11 +3069,6 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                 if abs(r_) >= 0.4 and g_ >= 1.02:
                     es = [e for e in mk['edges']() if e is not None and abs(e - r_) <= 0.2]
                     if es: u, g = r_, g_; p['tilt_by_edge'] = round(min(es, key=lambda e: abs(e - r_)), 3)
-                    # (2026-11-06: a clear whole-page read the halves do not confirm and no ruler certifies is not turned —
-                    # an index page reads so — but it is not passed over in silence either: listed as a disputed tilt for
-                    # the owner's ruling (data/crop/owner-turns.tsv), as سيبويه ج 2 ص 221 — a colophon in display type,
-                    # whole 0.85°, halves 0.725/0.625 — whose turn hinged on 1.4 pt of the frame's placement)
-                    elif not p.get('tilt_disputed'): p['tilt_disputed'] = round(r_, 3)
             if abs(u) >= 1.0 and mk.get('level_frame'): p['frame_level'] = round(u, 3); u = 0.0   # a level frame: not turned
             if abs(u) >= SKEW_MIN and g >= 1.02:
                 if mk['proj'](-3.0, 3.0, 0.25) < SKEW_MIN - 0.05: p['tilt_disputed'] = round(u, 3)   # the image shows no tilt
