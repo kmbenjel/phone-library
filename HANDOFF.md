@@ -44,7 +44,15 @@ every turn, benched before 26i.
   data/crop/owner-turns.tsv (path, 221, 0.95, turn) and the case passes; else change the case to «left as scanned».
   Bench logs: vm3 (f3ed545be4) + vm8 (its tilt path = f3ed) on the VM; recipes *.f3ed545be4*.json in the laptop cache.
   crop-vm2 STOPPED 20:25 (crop_redo starts it).
-- NEXT: redo all cropped books with the new method — list data/crop/redo-all-2026-11-06.tsv (1,114, current
+- REDO RUNNING since 21:08 UTC: unit crop-redo-2026-11-06 (scratch/redo_2026-11-06-vm2.sh → crop_redo.py --remote --workers 31
+  on crop-vm2, project phone-library-crop-261106), 1,114 books, ~125/h → ETA ~06:00 UTC 11-07; log logs/crop-redo-2026-11-06.log,
+  progress = lines of data/crop/redo-done.tsv (the 11-05 list is data/crop/redo-done.before-2026-11-06.tsv). Its end:
+  crop_doubts_page.py crop-redo-2026-11-06 → site/crop-doubts.html, then the VM stopped. Resume after a break: crop_redo.py
+  itself with the same arguments (never the launcher again). AFTER A CLEAR: arm watch_comments.py and a polled monitor on
+  the log (grep -v "^VM LOST"; fail|traceback|stopped|ended with exit|redo finished|skip|away) — tail -F gives nothing.
+  THEN: compare the new review page's counts with the old (3,743 shown pages / 1,095 books; the 235 edge-cut results and 63
+  banded first pages should be gone), self-review it (owner 16:50: «راجعه بنفسك حتى التمام»), refresh.sh, WORKLOG, the owner.
+- (was) NEXT: redo all cropped books with the new method — list data/crop/redo-all-2026-11-06.tsv (1,114, current
   paths; crop_redo.py --list-all) — `CROP_VM=crop-vm2 CROP_VM_PROJECT=phone-library-crop-261106 crop_redo.py
   data/crop/redo-all-2026-11-06.tsv crop-redo-2026-11-06 --remote --workers 31` in a launcher like
   scratch/redo_2026-11-05-vm32c.sh (its end: crop_doubts_page.py, VM stop). NEEDS THE PHONE: sshd 8022 and FTP 2221 both
