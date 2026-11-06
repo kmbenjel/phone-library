@@ -2341,7 +2341,11 @@ def decide(pages, wq=0.95):
     for i in text:
         p = pages[i]; w, h = p['w'], p['h']; sp = (p.get('specks') or []) + (p.get('edge') or [])
         at = lambda u: [f for j, f in fols if j != i and (same_place(u, f, w, h) or same_rel(i, u, j, f, w, h))]
-        if not sp or (p.get('folio') and len(at(p['folio'])) >= max(3, int(0.03 * len(text)))): continue
+        # (the page's own folio counts as found only by its place on the sheet: on فهرسة ابن خير ص 4 the «(١)» under the
+        # grains stands, relative to that page's lower text block, where the other pages' numbers stand relative to theirs,
+        # and the relative test confirmed it — the grains above were dust again, the page centred on itself, 2026-11-06)
+        own = [f for j, f in fols if j != i and same_place(p['folio'], f, w, h)] if p.get('folio') else []
+        if not sp or len(own) >= max(3, int(0.03 * len(text))): continue
         g_, groups = M * w / REF, []
         for s in sp:
             for gr in groups:
