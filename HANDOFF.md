@@ -9,7 +9,7 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
-## 2026-11-06 17:45 — BENCH OF THE SELF-REVIEW FIXES ON crop-vm2; 3 MORE FIXES (Claude, Fable): READ THIS FIRST
+## 2026-11-06 19:05 — BENCH OF THE SELF-REVIEW FIXES ON crop-vm2; 5 MORE FIXES (Claude, Fable): READ THIS FIRST
 - crop-vm2 is c2d-highcpu-32 (resized 17:10; spot; project phone-library-crop-261106; ssh alias
   crop-vm2.europe-southwest1-b.phone-library-crop-261106 after `gcloud compute config-ssh --project …`). Its repo copy
   ~/phone-library has scripts/ (rsync --delete from the laptop before each run), data/improve, data/phone/index-now.tsv,
@@ -24,6 +24,13 @@ every turn, benched before 26i.
   (the «(١)» confirmed as folio by relative place) → own folio confirmed by sheet place only. Probes of the owner's pages
   (الأغاني ج 8 ص 111, اللصوص ص 5, الإعلام ص 178/272) still right. Baseline hash for a recipe diff: 511f6d7a5e
   (scripts/crop_recipe_diff.py 511f6d7a5e f3ed545be4 after scp of the VM's *.f3ed545be4*.json into the laptop cache).
+- LATER FIXES (all benched, commits 4809fba, 01408e9; method c5a81781fc under bench vm6 19:02): سيبويه ج 2 ص 221 (its
+  turn hinged on the halves gate: whole 0.85 vs halves 0.725/0.625 → halves agreeing within 0.2° let the whole lie within
+  ±0.2°, for clear tilts ≥ 0.4° only — the first try, a bypass of the halves test certified by third(), turned two index
+  pages and was reverted, 7ea0ed0); ديوان اللصوص: whole-book decision «level» now (gain 1.12, sway under the bar once the
+  head is in the block; the 11-05 crop rested on «sways 2.5 %» alone) — crop_regress passes an «in» region under «level».
+  Bench logs on the VM: logs/crop-regress-2026-11-06-vm6-part{0,1,2}.log; vm5 had 2 FAILs (those two), vm3 2 (سيبويه +
+  اللصوص — part 0's end was missed at first: ALWAYS read every part's «N failures» line, the monitor repeats parts 1–2's).
 - AFTER 0 FAILURES: redo all cropped books with the new method — list data/crop/redo-all-2026-11-06.tsv (1,114, current
   paths; crop_redo.py --list-all) — `CROP_VM=crop-vm2 CROP_VM_PROJECT=phone-library-crop-261106 crop_redo.py
   data/crop/redo-all-2026-11-06.tsv crop-redo-2026-11-06 --remote --workers 31` in a launcher like
