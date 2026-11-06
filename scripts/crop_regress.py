@@ -4,7 +4,8 @@ Cases: data/improve/crop-regression.tsv (phone path, page, check, expected, note
 turning, and no page that both tilt measures see as tilted is left unturned (owner 2026-10-08: «ولم نبق شيئا من الميل»). The books are fetched once from the phone
 (Unicode-normalised lookup, guarded path) into ~/.cache/phone-library/crop-regress/ and analysed with book_crop.plan();
 results are cached per (book bytes, book_crop.py) so an unchanged method is not re-run.
-Usage: python3 scripts/crop_regress.py        → one line per case (PASS/FAIL) and a summary; exit 1 on any FAIL"""
+Usage: python3 scripts/crop_regress.py        → one line per case (PASS/FAIL) and a summary; exit 1 on any FAIL
+CASES=part.tsv runs a subset of the cases (several parts at once on a big VM; the cache is shared by book and method)."""
 import csv, hashlib, json, os, subprocess, sys, unicodedata
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
@@ -158,8 +159,9 @@ def mem():
     return f'{hwm} MB, workers up to {resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss // 1024} MB'
 
 def main():
-    rows = [r for r in csv.reader(open(os.path.join(ROOT, 'data/improve/crop-regression.tsv'), encoding='utf-8'), delimiter='\t')
-            if r and not r[0].startswith('#')]
+    cases = os.environ.get('CASES') or os.path.join(ROOT, 'data/improve/crop-regression.tsv')   # (CASES=part.tsv: a subset,
+    rows = [r for r in csv.reader(open(cases, encoding='utf-8'), delimiter='\t')              # to run several parts at once
+            if r and not r[0].startswith('#')]                                                 # on a big VM, 2026-11-06)
     # (one book's recipe in memory at a time, read again from the cache when needed: holding all of them made this process
     # 1.3 GB, the memory pen overflowed beside its workers and the governor's brake killed the run six times, 2026-10-18)
     fails = 0; recs = {}; cur = (None, None)

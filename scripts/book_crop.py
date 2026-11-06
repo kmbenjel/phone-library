@@ -2382,6 +2382,10 @@ def decide(pages, wq=0.95):
         out = []
         for gr in groups:
             u = union(gr)
+            # (a line of print stays within the text's columns: the core's, ± 4 % of the page — the sheet's own band near
+            # the top of a photocopy spans nearly the whole sheet, 2–4 % below its edge on most pages, and passed this
+            # block's test of place on 66 of القوافي's 108 pages, 2026-11-06: the box grew to the sheet, the crop was lost)
+            if u[0] < c_[0] - 0.04 * w or u[2] > c_[2] + 0.04 * w: continue
             if u[3] - u[1] <= 0.035 * h and u[2] - u[0] >= 0.02 * w: out.append((gr, u, 'head' if u[3] <= c_[1] + 1 else 'foot'))
         return out
     L = {i: _lines(i) for i in text}
