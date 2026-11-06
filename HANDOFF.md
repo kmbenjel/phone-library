@@ -31,7 +31,11 @@ every turn, benched before 26i.
   head is in the block; the 11-05 crop rested on «sways 2.5 %» alone) — crop_regress passes an «in» region under «level».
   Bench logs on the VM: logs/crop-regress-2026-11-06-vm6-part{0,1,2}.log; vm5 had 2 FAILs (those two), vm3 2 (سيبويه +
   اللصوص — part 0's end was missed at first: ALWAYS read every part's «N failures» line, the monitor repeats parts 1–2's).
-- BENCH vm6 CLEAN 19:24 (c5a81781fc: 416 PASS, 0 FAIL). THE METHOD IS READY. crop-vm2 STOPPED 19:28 (crop_redo starts it).
+- BENCH vm7 CLEAN 19:53 — METHOD FINAL aa692d067e (commit c7d07c5): 416 PASS, 0 FAIL; turn audit vs the 11-05 method over
+  the 49 books: 0 turns lost, 23 gained (0.4–1.6°, certified), decisions unchanged. (vm6's c5a81781fc had widened the halves
+  gate in the page analysis too — خريدة القصر lost 22 turns; now wide=True only in the level check's first look.) Audit
+  tool: compare *.<hash>.json in the cache by page skew — scratch of this session, redo in a script if needed.
+  crop-vm2 STOPPED 19:58 (crop_redo starts it).
 - NEXT: redo all cropped books with the new method — list data/crop/redo-all-2026-11-06.tsv (1,114, current
   paths; crop_redo.py --list-all) — `CROP_VM=crop-vm2 CROP_VM_PROJECT=phone-library-crop-261106 crop_redo.py
   data/crop/redo-all-2026-11-06.tsv crop-redo-2026-11-06 --remote --workers 31` in a launcher like
