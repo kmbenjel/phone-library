@@ -657,7 +657,11 @@ def skew_of(xy, raw=False):
     # ≤ 0.6° (a slightly curved page: halves −0.375 / +0.075, whole −0.25 — the owner's p. 387). Index pages, two columns
     # and verse fool the whole-page profile: there the whole lies outside its halves (p. 98: +0.9 vs −1.0 / −0.4)
     # (± 1e-6: a whole-page angle exactly on the limit once read as outside it — الفوائد المحصورة ص 16, −0.9 vs −0.8 − 0.1)
-    if len(parts) < 2 or abs(parts[0] - parts[1]) > 0.6 + 1e-6 or not (min(parts) - 0.1 - 1e-6 <= a <= max(parts) + 0.1 + 1e-6): return 0.0, 1.0
+    # (2026-11-06, سيبويه ج 2 ص 221: halves 0.725 / 0.625, whole 0.85 — the same tilt everywhere, the whole profile 0.025°
+    # past the ±0.1 — read level when the box moved 1.4 pt. Halves that agree within 0.2° are a real tilt by this test's own
+    # purpose: the whole may then lie within ±0.2° of their range; an index page's whole lies far outside its halves)
+    tol = 0.2 if len(parts) == 2 and abs(parts[0] - parts[1]) <= 0.2 + 1e-6 else 0.1
+    if len(parts) < 2 or abs(parts[0] - parts[1]) > 0.6 + 1e-6 or not (min(parts) - tol - 1e-6 <= a <= max(parts) + tol + 1e-6): return 0.0, 1.0
     return a, gain
 
 SKEW_MIN = 0.2    # degrees: the owner sees a 0.25° tilt on a full line
