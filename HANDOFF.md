@@ -38,7 +38,8 @@ every turn, benched before 26i.
   level check it still did; in the page analysis it re-routed خريدة القصر's 22 turns to «unsure»; listing refused clear
   reads as «disputed» marked 127 index-page false reads. Lesson: no change to skew_of/the first look without a turn
   audit (compare page skews of two hashes' recipes — the bench's cases alone did not see the index page turned).
-- KNOWN FAIL: سيبويه ج 2 ص 221 «turn yes» — a colophon whose 0.85° read the halves (0.725/0.625) do not confirm by 0.025°;
+- RESOLVED 20:50: OWNER «turn» on ص 221 → owner-turns.tsv row added; the case passes (bench 0 failures on f3ed545be4).
+- (was) KNOWN FAIL: سيبويه ج 2 ص 221 «turn yes» — a colophon whose 0.85° read the halves (0.725/0.625) do not confirm by 0.025°;
   the box 1.4 pt lower than 11-05 (Th from typical pages) flipped it. OWNER ASKED 20:15: «turn» → add the line to
   data/crop/owner-turns.tsv (path, 221, 0.95, turn) and the case passes; else change the case to «left as scanned».
   Bench logs: vm3 (f3ed545be4) + vm8 (its tilt path = f3ed) on the VM; recipes *.f3ed545be4*.json in the laptop cache.
