@@ -9,7 +9,25 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
-## 2026-11-07 02:10 — REDO FINISHED; SELF-REVIEW OF THE PAGE UNDER WAY; THE FIX ROUND NEXT (Claude, Fable): READ THIS FIRST
+## 2026-11-07 03:50 — FULL REDO crop-redo-2026-11-07 RUNNING WITH THE FINAL METHOD 09714b71dd (Claude, Fable): READ THIS FIRST
+- RUNNING since 03:49 UTC: units crop-redo-2026-11-07e-{crop-vm2,align-1,crop-vm} (31 workers each, lists
+  data/crop/redo-part-2026-11-07b-<vm>.tsv, 371/371/372 books, 4.42 GB each; PHONE_PARALLEL=1 STAGE_GB=4; the VMs start
+  themselves) + crop-redo-2026-11-07-end (waits for the e-units → crop_doubts_page.py crop-redo-2026-11-07 → STOPS ALL
+  THREE VMs). Logs logs/crop-redo-2026-11-07-<vm>.log and logs/crop-redo-2026-11-07.log; progress = data/crop/redo-done.tsv
+  (fresh; the 11-06 run's is data/crop/redo-done.before-2026-11-07.tsv). ETA ~1.5 h (≈540 books/h on three VMs).
+  Resume a part: crop_redo.py with its 11-07b list, batch crop-redo-2026-11-07, env CROP_VM=<vm> [CROP_VM_PROJECT=
+  phone-library-crop-261106] PHONE_PARALLEL=1 STAGE_GB=4 RESUME_FREE_GB=1 (never the launcher).
+- AFTER A /clear: arm `python3 -u scripts/watch_comments.py` and the scratchpad's redo_watch_1107.sh as Monitors; when
+  the end log says «redo finished» and the VMs are stopped: `python3 scratch/doubts_compare_2026-11-07.py` (vs
+  data/crop/doubts-counts-before-2026-11-07.json = the 11-06 page's counts), `python3 -I scratch/redo_audit_2026-11-06.py`
+  (baseline = git HEAD's recipes = the 11-06 method's: NEWLY-cut title pages should be gone, الطبقات ×2 among them),
+  `python3 -I scratch/sheets_scan_2026-11-07.py "2026-11-07 03:45"` (the EDGE-V count vs 76; المنار p193's head), look at
+  the fixed pages' sheets by eye (المنار ج 16 026c3ae46830 p0193, دلائل النبوة 039612a752e5 p0133, الطبقات 71436c9358e3
+  p0291), then scripts/refresh.sh, commit the data (recipes, changes.tsv, index, redo-done), WORKLOG, tell the owner.
+- THE METHOD: 09714b71dd = the 11-06 method + fixes 1, 2, 3, 3b, 5 (below). Benched (bench 2: 0 failures) and
+  turn-audited against the redo's recipes (0 turns lost/gained). Fix 4 withdrawn, fix 6 deferred (below).
+
+## 2026-11-07 02:10 — REDO FINISHED; SELF-REVIEW OF THE PAGE UNDER WAY; THE FIX ROUND NEXT (Claude, Fable)
 - DONE 01:57: 1,114 books — 1,111 redone (method 002b4f3ec1), 1 same, 1 SKIP (المغرب 01's set-aside original, expected);
   سلك الدرر 02 (caught by the 00:59 oom-kill after its upload) repaired at 02:03 (scratch/redo_2026-11-07-repair.py: the
   recipe by re-analysis — the appended bytes equal the phone's but for the trailer's random /ID). Only 267 recipes differ
