@@ -33,8 +33,12 @@ every turn, benched before 26i.
   (scratch/redo_2026-11-07c-end.sh: page of both batches, STOPS crop-vm2). Same done file. Resume a part: crop_redo.py with
   its c-list, batch crop-redo-2026-11-07b, env CROP_VM=crop-vm2 CROP_VM_PROJECT=phone-library-crop-261106 PHONE_PARALLEL=1
   STAGE_GB=3 RESUME_FREE_GB=1 NETPACE=0 REDO_DONE=data/crop/redo-done-2026-11-07b.tsv.
+- 13:40: crop-vm2 CPU-bound (23 analyses at 100 % of a core each, the biggest volumes first, the link idle) → part 3 MOVED
+  to crop-vm (the owner's VM, started by crop_redo itself): unit crop-redo-2026-11-07e-3 (CROP_VM=crop-vm, no project);
+  parts 1–2 stay on crop-vm2 (units d-1, d-2); the end unit is now crop-redo-2026-11-07e-end (waits for d-1, d-2, e-3;
+  builds the page; STOPS crop-vm2 AND crop-vm). align-1 stays off (its hourly self-shutdown).
 - AFTER A /clear: arm watch_comments.py as a Monitor; act on each comment (review_close.py after acting); watch the units
-  above (systemctl --user list-units 'crop-redo-2026-11-07d*'); nothing else runs.
+  above (systemctl --user list-units 'crop-redo-2026-11-07*'); nothing else runs.
 
 ## 2026-11-07 12:00 — (superseded above) THE OWNER REVIEWS; HIS REMARKS ACTED ON: PAGE WINDOWS, THE FRAME RULE (Claude, Fable)
 - OWNER 11:19–11:40 on site/crop-doubts.html: (1) المخصص ج 13 «اجعل الإطار الأسود معيارا للميلان فهو مائل بوضوح في بعضها»;
