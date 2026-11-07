@@ -41,7 +41,11 @@ Moved verbatim from AGENTS.md (2026-10-28) to keep that guide short; AGENTS.md p
    free memory < 2 GB → it closes Brave/Chrome the normal way if nobody has touched the laptop for 10 min and no sound plays,
    then, if still short, one worker fewer; < 1 GB or memory pressure ≥ 20 % → the EMERGENCY BRAKE: the largest crop process is
    killed at once, then two workers fewer; > 4.5 GB for 10 min → one more. **A book starts only with ≥ 3 GB free**
-   (`crop_batch.room()`, in every crop tool, the bench included). **Every crop job runs in ONE memory pen, `crop.slice`**
+   (`crop_batch.room()`, in every crop tool, the bench included). **The session guard (2026-11-07, after systemd-oomd
+   logged the owner out at 00:59 with no crop job on the laptop):** the same governor pauses (SIGSTOP) the largest heavy
+   batch process of ANY job (≥ 400 MB: ffmpeg, python, node builds, headless Chrome…; never VS Code, Antigravity, GNOME or
+   the named services) at pressure ≥ 8 % or < 1.5 GB free, kills it at ≥ 20 % or < 0.8 GB, and resumes the paused ones
+   (`data/crop/paused`) once ≥ 3 GB are free and calm; it watches every 2 s when memory is short. **Every crop job runs in ONE memory pen, `crop.slice`**
    (`systemd-run --user --slice=crop.slice --unit=NAME --nice=10 --working-directory=$PWD scripts/run_resumable.sh LOG -- CMD`,
    no memory properties of its own): the governor sizes the pen every few seconds from what the owner uses (free memory + what the
    pen holds − 2.5 GB, 2–10 GB) — when he opens more (browsers, VS Code, Antigravity), the jobs are reclaimed and swapped, never
