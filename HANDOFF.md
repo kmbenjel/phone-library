@@ -9,17 +9,20 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
-## 2026-11-06 23:25 — REDO RUNNING; THE MAX-EFFORT REVIEW IS IN; PACE DIAGNOSED (Claude, Fable): READ THIS FIRST
-- REDO: three parts as before (units crop-redo-2026-11-06-{crop-vm2,align-1,crop-vm} + -end); ~140 of 1,114 done at 23:19,
-  ~130 books/h. THE PACE IS THE PHONE LINK, NOT THE VMs (owner 22:50 asked for «all the cpu room»): 47 analyses on 96 vCPUs
-  wait for the laptop — every phone transfer holds /tmp/phone-ftp.lock exclusively, the lock is held 100 % of the time by one
-  part at a time (1.5 MB/s each way), so the three parts take turns. ETA ~01:00–01:30 UTC as it is.
-  READY, NOT APPLIED (waits for the owner's word — §7.9): a patch making the lock SHARED over ssh when a run sets
-  PHONE_PARALLEL=1 (crop_batch.Phone), the upload to the phone paced like the download, + scratch/redo_2026-11-06-restart.sh
-  (stops the end unit first, kills the parts while the lock is held, relaunches them as crop-redo-2026-11-06b-<vm> with
-  PHONE_PARALLEL=1 STAGE_GB=4, re-arms the end unit on the b-names). Patch file: scratchpad patch/phone-parallel.patch
-  (/tmp/claude-1000/-home-k-projects-phone-library/1e050430-f6ac-4fcb-91d9-2a49009df750/scratchpad/patch/) — the stage()
-  part of it is already in (below). Still ≤ 3 transfers at once; the difference is that all three may be phone transfers.
+## 2026-11-07 00:45 — REDO ON THREE VMs, SHARED PHONE LOCK; THE MAX-EFFORT REVIEW IS IN (Claude, Fable): READ THIS FIRST
+- REDO NOW: units crop-redo-2026-11-07c-{crop-vm2,align-1,crop-vm} (31 workers each, lists data/crop/redo-part-2026-11-07-<vm>.tsv
+  of 197/198/197 books, equal thirds by size; each VM kept its in-flight books) + crop-redo-2026-11-06-end (waits for the
+  c-units, then crop_doubts_page.py, then stops crop-vm2 ONLY). 522 of 1,114 done at the 00:40 relaunch; pace ~316/h on
+  two VMs before it, more now → ETA ~02:00 UTC. Logs still logs/crop-redo-2026-11-06-<vm>.log; progress data/crop/redo-done.tsv.
+  Resume a part: crop_redo.py with its 11-07 list and env CROP_VM=<vm> [CROP_VM_PROJECT=phone-library-crop-261106]
+  PHONE_PARALLEL=1 STAGE_GB=4 RESUME_FREE_GB=1 (never the launchers again).
+- HISTORY OF THE NIGHT: the pace was the PHONE LINK, not the VMs (every phone transfer held /tmp/phone-ftp.lock exclusively:
+  held 100 % of the time by one part at a time, 1.5 MB/s each way, 130 books/h, the VMs half idle). OWNER «go» 23:30 →
+  crop_batch.Phone takes the lock SHARED when a run sets PHONE_PARALLEL=1 over ssh (FTP keeps it exclusive) and put() is
+  paced like get(); the parts relaunched (b-units) → 316 books/h, the VMs CPU-bound. crop-vm's part finished ~00:30; OWNER
+  00:37 «use the most of crop-vm» → the rebalance above (c-units). Scripts: scratch/redo_2026-11-06-restart.sh,
+  scratch/redo_2026-11-07-lists.py, scratch/redo_2026-11-07-rebalance.sh (one-offs, ignored by git). Still ≤ 3 transfers
+  at once per process (NET); the pacer (netpace) guards the home Wi-Fi.
 - FIXED 23:13 (committed): mem_governor.brake() no longer kills a «--remote» coordinator (it killed crop-vm2's at 23:10:59:
   with no local worker the 136-MB coordinator was «the largest crop process»; the part restarted by itself 23:13 via
   run_resumable). crop_redo.stage() reuses a staged original left by a stopped run (first n0 bytes = m0) instead of
