@@ -21,8 +21,13 @@ every turn, benched before 26i.
   / 21 analyses with 1 book done. It catches up as the books shrink. NETPACE=0 only on the owner's word (§7.9).
   align-1 SHUTS ITSELF DOWN an hour after each boot (its hifz startup script, still in its metadata — removing it was
   denied to a session on 11-06; the owner can: gcloud compute instances remove-metadata align-1 --keys startup-script
-  --zone europe-southwest1-b): 04:50 «VM away», crop_redo starts it again by itself (new address) and its in-flight
-  analyses run again — ~10–15 min lost per hour on that part; expect it again ~05:55. Not worth a rebalance.
+  --zone europe-southwest1-b): 04:50 «VM away»; crop_redo had not restarted it after 6 min (its first check saw it
+  STOPPING; the next is 5 min later) → started by hand 04:56 (34.175.28.207 again). Killing this boot's pending shutdown
+  on the VM (/home/k/hifz/multi.sh pid 1468 at its «sleep 3600; sudo shutdown -h now», then its sleep 1477) was DENIED to
+  this session by the permission classifier («interfere with workloads»), as the metadata change was on 11-06 → the
+  shutdown comes again ~05:56; the OWNER can cancel it (ssh align-1, kill the multi.sh bash FIRST, then the sleep — the
+  other order runs the shutdown at once) or remove the metadata; else start the VM again by hand when the part says
+  «VM away» for more than 5 min. ~15 min of that part's work is lost per shutdown.
   Resume a part: crop_redo.py with its 11-07b list, batch crop-redo-2026-11-07, env CROP_VM=<vm> [CROP_VM_PROJECT=
   phone-library-crop-261106] PHONE_PARALLEL=1 STAGE_GB=4 RESUME_FREE_GB=1 (never the launcher).
 - AFTER A /clear: arm `python3 -u scripts/watch_comments.py` and the scratchpad's redo_watch_1107.sh as Monitors; when
