@@ -56,6 +56,15 @@ verse reference «١٤٠/٢» touches the frame's left edge with 4 % of white sc
 hugs the text's right side (1 % vs 12 % left; the scan may end there). The pattern: a printed marginal at the scan's edge
 gets the frame ON it, not beside it. 0e7cea1fb8d4 p0010 (the scan itself ends at the marginal) is rightly not a fault.
 
+### 'stain' (12), 'rim' (8), 'stamp' (6) — seed 7 — 3 faults, no print cut
+No print cut by any sampled frame; no rim/stamp painting erased print or left a patch in the text area (what it removed
+was uploader URLs/logos; one real library stamp, 3bb3bd68436d, left visible). FAULTS: 'stain' 2 of 12, one cause — the
+frame OFF-CENTRE HORIZONTALLY on whole books: الموسوعة الشاملة 25 892f76644e2c (17 px left vs 49 px right on p0042, the
+book's other sheets the same) and نظام الطلاق في الإسلام ج1 1003e67af5ee (23 vs 71 px on p0025; the wide right side holds
+only show-through) — for the fix round (the horizontal placement of the book box on pages whose text is narrower);
+'rim' 1 of 8, mild: الروض الأنف 02 a5f0af853401 p0009 sits ~18 px low (top rule 19 px from the edge vs 37 on the other
+sheets). 'stamp' 0 of 6.
+
 ### 'folio' (24 sampled, seed 5) — SOUND
 24 of 24 have a real page number at the joined place (23 numerals, 1 abjad letter ح in the notes of قصة الحضارة); junk taken
 for a folio: 0; no frame pulled toward dust, halftone dots or the opposite page; no folio cut or touched (smallest clearance
@@ -63,3 +72,7 @@ for a folio: 0; no frame pulled toward dust, halftone dots or the opposite page;
 reason, not the rule's). In six sheets the before image circles specks near the folio's row and none was joined. Remarks:
 5f410d374595 p0042 bottom gap ≈ 2× the top (the scan starts at the folio's level); 94d9cc846cde p0278 faint blotches
 inside at the top-left, frame unaffected.
+
+## 5. Verdict
+
+The method's own changes (the 11-06 fixes) hold: the folio rule is sound on 24/24, the band/head rules move frames the intended way, nothing of the sampled 104 sheets lost print to the new rules except the cover-like cut of text pages (finding 1: the Sachau title pages). The faults the review found are mostly OLDER than this run: the sheet-fill painting over a running head (المنار ج16 p193: the sheet's inner rectangle read 67 pt too low on a 1.2° tilted page on the bed, the fill strip covered the head because the head was in no «printed» group), the unfilled bed strips, the off-centre frames of two 'stain' books, a verse book's pages left leaning. The fix round (HANDOFF) takes them in order of harm; its partial redo covers the books these lists name plus whatever the bench diff changes.
