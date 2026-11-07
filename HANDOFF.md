@@ -47,6 +47,14 @@ every turn, benched before 26i.
      c8935d2899f8 p217 (title pages: HARMFUL, 4 pt a side), المحرر الوجيز 766cb6a40dd6 p1 (title page, print well inside:
      harmless), مختار الأغاني a2167d651424 pp. 594–595 (14 pt a side, scale 0.84 — 169 MB, not fetched: LOOK at the end).
      The partial redo after the fix = the books this audit lists (plus any the fix changes in the bench).
+  AUDIT AT 01:25 (176 changed recipes of 646 redone — 455 recipes are byte-identical to the 11-05 ones, «redone» only
+  because the PDF's trailer bytes differ; the audit reads git-modified recipes, baseline = HEAD = the 11-05 recipes):
+  NEWLY cut first/last text pages in 13 books (الطبقات ×2 harmful; المحرر الوجيز harmless; the rest p1 title pages not yet
+  seen: معجم الشعراء, الفن ومذاهبه, الذخائر 01/04, ديوان الزهاوي, عالم المعرفة ×2, بيان الأدلة, الأم p295–296, يواقيت المشتري,
+  درر الحكم, مختار الأغاني p594–595); 3 books whose decision went crop → level (تأويلات أهل السنة gain 1.044, المنتخب من
+  السياق 1.175, سلم الوصول 1.116 — the head line in the block pushed the gain under the bar: the rule's outcome, to show
+  the owner); الشكوى والعتاب (al-mostafa/alkottob watermark): 14 pages whose box now spans the sheet 0–792 (the watermark's
+  «www.alkottob.com» footer/diagonal taken as a number/head line) → shown whole at 0.942 — finding 2/3's class, nothing cut.
   2. _lines() (band_print) tests the group's bounding box: a row of specks passes as a line of print (89 of 718 groups had
      no letter-sized member; one made halftone dots the folio; moves ≤ 2.8 pt). Fix: require a letter-sized member.
   3. the «where the book prints its head» reference is nearly vacuous (core.top − text.top ≥ 1 % h holds on ~all pages).
