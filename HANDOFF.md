@@ -64,8 +64,12 @@ every turn, benched before 26i.
   2/4/5, written after): _lines() wants a letter-sized member (≥ 0.6 % h × 0.3 % w) in a head/foot line; folio_specks
   wants one for a match by relative place alone; Th leaves the taller pages out only when they are ≤ max(2, 10 %) of the
   pages. Bench 2 = everything together after bench 1 passes (the laptop's book_crop hash is printed by each step's
-  compile). BENCH 1 (fix 1 alone, 16bb1bdb2f): 318 cases, 0 failures. BENCH 2 (fixes 1–5, 09714b71dd) launched 02:58 on
-  crop-vm2 (scratch/regress_2026-11-07-all.sh; logs crop-regress-2026-11-07-all-part{0,1,2}.log on the VM); the VM probes
+  compile). BENCH 1 (fix 1 alone, 16bb1bdb2f): 318 cases, 0 failures. BENCH 2 (fixes 1–5, 09714b71dd): 318 cases, 0
+  failures (03:19). TURN AUDIT 16bb1bdb2f → 09714b71dd (scripts/crop_recipe_diff.py; both hashes' recipes pulled into the
+  laptop cache): 49 books, 32 unchanged; 0 turns lost, 0 gained, 3 changed by ≤ 0.25°; no decision changed; sizes: H +0.4
+  (الإعلام), +1.2 (الأغاني ج 8), −2.0 (خريدة القصر) pt; the page changes are 0.2–1.4 pt vertical shifts, with 22 frames moved
+  3–22 pt: الإعلام's dust-folio pages re-centred (finding 4's own case), الأغاني ±3–10 (the shorter H), خريدة 6–10 pt (7
+  pages). BENCH 3 (the final 833cb05780, fix 4 added) launched 03:20 (scratch/regress_2026-11-07-final.sh); the VM probes
   (scratch/probe_vm.py → ~/probe/probe.out on the VM) PASS: دلائل p133 head joined, window top 66.8; الطبقات ج 7 p291
   cover_like_kept → shown whole with bands as in 11-05. FIX 4 WRITTEN after bench 2's launch (book_crop 833cb05780):
   decide(): a letter-sized EDGE mark within 1.5 % of the width of a margin piece the box holds joins it as a margin piece
