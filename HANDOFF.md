@@ -27,7 +27,9 @@ every turn, benched before 26i.
   this session by the permission classifier («interfere with workloads»), as the metadata change was on 11-06 → the
   shutdown comes again ~05:56; the OWNER can cancel it (ssh align-1, kill the multi.sh bash FIRST, then the sleep — the
   other order runs the shutdown at once) or remove the metadata; else start the VM again by hand when the part says
-  «VM away» for more than 5 min. ~15 min of that part's work is lost per shutdown.
+  «VM away» for more than 5 min. ~15 min of that part's work is lost per shutdown. 05:57 it went off again → started by
+  hand 05:59 (a background watch does it: 90 s after TERMINATED, only while the e-unit is active); the next ~07:00 is
+  watched the same way.
   Resume a part: crop_redo.py with its 11-07b list, batch crop-redo-2026-11-07, env CROP_VM=<vm> [CROP_VM_PROJECT=
   phone-library-crop-261106] PHONE_PARALLEL=1 STAGE_GB=4 RESUME_FREE_GB=1 (never the launcher).
 - AFTER A /clear: arm `python3 -u scripts/watch_comments.py` and the scratchpad's redo_watch_1107.sh as Monitors; when
