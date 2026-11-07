@@ -35,7 +35,7 @@ every turn, benched before 26i.
   STAGE_GB=3 RESUME_FREE_GB=1 NETPACE=0 REDO_DONE=data/crop/redo-done-2026-11-07b.tsv.
 - 13:40: crop-vm2 CPU-bound (23 analyses at 100 % of a core each, the biggest volumes first, the link idle) → part 3 MOVED
   to crop-vm (the owner's VM, started by crop_redo itself): unit crop-redo-2026-11-07e-3 (CROP_VM=crop-vm, no project);
-  parts 1–2 stay on crop-vm2 (units d-1, d-2); the end unit is now crop-redo-2026-11-07e-end (waits for d-1, d-2, e-3;
+  parts 1–2 stay on crop-vm2 (units d-1, d-2; 14:23: 15 workers each, part 3 24 — the VMs had idle cores); the end unit is crop-redo-2026-11-07e-end (waits for d-1, d-2, e-3;
   builds the page; STOPS crop-vm2 AND crop-vm). align-1 stays off (its hourly self-shutdown).
 - AFTER A /clear: arm watch_comments.py as a Monitor; act on each comment (review_close.py after acting); watch the units
   above (systemctl --user list-units 'crop-redo-2026-11-07*'); nothing else runs.
