@@ -9,8 +9,20 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
-## 2026-11-07 03:50 — FULL REDO crop-redo-2026-11-07 RUNNING WITH THE FINAL METHOD 09714b71dd (Claude, Fable): READ THIS FIRST
-- RUNNING since 03:49 UTC: units crop-redo-2026-11-07e-{crop-vm2,align-1,crop-vm} (31 workers each, lists
+## 2026-11-07 07:45 — FULL REDO crop-redo-2026-11-07 DONE; ALL VMs STOPPED; READY FOR THE OWNER'S REVIEW (Claude, Fable): READ THIS FIRST
+- DONE 07:38: 1,114 books — 1,111 redone with the final method 09714b71dd, 2 same, 1 expected SKIP (المغرب 01's set-aside
+  original). 249 recipes differ from the 11-06 method's. Review page site/crop-doubts.html rebuilt (1,086 books with
+  doubts, 24 without; counts by kind within ±8 of the 11-06 page). Data committed. All three VMs STOPPED (the end unit).
+  CHECKS: data/improve/crop-redo-2026-11-07-audit.txt (4 flags: slight shrinks of 1.6–3 % on three books; Sans famille's
+  frame tighter — none cuts print), data/improve/crop-redo-2026-11-07-sheets-scan.txt (EDGE-V 72 pages vs 76), and by eye
+  the three fixed pages right (المنار ج 16 ص 193 head intact; دلائل النبوة ص 133 head inside; الطبقات Sachau ج 7 ص 291 whole,
+  wide lines complete). refresh.sh ran after (logs/refresh-2026-11-07b.log).
+- NEXT: the OWNER reviews site/crop-doubts.html (his comments arrive through watch_comments.py — arm it each session);
+  open items for a later round: finding 4 (a printed marginal at the scan's edge: الإبانة ص 471 — withdrawn, see below),
+  fix 6 (مورد الظمآن's leaning verse pages — his «turn» ruling → owner-turns.tsv), the two 'stain' books with frames
+  off-centre sideways (الموسوعة الشاملة 25, نظام الطلاق ج 1), the unfilled bed strips (الخطط التوفيقية 06 ص 4), align-1's
+  startup-script shutdown (remove the metadata before the next long run on it).
+- (was) RUNNING since 03:49 UTC: units crop-redo-2026-11-07e-{crop-vm2,align-1,crop-vm} (31 workers each, lists
   data/crop/redo-part-2026-11-07b-<vm>.tsv, 371/371/372 books, 4.42 GB each; PHONE_PARALLEL=1 STAGE_GB=4; the VMs start
   themselves) + crop-redo-2026-11-07-end (waits for the e-units → crop_doubts_page.py crop-redo-2026-11-07 → STOPS ALL
   THREE VMs). Logs logs/crop-redo-2026-11-07-<vm>.log and logs/crop-redo-2026-11-07.log; progress = data/crop/redo-done.tsv
