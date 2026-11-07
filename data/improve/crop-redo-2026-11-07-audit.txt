@@ -1,0 +1,6 @@
+# scratch/redo_audit_2026-11-06.py over crop-redo-2026-11-07 (the final method 09714b71dd) vs git HEAD = the 11-06 method's recipes, 2026-11-07 07:38: 249 recipes changed, 4 flagged — الروض الأنف 90 pages newly shrunk by 1.6 % (H 657 → 673, the Th rule), الخضر حسين 25 pages by ≤ 2.6 % (box 402×612 → 377×594), فوائد الظهيرية مخطوط 2, Sans famille 17 pages (its illustrations: the box 342 → 266 wide, a tighter frame that holds head, folio and text — the old one took in the margin's stains). None cuts print.
+FLAG 27e39f9d266e الفقه الحنفي/فوائد الظهيرية في الفقه - مخطوط.pdf | NEWLY cut like a cover on p. [1, 2]; whole pages 3 → 6
+FLAG 95c616621b9b السيرة النبوية/الروض الأنف في شرح السيرة النبوية - السهيلي (ت عبد الرح | shrunk pages 74 → 132 of 614
+FLAG f56982a2fcac الأدب/أدب عالمي/أدب فرنسي/Sans famille - Hector Malot (Paris, Dentu 18 | NEWLY cut like a cover on p. [443, 444]
+FLAG f7c47c8567c6 الجوامع/موسوعة الأعمال الكاملة للإمام محمد الخضر حسين (ت علي الرضا الح | shrunk pages 25 → 50 of 74
+249 recipes read, 4 flagged
