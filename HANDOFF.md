@@ -19,6 +19,10 @@ every turn, benched before 26i.
   its first 50 books = 2.36 of 4.74 GB), each part uploads one book at a time to its VM (NET = 1 per process, paced by
   netpace's WAN guard), the laptop's line gives ~1.8 MB/s up in all → 13.3 GB ≈ 2 h of uploads; at 04:10 the VMs ran 3 / 3
   / 21 analyses with 1 book done. It catches up as the books shrink. NETPACE=0 only on the owner's word (§7.9).
+  align-1 SHUTS ITSELF DOWN an hour after each boot (its hifz startup script, still in its metadata — removing it was
+  denied to a session on 11-06; the owner can: gcloud compute instances remove-metadata align-1 --keys startup-script
+  --zone europe-southwest1-b): 04:50 «VM away», crop_redo starts it again by itself (new address) and its in-flight
+  analyses run again — ~10–15 min lost per hour on that part; expect it again ~05:55. Not worth a rebalance.
   Resume a part: crop_redo.py with its 11-07b list, batch crop-redo-2026-11-07, env CROP_VM=<vm> [CROP_VM_PROJECT=
   phone-library-crop-261106] PHONE_PARALLEL=1 STAGE_GB=4 RESUME_FREE_GB=1 (never the launcher).
 - AFTER A /clear: arm `python3 -u scripts/watch_comments.py` and the scratchpad's redo_watch_1107.sh as Monitors; when
