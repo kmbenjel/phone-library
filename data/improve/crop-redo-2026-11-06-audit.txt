@@ -1,0 +1,30 @@
+# scratch/redo_audit_2026-11-06.py over the finished redo crop-redo-2026-11-06 (2026-11-07 01:58): 267 recipes changed vs the 11-05 method, 26 flagged.
+# NEWLY cut = a first-2/last-4 page shown narrower than in the 11-05 recipe (finding 1 of data/improve/crop-review-2026-11-06.md); crop → level = finding of the head-line block; H/shrunk = Th from typical pages.
+FLAG 010a666385e3 التراجم والطبقات/كتاب الطبقات الكبرى - ابن سعد (ت إدوارد سخو - مطبعة ب | NEWLY cut like a cover on p. [291]
+FLAG 1056399f36bf كتب اللغة/معجم تيمور الكبير في الألفاظ العامية - أحمد تيمور باشا/04 -  | H 633.71 → 564.44
+FLAG 1093d083eaf8 الأدب/الإماء الشواعر - أبو الفرج الأصبهاني/مختار الاغانى فى الاخبار و  | NEWLY cut like a cover on p. [594, 595]
+FLAG 12e0298efc60 التراجم والطبقات/معجم الشعراء - المرزباني (ت عبد الستار فراج).pdf | NEWLY cut like a cover on p. [1]
+FLAG 138cf5d20941 الأدب/الشكوى والعتاب وما وقع للخلان والأصحاب - أبو منصور الثعالبي - دا | shrunk pages 1 → 15 of 173
+FLAG 322927663c37 الأدب/الفن ومذاهبه في الشعر العربي - شوقي ضيف/الفن ومذاهبه في الشعر ال | NEWLY cut like a cover on p. [1]
+FLAG 33affd7d38c2 كتب عامة/الذخائر - مجموعة من المؤلفين/04 - الذخائر - مجموعة من المؤلفي | NEWLY cut like a cover on p. [1]
+FLAG 4176d93a08a7 كتب اللغة/معجم تيمور الكبير في الألفاظ العامية - أحمد تيمور باشا/05 -  | H 521.46 → 466.22
+FLAG 50918cfa4b5d التفسير/تأويلات أهل السنة - أبو منصور الماتريدي (ت باسلوم - دار الكتب  | whole pages 0 → 574; decision crop → level
+FLAG 5a306386c8e4 الشعر ودواوينه/ديوان الزهاوي - جميل صدقي الزهاوي (ط المطبعة العربية بم | NEWLY cut like a cover on p. [1]
+FLAG 60756064c6ee البلدان والرحلات/الرحلة الناصرية للناصري/1 - الرحلة الناصرية للناصري.p | H 792.0 → 650.31
+FLAG 6f3a9f6b1c53 علوم أخرى/سلسلة عالم المعرفة (المجلس الوطني للثقافة - الكويت)/الأعداد  | NEWLY cut like a cover on p. [1]
+UNREADABLE data/crop/recipes/8517e87c549a967720cce26409c49ce5.json Expecting value: line 1 column 16385 (char 16384)
+FLAG 8cd80892961f العقيدة/بيان الأدلة النقلية والعقلية في الفرق بين الرقية الشرعية والرق | NEWLY cut like a cover on p. [1]
+FLAG 9b8b1c806b8f الفقه الشافعي/الأم ويليه مختصر المزني - الإمام الشافعي (ت محمد زهري ال | NEWLY cut like a cover on p. [295, 296]
+FLAG a01371308b79 العلل والسؤلات الحديثية/المنتخب من السياق لتاريخ نيسابور للفارسي - الص | whole pages 2 → 615; decision crop → level
+FLAG abf14d2db8ef علوم أخرى/سلسلة عالم المعرفة (المجلس الوطني للثقافة - الكويت)/الأعداد  | NEWLY cut like a cover on p. [1]
+FLAG b2389124e7a2 البلاغة/يواقيت المشتري من جوهر الأخضري فن البلاغة ولمع العرفان على أرج | NEWLY cut like a cover on p. [1]
+FLAG c356b54947a5 التراجم والطبقات/المعسول - محمد المختار السوسي/09 - المعسول.pdf | NEWLY cut like a cover on p. [1]
+FLAG df915de2392b الشعر ودواوينه/ديوان اللصوص في العصرين الجاهلي والإسلامي - طريفي، محمد | whole pages 0 → 416; decision crop → level
+FLAG e28fa8015082 علوم أخرى/سلسلة عالم المعرفة (المجلس الوطني للثقافة - الكويت)/الأعداد  | NEWLY cut like a cover on p. [1]
+FLAG e37d6294c419 البلاغة/مواد البيان - علي بن خلف الكاتب (ت حاتم صالح الضامن - دار البش | NEWLY cut like a cover on p. [475, 476]
+FLAG ea12e1dd25bd التفسير/المحرر الوجيز في تفسير الكتاب العزيز - ابن عطية الأندلسي (ط ال | NEWLY cut like a cover on p. [1]
+FLAG ee8ffb4dd169 كتب عامة/الذخائر - مجموعة من المؤلفين/01 - الذخائر - مجموعة من المؤلفي | NEWLY cut like a cover on p. [354]
+FLAG f4cef699f119 التراجم والطبقات/كتاب الطبقات الكبرى - ابن سعد (ت إدوارد سخو - مطبعة ب | NEWLY cut like a cover on p. [217]
+FLAG fbe88af5be44 التراجم والطبقات/سلم الوصول إلى طبقات الفحول - حاجي خليفة (ت أكمل الدي | whole pages 0 → 491; decision crop → level
+FLAG fd1009e4861e الرقائق والآداب والأذكار/درر الحكم - الثعالبي.pdf | NEWLY cut like a cover on p. [1]
+267 recipes read, 26 flagged
