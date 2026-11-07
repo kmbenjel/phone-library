@@ -5,11 +5,12 @@ box and a comment (report «crop-doubts»; review_server.py). The pages the owne
 too, his words beside them (crop_batch.owner_pages: data/crop/owner-pages.tsv, owner-turns.tsv). Books he ticks, or answered, leave the page
 (data/names/review-closed.tsv, report «crop-doubts»). Books without doubts are not shown: the count says how many.
 Usage: python3 scripts/crop_doubts_page.py [BATCH …]   (the change-log batch names, e.g. crop-redo-001; default: all)"""
-import csv, html, json, os, shutil, sys
+import csv, hashlib, html, json, os, re, shutil, subprocess, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 J = lambda *p: os.path.join(ROOT, *p)
 SHEETS = os.path.expanduser('~/.cache/phone-library/crop-sheets')
-WHY = {'tilt': 'ميل لم تحسمه المقاييس (اختلفت أو لم تُعالجه)', 'whole': 'صفحة بقيت كاملة لم تُقص',
+WHY = {'frame': 'صفحة ذات إطار مطبوع: قُوِّمت بميل إطارها نفسه (أو تُركت لأن إطارها قائم) مهما قرأت سطورها — حكمك على المخصص ج 13',
+       'tilt': 'ميل لم تحسمه المقاييس (اختلفت أو لم تُعالجه)', 'whole': 'صفحة بقيت كاملة لم تُقص',
        'stain': 'بقعة أُبقيت داخل الإطار حفاظا على توازن الهامشين', 'stamp': 'ختم غُطّي بلون الصفحة',
        'rim': 'حافة صوّرها الماسح خارج النص غُطّيت بلون الورق',
        'larger': 'صفحة عُرضت بإطار أكبر قليلا ليسع ما فيها', 'sheet': 'صفحة على سطح الماسح: مُلئ ما وراء حافتها بلونها',
@@ -23,15 +24,53 @@ WHY = {'tilt': 'ميل لم تحسمه المقاييس (اختلفت أو لم 
        'tracks': 'تدوير أمال بعض السطور فرُدّ، ثم قُوِّمت الصفحة بالزاوية التي تتفق عليها سطورها (كل سطر مقيس وحده)'}
 
 def main(batches):
-    logged = {}                                       # path → (day, tag) of its latest crop: a card's id is «<hash>-<tag>», the
-    for r in csv.reader(open(J('data', 'changes', 'changes.tsv'), encoding='utf-8'), delimiter='\t'):   # crop's own md5,
-        if len(r) > 5 and r[1] == 'crop' and (not batches or r[5].strip() in batches):          # so a redone book comes back
-            m = r[4].rsplit('→ md5 ', 1)[1][:7] if '→ md5 ' in r[4] else r[0][2:10].replace('-', '')  # (2026-11-03: ids
-            logged[r[2].removeprefix('Books/')] = (r[0][:10], m)                                # were the path's hash alone)
-    closed = {}
+    logged = {}                                       # path → (day, tag, recipe) of its latest crop: a card's id is «<hash>-<tag>»,
+    for r in csv.reader(open(J('data', 'changes', 'changes.tsv'), encoding='utf-8'), delimiter='\t'):   # the crop's own md5
+        if len(r) > 5 and r[1] == 'crop' and (not batches or r[5].strip() in batches):          # (2026-11-03: ids were
+            m = r[4].rsplit('→ md5 ', 1)[1][:7] if '→ md5 ' in r[4] else r[0][2:10].replace('-', '')  # the path's hash alone)
+            o = re.search(r'original \d+ B md5 (\w+)', r[4])
+            logged[r[2].removeprefix('Books/')] = (r[0][:10], m, J('data', 'crop', 'recipes', o.group(1) + '.json') if o else None)
+    # THE OWNER'S TICKS AND WORDS SURVIVE A REDO (owner 2026-11-07 «كثيرا من ملاحظاتي السابقة ألغيت»: every redo rewrites the
+    # file, so the tag changed on 1,111 books and his 14 remarks of 10-31 and 11-06 went off the cards): a closed row names
+    # the card («<hash>-<tag>», or the hash alone) and closes the book while its RECIPE is the one he saw — the row's
+    # recipe=<md5> (review_close.py writes it), or, for the rows before 11-07 without it, a recipe git has not changed since
+    # the row's day. A book whose recipe changed since comes back, his earlier words shown beside the new pages.
+    closed = {}                                       # card or hash → (day, recipe md5 or None)
     if os.path.exists(J('data', 'names', 'review-closed.tsv')):
-        closed = {l.split('\t')[1]: l.split('\t')[2] for l in open(J('data', 'names', 'review-closed.tsv'), encoding='utf-8')
-                  if l.startswith('crop-doubts\t')}
+        for l in open(J('data', 'names', 'review-closed.tsv'), encoding='utf-8'):
+            f = l.rstrip('\n').split('\t')
+            if f[0] != 'crop-doubts' or len(f) < 3: continue
+            rm = next((x[7:] for x in f[3:] if x.startswith('recipe=')), None)
+            closed[f[1]] = (f[2], rm)
+    changed = {}                                      # recipe file → the day git last changed it (one call for all)
+    try:
+        day = None
+        for l in subprocess.run(['git', 'log', '--format=%%%cs', '--name-only', '--', 'data/crop/recipes'], cwd=ROOT,
+                                capture_output=True, text=True).stdout.splitlines():
+            if l.startswith('%'): day = l[1:]
+            elif l.strip() and J(l.strip()) not in changed: changed[J(l.strip())] = day   # (the first = latest commit)
+    except OSError: pass
+    rmd5 = lambda f: hashlib.md5(open(f, 'rb').read()).hexdigest() if f and os.path.exists(f) else None
+    def is_closed(h, key, day, rf):
+        c = last.get(key)                             # (his words on THIS card, not yet answered: the card stays)
+        if c and not c.get('checked') and c.get('comment', '').strip() and key not in closed: return False
+        for k in (key, h) + tuple(k for k in closed if k.startswith(h + '-') and k != key):
+            if k not in closed: continue
+            cday, crm = closed[k]
+            if k == key: return True
+            if crm: return crm == rmd5(rf)
+            if rf and changed.get(rf, '0000') <= cday: return True
+        return False
+    hist, last = {}, {}                               # hash → his remarks on the book's older cards [(time, card, checked, words)]
+    try:
+        for l in open(J('data', 'names', 'review-comments.jsonl'), encoding='utf-8'):
+            try: c = json.loads(l)
+            except ValueError: continue
+            if c.get('report') == 'crop-doubts': last[str(c.get('n'))] = c
+        for n, c in last.items():
+            hist.setdefault(n.split('-')[0], []).append((c.get('time', ''), n, c.get('checked'), c.get('comment', '')))
+            if c.get('checked') and n not in closed: closed[n] = (str(c.get('time', ''))[:10], None)   # his tick closes the card
+    except OSError: pass
     out = J('site', 'crop-doubts'); os.makedirs(out, exist_ok=True)
     E, cards, clean = html.escape, [], 0
     for h in sorted(os.listdir(SHEETS)) if os.path.isdir(SHEETS) else []:
@@ -40,8 +79,12 @@ def main(batches):
         except (OSError, ValueError): continue
         if book.get('path') not in logged or 'shown' not in book: continue
         if not book['shown']: clean += 1; continue
-        day, tag = logged[book['path']]; key = f'{h}-{tag}'
-        if key in closed or closed.get(h, '') >= day: continue   # (an old row, the hash alone: closes crops up to its day)
+        day, tag, rf = logged[book['path']]; key = f'{h}-{tag}'
+        if is_closed(h, key, day, rf): continue
+        prev = sorted((x for x in hist.get(h, []) if x[1] != key), reverse=True)
+        pv = '؛ '.join(f'يوم {E(t[:10])}: ' + ('علّمته «سليم»' if ch and not w.strip() else '«' + E(w.strip()) + '»' + (' وعلّمته «سليم»' if ch else ''))
+                      for t, _, ch, w in prev)
+        pv = f'<p class="prev">ملاحظاتك على قصّ أقدم لهذا الكتاب (تغيّر القص بعدها): {pv}</p>' if pv else ''
         figs = []; own = book.get('owner') or {}
         for i, why in book['shown']:
             b, a = f'p{i + 1:04d}-before.jpg', f'p{i + 1:04d}-after.jpg'
@@ -57,7 +100,7 @@ def main(batches):
         tw = f'<p class="meta">صفحات تُركت كما مُسحت لأن سطورها على زاويتين: ص {"، ".join(map(str, two))}</p>' if two else ''
         rims = book.get('rims') or []                 # (every page with a rim painted out, named — pilot audit 2026-10-31)
         tw += f'<p class="meta">صفحات غُطّيت فيها حافة بلون الورق: ص {"، ".join(map(str, rims))}</p>' if rims else ''
-        cards.append(f'<article><h2>{E(book["path"])}</h2><p class="meta">مواضع الشك في الكتاب كله — {E(summ)}</p>{tw}{"".join(figs)}'
+        cards.append(f'<article><h2>{E(book["path"])}</h2><p class="meta">مواضع الشك في الكتاب كله — {E(summ)}</p>{tw}{pv}{"".join(figs)}'
                      f'<div class="review" data-n="{E(key)}"><label><input type="checkbox" class="chk"> سليم</label>'
                      f'<textarea class="cmt" rows="2" placeholder="ملاحظتك"></textarea><span class="st"></span></div></article>')
     page = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -67,6 +110,7 @@ def main(batches):
 :root[data-theme="dark"]{{--bg:#161513;--fg:#ece8e1;--mut:#a39c91;--card:#1f1d1a;--line:#34312c;--sep:#ece8e1}}
 body{{background:var(--bg);color:var(--fg);font:16px/1.7 "Noto Naskh Arabic","Amiri",serif;margin:0;padding:16px}}
 main{{max-width:1200px;margin:auto}} h1{{font-size:1.4rem}} h2{{font-size:1.02rem;margin:.2em 0;word-break:break-word}} .meta,.lead,figcaption,.st{{color:var(--mut)}}
+.prev{{color:#8a4b00;background:#fff6e5;border-radius:6px;padding:4px 8px}} @media (prefers-color-scheme: dark){{:root:not([data-theme="light"]) .prev{{color:#f0c27a;background:#2a2112}}}}
 article{{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:16px 0}}
 figure{{margin:10px 0}} .pair{{display:flex;align-items:flex-end;overflow-x:auto}} .pair>div{{display:flex;flex-direction:column;align-items:center}}
 .pair img{{height:500px;display:block}} .pair span{{font-weight:bold;padding:0 6px}} .sep{{width:2px;align-self:stretch;background:var(--sep);margin-top:1.7em}}

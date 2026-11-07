@@ -48,6 +48,7 @@ def follow(path):
 
 OWNER_TURNS = J('data', 'crop', 'owner-turns.tsv')
 OWNER_PAGES = J('data', 'crop', 'owner-pages.tsv')
+OWNER_BOXES = J('data', 'crop', 'owner-boxes.tsv')
 
 def listed(table, path):
     """the rows of a list of pages (path, page, …) that are about this book: the list's paths and `path` are each followed
@@ -72,6 +73,13 @@ def owner_turns(path):
     of 0: a page he ruled «leave as scanned» (crop-tilt-002 / 003 — book_crop fix F, 2026-10-29)"""
     return {int(r[1]): float(r[2]) for r in listed(OWNER_TURNS, path)}
 
+def owner_boxes(path):
+    """the pages of this book the owner gave a window or ruled whole (data/crop/owner-boxes.tsv: path, page, ruling, his
+    words, where — owner 2026-11-07 on crop-doubts: الفن ومذاهبه ص 1 «قبل هو الصواب», خزانة الأدب 01 ص 236 «انزل بأعلى
+    الإطار تحت التشوه الأسود، وخذ من اليسار»; ruling = «whole» or «window X0 Y0»: the book's box from that corner, in the
+    page's pt as scanned) → {page (1-based): ruling}, for book_crop.plan (owner_windows)"""
+    return {int(r[1]): r[2].strip() for r in listed(OWNER_BOXES, path)}
+
 def owner_pages(path):
     """the pages of this book the owner pointed at in an earlier crop review (data/crop/owner-pages.tsv: path, page, his
     words, where; and the pages he ruled «turn», owner-turns.tsv) → {page (1-based): «his words» (where)}: drawn on the
@@ -83,6 +91,8 @@ def owner_pages(path):
         out.setdefault(int(r[1]), []).append(f'{"أجزتَ تدويرها" if float(r[2]) else "أبقيتَها كما مُسحت"} '
                                              f'({m[1] + "، " + m[2] if m else "crop-tilt-001، 2026-10-25"})')
     for r in listed(OWNER_PAGES, path): out.setdefault(int(r[1]), []).append(f'«{r[2]}»' + (f' ({r[3]})' if len(r) > 3 and r[3] else ''))
+    for r in listed(OWNER_BOXES, path):              # (his window or «whole» ruling: the page is drawn with his words)
+        out.setdefault(int(r[1]), []).append(f'«{r[3]}»' + (f' ({r[4]})' if len(r) > 4 and r[4] else '') if len(r) > 3 and r[3] else f'حكمتَ: {r[2]}')
     return {k: ' / '.join(v) for k, v in out.items()}
 
 def names_of(path, back):
@@ -188,7 +198,7 @@ def analyse(path, src, jobs=1):
     """CPU part, in a worker process: plan + apply to a copy; returns what the phone step needs (jobs > 1: the book's pages
     shared out among that many processes — one urgent book with all processors)"""
     import book_crop as bc
-    rec = bc.plan(src, jobs, owner_turns=owner_turns(path))
+    rec = bc.plan(src, jobs, owner_turns=owner_turns(path), owner_boxes=owner_boxes(path))
     out = {'path': path, 'src': src, 'decision': rec.get('decision'), 'gain': rec.get('gain'),
            'turned': sum(1 for p in rec['pages'] if p.get('skew')), 'whole': len(rec.get('whole') or []),
            'residual': rec.get('residual_tilt') or [], 'untreated': rec.get('untreated_tilt') or [],
@@ -211,7 +221,8 @@ def analyse(path, src, jobs=1):
         for i, p in enumerate(P):
             # (a page whose lines lie at two angles, left as scanned — owner 2026-10-27 on crop-tilt-002: «Leave as scanned»,
             # listed for him: every such page of the book is named on its card, the first ones shown)
-            why = ('two' if p.get('two_angles') is not None and not p.get('skew') else
+            why = ('frame' if p.get('frame_turn') is not None else      # (the printed frame as the standard, owner 2026-11-07)
+                   'two' if p.get('two_angles') is not None and not p.get('skew') else
                    'tilt' if p.get('unsure_tilt') or p.get('tilt_disputed') or i in untreated else
                    'whole' if i in whole or (p['kind'] == 'text' and not p.get('crop') and rec.get('decision') == 'crop') else
                    'stain' if p.get('stain_kept') else
@@ -236,8 +247,8 @@ def analyse(path, src, jobs=1):
                    # (a turn that made lines worse, set again by the angle the lines take — two_angles, 2026-10-27)
                    'tracks' if p.get('turn_by_tracks') is not None and p.get('skew') else None)
             if why: flags.append((i, why))
-        order = {'two': 0, 'tilt': 1, 'whole': 2, 'stain': 3, 'rim': 4, 'stamp': 5, 'larger': 6, 'sheet': 7, 'third': 8, 'side': 9, 'edge': 10,
-                 'cut': 11, 'folio': 12, 'orn': 13, 'base': 14, 'tracks': 15}
+        order = {'frame': 0, 'two': 1, 'tilt': 2, 'whole': 3, 'stain': 4, 'rim': 5, 'stamp': 6, 'larger': 7, 'sheet': 8, 'third': 9, 'side': 10, 'edge': 11,
+                 'cut': 12, 'folio': 13, 'orn': 14, 'base': 15, 'tracks': 16}
         seen, sp = set(), []
         for i, why in sorted(flags, key=lambda x: (order[x[1]], x[0])):   # each kind of doubt first, then more of them
             if why in seen: continue

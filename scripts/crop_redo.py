@@ -26,7 +26,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 import crop_batch as cb
 J = lambda *p: os.path.join(ROOT, *p)
-DONE = J('data', 'crop', 'redo-done.tsv')
+DONE = os.environ.get('REDO_DONE') or J('data', 'crop', 'redo-done.tsv')   # (REDO_DONE=<file>: a fix batch after a full redo, 2026-11-07)
 LOCAL_MAP = os.path.expanduser('~/.cache/phone-library/local-map.tsv')
 
 def crops():
@@ -84,7 +84,7 @@ VM_NAME, VM_ZONE, VM_USER = (os.environ.get('CROP_VM', 'crop-vm'), os.environ.ge
 VM_PROJ = [f'--project={os.environ["CROP_VM_PROJECT"]}'] if os.environ.get('CROP_VM_PROJECT') else []   # (a VM in another
 VM_KEY = os.path.expanduser('~/.ssh/google_compute_engine')                                                  # gcloud project, 2026-11-06)
 VM_REPO = 'phone-library'                             # the repo copy in the VM user's home
-VM_DATA = ['data/crop/owner-turns.tsv', 'data/crop/owner-pages.tsv', 'data/changes/changes.tsv', 'data/phone/index-now.tsv']
+VM_DATA = ['data/crop/owner-turns.tsv', 'data/crop/owner-pages.tsv', 'data/crop/owner-boxes.tsv', 'data/changes/changes.tsv', 'data/phone/index-now.tsv']
 VM = None                                             # «user@address» once --remote has found it
 class _Net:
     """bulk transfers, the phone's and the VM's: one at a time (AGENTS.md §7.9), but NET_HOTSPOT (3) at once on the phone's

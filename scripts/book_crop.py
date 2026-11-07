@@ -927,6 +927,43 @@ def two_angles(L):
     agree = sum(1 for v in L if abs(v[2]) <= 0.35 + 1e-6)
     return w if len(w) >= 2 and (len(w) >= 0.2 * len(L) or agree < 0.8 * len(L)) else []
 
+def frame_lean(mk):
+    """THE PRINTED FRAME AS THE STANDARD OF THE TILT (owner 2026-11-07 on crop-doubts, المخصص ج 13 — the Bulaq print's thick
+    border: «اجعل الإطار الأسود معيارا للميلان فهو مائل بوضوح في بعضها»): on a page whose text stands inside a printed frame
+    (marks' rules: a long rule left and right of the text block, each ≥ 70 % of its height, one above and one below it), the
+    lean of the frame's two SIDES — the longest printed lines of the page — is the page's tilt, whatever its lines of text
+    read (a lithographed or photographed leaf's lines lean more and more down the page: that book's p. 8 reads −0.06° at
+    the top rule and −0.94° at the bottom one; the frame is what the eye squares the page by). Each side's ink is followed
+    row by row (the centre of its run; a run wider than 14 pt — a letter touching the rule — skipped) and fitted by a line,
+    on at least 80 % of its rows; its upper and lower halves must agree within 0.6° (a bent side is no standard) and the
+    two sides within 0.4°. Returns their mean lean in degrees (the turn that levels it is its negative: p. 13 read −0.69 /
+    −0.66°, turned +0.68 its sides read −0.05 / −0.08°), or None"""
+    a, z, paper, tb = mk.get('img'), mk.get('z'), mk.get('paper'), mk.get('text')
+    if a is None or tb is None or not paper or not z: return None
+    tw, th = tb[2] - tb[0], tb[3] - tb[1]
+    if tw <= 0 or th <= 0: return None
+    R = mk.get('rules') or []
+    V = [b for b in R if b[3] - b[1] > b[2] - b[0] and b[3] - b[1] >= 0.7 * th]
+    L = [b for b in V if b[2] <= tb[0] + 0.02 * tw]; Rt = [b for b in V if b[0] >= tb[2] - 0.02 * tw]
+    Hz = [b for b in R if b[2] - b[0] >= b[3] - b[1] and b[2] - b[0] >= 0.7 * tw]
+    if not L or not Rt or not any(b[3] <= tb[1] + 0.05 * th for b in Hz) or not any(b[1] >= tb[3] - 0.05 * th for b in Hz): return None
+    def lean(b, part):
+        x0, y0, x1, y1 = [int(round(v * z)) for v in b]; pad = int(6 * z)
+        sub = a[y0:y1, max(0, x0 - pad):x1 + pad] < paper - 80
+        r0, r1 = int(sub.shape[0] * part[0]), int(sub.shape[0] * part[1]); rows, xs = [], []
+        for r in range(r0, r1):
+            c = np.nonzero(sub[r])[0]
+            if len(c) >= 2 and c[-1] - c[0] <= 14 * z: rows.append(r); xs.append((c[0] + c[-1]) / 2)
+        if len(rows) < 30 or len(rows) < 0.8 * (r1 - r0): return None
+        return float(np.degrees(np.arctan(np.polyfit(rows, xs, 1)[0])))
+    out = []
+    for b in (max(L, key=lambda b: b[3] - b[1]), max(Rt, key=lambda b: b[3] - b[1])):
+        w, t, u = lean(b, (0.0, 1.0)), lean(b, (0.0, 0.5)), lean(b, (0.5, 1.0))
+        if w is None or t is None or u is None or abs(t - u) > 0.6 + 1e-6: return None
+        out.append(w)
+    if abs(out[0] - out[1]) > 0.4 + 1e-6: return None
+    return round(float(np.mean(out)), 3)
+
 def print_turn(t0, t1, d):
     """A TURN THE PRINT CERTIFIES (2026-10-27): the page's printed rules (line_tracks' rule lines, read in both views alike —
     their angle moved by the turn within 0.15°) all stand level once turned (≤ 0.15°), and its lines of text give no reading
@@ -2199,7 +2236,7 @@ def analyse(path):
     """kept for the old callers: the measured pages and the decision at the narrowest box"""
     return decide(analyse_pages(path))
 
-def plan(path, jobs=1, owner_turns=None):
+def plan(path, jobs=1, owner_turns=None, owner_boxes=None):
     """the whole method: measure every page once, then the narrowest box that works — the width of 95 % of the pages,
     else 98 %, else all; each tried with the second check (a book is cropped only if few pages stay whole).
     owner_turns: {page (1-based, as in the recipe): |tilt|} — pages the owner ruled «turn» (verify); a tilt of 0: a page he
@@ -2219,7 +2256,7 @@ def plan(path, jobs=1, owner_turns=None):
         if gut:
             tmp = path[:-4] + '.split.pdf'; shutil.copyfile(path, tmp)
             dd = pymupdf.open(tmp); split_pages(dd, gut); dd.save(tmp, incremental=True, encryption=pymupdf.PDF_ENCRYPT_KEEP); dd.close()
-            try: rec = plan(tmp, jobs, owner_turns)
+            try: rec = plan(tmp, jobs, owner_turns, owner_boxes)
             finally: os.remove(tmp)
             rec['split'] = {str(k): v for k, v in gut.items()}; rec['split_from'] = n0
             return rec
@@ -2231,9 +2268,29 @@ def plan(path, jobs=1, owner_turns=None):
         if rec.get('decision') == 'level': break
         if rec.get('decision') != 'crop': continue
         rec = verify(path, rec, jobs=jobs, owner_turns=owner_turns)
-        if rec.get('decision') == 'crop': rec['width_quantile'] = wq; return frames(rec)
+        if rec.get('decision') == 'crop': owner_windows(rec, owner_boxes); rec['width_quantile'] = wq; return frames(rec)
     if rec.get('decision') == 'level' or (rec.get('skewed') and 'do not fit one box' in (rec.get('decision') or '')):
         r2 = level(path, pages, rec.get('decision'), jobs, owner_turns); r2['stamp_pages'] = len(stamps); return r2
+    return rec
+
+def owner_windows(rec, boxes):
+    """THE OWNER'S WINDOW (2026-11-07, his remarks on crop-doubts — الفن ومذاهبه ص 1 «لا تسع ما فيها، لأن قبل هو الصواب»:
+    the cover's dotted border cut by the cover-like rule; خزانة الأدب 01 ص 236 «انزل بأعلى الإطار تحت التشوه الأسود، وخذ من
+    اليسار لتستوي مع غيرها»: a smudge at the top taken for content, the frame grown to it): a page he ruled «whole» is
+    shown entire (the whole sheet, shrunk to the book's box); a page he gave «window X0 Y0» (pt, the page as scanned) shows
+    the book's box W × H from that corner, its turn kept, its move and growth dropped (data/crop/owner-boxes.tsv via
+    crop_batch.owner_boxes)"""
+    W, H = rec['size']
+    for n, rule in (boxes or {}).items():
+        if not 1 <= n <= len(rec['pages']): continue
+        p = rec['pages'][n - 1]; w = rule.split()
+        if w[0] == 'whole': p['crop'] = None; p['owner_box'] = 'whole'
+        elif w[0] == 'window' and len(w) >= 3:
+            x0 = min(max(0.0, float(w[1])), max(0.0, p['w'] - W)); y0 = min(max(0.0, float(w[2])), max(0.0, p['h'] - H))
+            p['crop'] = [round(x0, 1), round(y0, 1), round(x0 + W, 1), round(y0 + H, 1)]; p['owner_box'] = rule
+        else: continue
+        for k in ('move', 'enlarged', 'bands', 'fit_whole', 'cover_like', 'cover_like_kept'): p.pop(k, None)
+        rec['whole'] = sorted(set(k for k in rec.get('whole', []) if k != n - 1) | ({n - 1} if w[0] == 'whole' else set()))
     return rec
 
 def level(path, pages, why, jobs=1, owner_turns=None):
@@ -2853,7 +2910,7 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         if rec['pages'][i].get('sheet'): a = whiten(a, z, fwd_box(doc, i, q, rec['pages'][i]['sheet']))   # will see it, at px
         ex = [pad_box(b, page.rect.width) for b in st or []] + (rec['pages'][i].get('dots') or [])
         mk = marks(a, z, page.rect.width, fwd_boxes(doc, i, q, ex) if ex else None,
-                   band_mask(doc, i, q, b0, a.shape, z) if b0 else None); mk['z'] = z
+                   band_mask(doc, i, q, b0, a.shape, z) if b0 else None); mk['z'] = z; mk['img'] = a   # (img: frame_lean)
         memo = {}
         def once(k, f):                               # each measure of this view taken once
             if k not in memo: memo[k] = f()
@@ -3197,6 +3254,27 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
         # THE OWNER'S TURN (data/crop/owner-turns.tsv, owner 2026-10-25 on crop-tilt-001: «أجيز هذا وجميع ما سبق»): a page he
         # ruled «turn» after seeing it turned by its measured tilt, which the measures above leave as it is, is turned by
         # that tilt — u measured here, on the page as it is (sign and size); the readings after it are kept for the record
+        # THE PRINTED FRAME AS THE STANDARD (owner 2026-11-07, المخصص ج 13 «اجعل الإطار الأسود معيارا للميلان فهو مائل بوضوح في
+        # بعضها»): a page whose text stands in a printed frame is squared by the frame (frame_lean). When the frame, as the
+        # page now stands — as scanned, or as turned by the readings above — still leans beyond 0.35°, the page is turned by
+        # the frame's own lean instead (no turn under 0.2°: left as scanned), whatever its lines of text read: the two-angle
+        # refusal, the unsure and disputed readings and the text's own turn give way; kept when the frame then stands within
+        # 0.2°. His own rulings on the page (owner_turns, below) stay above it
+        if (owner_turns or {}).get(i + 1) is None and mk.get('text') is not None and mk.get('rules'):
+            m0_ = look(i, {k: v for k, v in p.items() if k != 'skew'}); fl = frame_lean(m0_)
+            sk0 = p.get('skew') or 0.0                 # (not «cur»: look()'s closure variable)
+            if fl is not None and abs(fl + sk0) > 0.35 + 1e-6:
+                d = round(round(-fl / 0.025) * 0.025, 3) if abs(fl) >= 0.2 - 1e-6 else 0.0
+                m2 = look(i, dict(p, skew=d)) if d else m0_; f2 = frame_lean(m2)
+                if f2 is not None and abs(f2) <= 0.2 + 1e-6:
+                    for k in ('two_angles', 'lines_lean', 'unsure_tilt', 'tilt_disputed', 'untreated_tilt', 'after_tilt', 'after_tilt_image',
+                              'turned_in_check', 'level_by_tracks', 'turn_by_tracks', 'base_found', 'level_by_proj', 'loop_fallback', 'tracks_near', 'skew'):
+                        p.pop(k, None)
+                    p['frame_turn'] = {'lean': fl, 'was': round(sk0, 3), 'after': f2, 'turn': d}
+                    if d:
+                        p['skew'] = d
+                        if m2['xy'] is not None: p['after_tilt'] = round(abs(skew_of(m2['xy'], raw=True)[0]), 3); p['after_tilt_image'] = m2['proj']()
+                    mk = m2
         ot = (owner_turns or {}).get(i + 1)
         # THE OWNER'S «LEAVE AS SCANNED» (fix F, 2026-10-29: his turn of 0 — the pages he saw left as scanned for their two
         # angles and kept so, crop-tilt-002 «Leave as scanned», crop-tilt-003 «mark all ok»): never turned, whatever a later
@@ -3380,7 +3458,8 @@ def verify(path, rec, px=1000, tilt_only=False, jobs=1, only=None, moved_in=None
                             and not (p.get('level_by_base') is not None and abs(p['level_by_base']) <= 0.1 + 1e-6)
                             and not (p.get('level_by_tracks') is not None and abs(p['level_by_tracks']) <= 0.2 + 1e-6)
                             and not (p.get('image_third') is not None and p.get('after_tilt', 9) <= LEVEL and p.get('after_tilt_image', 9) <= 0.35 + 1e-6)
-                            and p.get('owner_turn') is None]          # (the owner saw that turn and asked for it)
+                            and p.get('owner_turn') is None           # (the owner saw that turn and asked for it)
+                            and p.get('frame_turn') is None]          # (squared by its printed frame: his standard, 2026-11-07)
     rec['level_by_lines'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('level_by_lines') is not None and p.get('skew')]
     rec['curved'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('curved')]
     rec['enlarged'] = [i + 1 for i, p in enumerate(rec['pages']) if p.get('enlarged')]
@@ -3409,12 +3488,14 @@ def frames(rec):
         if p['kind'] == 'rotated': p['fit_whole'] = True; continue    # a page turned by /Rotate: fitted whole (apply)
         k_ = rec['pages'].index(p); n_ = len(rec['pages'])
         own_cover = (k_ < 2 or k_ >= n_ - 4) and p['kind'] in ('cover', 'picture')
+        own_whole = p.get('owner_box') == 'whole'       # (the owner's «whole»: the entire sheet, no cover cut — owner_windows)
+        if own_whole: c = None; own_cover = False
         if own_cover and not c: c = [0.0, 0.0, pw, ph]
         # a front or back page printed nearly to its edges that cover_rect did not read as a cover (a light grey cover on a
         # white sheet is «paper» to it — owner 2026-11-06, الفن ومذاهبه ص 1 «لم تطابق النتيجة الإطار الموضوع على القديمة»:
         # its box, wider than the book's proportions, was shown whole with blank bands above and below; 63 first pages):
         # a box ≥ 80 % of the page is a cover, cut to the book's proportions like one inside the book (≤ 8 % a side)
-        cover_like = (k_ < 2 or k_ >= n_ - 4) and p['kind'] == 'text' and bool(c) and (c[2] - c[0]) * (c[3] - c[1]) >= 0.8 * pw * ph
+        cover_like = (k_ < 2 or k_ >= n_ - 4) and p['kind'] == 'text' and bool(c) and (c[2] - c[0]) * (c[3] - c[1]) >= 0.8 * pw * ph and not own_whole
         if p['kind'] == 'cover' and c or own_cover or cover_like:   # A COVER FILLS THE FRAME, cut to the book's proportions (owner
             cw, chh = c[2] - c[0], c[3] - c[1]        # 2026-10-18, دلائل الإعجاز ص 1: «الملاحظة على حالها … ولو نقص شيء لا
             lim = 1.0 if own_cover else 0.08          # يؤثر من حواف الغلاف»; مواد البيان: «هل العرض مستو مع جميع الصفحات؟ يمكن
@@ -3448,7 +3529,7 @@ def frames(rec):
             x, y, rw, rh = (c[0] + c[2]) / 2, (c[1] + c[3]) / 2, W, H
         else:
             if c: N = c                                # a box grown for this page, or cut short by the page's edge
-            elif p['kind'] == 'picture':               # a picture (a cover photographed edge to edge, a plate): the whole
+            elif p['kind'] == 'picture' or own_whole:  # a picture (a cover photographed edge to edge, a plate): the whole
                 N = [0.0, 0.0, pw, ph]                 # page, centred (owner 2026-10-18, مواد البيان: «لا تحافظ على مقاس
                                                        # الأوراق ولا شمول الغلاف» — framed on a measured part, its foot was cut)
             else:                                       # a page left whole: all it holds, with the book's margin
