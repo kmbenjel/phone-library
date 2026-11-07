@@ -17,6 +17,10 @@ every turn, benched before 26i.
   frame tighter — none cuts print), data/improve/crop-redo-2026-11-07-sheets-scan.txt (EDGE-V 72 pages vs 76), and by eye
   the three fixed pages right (المنار ج 16 ص 193 head intact; دلائل النبوة ص 133 head inside; الطبقات Sachau ج 7 ص 291 whole,
   wide lines complete). refresh.sh ran after (logs/refresh-2026-11-07b.log).
+- AFTER A /clear (owner 2026-11-07 ~10:40 «ready for clear»): NO long job runs, all VMs are stopped; arm only
+  `python3 -u scripts/watch_comments.py` as a Monitor (30 min, re-arm at expiry) and act on each comment as it comes
+  (owner 10-18: continuously; review-closed.tsv for ticked books). The scratchpad of the old session (patches, probes,
+  fetched books) is gone with it; everything that matters is in the repo and in this file.
 - NEXT: the OWNER reviews site/crop-doubts.html (his comments arrive through watch_comments.py — arm it each session);
   open items for a later round: finding 4 (a printed marginal at the scan's edge: الإبانة ص 471 — withdrawn, see below),
   fix 6 (مورد الظمآن's leaning verse pages — his «turn» ruling → owner-turns.tsv), the two 'stain' books with frames
