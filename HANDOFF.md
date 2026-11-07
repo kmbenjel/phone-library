@@ -26,8 +26,15 @@ every turn, benched before 26i.
   crop-redo-2026-11-07b + crop-fix-2026-11-07, STOPS crop-vm2). Stop: systemctl --user stop crop-redo-2026-11-07b-crop-vm2
   (resumable: same command again). AFTER: refresh.sh, commit (recipes, changes.tsv, index, done file), WORKLOG; his ticks
   of today hold on books whose recipe the frame rule leaves unchanged (most); changed ones come back with his words.
-- AFTER A /clear: arm watch_comments.py as a Monitor; act on each comment (review_close.py after acting); watch the two
-  units above (systemctl --user list-units 'crop-*'); nothing else runs.
+- 13:30 OWNER «use the remaining cpu room for speed» → the single part (one upload stream, 0.35 MB/s of originals, ~10 h)
+  stopped and SPLIT into three parts on crop-vm2 (scratch/redo_2026-11-07b-split.sh: lists data/crop/redo-part-2026-11-07c-{1,2,3}.tsv,
+  equal thirds by size, 11 workers each); then OWNER «nobody needs the network» → relaunched with NETPACE=0 as units
+  crop-redo-2026-11-07d-{1,2,3} (logs logs/crop-redo-2026-11-07c-<k>.log) + crop-redo-2026-11-07d-end
+  (scratch/redo_2026-11-07c-end.sh: page of both batches, STOPS crop-vm2). Same done file. Resume a part: crop_redo.py with
+  its c-list, batch crop-redo-2026-11-07b, env CROP_VM=crop-vm2 CROP_VM_PROJECT=phone-library-crop-261106 PHONE_PARALLEL=1
+  STAGE_GB=3 RESUME_FREE_GB=1 NETPACE=0 REDO_DONE=data/crop/redo-done-2026-11-07b.tsv.
+- AFTER A /clear: arm watch_comments.py as a Monitor; act on each comment (review_close.py after acting); watch the units
+  above (systemctl --user list-units 'crop-redo-2026-11-07d*'); nothing else runs.
 
 ## 2026-11-07 12:00 — (superseded above) THE OWNER REVIEWS; HIS REMARKS ACTED ON: PAGE WINDOWS, THE FRAME RULE (Claude, Fable)
 - OWNER 11:19–11:40 on site/crop-doubts.html: (1) المخصص ج 13 «اجعل الإطار الأسود معيارا للميلان فهو مائل بوضوح في بعضها»;
