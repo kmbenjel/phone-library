@@ -10,10 +10,15 @@ photocopy, lines set one by one) is NOT turned by any path and is listed for him
 every turn, benched before 26i.
 
 ## 2026-11-07 00:45 — REDO ON THREE VMs, SHARED PHONE LOCK; THE MAX-EFFORT REVIEW IS IN (Claude, Fable): READ THIS FIRST
-- REDO NOW: units crop-redo-2026-11-07c-{crop-vm2,align-1,crop-vm} (31 workers each, lists data/crop/redo-part-2026-11-07-<vm>.tsv
+- REDO NOW: units crop-redo-2026-11-07d-{crop-vm2,align-1,crop-vm} (31 workers each, lists data/crop/redo-part-2026-11-07-<vm>.tsv
   of 197/198/197 books, equal thirds by size; each VM kept its in-flight books) + crop-redo-2026-11-06-end (waits for the
-  c-units, then crop_doubts_page.py, then stops crop-vm2 ONLY). 522 of 1,114 done at the 00:40 relaunch; pace ~316/h on
-  two VMs before it, more now → ETA ~02:00 UTC. Logs still logs/crop-redo-2026-11-06-<vm>.log; progress data/crop/redo-done.tsv.
+  d-units, then crop_doubts_page.py, then stops crop-vm2 ONLY). 624 of 1,114 done at the 01:16 relaunch (490 left) → ETA
+  ~02:30 UTC. Logs still logs/crop-redo-2026-11-06-<vm>.log; progress data/crop/redo-done.tsv.
+  OOM AT 00:59:23: systemd-oomd killed the VS Code, Firefox, Chromium and Antigravity scopes AND the three c-part units
+  (app.slice) — the end unit then saw «all parts ended» at 624, built site/crop-doubts.html from them (to be rebuilt at the
+  real end) and stopped crop-vm2. The other session (Opus, e1fe7a3) gave mem_governor a SESSION GUARD (pauses/kills heavy
+  batch processes early; «--remote» coordinators spared). If the units die again: scratch/redo_2026-11-07-relaunch.sh
+  pattern (new unit letter, end.sh's unit names sed'ed, end unit re-armed); check free RAM first.
   Resume a part: crop_redo.py with its 11-07 list and env CROP_VM=<vm> [CROP_VM_PROJECT=phone-library-crop-261106]
   PHONE_PARALLEL=1 STAGE_GB=4 RESUME_FREE_GB=1 (never the launchers again).
 - HISTORY OF THE NIGHT: the pace was the PHONE LINK, not the VMs (every phone transfer held /tmp/phone-ftp.lock exclusively:
