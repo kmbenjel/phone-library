@@ -64,8 +64,15 @@ every turn, benched before 26i.
   2/4/5, written after): _lines() wants a letter-sized member (≥ 0.6 % h × 0.3 % w) in a head/foot line; folio_specks
   wants one for a match by relative place alone; Th leaves the taller pages out only when they are ≤ max(2, 10 %) of the
   pages. Bench 2 = everything together after bench 1 passes (the laptop's book_crop hash is printed by each step's
-  compile; the VM's copy is still 16bb1bdb2f = fix 1 alone until the next rsync). FIX 4 (the frame on a printed marginal
-  at the scan's edge, الإبانة في اللغة c8249fecfc4f ص 471 — 13 MB, scratchpad fetch/ibana_orig.pdf) under analysis.
+  compile). BENCH 1 (fix 1 alone, 16bb1bdb2f): 318 cases, 0 failures. BENCH 2 (fixes 1–5, 09714b71dd) launched 02:58 on
+  crop-vm2 (scratch/regress_2026-11-07-all.sh; logs crop-regress-2026-11-07-all-part{0,1,2}.log on the VM); the VM probes
+  (scratch/probe_vm.py → ~/probe/probe.out on the VM) PASS: دلائل p133 head joined, window top 66.8; الطبقات ج 7 p291
+  cover_like_kept → shown whole with bands as in 11-05. FIX 4 WRITTEN after bench 2's launch (book_crop 833cb05780):
+  decide(): a letter-sized EDGE mark within 1.5 % of the width of a margin piece the box holds joins it as a margin piece
+  (الإبانة في اللغة c8249fecfc4f ص 471: the «١» of «١٤٠/٢» in the outer zone; on a 21-page extract the box now starts at
+  25.5 and the frame's left edge 8.8 pt beyond it; scratchpad fetch/ibana_orig.pdf, 13 MB, 968 pages — a whole-book plan
+  took 685 s on the laptop). Bench 3 = the final hash after bench 2, with the turn audit (crop_recipe_diff.py vs
+  002b4f3ec1 over the bench's recipes). FIX 6 (مورد الظمآن's leaning verse pages) under analysis.
 - THE FIX ROUND (max effort, after the review; owner 22:46), in this order of harm: (1) the band paint must never cover
   print (an ink test on the band's area after the turn: المنار p193) and the bed strips must be filled on both sides
   (الخطط 06 p4); (2) finding 1 of the review (the cover-like cut of text pages: الطبقات title pages); (3) the head line of
