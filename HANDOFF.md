@@ -9,11 +9,29 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
-## 2026-11-07 00:45 — REDO ON THREE VMs, SHARED PHONE LOCK; THE MAX-EFFORT REVIEW IS IN (Claude, Fable): READ THIS FIRST
-- REDO NOW: units crop-redo-2026-11-07d-{crop-vm2,align-1,crop-vm} (31 workers each, lists data/crop/redo-part-2026-11-07-<vm>.tsv
-  of 197/198/197 books, equal thirds by size; each VM kept its in-flight books) + crop-redo-2026-11-06-end (waits for the
-  d-units, then crop_doubts_page.py, then stops crop-vm2 ONLY). 624 of 1,114 done at the 01:16 relaunch (490 left) → ETA
-  ~02:30 UTC. Logs still logs/crop-redo-2026-11-06-<vm>.log; progress data/crop/redo-done.tsv.
+## 2026-11-07 02:10 — REDO FINISHED; SELF-REVIEW OF THE PAGE UNDER WAY; THE FIX ROUND NEXT (Claude, Fable): READ THIS FIRST
+- DONE 01:57: 1,114 books — 1,111 redone (method 002b4f3ec1), 1 same, 1 SKIP (المغرب 01's set-aside original, expected);
+  سلك الدرر 02 (caught by the 00:59 oom-kill after its upload) repaired at 02:03 (scratch/redo_2026-11-07-repair.py: the
+  recipe by re-analysis — the appended bytes equal the phone's but for the trailer's random /ID). Only 267 recipes differ
+  from 11-05's. Review page site/crop-doubts.html: 1,087 books with doubts, 23 without; counts by kind vs before
+  (scratch/doubts_compare_2026-11-06.py): shown pages 3,731 → 3,749; «رقم الصفحة قُرئ بقعةً» 239 → 300, «بقعة أُبقيت» −32,
+  «إطار أكبر قليلا» −13, the rest ±6. crop-vm2 STOPPED by the end unit; align-1 and crop-vm are the owner's (idle, running).
+  Data committed (01a7311, 53b35f2). refresh.sh running (logs/refresh-2026-11-07.log).
+- SELF-REVIEW (owner 16:50 «راجعه بنفسك حتى التمام»): (a) data/improve/crop-redo-2026-11-06-audit.txt — the recipes' audit:
+  17 books with a first/last TEXT page newly cut like a cover (the Sachau الطبقات title pages harmful), 4 books crop → level,
+  الشكوى والعتاب's watermark pages; (b) data/improve/crop-redo-2026-11-06-sheets-scan.txt — the after-images scan: 76 pages /
+  60 books with print at the top or bottom edge and the other margin wide (212 / 140 before the fix), of which by eye
+  دلائل النبوة 039612a752e5 p133 (running head cut on a section-title page) and الفوائد المحصورة 0697061b1361 p264 (a mark
+  under the folio cut) are real faults, 0022362994e5 p1 and 02633978b4d5 p53 fine; (c) four xhigh subagents judging random
+  sheets by kind (stain/rim/stamp; tilt/two/owner; larger/whole/sheet/edge; folio) — reports pending, to be added here.
+  NOTE: sheet FILES are numbered 1-based (p0291 = page 291), reasons.json keys 0-based.
+- THE FIX ROUND (max effort, after the review; owner 22:46): fixes 1–5 of data/improve/crop-review-2026-11-06.md + the head
+  line of short pages (p133 above: the head at its usual sheet place must be inside even when the page's text is a short
+  title) + marks under the folio (p264) → crop_regress bench (crop-vm2: scratch/regress_2026-11-06-vm3.sh pattern) + turn
+  audit (scripts/crop_recipe_diff.py vs 002b4f3ec1) → partial redo of the affected books (the audit's and scan's lists +
+  what the bench diff changes) with crop_redo.py --remote. Nothing of it applied yet.
+- (was) units crop-redo-2026-11-07d-{crop-vm2,align-1,crop-vm} (31 workers each, lists data/crop/redo-part-2026-11-07-<vm>.tsv)
+  + crop-redo-2026-11-06-end. Logs logs/crop-redo-2026-11-06-<vm>.log; progress data/crop/redo-done.tsv.
   OOM AT 00:59:23: systemd-oomd killed the VS Code, Firefox, Chromium and Antigravity scopes AND the three c-part units
   (app.slice) — the end unit then saw «all parts ended» at 624, built site/crop-doubts.html from them (to be rebuilt at the
   real end) and stopped crop-vm2. The other session (Opus, e1fe7a3) gave mem_governor a SESSION GUARD (pauses/kills heavy

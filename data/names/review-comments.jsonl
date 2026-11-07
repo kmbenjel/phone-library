@@ -1079,3 +1079,9 @@
 {"time": "2026-11-02 06:05:51", "report": "decisions", "n": "26-set", "checked": true, "comment": ""}
 {"time": "2026-11-02 06:05:57", "report": "decisions", "n": "86-index", "checked": true, "comment": ""}
 {"time": "2026-11-02 06:06:00", "report": "decisions", "n": "631-set", "checked": true, "comment": ""}
+{"time": "2026-11-06 16:28:52", "report": "crop-doubts", "n": "0022362994e5-073136d", "checked": false, "comment": "في الأولى لم تطابق النتيجة الإطار الموضوع على القديمة"}
+{"time": "2026-11-06 16:28:55", "report": "crop-doubts", "n": "0022362994e5-073136d", "checked": false, "comment": "في الأولى لم تطابق النتيجة الإطار الموضوع على القديمة"}
+{"time": "2026-11-06 16:29:52", "report": "crop-doubts", "n": "01435c38ee4b-066c661", "checked": false, "comment": "ترقيم الصفحات تم إهماله"}
+{"time": "2026-11-06 16:30:03", "report": "crop-doubts", "n": "01435c38ee4b-066c661", "checked": false, "comment": "ترقيم الصفحات تم إهماله فجاء ضيقا أو منقوصا في النتيجة"}
+{"time": "2026-11-06 16:37:19", "report": "crop-doubts", "n": "02f9b959eabb-d7c70d3", "checked": true, "comment": ""}
+{"time": "2026-11-06 16:37:40", "report": "crop-doubts", "n": "03395eb74040-e6fff44", "checked": false, "comment": "الأخير نازل"}

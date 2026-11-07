@@ -1,0 +1,786 @@
+# scratch/sheets_scan_2026-11-07.py over the review sheets of crop-redo-2026-11-06 (2026-11-07 02:05): 5,894 after images. EDGE-V = ink at the top/bottom edge of the shown window with the other margin > 4 % (212 pages / 140 books before the 11-06 fix); EDGE-S = ink at a side edge; BAND = ≥ 10 % near-white rows at the top/bottom (short pages trip it too).
+# Looked at: 0022362994e5 p1 cover shown whole (fine); 02633978b4d5 p53 a stamp kept at a short page's foot (fine); 039612a752e5 p133 the running head «المصادر … ١٣٣» CUT at the top of a section-title page (FAULT: the head stands at its usual sheet place but this page's text is a short title in the middle); 0697061b1361 p264 a printed mark under the folio cut at the bottom (FAULT).
+0014dfcdb41a p38 rim BAND top=0.06 bottom=0.47
+0022362994e5 p1 larger EDGE-V top=True bottom=False margins 0.00/0.07
+0022362994e5 p2 stamp BAND top=1.00 bottom=1.00
+0022362994e5 p6 tilt BAND top=0.49 bottom=0.49
+0138891bbb78 p426 larger BAND top=0.05 bottom=0.11
+01f30cd9fc77 p5 larger BAND top=0.17 bottom=0.05
+01fcebee8986 p2 stamp BAND top=0.25 bottom=0.58
+02633978b4d5 p53 stain EDGE-V top=False bottom=True margins 0.21/0.00
+02633978b4d5 p53 stain BAND top=0.21 bottom=0.00
+02633978b4d5 p60 stain BAND top=0.05 bottom=0.19
+02633978b4d5 p111 stain BAND top=0.05 bottom=0.12
+028b9c11562e p52 stain EDGE-S left=True right=False
+028b9c11562e p266 tilt EDGE-V top=False bottom=True margins 0.05/0.00
+0296df59c56f p5 stain BAND top=0.15 bottom=0.09
+0296df59c56f p19 folio BAND top=0.11 bottom=0.11
+0296df59c56f p155 tilt BAND top=0.15 bottom=0.06
+0296df59c56f p179 tilt BAND top=0.09 bottom=0.12
+02f9b959eabb p315 stain BAND top=0.04 bottom=0.11
+03739ebd5f7d p119 base BAND top=0.05 bottom=0.38
+0373f58b3750 p40 stain BAND top=0.12 bottom=0.14
+0373f58b3750 p543 base BAND top=0.13 bottom=0.04
+039612a752e5 p133 stain EDGE-V top=True bottom=False margins 0.00/0.50
+039612a752e5 p133 stain BAND top=0.00 bottom=0.50
+039612a752e5 p150 tilt BAND top=0.21 bottom=0.20
+0405a04564d0 p8 larger BAND top=0.17 bottom=0.21
+04ace05c8688 p5 base BAND top=0.22 bottom=0.08
+04ace05c8688 p56 stain BAND top=0.05 bottom=0.10
+04fceb40d4b9 p1 folio BAND top=0.14 bottom=0.03
+05841f83bc1b p473 stain BAND top=0.08 bottom=0.44
+0697061b1361 p24 stain EDGE-V top=False bottom=True margins 0.06/0.00
+0697061b1361 p264 owner EDGE-V top=False bottom=True margins 0.06/0.00
+0697061b1361 p268 owner EDGE-V top=False bottom=True margins 0.06/0.00
+0697061b1361 p322 owner EDGE-V top=False bottom=True margins 0.05/0.00
+071b99bcd304 p41 base BAND top=0.04 bottom=0.17
+072b67354dbc p235 third BAND top=0.18 bottom=0.43
+072b67354dbc p391 base BAND top=0.23 bottom=0.23
+086534f15422 p82 base BAND top=0.17 bottom=0.04
+08a299abefcd p1 stamp BAND top=0.14 bottom=0.06
+08a299abefcd p474 tilt EDGE-V top=False bottom=True margins 0.04/0.00
+09177d734296 p66 base BAND top=0.03 bottom=0.11
+09177d734296 p86 base BAND top=0.12 bottom=0.05
+0983439ce1de p20 stain BAND top=0.17 bottom=0.00
+0983439ce1de p58 stain BAND top=0.19 bottom=0.04
+09aa7cebac26 p6 base BAND top=0.16 bottom=0.07
+09aa7cebac26 p21 stain BAND top=0.12 bottom=0.04
+09aa7cebac26 p23 stain BAND top=0.14 bottom=0.07
+09e83ae92134 p37 larger EDGE-S left=True right=True
+09eaf5574457 p383 edge EDGE-V top=False bottom=True margins 0.07/0.00
+0a0ac9040adc p36 stain EDGE-V top=False bottom=True margins 0.04/0.00
+0a0ac9040adc p61 tilt EDGE-V top=False bottom=True margins 0.04/0.00
+0a6b1fd1881f p1 larger BAND top=0.27 bottom=0.39
+0ad0f35b20f3 p7 stain BAND top=0.14 bottom=0.15
+0ad0f35b20f3 p280 folio BAND top=0.05 bottom=0.22
+0ad0f35b20f3 p398 base BAND top=0.04 bottom=0.17
+0ad0f35b20f3 p407 larger BAND top=0.12 bottom=0.11
+0ad0f35b20f3 p472 tilt BAND top=0.05 bottom=0.39
+0b6a6061e372 p81 larger BAND top=0.11 bottom=0.11
+0cd5c04aa093 p153 two BAND top=0.07 bottom=0.12
+0cec1b0fabca p2 stamp BAND top=0.16 bottom=0.17
+0cec1b0fabca p20 stain BAND top=0.01 bottom=0.13
+0cec1b0fabca p195 tilt BAND top=0.19 bottom=0.19
+0db1e34e5708 p2 sheet EDGE-S left=False right=True
+0db1e34e5708 p5 sheet EDGE-S left=True right=False
+0dbcf2b069e5 p4 stain BAND top=0.12 bottom=0.00
+0dbcf2b069e5 p67 larger EDGE-S left=True right=False
+0e7cea1fb8d4 p4 tilt BAND top=0.45 bottom=0.45
+0f9d613f2be1 p2 stamp BAND top=0.12 bottom=0.12
+0f9d613f2be1 p5 stain BAND top=0.24 bottom=0.10
+0f9d613f2be1 p362 larger BAND top=0.14 bottom=0.03
+0faaffeb7676 p1 larger BAND top=0.26 bottom=0.37
+100287378429 p25 stain BAND top=0.19 bottom=0.00
+100287378429 p423 rim BAND top=0.28 bottom=0.28
+10679cd4c62d p296 rim BAND top=0.44 bottom=0.44
+10ce0d38fc38 p77 larger BAND top=0.16 bottom=0.16
+12431097de6c p3 whole BAND top=0.29 bottom=0.45
+12431097de6c p4 tilt BAND top=0.04 bottom=0.11
+12431097de6c p15 stain BAND top=0.10 bottom=0.08
+12431097de6c p51 folio BAND top=0.12 bottom=0.12
+12431097de6c p103 base BAND top=0.10 bottom=0.10
+12447697dacc p782 base BAND top=0.04 bottom=0.60
+134e1bb3f672 p72 stain BAND top=0.04 bottom=0.24
+13693dab2eb0 p4 stain BAND top=0.23 bottom=0.11
+1384d8927d45 p4 tilt BAND top=0.14 bottom=0.32
+13c017ab2daa p46 base BAND top=0.20 bottom=0.07
+13cb3ef9ba09 p138 tilt BAND top=0.14 bottom=0.03
+13cb3ef9ba09 p282 larger BAND top=0.10 bottom=0.07
+141baa953c4f p2 stain BAND top=0.23 bottom=0.12
+141baa953c4f p273 larger BAND top=0.10 bottom=0.09
+14e9a6149e7b p2 stamp BAND top=0.28 bottom=0.28
+15813e705161 p3 sheet EDGE-V top=False bottom=True margins 0.04/0.00
+15813e705161 p31 two EDGE-S left=False right=True
+15813e705161 p58 two EDGE-S left=True right=True
+15b5d65dae9f p4 rim BAND top=0.13 bottom=0.01
+15b5d65dae9f p17 stain BAND top=0.11 bottom=0.02
+15b8f18d2993 p37 larger BAND top=0.06 bottom=0.12
+16737c8e808d p3 stain BAND top=0.25 bottom=0.24
+167a53338e6e p244 stain BAND top=0.15 bottom=0.12
+16d16b3b3257 p41 stain EDGE-S left=True right=False
+16d16b3b3257 p43 larger BAND top=0.10 bottom=0.10
+170f985fb5d3 p5 stain BAND top=0.46 bottom=0.46
+1782d4d4671d p3 whole BAND top=0.15 bottom=0.34
+18a5128ecc66 p3 larger BAND top=0.47 bottom=0.46
+18a5128ecc66 p5 folio BAND top=0.20 bottom=0.04
+18a5128ecc66 p7 stain BAND top=0.12 bottom=0.22
+193c17c1794a p386 larger EDGE-S left=True right=True
+19c4b95c88a9 p1 larger EDGE-S left=False right=True
+1a560af3b604 p15 stain BAND top=0.03 bottom=0.21
+1a560af3b604 p151 larger BAND top=0.12 bottom=0.04
+1a560af3b604 p491 stain BAND top=0.04 bottom=0.28
+1aaab3457b33 p1 tilt BAND top=0.40 bottom=0.39
+1aaab3457b33 p2 stain BAND top=0.13 bottom=0.13
+1ab3b838b6d1 p62 stain BAND top=1.00 bottom=1.00
+1ab3b838b6d1 p206 larger BAND top=0.44 bottom=0.05
+1b80ee687d21 p319 tilt BAND top=0.16 bottom=0.04
+1b88d3350e87 p2 stain BAND top=0.30 bottom=0.28
+1b88d3350e87 p64 rim BAND top=0.10 bottom=0.13
+1b88d3350e87 p176 tilt BAND top=0.13 bottom=0.14
+1bad49945474 p203 tilt BAND top=0.25 bottom=0.16
+1c553ec67f23 p3 stamp BAND top=0.27 bottom=0.27
+1c553ec67f23 p4 stamp BAND top=0.19 bottom=0.32
+1d12000b2925 p2 stamp BAND top=0.28 bottom=0.29
+1d6be7decf3c p2 stamp BAND top=0.43 bottom=0.43
+1d6be7decf3c p3 stamp BAND top=0.47 bottom=0.47
+1dc64b192916 p243 larger BAND top=0.14 bottom=0.01
+1dc64b192916 p358 base BAND top=0.05 bottom=0.20
+1ddae5fc2cb5 p1 tilt BAND top=0.08 bottom=0.13
+1dee8a08aaea p11 larger BAND top=0.19 bottom=0.08
+1eac0c986de6 p193 larger EDGE-S left=False right=True
+1edec7914cb1 p498 larger EDGE-S left=False right=True
+203adcffa2d3 p1 larger BAND top=0.31 bottom=0.36
+203adcffa2d3 p101 stain BAND top=0.14 bottom=0.06
+210a0d64f939 p39 stain BAND top=0.04 bottom=0.22
+2171e12f063a p1 whole EDGE-S left=True right=True
+228fd5ee8e35 p1 stain BAND top=0.12 bottom=0.46
+228fd5ee8e35 p36 folio EDGE-S left=True right=False
+228fd5ee8e35 p39 edge EDGE-V top=False bottom=True margins 0.19/0.00
+228fd5ee8e35 p39 edge BAND top=0.19 bottom=0.00
+228fd5ee8e35 p66 tilt EDGE-V top=False bottom=True margins 0.05/0.00
+228fd5ee8e35 p198 two EDGE-V top=False bottom=True margins 0.06/0.00
+228fd5ee8e35 p359 base BAND top=0.15 bottom=0.01
+22acb6811d75 p8 tilt BAND top=0.11 bottom=0.04
+23edd5265ac9 p28 stain BAND top=0.12 bottom=0.04
+2430f4e16af8 p126 two EDGE-V top=False bottom=True margins 0.06/0.00
+2442841fb9cc p4 stain BAND top=0.25 bottom=0.09
+2442841fb9cc p5 stain BAND top=0.46 bottom=0.46
+2442841fb9cc p6 rim BAND top=0.09 bottom=0.13
+24bffad9572e p1 whole EDGE-S left=True right=True
+24bffad9572e p3 whole EDGE-S left=True right=False
+24bffad9572e p3 whole BAND top=0.23 bottom=0.06
+24bffad9572e p6 folio BAND top=0.21 bottom=0.04
+24d15deef549 p2 larger BAND top=0.12 bottom=0.12
+24e9b6174ebc p1 larger EDGE-V top=True bottom=False margins 0.00/0.10
+24e9b6174ebc p2 stamp BAND top=1.00 bottom=1.00
+24ec8c2cc2e5 p156 two BAND top=0.08 bottom=0.35
+250554a1a192 p11 orn BAND top=0.05 bottom=0.55
+26c84ac1ff63 p3 rim BAND top=0.49 bottom=0.49
+2756cf37f8b5 p270 rim BAND top=0.48 bottom=0.48
+279e1be23c47 p5 two BAND top=0.13 bottom=0.04
+27b9d92aec9e p175 stain BAND top=0.05 bottom=0.42
+280a7b3b5c5c p5 stain BAND top=0.04 bottom=0.12
+280a7b3b5c5c p36 base BAND top=0.14 bottom=0.04
+28800be0dcd6 p4 stain BAND top=0.38 bottom=0.38
+289a1a372c14 p2 stamp BAND top=0.43 bottom=0.43
+2a83770761cb p36 base BAND top=0.16 bottom=0.04
+2a8765b4e8da p2 stamp BAND top=0.48 bottom=0.48
+2a8765b4e8da p3 stamp BAND top=0.25 bottom=0.25
+2a8bb18f1829 p4 stamp BAND top=0.31 bottom=0.19
+2a8bb18f1829 p5 stamp BAND top=0.14 bottom=0.04
+2af978d37d97 p3 larger BAND top=0.43 bottom=0.30
+2b5101f8f57c p3 stain BAND top=0.14 bottom=0.05
+2b5a6840b21c p89 two BAND top=0.18 bottom=0.05
+2b67844c92df p5 stain BAND top=0.46 bottom=0.46
+2b6fd779f85f p1 whole EDGE-S left=True right=True
+2b6fd779f85f p114 whole EDGE-S left=True right=True
+2bb05f232862 p4 rim BAND top=0.17 bottom=0.38
+2bd8e6584ec8 p6 folio EDGE-V top=True bottom=False margins 0.00/0.06
+2bf015a68085 p27 tilt BAND top=0.13 bottom=0.04
+2eea354c9808 p239 folio BAND top=0.23 bottom=0.23
+2eea354c9808 p277 folio BAND top=0.16 bottom=0.04
+2eea354c9808 p336 folio BAND top=0.17 bottom=0.04
+2f0803c572f9 p7 base BAND top=0.20 bottom=0.04
+2f44d2326edb p266 stain BAND top=0.10 bottom=0.16
+2f44d2326edb p267 tilt BAND top=0.11 bottom=0.11
+2fa28c97ae38 p35 rim BAND top=0.16 bottom=0.07
+30fd3fd89611 p58 tilt BAND top=0.19 bottom=0.13
+3103a9db389b p2 stamp BAND top=1.00 bottom=1.00
+3103a9db389b p8 owner BAND top=0.19 bottom=0.19
+3103a9db389b p9 owner BAND top=0.36 bottom=0.36
+3103a9db389b p75 stain BAND top=0.22 bottom=0.06
+31193ceccedf p3 tilt BAND top=0.02 bottom=0.11
+31193ceccedf p643 whole BAND top=0.06 bottom=0.13
+3260bb1d6dcc p5 rim BAND top=0.06 bottom=0.84
+3269d1b1a746 p3 rim BAND top=0.46 bottom=0.19
+330c83cd2445 p33 base EDGE-V top=False bottom=True margins 0.08/0.00
+343ad6a73891 p576 rim BAND top=0.19 bottom=0.19
+345d9fe1f0aa p9 larger BAND top=0.11 bottom=0.14
+358ea705fdb7 p1 larger BAND top=0.05 bottom=0.13
+359fbc885910 p6 tilt EDGE-S left=True right=False
+359fbc885910 p65 two BAND top=0.04 bottom=0.16
+359fbc885910 p67 two BAND top=0.05 bottom=0.15
+359fbc885910 p91 base BAND top=0.04 bottom=0.13
+359fbc885910 p240 tracks BAND top=0.04 bottom=0.15
+35f6d017c3cb p10 stain BAND top=0.03 bottom=0.23
+35f6d017c3cb p195 base BAND top=0.06 bottom=0.63
+3621ad910d20 p2 stain BAND top=0.10 bottom=0.16
+36fcaf5a2e21 p29 third BAND top=0.13 bottom=0.13
+3769d26f04d3 p2 stamp BAND top=0.38 bottom=0.38
+3890fba20f9a p1 larger EDGE-S left=True right=True
+3890fba20f9a p2 stamp BAND top=0.08 bottom=0.24
+3890fba20f9a p17 tilt BAND top=0.14 bottom=0.12
+3bd6c91a90f7 p1 stain EDGE-S left=False right=True
+3be8c112000c p7 stain BAND top=0.18 bottom=0.03
+3c63f573207f p20 stain BAND top=0.05 bottom=0.10
+3c63f573207f p36 tilt BAND top=0.14 bottom=0.04
+3cd94f771da5 p28 rim BAND top=0.47 bottom=0.47
+3ee795ab24bc p6 stain BAND top=0.14 bottom=0.04
+3ee795ab24bc p61 tilt BAND top=0.19 bottom=0.04
+3eebe3630283 p223 larger BAND top=0.03 bottom=0.15
+3f31e4d4035b p2 stamp BAND top=0.25 bottom=0.25
+3f70fdf17f76 p3 stamp BAND top=0.46 bottom=0.32
+3f70fdf17f76 p41 stain BAND top=0.10 bottom=0.00
+3f70fdf17f76 p130 tilt EDGE-V top=False bottom=True margins 0.09/0.00
+3fb2832a6f91 p6 stain BAND top=0.18 bottom=0.00
+421a326ac0b1 p62 stain BAND top=0.11 bottom=0.10
+42d21f73b6e3 p2 stamp BAND top=0.43 bottom=0.43
+42d21f73b6e3 p3 stamp BAND top=0.47 bottom=0.47
+42d21f73b6e3 p4 stamp BAND top=0.17 bottom=0.32
+43b1158bc5be p2 stamp BAND top=0.16 bottom=0.04
+43b1158bc5be p3 stamp BAND top=0.28 bottom=0.28
+44e3603375e8 p1 larger EDGE-S left=True right=False
+44e3603375e8 p1 larger BAND top=0.05 bottom=0.29
+453d51e288d1 p1 larger BAND top=0.24 bottom=0.38
+45a856141986 p19 base BAND top=0.05 bottom=0.50
+45a856141986 p143 larger BAND top=0.18 bottom=0.18
+45a856141986 p152 tilt BAND top=0.05 bottom=0.71
+461890e273c8 p1 whole EDGE-V top=True bottom=False margins 0.00/0.05
+469eb874b37c p19 larger BAND top=0.14 bottom=0.08
+476e3fa9e3ea p188 edge EDGE-S left=False right=True
+48331979a376 p2 stamp BAND top=0.28 bottom=0.23
+48331979a376 p4 stamp BAND top=0.28 bottom=0.23
+48c3000e3d25 p42 larger EDGE-S left=True right=False
+48c3000e3d25 p42 larger BAND top=0.19 bottom=0.25
+4a0fc25a3d64 p41 stain BAND top=0.05 bottom=0.57
+4a0fc25a3d64 p196 larger BAND top=0.11 bottom=0.09
+4abb264e6f4a p1 stamp BAND top=0.14 bottom=0.04
+4ccc33116262 p7 stain BAND top=0.12 bottom=0.04
+4d18e08c8a92 p5 base BAND top=0.14 bottom=0.14
+4d539b3c8945 p42 stain BAND top=0.05 bottom=0.12
+4d539b3c8945 p444 tilt BAND top=0.31 bottom=0.31
+4e3f5e8d8279 p5 tilt BAND top=0.14 bottom=0.05
+4e7c4de8c91d p229 stain BAND top=0.15 bottom=0.06
+4e7c4de8c91d p287 stain BAND top=0.26 bottom=0.08
+4ee9336a7f17 p3 tilt BAND top=0.00 bottom=0.26
+4ee9336a7f17 p9 base BAND top=0.05 bottom=0.21
+4fb55a1abd5d p1 whole EDGE-S left=True right=True
+4fb55a1abd5d p18 tilt BAND top=0.16 bottom=0.10
+4ffc24a41702 p213 stain BAND top=0.04 bottom=0.45
+4ffc24a41702 p214 stain BAND top=0.04 bottom=0.23
+4ffc24a41702 p221 stain BAND top=0.01 bottom=0.21
+50b15ba87372 p2 larger EDGE-S left=True right=True
+5351a42f5cd7 p108 rim BAND top=0.49 bottom=0.49
+53b02e1db4fb p1 whole EDGE-V top=False bottom=True margins 0.07/0.00
+54dce4c59b22 p17 stain BAND top=0.18 bottom=0.21
+5533485a19c6 p31 folio BAND top=0.24 bottom=0.05
+555cbb106432 p240 larger EDGE-V top=False bottom=True margins 0.06/0.00
+56e118decf67 p15 tilt BAND top=0.46 bottom=0.46
+5746a2a37973 p216 base BAND top=0.15 bottom=0.04
+581fbca1fee5 p143 stain BAND top=0.02 bottom=0.10
+58306da91163 p7 stain EDGE-V top=True bottom=False margins 0.00/0.23
+58306da91163 p7 stain BAND top=0.00 bottom=0.23
+58306da91163 p9 larger BAND top=0.10 bottom=0.11
+5878c601fa2e p32 larger BAND top=0.12 bottom=0.13
+591b208c31c5 p77 folio BAND top=0.15 bottom=0.04
+591b208c31c5 p189 folio BAND top=0.15 bottom=0.04
+59305303ab81 p3 larger EDGE-S left=False right=True
+5972977fc564 p2 larger EDGE-S left=True right=True
+5a3da9b1f474 p1 whole EDGE-S left=True right=False
+5a3da9b1f474 p2 whole EDGE-V top=True bottom=False margins 0.00/0.04
+5aca0a3bf109 p26 stain BAND top=0.06 bottom=0.11
+5aca0a3bf109 p31 stain BAND top=0.17 bottom=0.07
+5b3504b806e0 p8 base BAND top=0.20 bottom=0.04
+5c531226b65c p2 stamp BAND top=0.05 bottom=0.13
+5c531226b65c p12 stain BAND top=0.06 bottom=0.13
+5cff44eb133f p450 larger BAND top=0.13 bottom=0.13
+5fabe9dcc293 p67 base BAND top=0.17 bottom=0.05
+615de00eb3f1 p1 larger BAND top=0.20 bottom=0.02
+61ef0291cc16 p9 rim BAND top=0.46 bottom=0.46
+61ef0291cc16 p12 larger BAND top=0.08 bottom=0.10
+634de8d4d82b p306 larger BAND top=0.10 bottom=0.10
+6458528bd3ec p14 stamp EDGE-V top=False bottom=True margins 0.04/0.00
+649830fed042 p2 larger BAND top=0.15 bottom=0.15
+657ec8921823 p4 larger BAND top=0.33 bottom=0.17
+65ab8e54ec5b p1 stamp BAND top=0.10 bottom=0.10
+65ab8e54ec5b p101 whole BAND top=0.10 bottom=0.10
+65c24c3c1775 p441 stain BAND top=0.09 bottom=0.29
+65c24c3c1775 p449 two BAND top=0.07 bottom=0.38
+65c24c3c1775 p962 two BAND top=0.10 bottom=0.10
+66147cea3b50 p3 stamp BAND top=0.48 bottom=0.48
+66147cea3b50 p4 stamp BAND top=0.23 bottom=0.05
+66147cea3b50 p5 stamp BAND top=0.48 bottom=0.48
+6652bd03301d p55 base BAND top=0.00 bottom=0.12
+66582161c17f p3 tilt BAND top=0.28 bottom=0.38
+66582161c17f p133 stain BAND top=0.10 bottom=0.13
+6674ebd1c486 p5 base BAND top=0.16 bottom=0.46
+67b128b3b0ed p40 rim BAND top=0.17 bottom=0.04
+67b128b3b0ed p85 base BAND top=0.23 bottom=0.05
+67b128b3b0ed p114 larger BAND top=0.52 bottom=0.35
+67e0ccc9b540 p733 tilt BAND top=0.05 bottom=0.13
+68600214e7de p1 larger BAND top=0.05 bottom=0.21
+69428e9e2d6d p429 rim BAND top=0.48 bottom=0.48
+69695850cb1d p43 two BAND top=0.16 bottom=0.05
+69695850cb1d p100 two BAND top=0.17 bottom=0.04
+69695850cb1d p104 base BAND top=0.17 bottom=0.04
+69695850cb1d p154 two BAND top=0.18 bottom=0.04
+69695850cb1d p495 third BAND top=0.23 bottom=0.04
+69ada55e31e5 p2 larger BAND top=0.24 bottom=0.19
+6b416c9fe9e7 p2 sheet BAND top=0.05 bottom=0.13
+6b7fc21b6a8c p3 larger BAND top=0.03 bottom=0.16
+6b7fc21b6a8c p16 tilt BAND top=0.15 bottom=0.23
+6b7fc21b6a8c p54 tilt BAND top=0.00 bottom=0.14
+6c055495a724 p55 tilt BAND top=0.40 bottom=0.40
+6c055495a724 p68 tilt EDGE-V top=False bottom=True margins 0.05/0.00
+6c055495a724 p74 stain EDGE-V top=False bottom=True margins 0.04/0.00
+6c055495a724 p144 tilt EDGE-V top=False bottom=True margins 0.04/0.00
+6c296ec152d2 p2 stamp BAND top=0.28 bottom=0.28
+6c296ec152d2 p4 stamp BAND top=0.28 bottom=0.28
+6c441a200836 p2 stamp BAND top=0.04 bottom=0.11
+6c441a200836 p4 stain BAND top=0.28 bottom=0.00
+6c9bb3ccc5a9 p10 tilt BAND top=0.00 bottom=0.19
+6c9bb3ccc5a9 p11 tilt BAND top=0.00 bottom=0.23
+6c9bb3ccc5a9 p13 larger EDGE-S left=True right=True
+6c9bb3ccc5a9 p50 whole EDGE-S left=False right=True
+6c9bb3ccc5a9 p51 whole EDGE-V top=True bottom=False margins 0.00/0.15
+6cc05b6a4a23 p193 larger BAND top=0.03 bottom=0.17
+6d02f1c1f2cb p57 base BAND top=0.35 bottom=0.35
+6e360cfca280 p437 larger BAND top=0.20 bottom=0.21
+6e451af04af6 p1 larger EDGE-V top=False bottom=True margins 0.07/0.00
+6eb16afdfc4a p1 larger BAND top=0.10 bottom=0.17
+6eca7c80bcdd p15 stain BAND top=0.15 bottom=0.15
+6f05d66440fc p10 two BAND top=0.15 bottom=0.05
+6fbb5d531ed8 p4 stain BAND top=0.07 bottom=0.21
+6fbb5d531ed8 p21 tilt BAND top=0.08 bottom=0.33
+728dedd21c34 p18 larger BAND top=0.03 bottom=0.10
+72a157764128 p4 larger BAND top=0.10 bottom=0.10
+7364d9ec1386 p1 third BAND top=0.12 bottom=0.10
+7364d9ec1386 p137 larger EDGE-V top=False bottom=True margins 0.08/0.00
+7364d9ec1386 p139 whole EDGE-S left=False right=True
+73ef61da29b8 p32 stain BAND top=0.06 bottom=0.25
+740250877a59 p119 whole BAND top=0.11 bottom=0.11
+740250877a59 p127 rim BAND top=0.17 bottom=0.23
+7492d0625a7a p2 stamp BAND top=0.29 bottom=0.28
+7492d0625a7a p346 stain BAND top=0.03 bottom=0.10
+750000348dca p3 larger EDGE-S left=False right=True
+750000348dca p3 larger BAND top=0.00 bottom=0.11
+752819ebd705 p97 tilt BAND top=0.14 bottom=0.01
+759fb376aa04 p177 rim BAND top=0.49 bottom=0.49
+766cb6a40dd6 p1 sheet EDGE-S left=True right=True
+76cfdc30b9ee p1 stain BAND top=0.21 bottom=0.22
+7814be79f600 p150 rim BAND top=0.12 bottom=0.15
+782d59116dc1 p53 stain BAND top=0.21 bottom=0.23
+7845764a2a13 p1 stain EDGE-V top=True bottom=False margins 0.00/0.08
+7845764a2a13 p2 larger BAND top=0.11 bottom=0.10
+7864da619954 p4 stain BAND top=0.12 bottom=0.05
+789b28fbd4d7 p291 stain BAND top=0.21 bottom=0.24
+78a768b4131e p2 stamp BAND top=0.28 bottom=0.28
+78c663e0bc7a p1 stamp EDGE-S left=False right=True
+78c663e0bc7a p20 sheet BAND top=0.00 bottom=0.11
+78c663e0bc7a p354 larger EDGE-S left=True right=False
+79228b31ab90 p3 rim BAND top=0.21 bottom=0.76
+79228b31ab90 p33 stamp BAND top=0.20 bottom=0.09
+79228b31ab90 p53 stain BAND top=0.11 bottom=0.11
+7aefedde2127 p44 stain BAND top=0.02 bottom=0.10
+7aefedde2127 p361 tilt BAND top=0.18 bottom=0.04
+7b636fedcacf p97 base BAND top=0.04 bottom=0.64
+7b636fedcacf p173 larger BAND top=0.17 bottom=0.17
+7bbd10422e83 p471 stain BAND top=0.05 bottom=0.63
+7ca0c70b02fd p41 base BAND top=0.04 bottom=0.64
+7cc479d35032 p5 stain BAND top=0.47 bottom=0.37
+7cc479d35032 p146 folio BAND top=0.13 bottom=0.13
+7ccb6d32d8fb p1 larger EDGE-V top=True bottom=False margins 0.00/0.05
+7d634044fb29 p10 larger BAND top=0.16 bottom=0.17
+7d634044fb29 p11 tilt BAND top=0.14 bottom=0.19
+7e4078d5d6e0 p95 base BAND top=0.23 bottom=0.04
+7eb2fa8f27fb p4 tilt BAND top=0.03 bottom=0.45
+7effc3806833 p204 tilt BAND top=0.06 bottom=0.65
+80d970866ba9 p5 base BAND top=0.14 bottom=0.14
+811e6b0cb918 p1 stain BAND top=0.24 bottom=0.25
+811e6b0cb918 p183 whole BAND top=0.45 bottom=0.45
+816413b0e765 p3 stain EDGE-V top=True bottom=False margins 0.00/0.06
+816413b0e765 p42 tilt EDGE-V top=True bottom=False margins 0.00/0.11
+816413b0e765 p42 tilt BAND top=0.00 bottom=0.11
+816413b0e765 p65 tilt EDGE-V top=True bottom=False margins 0.00/0.06
+816413b0e765 p82 two EDGE-V top=True bottom=False margins 0.00/0.05
+816413b0e765 p84 owner+larger EDGE-V top=True bottom=False margins 0.00/0.22
+816413b0e765 p84 owner+larger BAND top=0.00 bottom=0.19
+8227e0f0e775 p10 stain BAND top=0.08 bottom=0.19
+8227e0f0e775 p64 larger BAND top=0.20 bottom=0.03
+836820b8e54d p62 base BAND top=0.21 bottom=0.06
+836820b8e54d p116 stain BAND top=0.21 bottom=0.04
+836820b8e54d p142 tilt BAND top=0.09 bottom=0.11
+836820b8e54d p202 two BAND top=0.10 bottom=0.11
+836820b8e54d p269 larger BAND top=0.08 bottom=0.10
+83785c6175a7 p5 stain BAND top=0.06 bottom=0.13
+83785c6175a7 p171 rim BAND top=0.00 bottom=0.27
+83e07d123e49 p1 larger EDGE-S left=False right=True
+83e07d123e49 p519 base BAND top=0.04 bottom=0.52
+83e0a2f1f0ad p32 larger BAND top=0.02 bottom=0.11
+83e5120704a5 p1 sheet EDGE-S left=False right=True
+83e5120704a5 p228 two BAND top=0.19 bottom=0.12
+841b33dd4ab5 p8 two EDGE-V top=False bottom=True margins 0.11/0.00
+841b33dd4ab5 p8 two BAND top=0.11 bottom=0.00
+841b33dd4ab5 p27 two EDGE-S left=True right=False
+8493dace3571 p5 larger BAND top=0.11 bottom=0.11
+856cf80bba34 p1 larger BAND top=0.12 bottom=0.11
+86071e358e91 p6 larger EDGE-S left=True right=False
+86071e358e91 p6 larger BAND top=0.04 bottom=0.11
+86efce2c7edd p4 stain BAND top=0.25 bottom=0.09
+86efce2c7edd p5 stain BAND top=0.46 bottom=0.46
+86efce2c7edd p6 rim BAND top=0.08 bottom=0.13
+875e9f242d7f p176 stain BAND top=0.19 bottom=0.04
+87a628a1a7ac p2 stain BAND top=0.11 bottom=0.45
+87f2c13bac1e p2 tilt BAND top=0.20 bottom=0.20
+87fe74698079 p63 base BAND top=0.06 bottom=0.22
+88c75e348b9e p287 whole EDGE-S left=False right=True
+88c75e348b9e p288 larger EDGE-S left=True right=True
+892f76644e2c p42 stain EDGE-V top=False bottom=True margins 0.04/0.00
+89363aa60843 p51 stain BAND top=0.05 bottom=0.10
+89561824400d p3 sheet EDGE-V top=False bottom=True margins 0.04/0.00
+89561824400d p4 sheet EDGE-S left=True right=True
+89561824400d p5 sheet EDGE-V top=False bottom=True margins 0.04/0.00
+89b1293756a1 p12 larger BAND top=0.07 bottom=0.11
+89d484695732 p269 third BAND top=0.14 bottom=0.52
+89f9786efa2d p1 larger EDGE-S left=True right=True
+8b38d755cd5d p2 stain BAND top=0.04 bottom=0.46
+8b38d755cd5d p144 stain BAND top=0.11 bottom=0.09
+8b38d755cd5d p149 stain BAND top=0.04 bottom=0.49
+8b38d755cd5d p157 tilt BAND top=0.31 bottom=0.31
+8b57caacfee3 p1 stamp EDGE-S left=True right=False
+8b57caacfee3 p10 larger EDGE-V top=True bottom=False margins 0.00/0.12
+8b57caacfee3 p10 larger BAND top=0.00 bottom=0.11
+8b90424d0f29 p21 larger BAND top=0.12 bottom=0.13
+8bced095f73a p2 stain BAND top=0.47 bottom=0.43
+8bdd68dd145e p4 tilt BAND top=0.05 bottom=0.28
+8cf4d0de457a p195 tilt BAND top=0.00 bottom=0.12
+8d290b55437c p286 stain BAND top=0.42 bottom=0.43
+8d2d4c5b2848 p21 stain BAND top=0.14 bottom=0.00
+8d7204a7003a p49 larger BAND top=0.13 bottom=0.07
+8d81e125d949 p52 stain EDGE-V top=False bottom=True margins 0.04/0.00
+8da901e543e1 p63 base BAND top=0.06 bottom=0.22
+8ec1fd8095ad p1 owner EDGE-S left=True right=True
+8ec79f734bf3 p2 stamp BAND top=0.27 bottom=0.27
+8ec79f734bf3 p4 stamp BAND top=0.27 bottom=0.27
+8fb4128f77f2 p1 stain BAND top=0.11 bottom=0.09
+8fb4128f77f2 p446 larger BAND top=0.16 bottom=0.16
+8fd5f261d1fe p5 stain BAND top=0.18 bottom=0.16
+8fd5f261d1fe p375 base BAND top=0.12 bottom=0.12
+90df137441b3 p76 larger BAND top=0.01 bottom=0.10
+90fac4f5af55 p466 tilt BAND top=0.02 bottom=0.47
+90fac4f5af55 p468 tilt BAND top=0.02 bottom=0.47
+9122e8c117ed p10 two BAND top=0.06 bottom=0.28
+92545097e69d p3 rim BAND top=0.49 bottom=0.49
+925cf0aefb1f p5 stain BAND top=0.47 bottom=0.45
+92b628faea12 p227 tilt BAND top=0.19 bottom=0.04
+92c5e877a562 p9 rim BAND top=0.11 bottom=0.01
+932102da17d3 p1 larger EDGE-S left=True right=True
+932102da17d3 p254 rim BAND top=0.50 bottom=0.50
+9384a188949d p425 larger BAND top=0.12 bottom=0.13
+938fc948a445 p25 stain BAND top=0.19 bottom=0.04
+939978844e59 p5 tilt BAND top=0.05 bottom=0.24
+939978844e59 p391 two BAND top=0.17 bottom=0.16
+93ad7dc26d21 p1 whole EDGE-S left=True right=True
+942a3b648d30 p3 larger BAND top=0.20 bottom=0.20
+94b2e1f13e0f p4 larger BAND top=0.10 bottom=0.26
+94d9cc846cde p13 stain BAND top=0.00 bottom=0.13
+96184e150917 p17 larger BAND top=0.13 bottom=0.07
+962a1b3aa60a p291 stain BAND top=0.08 bottom=0.50
+979f0e63b92d p5 stain BAND top=0.46 bottom=0.46
+979f0e63b92d p150 stain EDGE-S left=False right=True
+979f0e63b92d p182 larger BAND top=0.16 bottom=0.10
+983efb39d32b p517 tilt BAND top=0.10 bottom=0.10
+9867c7a346bc p1 whole BAND top=0.05 bottom=0.24
+9867c7a346bc p2 whole BAND top=0.05 bottom=0.11
+9867c7a346bc p29 stain BAND top=0.11 bottom=0.00
+989e3e6d6230 p5 stain BAND top=0.43 bottom=0.42
+989e3e6d6230 p6 stain BAND top=0.39 bottom=0.46
+98a74c9a576e p90 base BAND top=0.04 bottom=0.67
+992020fb7fe3 p4 folio BAND top=0.11 bottom=0.19
+9b44ddad9db9 p20 base BAND top=0.15 bottom=0.04
+9b44ddad9db9 p236 folio BAND top=0.13 bottom=0.04
+9c62084c376b p3 stamp BAND top=0.24 bottom=0.15
+9c62084c376b p4 stamp BAND top=0.09 bottom=0.13
+9cc70814f745 p1 larger BAND top=0.14 bottom=0.14
+9cc70814f745 p9 larger BAND top=0.17 bottom=0.12
+9cc70814f745 p115 two BAND top=0.20 bottom=0.03
+9cc70814f745 p268 tilt BAND top=0.12 bottom=0.11
+9ce15c6b0f9f p5 stain BAND top=0.28 bottom=0.27
+9d128d21413b p4 rim BAND top=0.25 bottom=0.25
+9d77bc02af8e p17 whole BAND top=0.00 bottom=0.12
+9d77bc02af8e p41 whole BAND top=0.11 bottom=0.16
+9d77bc02af8e p72 tilt BAND top=0.39 bottom=0.48
+9da21ff3808b p57 folio BAND top=0.04 bottom=0.36
+9da5c530d977 p1 owner EDGE-S left=True right=True
+9e4d3a107513 p530 whole BAND top=0.20 bottom=0.06
+9e5be7fa5f72 p4 tilt BAND top=0.10 bottom=0.04
+9e5be7fa5f72 p12 base BAND top=0.10 bottom=0.10
+9e5be7fa5f72 p90 stain BAND top=0.10 bottom=0.07
+a19cc1628ad3 p187 rim BAND top=0.48 bottom=0.01
+a19cc1628ad3 p251 tilt EDGE-V top=False bottom=True margins 0.06/0.00
+a1d373dd517a p147 two EDGE-V top=False bottom=True margins 0.06/0.00
+a50d7cba56fd p341 rim BAND top=0.49 bottom=0.49
+a5475779dd12 p1 larger BAND top=0.12 bottom=0.17
+a5f0290ba3cc p3 stamp BAND top=0.12 bottom=0.05
+a5f0290ba3cc p340 two EDGE-V top=False bottom=True margins 0.08/0.00
+a61b4aeed30c p4 larger EDGE-S left=True right=True
+a61b4aeed30c p4 larger BAND top=0.53 bottom=0.42
+a6413e6beb1b p11 two BAND top=0.11 bottom=0.07
+a649375bd21a p435 larger EDGE-V top=True bottom=False margins 0.00/0.11
+a649375bd21a p435 larger BAND top=0.00 bottom=0.11
+a66b7c62c571 p1 whole EDGE-S left=True right=True
+a67bfd00ccd0 p2 tilt BAND top=0.39 bottom=0.39
+a6f7ac98093e p22 stain BAND top=0.04 bottom=0.66
+a6f7ac98093e p86 stain BAND top=0.03 bottom=0.51
+a6f7ac98093e p159 stain BAND top=0.04 bottom=0.63
+a6f7ac98093e p164 stain BAND top=0.04 bottom=0.23
+a6f7ac98093e p168 stain BAND top=0.04 bottom=0.32
+a7030bad2c8f p9 larger BAND top=0.01 bottom=0.14
+a72bb3507018 p6 larger EDGE-V top=True bottom=False margins 0.00/0.08
+a7a5b2b18a06 p62 larger BAND top=0.13 bottom=0.13
+a9afd7687407 p73 sheet EDGE-S left=False right=True
+a9fb047c668a p339 base BAND top=0.10 bottom=0.53
+abf5569fa9a9 p34 stain BAND top=0.05 bottom=0.23
+aca180228beb p184 stain BAND top=0.23 bottom=0.23
+aca8241773c6 p2 stamp BAND top=0.29 bottom=0.29
+acb87508dd15 p4 folio BAND top=0.04 bottom=0.34
+acb87508dd15 p11 orn BAND top=0.04 bottom=0.30
+accdc0dc5d42 p3 tilt BAND top=0.22 bottom=0.09
+ad5f8d816651 p1 larger EDGE-V top=True bottom=False margins 0.00/0.09
+ad5f8d816651 p73 tilt BAND top=0.36 bottom=0.34
+ae39a500653d p5 third BAND top=0.18 bottom=0.18
+ae39a500653d p63 stain BAND top=0.05 bottom=0.11
+ae4dff52002b p1 stamp BAND top=0.10 bottom=0.10
+aebb9e6e876f p29 larger BAND top=0.13 bottom=0.02
+b097e962190c p241 larger BAND top=0.03 bottom=0.10
+b13127b9b70d p2 stamp BAND top=0.42 bottom=0.18
+b13127b9b70d p266 tilt BAND top=0.05 bottom=0.58
+b2b231579c3d p259 tilt BAND top=0.15 bottom=0.09
+b2b231579c3d p357 two BAND top=0.15 bottom=0.08
+b2b231579c3d p447 rim BAND top=0.11 bottom=0.11
+b2fe4bf9adb4 p23 stain BAND top=0.05 bottom=0.23
+b2fe4bf9adb4 p87 sheet BAND top=0.19 bottom=0.18
+b38ba50ba788 p131 tilt BAND top=0.16 bottom=0.06
+b4973f7461b6 p2 stain BAND top=0.19 bottom=0.14
+b4973f7461b6 p4 stain BAND top=0.27 bottom=0.06
+b4d4d3204e4d p2 stamp BAND top=0.27 bottom=0.27
+b4ecd14df8fc p2 tilt BAND top=0.53 bottom=0.30
+b4ecd14df8fc p38 base BAND top=0.04 bottom=0.61
+b53cdf4c305b p22 larger BAND top=0.13 bottom=0.14
+b5c303e9d5fb p2 stamp BAND top=0.29 bottom=0.29
+b679f29afe13 p39 tilt BAND top=0.34 bottom=0.34
+b6b341b1768b p1 whole EDGE-S left=True right=False
+b6b341b1768b p3 larger EDGE-S left=True right=True
+b70233bf7ec1 p2 rim BAND top=0.04 bottom=0.43
+b73e81c42d12 p2 larger EDGE-S left=False right=True
+b73e81c42d12 p5 stain BAND top=0.46 bottom=0.46
+b7598bfa22a6 p9 larger BAND top=0.05 bottom=0.11
+b7741283919f p17 rim BAND top=0.30 bottom=0.30
+b93414c3df84 p201 folio BAND top=0.15 bottom=0.05
+bcc753afb347 p5 base BAND top=0.05 bottom=0.63
+bcc753afb347 p6 stain BAND top=0.14 bottom=0.10
+bcc753afb347 p20 larger BAND top=0.11 bottom=0.11
+bd4e56298e77 p2 base BAND top=0.23 bottom=0.08
+bd4e56298e77 p252 stain EDGE-V top=False bottom=True margins 0.99/0.00
+bd4e56298e77 p252 stain BAND top=0.42 bottom=0.00
+bd861050c2c8 p58 stain BAND top=0.05 bottom=0.13
+bd861050c2c8 p62 stain BAND top=0.05 bottom=0.27
+bd861050c2c8 p91 stain BAND top=0.05 bottom=0.23
+bd861050c2c8 p103 stain BAND top=0.05 bottom=0.26
+bd861050c2c8 p290 tilt BAND top=0.15 bottom=0.00
+bda91f291d5e p2 stamp BAND top=0.18 bottom=0.07
+bfb45e8cfab8 p309 edge EDGE-V top=False bottom=True margins 0.05/0.00
+bfec6f256315 p4 stain BAND top=0.26 bottom=0.25
+bfec6f256315 p266 tilt EDGE-V top=False bottom=True margins 0.07/0.00
+c13757b840df p2 stamp BAND top=0.01 bottom=0.31
+c13757b840df p5 stain BAND top=0.00 bottom=0.15
+c13757b840df p46 two EDGE-V top=False bottom=True margins 0.06/0.00
+c13757b840df p58 two EDGE-V top=False bottom=True margins 0.06/0.00
+c15657aa9bf4 p14 stain BAND top=0.05 bottom=0.20
+c183ea571997 p4 rim BAND top=0.49 bottom=0.49
+c1e0138f574f p2 stain BAND top=0.01 bottom=0.34
+c1e9201bfe89 p43 rim BAND top=0.38 bottom=0.48
+c1e9201bfe89 p160 larger BAND top=0.00 bottom=0.27
+c225e2759c6b p5 stain BAND top=0.07 bottom=0.14
+c287ed0a6f71 p8 stain BAND top=0.04 bottom=0.35
+c287ed0a6f71 p16 tilt BAND top=0.04 bottom=0.63
+c287ed0a6f71 p45 larger BAND top=0.15 bottom=0.15
+c299d4d8e4f9 p6 stain BAND top=0.14 bottom=0.14
+c29dd110cb4b p2 stain BAND top=0.00 bottom=0.20
+c29dd110cb4b p3 tilt BAND top=0.49 bottom=0.26
+c29dd110cb4b p24 two EDGE-V top=False bottom=True margins 0.06/0.00
+c2ab0ca2f4f5 p556 rim BAND top=0.17 bottom=0.78
+c2ab0ca2f4f5 p618 larger BAND top=0.13 bottom=0.13
+c2d2a2d24e47 p41 rim BAND top=0.50 bottom=0.50
+c374d5145ee7 p348 whole EDGE-V top=False bottom=True margins 0.12/0.00
+c38fbf24b47a p111 two BAND top=0.21 bottom=0.08
+c3d39167098b p294 larger BAND top=0.10 bottom=0.08
+c3ec884fb8eb p49 stain BAND top=0.13 bottom=0.05
+c4266149b7cc p20 stain BAND top=0.10 bottom=0.11
+c4266149b7cc p49 larger BAND top=0.11 bottom=0.11
+c469428f6c4d p3 tilt EDGE-V top=False bottom=True margins 0.11/0.00
+c469428f6c4d p3 tilt BAND top=0.11 bottom=0.00
+c469428f6c4d p131 stain EDGE-S left=True right=False
+c469428f6c4d p373 two EDGE-V top=False bottom=True margins 0.08/0.00
+c4741124c39f p290 tilt BAND top=0.21 bottom=0.21
+c4835ba7e8d8 p5 stain BAND top=0.04 bottom=0.15
+c4835ba7e8d8 p81 stain BAND top=0.15 bottom=0.01
+c6a3a2cb9733 p2 stamp BAND top=0.28 bottom=0.28
+c6a3a2cb9733 p4 stamp BAND top=0.28 bottom=0.27
+c6c48a66600f p62 tilt BAND top=0.28 bottom=0.18
+c6eafdd778c6 p2 rim BAND top=0.50 bottom=0.50
+c6eafdd778c6 p10 larger BAND top=0.11 bottom=0.11
+c7054e698ef8 p25 stain BAND top=0.17 bottom=0.06
+c8249fecfc4f p143 tilt EDGE-V top=False bottom=True margins 0.06/0.00
+c826fab5910d p4 tilt BAND top=0.39 bottom=0.30
+c826fab5910d p5 stain BAND top=0.16 bottom=0.09
+c826fab5910d p9 owner+rim BAND top=0.10 bottom=0.10
+c864496b03b2 p7 tilt BAND top=0.44 bottom=0.45
+c864496b03b2 p28 stamp EDGE-V top=False bottom=True margins 0.05/0.00
+c876b283cb34 p36 stain BAND top=0.05 bottom=0.10
+c88a44e414cc p3 rim BAND top=0.49 bottom=0.47
+cd03d29feaf2 p432 third BAND top=0.09 bottom=0.52
+cd3a570d72f8 p2 stamp BAND top=0.46 bottom=0.47
+cd3a570d72f8 p3 stamp BAND top=0.09 bottom=0.78
+cd9e7daa1083 p328 tilt BAND top=0.10 bottom=0.09
+cd9e7daa1083 p329 stain BAND top=0.00 bottom=0.20
+cd9e7daa1083 p334 stain BAND top=0.10 bottom=0.17
+ceb6d02cb55a p348 stain BAND top=0.06 bottom=0.37
+cecbcf87e285 p3 stamp BAND top=0.28 bottom=0.28
+cecbcf87e285 p4 stamp BAND top=0.13 bottom=0.13
+cf324ebc1f8b p37 stain EDGE-V top=True bottom=False margins 0.00/0.08
+cf324ebc1f8b p54 base EDGE-V top=True bottom=False margins 0.00/0.11
+cf324ebc1f8b p54 base BAND top=0.00 bottom=0.11
+d01de4dd13f2 p3 stain BAND top=0.10 bottom=0.18
+d06df49d1971 p11 stain BAND top=0.08 bottom=0.13
+d077fe784b8a p635 tilt BAND top=0.07 bottom=0.11
+d077fe784b8a p636 tilt BAND top=0.07 bottom=0.10
+d077fe784b8a p637 tilt BAND top=0.07 bottom=0.10
+d136c781cd27 p1 whole EDGE-S left=True right=True
+d136c781cd27 p11 base BAND top=0.14 bottom=0.14
+d136c781cd27 p91 two BAND top=0.11 bottom=0.12
+d136c781cd27 p392 tilt BAND top=0.12 bottom=0.12
+d1a92eeb5318 p30 stain BAND top=0.05 bottom=0.14
+d28e92256f1c p6 stain BAND top=0.04 bottom=0.20
+d28e92256f1c p13 stain BAND top=0.04 bottom=0.21
+d28e92256f1c p35 stain BAND top=0.04 bottom=0.11
+d2e04a2e61ea p19 larger EDGE-S left=False right=True
+d2e04a2e61ea p19 larger BAND top=0.06 bottom=0.10
+d2e6995099bc p2 tilt BAND top=0.09 bottom=0.28
+d2e6995099bc p474 owner EDGE-S left=True right=True
+d3acf8ef40a6 p129 rim EDGE-V top=False bottom=True margins 0.04/0.00
+d3acf8ef40a6 p221 stain BAND top=0.00 bottom=0.38
+d3e5b9de7777 p1 stamp BAND top=0.18 bottom=0.18
+d4cd1608056c p9 larger BAND top=0.11 bottom=0.10
+d50772a9f294 p97 larger BAND top=0.11 bottom=0.08
+d5162787fc50 p103 larger BAND top=0.12 bottom=0.12
+d55a0890da2f p34 stain BAND top=0.05 bottom=0.22
+d55a0890da2f p144 stain BAND top=0.05 bottom=0.31
+d580dabf96dc p3 stamp BAND top=1.00 bottom=1.00
+d5aacafafe67 p3 stain BAND top=0.26 bottom=0.29
+d85796a4a478 p321 folio BAND top=0.22 bottom=0.41
+d88e7bf546f3 p61 stain BAND top=0.33 bottom=0.31
+d8ce64e3a54d p23 larger BAND top=0.06 bottom=0.15
+d9886f07601a p2 stamp BAND top=0.29 bottom=0.29
+d9f6ee65041b p2 larger EDGE-S left=False right=True
+d9f6ee65041b p130 whole BAND top=0.08 bottom=0.10
+d9f6ee65041b p180 stamp EDGE-V top=False bottom=True margins 0.05/0.00
+da0175999579 p287 tilt BAND top=0.06 bottom=0.38
+da3301089ca9 p367 larger BAND top=0.18 bottom=0.08
+da5dc9cf5204 p3 tilt BAND top=0.14 bottom=0.12
+dacaf11d9a10 p18 two BAND top=0.15 bottom=0.05
+dacaf11d9a10 p215 tilt BAND top=0.18 bottom=0.23
+db4a8ab79e18 p2 larger BAND top=0.07 bottom=0.76
+db4a8ab79e18 p4 stain EDGE-V top=True bottom=False margins 0.00/0.24
+db4a8ab79e18 p4 stain BAND top=0.00 bottom=0.23
+dbc891ac5496 p4 rim BAND top=0.37 bottom=0.03
+dbc891ac5496 p61 larger BAND top=0.10 bottom=0.00
+dc70b4b13da6 p330 larger BAND top=0.12 bottom=0.02
+dc8414c64a12 p4 stain BAND top=0.04 bottom=0.45
+dc8414c64a12 p5 larger BAND top=0.11 bottom=0.11
+ddf4ff3442e2 p544 larger EDGE-V top=False bottom=True margins 0.05/0.00
+ddfb2117e8ba p23 larger BAND top=0.12 bottom=0.11
+de98ec9ec728 p2 stamp BAND top=0.43 bottom=0.11
+de98ec9ec728 p3 stamp BAND top=0.47 bottom=0.47
+de98ec9ec728 p4 stamp BAND top=0.16 bottom=0.33
+de9d165cde44 p237 folio BAND top=0.21 bottom=0.04
+df0dbcccc0c7 p1 larger EDGE-S left=False right=True
+df0dbcccc0c7 p2 stain BAND top=0.17 bottom=0.20
+df0dbcccc0c7 p4 base BAND top=0.13 bottom=0.09
+e049a2c0d21b p194 stain BAND top=0.17 bottom=0.17
+e11531f9b2c0 p3 rim BAND top=0.12 bottom=0.12
+e11531f9b2c0 p31 larger BAND top=0.20 bottom=0.20
+e1b44ca5e7f0 p2 larger EDGE-S left=True right=False
+e1b44ca5e7f0 p2 larger BAND top=0.10 bottom=0.11
+e1b44ca5e7f0 p18 two BAND top=0.08 bottom=0.11
+e1b44ca5e7f0 p230 tilt EDGE-S left=True right=True
+e27ac9ea860a p2 stamp BAND top=0.28 bottom=0.28
+e2ce3c572e68 p5 two BAND top=0.16 bottom=0.04
+e2f1921e4bb4 p1 whole EDGE-S left=True right=True
+e33cb6ba8561 p234 larger BAND top=0.00 bottom=0.11
+e558db7f291e p52 folio BAND top=0.13 bottom=0.06
+e558db7f291e p86 larger BAND top=0.04 bottom=0.11
+e58523ec92ef p2 stamp BAND top=0.12 bottom=0.12
+e58523ec92ef p5 stain BAND top=0.24 bottom=0.10
+e58523ec92ef p8 rim BAND top=0.16 bottom=0.02
+e626e3b3839e p3 stain BAND top=0.10 bottom=0.07
+e62d2b7a830e p7 folio EDGE-V top=True bottom=False margins 0.00/0.05
+e69c753cda5d p21 folio BAND top=0.12 bottom=0.12
+e69c753cda5d p174 base BAND top=0.09 bottom=0.68
+e7385ec6168b p658 larger BAND top=0.23 bottom=0.12
+e8a8012d4d5e p6 stain BAND top=0.10 bottom=0.01
+e8a8012d4d5e p26 stain BAND top=0.10 bottom=0.02
+e8c1e2429eec p131 larger EDGE-V top=False bottom=True margins 0.07/0.00
+e934d8f63f7b p4 stain BAND top=0.47 bottom=0.45
+e978e5e6debb p1 larger EDGE-S left=True right=False
+ea37b02ed274 p22 two BAND top=0.13 bottom=0.03
+ea3abe50276a p19 base BAND top=0.40 bottom=0.40
+ea3abe50276a p425 tilt BAND top=0.47 bottom=0.46
+eb060c396529 p2 stamp BAND top=0.43 bottom=0.43
+eb060c396529 p3 stamp BAND top=0.47 bottom=0.46
+eb060c396529 p4 stamp BAND top=0.51 bottom=0.33
+eb916c685770 p74 larger BAND top=0.15 bottom=0.15
+eb916c685770 p125 tilt BAND top=0.04 bottom=0.69
+ebf009443b64 p21 tilt BAND top=0.10 bottom=0.11
+ecb9237ead8a p2 stamp BAND top=0.01 bottom=0.11
+ecb9237ead8a p9 stain BAND top=0.23 bottom=0.04
+ecf6dc081174 p1 stain BAND top=0.28 bottom=0.26
+ee6eb6704186 p4 larger BAND top=0.17 bottom=0.17
+eea04378e412 p57 larger BAND top=0.12 bottom=0.09
+ef7758d519dc p2 stamp BAND top=0.46 bottom=0.27
+ef7758d519dc p14 stain BAND top=0.05 bottom=0.21
+ef7758d519dc p519 tilt EDGE-V top=False bottom=True margins 0.22/0.00
+ef7758d519dc p519 tilt BAND top=0.22 bottom=0.00
+f03cf4c655cb p3 rim BAND top=0.00 bottom=0.41
+f04dd0850fe9 p29 stain BAND top=0.05 bottom=0.10
+f04dd0850fe9 p35 stain BAND top=0.05 bottom=0.10
+f0892bfa1ca3 p413 tilt BAND top=0.22 bottom=0.17
+f134344a7421 p2 stain BAND top=0.25 bottom=0.25
+f134344a7421 p29 stain BAND top=0.04 bottom=0.17
+f1f5195a4ed3 p9 larger BAND top=0.12 bottom=0.12
+f1f5195a4ed3 p19 larger BAND top=0.15 bottom=0.16
+f1f5195a4ed3 p109 larger BAND top=0.20 bottom=0.20
+f1f5195a4ed3 p119 larger BAND top=0.21 bottom=0.27
+f2e70760076f p8 base BAND top=0.04 bottom=0.17
+f2e70760076f p48 tilt BAND top=0.04 bottom=0.55
+f375afbb1f33 p277 tilt BAND top=0.04 bottom=0.57
+f5f27ac1b751 p3 stain BAND top=0.22 bottom=0.21
+f5fb36a756f8 p59 stain EDGE-S left=False right=True
+f62402166012 p331 rim BAND top=0.43 bottom=0.43
+f74c1be1cbb5 p11 stain BAND top=0.06 bottom=0.22
+f797a7823db0 p167 stain BAND top=0.20 bottom=0.04
+f818496e1122 p2 larger BAND top=0.08 bottom=0.40
+f8752c17bc7e p4 tilt BAND top=0.38 bottom=0.40
+f8752c17bc7e p5 stamp EDGE-V top=False bottom=True margins 0.10/0.00
+f97c575aae69 p212 tilt BAND top=0.23 bottom=0.23
+fa013c970870 p56 larger BAND top=0.33 bottom=0.13
+fb34486bb2a8 p21 rim BAND top=0.02 bottom=0.48
+fb79ce13f155 p160 larger EDGE-V top=False bottom=True margins 0.06/0.00
+fb7cf0d37bf1 p2 sheet BAND top=0.05 bottom=0.12
+fb7cf0d37bf1 p372 two EDGE-V top=True bottom=False margins 0.00/0.04
+fbf39d55c6f7 p29 base BAND top=0.13 bottom=0.14
+fbf39d55c6f7 p57 owner BAND top=0.20 bottom=0.07
+fc0fb7a344bb p1 sheet EDGE-S left=False right=True
+fc0fb7a344bb p1 sheet BAND top=0.02 bottom=0.16
+fc0fb7a344bb p8 stain BAND top=0.09 bottom=0.35
+fca6724f64ec p2 stamp BAND top=0.09 bottom=0.10
+fccf32c6484b p3 stamp BAND top=0.47 bottom=0.47
+fccf32c6484b p4 stamp BAND top=0.25 bottom=0.05
+fccf32c6484b p5 stamp BAND top=0.20 bottom=0.06
+fccf32c6484b p6 stamp BAND top=0.35 bottom=0.65
+fd5d42cd4ca2 p3 stain BAND top=0.00 bottom=0.48
+fd5d42cd4ca2 p7 stain BAND top=0.11 bottom=0.05
+fea199626f21 p3 rim BAND top=0.33 bottom=0.49
+ff0da6336291 p1 larger BAND top=0.15 bottom=0.15
+ff900b80f78c p3 larger EDGE-V top=True bottom=False margins 0.00/0.07
+5894 after images scanned: 76 ink at top/bottom with the other margin wide, 68 ink at a side edge, 639 with a blank band ≥ 4 %
