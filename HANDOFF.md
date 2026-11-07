@@ -72,8 +72,15 @@ every turn, benched before 26i.
   pages). BENCH 3 (833cb05780, fix 4 as first written) FAILED one case — القوافي ص 27: the photocopy's whole border frame
   (one edge mark of 2024 × 2847 pt) «joined» a margin piece, the box grew to it — fix 4 had a minimum size and no maximum
   → CAPPED (f1afeaa98f): the joined edge mark and the margin piece it adjoins are word-sized (0.6–2.5 % h × 0.3–6 % w);
-  الإبانة ص 471 still 8.8 pt inside. BENCH 4 (f1afeaa98f, the final) launched 03:25 (scratch/regress_2026-11-07-final2.sh,
-  logs crop-regress-2026-11-07-final2-part{0,1,2}.log on the VM). The full-redo launcher scratch/redo_2026-11-07-full.sh
+  الإبانة ص 471 still 8.8 pt inside. BENCH 4 (f1afeaa98f, THE FINAL METHOD): 416 checks, 0 failures (03:46;
+  scratch/regress_2026-11-07-final2.sh, logs crop-regress-2026-11-07-final22-part{0,1,2}.log on the VM — «final22» by a
+  sed slip). Its recipes are in the laptop cache (49 books). BUT THE TURN AUDIT 09714b71dd → f1afeaa98f WITHDREW FIX 4:
+  it fired on 49 pages of سيبويه ج 2 (9b98ea8b9570) and 167 of أسرار البلاغة (d20f1fe41833) — small marks 1–5 % from the
+  side edge, the «letters at the edge» class those books are benched for — narrowed both books' W (−4.8, −2.5 pt),
+  changed 5 marginal turns (3 lost, 1 gained) through the second look and left سيبويه p94 WHOLE at 0.945. One marginal
+  8.8 pt deeper on one book is not worth that. book_crop.py RESTORED to bdc33d0's = 09714b71dd (fixes 1–5), the FINAL
+  METHOD: bench 2 clean, turn audit vs the redo's recipes clean (above). Finding 4 (the frame on a printed marginal at the
+  scan's edge) stays open for a later round, with the 'edge letters' interplay in mind. The full-redo launcher scratch/redo_2026-11-07-full.sh
   (three e-units, batch crop-redo-2026-11-07, the 11-06 done file moved aside, the end unit stops ALL THREE VMs) checks for
   that hash; its watch script is the scratchpad's redo_watch_1107.sh. The VM probes
   (scratch/probe_vm.py → ~/probe/probe.out on the VM) PASS: دلائل p133 head joined, window top 66.8; الطبقات ج 7 p291

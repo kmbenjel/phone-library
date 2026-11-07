@@ -2441,22 +2441,6 @@ def decide(pages, wq=0.95):
                     if kind == 'head': al[1] = min(al[1], u[1] - 0.01 * h)
                     else: al[3] = max(al[3], u[3] + 0.01 * h)
                 if kind == 'foot' and not p.get('folio') and u[2] - u[0] <= 0.08 * w: p['folio'] = [round(v, 1) for v in u] + ['foot']
-    # A PRINTED MARGINAL REACHING THE SHEET'S EDGE ZONE (2026-11-07, max-effort self-review: الإبانة في اللغة ص 471 — the
-    # «١» of the verse reference «١٤٠/٢» in the left margin lay in the outer zone, marks() read it as an edge mark, the box
-    # began at the next piece and the frame's left edge stood on the «١»): a letter-sized edge mark less than 1.5 % of the
-    # width from a margin piece that is inside the box (a printed group the box took in) is that group's own and joins it
-    for i in text:
-        p = pages[i]; w, h = p['w'], p['h']; ed = p.get('edge') or []
-        if not ed or not p.get('margin') or not p.get('box'): continue
-        letter = lambda b: 0.006 * h <= b[3] - b[1] <= 0.025 * h and 0.003 * w <= b[2] - b[0] <= 0.06 * w   # a word or number,
-        held = [m for m in p['margin'] if inside(m, p['box'], 0.5) and letter(m)]       # not a bar: القوافي ص 27's photocopy
-        if not held: continue                                                           # border (2024 × 2847 pt, one edge
-        join = [e for e in ed if letter(e)                                              # mark) joined at bench 3, 2026-11-07
-                and any(e[0] - 0.015 * w <= m[2] and m[0] - 0.015 * w <= e[2] and e[1] <= m[3] + 0.005 * h and m[1] <= e[3] + 0.005 * h for m in held)]
-        if join:                                      # (a margin piece from here on: the box is rebuilt below from the
-            p['edge'] = [e for e in ed if not any(e is x for x in join)]   # text, notes, figures and printed groups)
-            p['margin'] = p['margin'] + [list(e[:4]) for e in join]
-            p['box'] = union([p['box']] + join); p['edge_joined'] = [[round(v, 1) for v in e[:4]] for e in join]
     # PRINTED RULES AND FRAMES belong to the page when the book prints them (marks() leaves every line out): a rule on the
     # same side of the text block at the same distance (± 2 % of the page) on ≥ 40 % of the text pages (at least 3); a rule
     # inside the text block's span stays; a rule further than 6 % of the page from the text is the scanner's or the sheet's
