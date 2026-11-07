@@ -14,7 +14,11 @@ every turn, benched before 26i.
   data/crop/redo-part-2026-11-07b-<vm>.tsv, 371/371/372 books, 4.42 GB each; PHONE_PARALLEL=1 STAGE_GB=4; the VMs start
   themselves) + crop-redo-2026-11-07-end (waits for the e-units → crop_doubts_page.py crop-redo-2026-11-07 → STOPS ALL
   THREE VMs). Logs logs/crop-redo-2026-11-07-<vm>.log and logs/crop-redo-2026-11-07.log; progress = data/crop/redo-done.tsv
-  (fresh; the 11-06 run's is data/crop/redo-done.before-2026-11-07.tsv). ETA ~1.5 h (≈540 books/h on three VMs).
+  (fresh; the 11-06 run's is data/crop/redo-done.before-2026-11-07.tsv). ETA ~06:00–06:30 UTC, NOT 1.5 h: this run is
+  UPLOAD-BOUND at the start — every list opens with the library's biggest volumes (crop-vm2's first 10: 491, 236, 98 … MB;
+  its first 50 books = 2.36 of 4.74 GB), each part uploads one book at a time to its VM (NET = 1 per process, paced by
+  netpace's WAN guard), the laptop's line gives ~1.8 MB/s up in all → 13.3 GB ≈ 2 h of uploads; at 04:10 the VMs ran 3 / 3
+  / 21 analyses with 1 book done. It catches up as the books shrink. NETPACE=0 only on the owner's word (§7.9).
   Resume a part: crop_redo.py with its 11-07b list, batch crop-redo-2026-11-07, env CROP_VM=<vm> [CROP_VM_PROJECT=
   phone-library-crop-261106] PHONE_PARALLEL=1 STAGE_GB=4 RESUME_FREE_GB=1 (never the launcher).
 - AFTER A /clear: arm `python3 -u scripts/watch_comments.py` and the scratchpad's redo_watch_1107.sh as Monitors; when
