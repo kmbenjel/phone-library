@@ -9,7 +9,27 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
-## 2026-11-07 12:00 — THE OWNER REVIEWS; HIS REMARKS ACTED ON: PAGE WINDOWS, THE FRAME RULE (BENCH RUNNING ON crop-vm2) (Claude, Fable): READ THIS FIRST
+## 2026-11-07 12:50 — FRAME RULE BENCHED CLEAN AND AUDITED; FULL REDO crop-redo-2026-11-07b RUNNING ON crop-vm2 ALONE (Claude, Fable): READ THIS FIRST
+- BENCH scratch/regress_2026-11-07-frame.sh (book_crop 0363c405ae): 0 failures in 3 parts (12:15). TURN AUDIT on the VM
+  (logs/turn-audit-frame.txt there; crop_recipe_diff.py now names the cause «frame: squared by its printed frame»): 49 bench
+  books, 2 changed, 5 pages — سؤالات أبي داود 0c32c1a4815b ص 37/173 (framed title pages, newly turned 0.65), إرشاد الساري
+  5b214426d112 ص 491 (turn −0.55 undone: its frame stood level), 496 (turned 0.575), 497 (0.425 → −0.25: the text and the
+  frame leaned opposite ways) — ALL RIGHT BY EYE (scratchpad audit sheets: the frame upright under the new rule, leaning
+  under the old).
+- DONE on the phone: الفن ومذاهبه (crop-fix-2026-11-07, 12:16: p. 1 whole — card closed by review_close.py with the new
+  key 0022362994e5-4dad150). RUNNING: unit crop-fix-1107a (خزانة الأدب 01, the p. 236 window — close its card when done:
+  review_close.py crop-doubts 00597fea27cf-<new tag> «…»), unit crop-fix-1107b (المخصص 13 with the frame rule — leave its
+  card open: he sees the squared pages as «frame» doubts and ticks). THEN THE FULL REDO: scratch/redo_2026-11-07b-frame.sh
+  launched 12:45 → unit crop-redo-2026-11-07b-crop-vm2 (waits for the fix units, then 1,111 books, batch
+  crop-redo-2026-11-07b, REDO_DONE=data/crop/redo-done-2026-11-07b.tsv, PHONE_PARALLEL=1, 31 workers, ~3.5 h: the phone
+  link paces it; logs logs/crop-redo-2026-11-07b*.log) + unit crop-redo-2026-11-07b-end (builds the review page of batches
+  crop-redo-2026-11-07b + crop-fix-2026-11-07, STOPS crop-vm2). Stop: systemctl --user stop crop-redo-2026-11-07b-crop-vm2
+  (resumable: same command again). AFTER: refresh.sh, commit (recipes, changes.tsv, index, done file), WORKLOG; his ticks
+  of today hold on books whose recipe the frame rule leaves unchanged (most); changed ones come back with his words.
+- AFTER A /clear: arm watch_comments.py as a Monitor; act on each comment (review_close.py after acting); watch the two
+  units above (systemctl --user list-units 'crop-*'); nothing else runs.
+
+## 2026-11-07 12:00 — (superseded above) THE OWNER REVIEWS; HIS REMARKS ACTED ON: PAGE WINDOWS, THE FRAME RULE (Claude, Fable)
 - OWNER 11:19–11:40 on site/crop-doubts.html: (1) المخصص ج 13 «اجعل الإطار الأسود معيارا للميلان فهو مائل بوضوح في بعضها»;
   (2) الفن ومذاهبه ص 1 «لا تسع ما فيها، لأن قبل هو الصواب. الباقي جيد» (the cover's dotted border cut by the 11-06 cover-like
   rule — his 11-06 remark on the same page was misread then); (3) خزانة الأدب 01 ص 236 «انزل بأعلى الإطار تحت التشوه الأسود،
