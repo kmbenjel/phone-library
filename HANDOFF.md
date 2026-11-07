@@ -22,14 +22,23 @@ every turn, benched before 26i.
   الشكوى والعتاب's watermark pages; (b) data/improve/crop-redo-2026-11-06-sheets-scan.txt — the after-images scan: 76 pages /
   60 books with print at the top or bottom edge and the other margin wide (212 / 140 before the fix), of which by eye
   دلائل النبوة 039612a752e5 p133 (running head cut on a section-title page) and الفوائد المحصورة 0697061b1361 p264 (a mark
-  under the folio cut) are real faults, 0022362994e5 p1 and 02633978b4d5 p53 fine; (c) four xhigh subagents judging random
-  sheets by kind (stain/rim/stamp; tilt/two/owner; larger/whole/sheet/edge; folio) — reports pending, to be added here.
-  NOTE: sheet FILES are numbered 1-based (p0291 = page 291), reasons.json keys 0-based.
-- THE FIX ROUND (max effort, after the review; owner 22:46): fixes 1–5 of data/improve/crop-review-2026-11-06.md + the head
-  line of short pages (p133 above: the head at its usual sheet place must be inside even when the page's text is a short
-  title) + marks under the folio (p264) → crop_regress bench (crop-vm2: scratch/regress_2026-11-06-vm3.sh pattern) + turn
-  audit (scripts/crop_recipe_diff.py vs 002b4f3ec1) → partial redo of the affected books (the audit's and scan's lists +
-  what the bench diff changes) with crop_redo.py --remote. Nothing of it applied yet.
+  under the folio: the uploader's logo, a remark) ; (c) four xhigh subagents judging random sheets by kind — results in
+  data/improve/crop-redo-2026-11-06-review.md §4: 'folio' SOUND (24/24 real numbers, no false join); tilt/two/owner 1 fault
+  of 26 (مورد الظمآن dea10c3fe97d: verse pages leaning ~2° left unturned, recto/verso alternating — systematic for that
+  book); larger/whole sound; 'sheet' 3 of 5 FAULTY — مجلة المنار ج16 026c3ae46830 p0193 a running head WIPED by the band
+  paint after a 1.2° turn (recipe identical to 11-05's: pre-existing), بداية الهداية p0053 an ornament's corner blanked,
+  الخطط التوفيقية 06 p0004 black bed strips left unfilled; 'edge' 2 of 5 (a printed marginal at the scan's edge gets the
+  frame ON it: c8249fecfc4f p0471). stain/rim/stamp: pending. NOTE: sheet FILES are numbered 1-based (p0291 = page 291),
+  reasons.json keys 0-based.
+- THE FIX ROUND (max effort, after the review; owner 22:46), in this order of harm: (1) the band paint must never cover
+  print (an ink test on the band's area after the turn: المنار p193) and the bed strips must be filled on both sides
+  (الخطط 06 p4); (2) finding 1 of the review (the cover-like cut of text pages: الطبقات title pages); (3) the head line of
+  short pages (دلائل النبوة p133: the head at its usual sheet place must be inside even when the page's text is a short
+  title); (4) a printed marginal at the scan's edge: the frame beside it, not on it (c8249fecfc4f p471); (5) findings
+  2–5 of the review (letter-sized members for band_print/folio_specks; Th outliers); (6) why مورد الظمآن's verse pages
+  were not turned. Each: fix → crop_regress bench (crop-vm2; scratch/regress_2026-11-06-vm3.sh pattern) + turn audit
+  (scripts/crop_recipe_diff.py vs 002b4f3ec1) → partial redo of the affected books (the audit's and scan's lists + what
+  the bench diff changes) with crop_redo.py --remote. Nothing of it applied yet.
 - (was) units crop-redo-2026-11-07d-{crop-vm2,align-1,crop-vm} (31 workers each, lists data/crop/redo-part-2026-11-07-<vm>.tsv)
   + crop-redo-2026-11-06-end. Logs logs/crop-redo-2026-11-06-<vm>.log; progress data/crop/redo-done.tsv.
   OOM AT 00:59:23: systemd-oomd killed the VS Code, Firefox, Chromium and Antigravity scopes AND the three c-part units
