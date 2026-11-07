@@ -28,8 +28,44 @@ every turn, benched before 26i.
   book); larger/whole sound; 'sheet' 3 of 5 FAULTY — مجلة المنار ج16 026c3ae46830 p0193 a running head WIPED by the band
   paint after a 1.2° turn (recipe identical to 11-05's: pre-existing), بداية الهداية p0053 an ornament's corner blanked,
   الخطط التوفيقية 06 p0004 black bed strips left unfilled; 'edge' 2 of 5 (a printed marginal at the scan's edge gets the
-  frame ON it: c8249fecfc4f p0471). stain/rim/stamp: pending. NOTE: sheet FILES are numbered 1-based (p0291 = page 291),
-  reasons.json keys 0-based.
+  frame ON it: c8249fecfc4f p0471); stain/rim/stamp 3 of 26, no print cut — two 'stain' books with the frame OFF-CENTRE
+  HORIZONTALLY on every sheet (الموسوعة الشاملة 25 892f76644e2c 17 vs 49 px, نظام الطلاق ج1 1003e67af5ee 23 vs 71 px), one
+  rim page 18 px low. VERDICT in data/improve/crop-redo-2026-11-06-review.md §5: the 11-06 rules hold; the faults found
+  are mostly older than this run. NOTE: sheet FILES are numbered 1-based (p0291 = page 291), reasons.json keys 0-based.
+- THE WIPED HEAD, DISSECTED (المنار ج16 p193, file fetched to the scratchpad fetch/bd40c18ae48d.pdf; the original = its
+  first 33,117,219 B): the page's added drawing stream paints the SHEET FILL — erase_stamp()'s sheet_fill branch fills the
+  strips beyond the sheet's inner rectangle S with the paper colour, keeping off only the known print groups (blots, lines,
+  rules, margin, the text block); S's top was read 67.28 pt below the scan's top (a 1.2° tilted sheet on the bed) and the
+  running head, 55 pt from the top and in no print group, was painted over. A 13-page extract does not reproduce it (its S
+  top is 6.5 pt, the head joins the text); the full-book analysis was being run (scratchpad plan_full.py → manar_full_rec.json)
+  to get the real S: it is [114.6, 79.5, 485.5, 780.0] — THE TEXT AREA ITSELF read as «a grey sheet on a lighter bed»
+  (the 6–12 % ring hits the toner-grey text region; the sheet is kept for the fill only, since the text exceeds it).
+  FIX 1 WRITTEN (book_crop 16bb1bdb2f, uncommitted until the bench): erase_stamp()'s print_in(): a free-standing dark
+  piece in a fill strip (touching neither the page's edge = bed nor the strip's inner side = the sheet's rim) that is
+  ≥ 5 px tall at 100 dpi is print and is kept off (padded 2 pt); a long thin free line (≥ 30 % of the strip, ≤ 1.2 % thick)
+  is the sheet's shadow and is still painted unless the book prints a rule there (p['rules']). Tested on p193 with the
+  full-book recipe (scratchpad test_fill.py): the head present (ink 0.138 in its rows), the text intact, the bed strip
+  painted but for its grains ≥ 5 px. BENCH launched 02:35 UTC on crop-vm2 (scratch/regress_2026-11-07-fill.sh, logs
+  logs/crop-regress-2026-11-07-fill-part{0,1,2}.log on the VM, ~20 min): the recipes are untouched by an apply-side
+  change, so the cases that matter are 'rim' and 'stamp' (نظم تنقيح فتح الكريم ص 93's seam). Then: commit, and the partial
+  redo of the books with sheet_fill pages (the review page's 'sheet' kind, 47 pages, + every book with a sheet-fill page:
+  count them from the VM-side analysis — the compact recipes do not store sheet_fill; the redo list = all books whose
+  11-06 log line has a sheet page… simplest: redo the 1,114 again on three VMs, ~1.5 h, after fixes 2–6 too).
+- FIXES 2 AND 3 WRITTEN TOO (book_crop a18eef46cd, laptop only, unbenched): (2) frames(): the cover-like cut of a
+  first-2/last-4 text page is refused when the page's PRINT (decide()'s «need»: text ∪ notes ∪ figures ∪ printed groups ∪
+  rules ∪ folio, shifted by the page's move) does not lie inside the cut window (±1 pt) — the p['lines'] test kept as a
+  second guard; to probe on الطبقات (Sachau) ج 7 ص 291 (scratchpad fetch/010a666385e3.pdf, 254 MB: analyse ON THE VM, the
+  laptop's RAM is short). (3) decide()'s _lines(): the head/number-line candidates and the containment test use the wider
+  of the page's own text/core columns and the BOOK's typical text columns (medians TL/TR over the text pages), AND the
+  marks tried are the edge marks + the MARGIN marks (on ص 133 the head stands 100 pt below the edge: its word and number
+  were «margin» pieces, never candidates); a joined margin piece leaves p['margin']. PROVEN on دلائل النبوة (3.2 MB,
+  scratchpad fetch/dalail_orig.pdf → dalail_rec2.json): p133's head joined (band_print 'head'), the window's top 66.8 →
+  the head 34 pt inside; the other 170 pages' crops unchanged (book_crop 7353b8e58d). FIX 5 (the review's findings
+  2/4/5, written after): _lines() wants a letter-sized member (≥ 0.6 % h × 0.3 % w) in a head/foot line; folio_specks
+  wants one for a match by relative place alone; Th leaves the taller pages out only when they are ≤ max(2, 10 %) of the
+  pages. Bench 2 = everything together after bench 1 passes (the laptop's book_crop hash is printed by each step's
+  compile; the VM's copy is still 16bb1bdb2f = fix 1 alone until the next rsync). FIX 4 (the frame on a printed marginal
+  at the scan's edge, الإبانة في اللغة c8249fecfc4f ص 471 — 13 MB, scratchpad fetch/ibana_orig.pdf) under analysis.
 - THE FIX ROUND (max effort, after the review; owner 22:46), in this order of harm: (1) the band paint must never cover
   print (an ink test on the band's area after the turn: المنار p193) and the bed strips must be filled on both sides
   (الخطط 06 p4); (2) finding 1 of the review (the cover-like cut of text pages: الطبقات title pages); (3) the head line of

@@ -2355,6 +2355,9 @@ def decide(pages, wq=0.95):
             u = union(gr); f_ = at(u)
             if len(f_) < max(3, int(0.03 * len(text))): continue
             if u[2] - u[0] > 0.08 * w or u[3] - u[1] > 0.025 * h: continue   # (a page number's size, as marks() reads one)
+            # (a match by the relative place alone needs a letter-sized speck among them — two dust specks 16 pt apart on a
+            # section-title page of الإعلام بنوازل الأحكام ص 19 became its folio; max-effort review finding 4, 2026-11-07)
+            if not any(same_place(u, f, w, h) for f in f_) and not any(s[3] - s[1] >= 0.006 * h and s[2] - s[0] >= 0.003 * w for s in gr): continue
             for s in gr:
                 for key in ('specks', 'edge'):
                     if any(s is x for x in p.get(key) or []): p[key] = [x for x in p[key] if x is not s]
@@ -2372,10 +2375,22 @@ def decide(pages, wq=0.95):
     # the text pages (at least 3) such a line of edge marks, or the text block's own top (bottom), lies within 3 % of the
     # page of it — are print: back into the text block, the box and the allowed area; a short one at the foot the folio.
     # (The place is read on the sheet, not from the core: on a chapter's first page the core starts lower.)
+    # (THE BOOK'S TEXT COLUMNS, not only the page's: on a section-title page the text is a short centred title and the
+    # running head's words lie outside its columns — دلائل النبوة ج ? ص 133, 2026-11-07, the head «المصادر … ١٣٣» cut at
+    # the top: never a candidate here, and rejected by the core's columns below. The columns tried are the wider of the
+    # page's own and the book's typical (the medians over its text pages, as shares of the width); the photocopy's band of
+    # القوافي spans the sheet beyond both and stays out)
+    _tl = sorted(pages[j]['text'][0] / pages[j]['w'] for j in text if pages[j].get('text'))
+    _tr = sorted(pages[j]['text'][2] / pages[j]['w'] for j in text if pages[j].get('text'))
+    TL, TR = (_tl[len(_tl) // 2], _tr[len(_tr) // 2]) if _tl else (None, None)
     def _lines(i):
-        p_ = pages[i]; w, h = p_['w'], p_['h']; t_, c_ = p_.get('text'), p_.get('core'); ed = p_.get('edge') or []
+        p_ = pages[i]; w, h = p_['w'], p_['h']; t_, c_ = p_.get('text'), p_.get('core')
+        # (the marks tried: the edge marks and the MARGIN marks — on a section-title page the head stands 100 pt below the
+        # edge, far above the title, and its word and number are «margin» pieces: دلائل النبوة ص 133, 2026-11-07)
+        ed = (p_.get('edge') or []) + (p_.get('margin') or [])
         if not t_ or not c_: return []
-        cand = [e for e in ed if t_[0] - 0.02 * w <= (e[0] + e[2]) / 2 <= t_[2] + 0.02 * w and (e[3] <= c_[1] + 1 or e[1] >= c_[3] - 1)
+        x0_, x1_ = (min(t_[0], TL * w), max(t_[2], TR * w)) if TL is not None else (t_[0], t_[2])
+        cand = [e for e in ed if x0_ - 0.02 * w <= (e[0] + e[2]) / 2 <= x1_ + 0.02 * w and (e[3] <= c_[1] + 1 or e[1] >= c_[3] - 1)
                 and e[3] - e[1] <= 0.035 * h]
         groups = []
         for e in sorted(cand, key=lambda e: e[1]):
@@ -2386,10 +2401,16 @@ def decide(pages, wq=0.95):
         out = []
         for gr in groups:
             u = union(gr)
+            # (a line of print holds a letter: a member ≥ 0.6 % of the height tall and ≥ 0.3 % of the width wide — the size
+            # tests below are on the group's bounding box, and a row of specks spread across the page passed them: 89 of
+            # 718 groups in the bench had no letter-sized member, halftone dots under a number became the «foot line» and
+            # the folio on هذا هو علم البيولوجيا ص 49; max-effort review finding 2, 2026-11-07)
+            if not any(e[3] - e[1] >= 0.006 * h and e[2] - e[0] >= 0.003 * w for e in gr): continue
             # (a line of print stays within the text's columns: the core's, ± 4 % of the page — the sheet's own band near
             # the top of a photocopy spans nearly the whole sheet, 2–4 % below its edge on most pages, and passed this
             # block's test of place on 66 of القوافي's 108 pages, 2026-11-06: the box grew to the sheet, the crop was lost)
-            if u[0] < c_[0] - 0.04 * w or u[2] > c_[2] + 0.04 * w: continue
+            cl_, cr_ = (min(c_[0], TL * w), max(c_[2], TR * w)) if TL is not None else (c_[0], c_[2])
+            if u[0] < cl_ - 0.04 * w or u[2] > cr_ + 0.04 * w: continue
             # (and it has print's height and stands off the sheet's edge: a 1.2-pt sliver on the top edge of مشتبهات القرآن
             # p. 8 passed as a head and pulled the box up to the edge and off centre, 2026-11-06)
             if u[3] - u[1] < 0.006 * h or u[1] < 0.003 * h or u[3] > 0.997 * h: continue
@@ -2409,9 +2430,10 @@ def decide(pages, wq=0.95):
         for i in text:
             p = pages[i]; h, w = p['h'], p['w']
             for gr, u, k in L[i]:
-                if k != kind or not any(e in p['edge'] for e in gr): continue
+                if k != kind or not any(e in p['edge'] or e in (p.get('margin') or []) for e in gr): continue
                 if sum(1 for j, ys in ref.items() if j != i and any(abs(y - u[k0]) <= 0.03 * h for y in ys)) < need_ - 1: continue
                 p['edge'] = [e for e in p['edge'] if not any(e is x for x in gr)]
+                if p.get('margin'): p['margin'] = [e for e in p['margin'] if not any(e is x for x in gr)]
                 p['text'] = union([p['text'], u]); p['box'] = union([p['box'], u])
                 p.setdefault('band_print', []).append([round(v, 1) for v in u] + [kind])
                 al = p.get('allowed')
@@ -2461,7 +2483,12 @@ def decide(pages, wq=0.95):
     # (the height likewise from typical pages — 2026-11-06: one page with a box > 15 % taller than the median (a plate, a
     # deep footnote) made the book's box as tall as the sheet, pinned at its edges and no longer centred on the text)
     _mh = q(bh.values(), 0.5)
-    Tw, Th = q([v for v in bw.values() if v <= 1.25 * _mw] or list(bw.values()), wq), q([v for v in bh.values() if v <= 1.15 * _mh] or list(bh.values()), 1.0)
+    # (the taller pages are left out of the height only when they are FEW — ≤ 2 or 10 % of the pages: a book whose typical
+    # page is the short one (a divan with wide leading, an index of short entries) would otherwise have every full page
+    # shrunk to its short median; max-effort review finding 5, 2026-11-07)
+    _typ = [v for v in bh.values() if v <= 1.15 * _mh]
+    Tw = q([v for v in bw.values() if v <= 1.25 * _mw] or list(bw.values()), wq)
+    Th = q(_typ, 1.0) if _typ and len(bh) - len(_typ) <= max(2, 0.1 * len(bh)) else q(list(bh.values()), 1.0)
     full_w = [i for i in text if cw[i] >= 0.9 * q(cw.values(), 0.5)]
     full_h = [i for i in text if bh[i] >= 0.9 * q(bh.values(), 0.5)]
     # an ornament (above) joins its page's box and text block only now: a page ending in a section's fleuron stays a short
@@ -3400,7 +3427,19 @@ def frames(rec):
                 # when it's safe … just some background color of a cover», 2026-11-06); a dense first or last text page
                 # whose lines reach the cut keeps its frame — up to 8 % of its lines would have gone, revisit 2026-11-06)
                 text_cut = cover_like and not own_cover and p['kind'] != 'cover' and any(abs(a_ - b_) > 0.5 for a_, b_ in zip(c, c2))
-                if text_cut and any(inside(l, c, 0) and not inside(l, c2, 1.0) for l in p.get('lines') or []):
+                # (THE PAGE'S PRINT decides, not p['lines'] — those are thin marks, rules and scan lines, never lines of
+                # text: the guard below never saw a running head or a wide imprint line. 2026-11-07, max-effort review
+                # finding 1, الطبقات الكبرى (Sachau) ج 7 ص 291 / ج ? ص 217: the title pages' two widest imprint lines lost
+                # ~4 pt a side. The print = the text block with the notes, figures, printed margin groups, rules and folio
+                # (decide()'s own «need»), in the page's moved frame; none of it may leave the cut window)
+                print_cut = False
+                if text_cut:
+                    mg = p.get('margin') or []; mv = p.get('move') or [0, 0]
+                    need_ = (union([p['text']] + notes_of(mg, pw, ph) + figures_of(mg, pw, ph) + printed_groups(mg, pw, ph)
+                                   + (p.get('rules') or []) + ([p['folio'][:4]] if p.get('folio') else [])) if p.get('text') else None)
+                    need_ = [need_[0] + mv[0], need_[1] + mv[1], need_[2] + mv[0], need_[3] + mv[1]] if need_ else c
+                    print_cut = not inside(need_, c2, 1.0)
+                if text_cut and (print_cut or any(inside(l, c, 0) and not inside(l, c2, 1.0) for l in p.get('lines') or [])):
                     p['cover_like_kept'] = [round(v, 1) for v in c2]
                 else:
                     if text_cut: p['cover_like'] = [round(v, 1) for v in c2]
@@ -3592,8 +3631,35 @@ def erase_stamp(doc, page, inv, p):
             tb = [tb[0] + mv_[0], tb[1] + mv_[1], tb[2] + mv_[0], tb[3] + mv_[1]] if tb else p.get('box')
             keep_off = [x for x in (p.get('blots') or []) + (p.get('lines') or []) + (p.get('rules') or []) + (p.get('margin') or [])
                         if inS(x)] + ([tb] if tb else [])
-            for st, col in strips:
-                for q in rect_minus(st, [[x[0] - 2, x[1] - 2, x[2] + 2, x[3] + 2] for x in keep_off]):
+            # PRINT IN THE STRIP IS NEVER PAINTED (2026-11-07, مجلة المنار ج 16 ص 193: the sheet's rectangle read 67 pt below
+            # the scan's top — sheet_rect keeps only rows ≥ 90 % covered, and the lighter rows around the running head were
+            # trimmed off — and the head, in no print group, was painted over). What the strip may cover: the bed (dark
+            # reaching the page's edge) and the sheet's own rim or shadow (dark along the strip's inner side); a dark piece
+            # touching neither — standing free on paper — is print (or a stamp: covered by its own patch), kept off.
+            def print_in(st, side):
+                X0, Y0, X1, Y1 = [int(round(v * z)) for v in st]
+                X0, Y0 = max(0, X0), max(0, Y0); X1, Y1 = min(pix.width, X1), min(pix.height, Y1)
+                if X1 - X0 < 3 or Y1 - Y0 < 3: return []
+                dark = img[Y0:Y1, X0:X1].sum(2) < 3 * 128
+                lab, n = ndimage.label(dark, structure=np.ones((3, 3), bool))
+                if not n: return []
+                outer, inner = {'T': (lab[0], lab[-1]), 'B': (lab[-1], lab[0]), 'L': (lab[:, 0], lab[:, -1]), 'R': (lab[:, -1], lab[:, 0])}[side]
+                bed = set(np.unique(outer)) | set(np.unique(inner)); bed.discard(0)
+                rules_ = p.get('rules') or []; long_ = 0.3 * max(X1 - X0, Y1 - Y0); thin_ = 0.012 * max(W_, H_) * z
+                out = []
+                for k, sl in enumerate(ndimage.find_objects(lab), 1):
+                    if k in bed or sl is None: continue
+                    ys, xs = sl; h_, w_ = ys.stop - ys.start, xs.stop - xs.start
+                    if h_ < 5 or w_ < 2: continue        # dust (a letter is ≥ 5 px tall at 100 dpi; المنار ص 193: the head's
+                                                      # letters 7–30 px, the bed's grains 1–4 px)
+                    b = [(X0 + xs.start) / z, (Y0 + ys.start) / z, (X0 + xs.stop) / z, (Y0 + ys.stop) / z]
+                    if max(h_, w_) >= long_ and min(h_, w_) <= thin_:   # a long thin line: the sheet's edge or shadow (painted,
+                        if not any(r[2] > b[0] and r[0] < b[2] and r[3] > b[1] and r[1] < b[3] for r in rules_): continue   # the seam, ص 93) unless the book prints a rule there
+                    out.append(b)
+                return out
+            for (st, col), side in zip(strips, 'TBLR'):
+                keep = keep_off + print_in(st, side)
+                for q in rect_minus(st, [[x[0] - 2, x[1] - 2, x[2] + 2, x[3] + 2] for x in keep]):
                     fills.append((q, col))
             def side_col(b):                          # a stamp's patch: the colour of the sheet's side nearest to it
                 cx_, cy_ = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
