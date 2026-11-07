@@ -69,7 +69,13 @@ every turn, benched before 26i.
   laptop cache): 49 books, 32 unchanged; 0 turns lost, 0 gained, 3 changed by ≤ 0.25°; no decision changed; sizes: H +0.4
   (الإعلام), +1.2 (الأغاني ج 8), −2.0 (خريدة القصر) pt; the page changes are 0.2–1.4 pt vertical shifts, with 22 frames moved
   3–22 pt: الإعلام's dust-folio pages re-centred (finding 4's own case), الأغاني ±3–10 (the shorter H), خريدة 6–10 pt (7
-  pages). BENCH 3 (the final 833cb05780, fix 4 added) launched 03:20 (scratch/regress_2026-11-07-final.sh); the VM probes
+  pages). BENCH 3 (833cb05780, fix 4 as first written) FAILED one case — القوافي ص 27: the photocopy's whole border frame
+  (one edge mark of 2024 × 2847 pt) «joined» a margin piece, the box grew to it — fix 4 had a minimum size and no maximum
+  → CAPPED (f1afeaa98f): the joined edge mark and the margin piece it adjoins are word-sized (0.6–2.5 % h × 0.3–6 % w);
+  الإبانة ص 471 still 8.8 pt inside. BENCH 4 (f1afeaa98f, the final) launched 03:25 (scratch/regress_2026-11-07-final2.sh,
+  logs crop-regress-2026-11-07-final2-part{0,1,2}.log on the VM). The full-redo launcher scratch/redo_2026-11-07-full.sh
+  (three e-units, batch crop-redo-2026-11-07, the 11-06 done file moved aside, the end unit stops ALL THREE VMs) checks for
+  that hash; its watch script is the scratchpad's redo_watch_1107.sh. The VM probes
   (scratch/probe_vm.py → ~/probe/probe.out on the VM) PASS: دلائل p133 head joined, window top 66.8; الطبقات ج 7 p291
   cover_like_kept → shown whole with bands as in 11-05. FIX 4 WRITTEN after bench 2's launch (book_crop 833cb05780):
   decide(): a letter-sized EDGE mark within 1.5 % of the width of a margin piece the box holds joins it as a margin piece

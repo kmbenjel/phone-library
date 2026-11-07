@@ -2448,9 +2448,10 @@ def decide(pages, wq=0.95):
     for i in text:
         p = pages[i]; w, h = p['w'], p['h']; ed = p.get('edge') or []
         if not ed or not p.get('margin') or not p.get('box'): continue
-        held = [m for m in p['margin'] if inside(m, p['box'], 0.5)]
-        if not held: continue
-        join = [e for e in ed if e[3] - e[1] >= 0.006 * h and e[2] - e[0] >= 0.003 * w
+        letter = lambda b: 0.006 * h <= b[3] - b[1] <= 0.025 * h and 0.003 * w <= b[2] - b[0] <= 0.06 * w   # a word or number,
+        held = [m for m in p['margin'] if inside(m, p['box'], 0.5) and letter(m)]       # not a bar: القوافي ص 27's photocopy
+        if not held: continue                                                           # border (2024 × 2847 pt, one edge
+        join = [e for e in ed if letter(e)                                              # mark) joined at bench 3, 2026-11-07
                 and any(e[0] - 0.015 * w <= m[2] and m[0] - 0.015 * w <= e[2] and e[1] <= m[3] + 0.005 * h and m[1] <= e[3] + 0.005 * h for m in held)]
         if join:                                      # (a margin piece from here on: the box is rebuilt below from the
             p['edge'] = [e for e in ed if not any(e is x for x in join)]   # text, notes, figures and printed groups)
