@@ -9,6 +9,43 @@ OWNER 2026-10-27 00:40 (AskUserQuestion on crop-tilt-002): «Leave as scanned» 
 photocopy, lines set one by one) is NOT turned by any path and is listed for him (review page). → a line-by-line guard on
 every turn, benched before 26i.
 
+## 2026-11-07 12:00 — THE OWNER REVIEWS; HIS REMARKS ACTED ON: PAGE WINDOWS, THE FRAME RULE (BENCH RUNNING ON crop-vm2) (Claude, Fable): READ THIS FIRST
+- OWNER 11:19–11:40 on site/crop-doubts.html: (1) المخصص ج 13 «اجعل الإطار الأسود معيارا للميلان فهو مائل بوضوح في بعضها»;
+  (2) الفن ومذاهبه ص 1 «لا تسع ما فيها، لأن قبل هو الصواب. الباقي جيد» (the cover's dotted border cut by the 11-06 cover-like
+  rule — his 11-06 remark on the same page was misread then); (3) خزانة الأدب 01 ص 236 «انزل بأعلى الإطار تحت التشوه الأسود،
+  وخذ من اليسار لتستوي مع غيرها. الباقي سليم»; 8 books ticked. Then: «لا حظت أن كثيرا من ملاحظاتي السابقة ألغيت» → «exclude all
+  that I already approved, fix all that I already addressed» → «Use a VM at least, unless really no need».
+- DONE (commit 5528a7a): crop_doubts_page.py — a tick closes its card; a closed row / tick on an older card holds while the
+  recipe is unchanged (review_close.py writes recipe=<md5>; old rows: git's last change of the recipe ≤ the row's day); a
+  card with unanswered words stays; a changed book shows his earlier words (orange «ملاحظاتك على قصّ أقدم»). Page: 1,073
+  books. OWNER WINDOWS: data/crop/owner-boxes.tsv (whole | window X0 Y0, pt as scanned) → crop_batch.owner_boxes →
+  book_crop.plan(owner_boxes) → owner_windows() before frames(); frames() shows an owner «whole» page entire; the rows are
+  drawn on every later crop (owner_pages). Rows: الفن ص 1 whole; خزانة 01 ص 236 window 130.2 152 (the text block 148–415 ×
+  169–508 pt, the smudge at y 142.6; the book's box 302.55 × 385.85). crop_redo: REDO_DONE=<file> (a fix batch after a full
+  redo), owner-boxes.tsv in VM_DATA. THE FRAME RULE: book_crop.frame_lean() + the hook in verify() before the owner's turn
+  (flag frame_turn; review kind «frame» in crop_batch/crop_doubts_page): a closed printed frame (rules L, R, T, B of the
+  text block) whose sides' mean lean (each side fitted row by row, halves within 0.6°, sides within 0.4°) leaves the frame
+  > 0.35° off after the text's turn → the page is turned by −lean (none under 0.2°), two-angle/unsure/disputed give way;
+  kept when the frame then stands ≤ 0.2°. Sign proven (p13 −0.69/−0.66 → turn +0.68 → −0.05/−0.08). On المخصص 13 (VM
+  probe, ~/probe on crop-vm2): 73 pages squared (28 newly turned, 32 re-turned by the frame, 13 undone), 6 left (p8 sides
+  differ 0.40, p181 bent, the rest ≤ 0.35); sheets p13/p77 right by eye. Memory: frame-is-tilt-standard,
+  review-remarks-survive-redos.
+- RUNNING on crop-vm2 (34.175.46.45, project phone-library-crop-261106, started 11:30 by hand — STOP IT when done:
+  gcloud compute instances stop crop-vm2 --zone europe-southwest1-b --project phone-library-crop-261106):
+  (a) unit crop-fix-1107a-dry (laptop): crop_redo --remote --dry of the 2 window books (data/crop/fix-2026-11-07a.tsv,
+  batch crop-fix-2026-11-07, REDO_DONE=data/crop/redo-done-fixes.tsv, book_crop 764e587bb9 = the windows without the frame
+  rule), log logs/crop-fix-2026-11-07a-dry.log → look at crop-sheets/0022362994e5 p0001 and 00597fea27cf p0236 by eye, then
+  the REAL run (same command without --dry; it re-syncs book_crop: 0363c405ae now) → review_close.py the two cards
+  («الباقي سليم»). (b) the bench scratch/regress_2026-11-07-frame.sh (book_crop 0363c405ae, 3 parts, logs on the VM
+  logs/crop-regress-2026-11-07-frame-part{0,1,2}.log, .out) → then the turn audit on the VM: scripts/crop_recipe_diff.py
+  09714b71dd 0363c405ae (the cache holds bench 2's recipes) — expect changes on framed bench books only; judge each.
+  If clean: redo المخصص 13 (+ the framed books: find them = recipes/sheets with frame_turn… simplest: the 11-07 redo list
+  again on three VMs ~4 h, or first the books whose marks have 4 rules — ask the owner which), then crop_doubts_page.py,
+  refresh.sh, WORKLOG, commit.
+- OPEN: the method question behind الفن ص 1 (the cover-like cut took the cover's dotted border as ground: frames()'s
+  cover_window — a border of specks is print) and خزانة ص 236 (a smudge at the sheet's top taken for content; the frame
+  grown 5.7 % and shifted to it) — fixed per page by his windows, not in the method yet.
+
 ## 2026-11-07 07:45 — FULL REDO crop-redo-2026-11-07 DONE; ALL VMs STOPPED; READY FOR THE OWNER'S REVIEW (Claude, Fable): READ THIS FIRST
 - DONE 07:38: 1,114 books — 1,111 redone with the final method 09714b71dd, 2 same, 1 expected SKIP (المغرب 01's set-aside
   original). 249 recipes differ from the 11-06 method's. Review page site/crop-doubts.html rebuilt (1,086 books with
