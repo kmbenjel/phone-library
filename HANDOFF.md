@@ -72,7 +72,13 @@ every turn, benched before 26i.
   (الإبانة في اللغة c8249fecfc4f ص 471: the «١» of «١٤٠/٢» in the outer zone; on a 21-page extract the box now starts at
   25.5 and the frame's left edge 8.8 pt beyond it; scratchpad fetch/ibana_orig.pdf, 13 MB, 968 pages — a whole-book plan
   took 685 s on the laptop). Bench 3 = the final hash after bench 2, with the turn audit (crop_recipe_diff.py vs
-  002b4f3ec1 over the bench's recipes). FIX 6 (مورد الظمآن's leaning verse pages) under analysis.
+  002b4f3ec1 over the bench's recipes). FIX 6 DEFERRED: مورد الظمآن في رسم القرآن (5ce0bb09e3f4, 0.5 MB, 40 pages;
+  scratchpad fetch/mawrid_orig.pdf, mawrid_rec.json) — p3 tilt_disputed −1.27°, p4–p6 unsure_tilt: in verify()'s tilt
+  check the two column-edge reads (cols(): tr, tl) must agree within 15 % and ≥ 0.25°, and on verse set in two hemistich
+  columns of unequal lengths the edges are ragged and disagree, loop_back finds nothing → unsure, left as scanned and
+  listed. A change there is the tilt path (owner 10-29 «keep as it is», the index-page trap, the halves gate): not
+  without its own turn audit and the owner's eye; the pages are on his review page as 'tilt' doubts — a «turn» ruling
+  goes into data/crop/owner-turns.tsv as for سيبويه ج 2 ص 221.
 - THE FIX ROUND (max effort, after the review; owner 22:46), in this order of harm: (1) the band paint must never cover
   print (an ink test on the band's area after the turn: المنار p193) and the bed strips must be filled on both sides
   (الخطط 06 p4); (2) finding 1 of the review (the cover-like cut of text pages: الطبقات title pages); (3) the head line of
