@@ -32,6 +32,10 @@ every turn, benched before 26i.
   watched the same way.
   Resume a part: crop_redo.py with its 11-07b list, batch crop-redo-2026-11-07, env CROP_VM=<vm> [CROP_VM_PROJECT=
   phone-library-crop-261106] PHONE_PARALLEL=1 STAGE_GB=4 RESUME_FREE_GB=1 (never the launcher).
+- REBALANCED 06:46 (crop-vm's part done at 06:45, align-1 lagging after its two restarts: 243 vs 153 left): the 373
+  remaining books split again, each VM keeping its in-flight ones → units crop-redo-2026-11-07f-{crop-vm2,align-1,crop-vm}
+  (135/131/129 books, 0.58 GB each; lists data/crop/redo-part-2026-11-07c-<vm>.tsv; scratch/redo_2026-11-07-lists2.py +
+  redo_2026-11-07-rebalance2.sh), the end unit re-armed on the f-names. 719 done at the relaunch.
 - AFTER A /clear: arm `python3 -u scripts/watch_comments.py` and the scratchpad's redo_watch_1107.sh as Monitors; when
   the end log says «redo finished» and the VMs are stopped: `python3 scratch/doubts_compare_2026-11-07.py` (vs
   data/crop/doubts-counts-before-2026-11-07.json = the 11-06 page's counts), `python3 -I scratch/redo_audit_2026-11-06.py`
