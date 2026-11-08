@@ -223,4 +223,6 @@ phone-library/
 
 ## 📄 License & Credits
 
+**License.** The code (`scripts/`) is under the [MIT License](LICENSE). The documentation (`docs/`, `AGENTS.md`) and the catalog indexes published at [benjelloun.dev/library](https://benjelloun.dev/library) ([kmbenjel/library](https://github.com/kmbenjel/library)) are under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): reuse them freely, with credit. The books themselves are not in this repository and are not covered by these licences.
+
 Built and orchestrated by [Khalid Benjelloun](https://benjelloun.dev) with [Google Antigravity](https://github.com/google) and multi-agent workflows. Web index accessible at [benjelloun.dev/library](https://benjelloun.dev/library).
