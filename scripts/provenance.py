@@ -1,0 +1,111 @@
+"""Match every phone PDF to its source archive.org file by exact byte size, then to the Waqfeya book.
+Inputs: data/phone/index-*.tsv, data/archive/{files,items}.jsonl, data/archive/titles.jsonl,
+        data/waqfeya/books.jsonl, data/waqfeya/details.jsonl
+Output: data/phone/provenance.tsv"""
+import json, csv, re, os, sys
+from collections import defaultdict, Counter
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+J = lambda p: os.path.join(ROOT, p)
+
+def norm(s):
+    s = re.sub(r'[ً-ْـ]', '', s or '')
+    for a, b in (('أ', 'ا'), ('إ', 'ا'), ('آ', 'ا'), ('ة', 'ه'), ('ى', 'ي'), ('ؤ', 'و'), ('ئ', 'ي')): s = s.replace(a, b)
+    return re.sub(r'[^ء-ي0-9 ]', ' ', s).split()
+
+def sim(a, b):
+    A, B = set(norm(a)), set(norm(b))
+    return len(A & B) / max(1, min(len(A), len(B)))
+
+def load_items():
+    files = {}
+    for fn in ['data/archive/items.jsonl'] + sorted(os.path.relpath(p, ROOT) for p in __import__('glob').glob(os.path.join(ROOT, 'data/archive/files*.jsonl'))):
+        if os.path.exists(J(fn)):
+            for l in open(J(fn)):
+                d = json.loads(l)
+                if not d.get('error'): files[d['id']] = d.get('files', [])
+    return files
+
+def load_waqfeya():
+    books = {}; by_item = defaultdict(list)
+    for l in open(J('data/waqfeya/books.jsonl')):
+        b = json.loads(l); books[b['_id']] = b
+    for fn in ('data/waqfeya/details.jsonl', 'data/waqfeya/details2.jsonl'):
+        if os.path.exists(J(fn)):
+            for l in open(J(fn)):
+                d = json.loads(l)
+                if 'links' in d: books[d['_id']] = {**books.get(d['_id'], {}), **d}
+    for bid, b in books.items():
+        ids = set(re.findall(r'archive\.org/(?:details|download)/([^/"?#\s]+)', json.dumps([b.get('thumbnail'), b.get('links'), b.get('archiveLink')], ensure_ascii=False)))
+        for i in ids: by_item[i].append(bid)
+    return books, by_item
+
+def load_added():
+    """files the agents added from archive.org (change log action «add», the download URL in the «from» column), followed
+    along every later move: {current path: (archive id, file name, URL fragment)}. The only link for a file that is not
+    byte-identical to any item file — a volume split out of a bundled scan (plan 403, 2026-11-07: المنتقى, nine volumes from
+    one 140 MB file, «#pages=a-b» in the URL) — since the size match above cannot see it. Used only when no size matches."""
+    import urllib.parse
+    strip = lambda p: p[6:] if p.startswith('Books/') else p
+    added = {}
+    for r in csv.reader(open(J('data/changes/changes.tsv'), encoding='utf-8'), delimiter='\t'):
+        if len(r) < 4: continue
+        act, a, b = r[1], r[2], r[3]
+        if act == 'add':
+            m = re.match(r'https?://(?:[\w.-]+\.)?archive\.org/(?:\d+/items|download)/([^/]+)/(.+?)(#[^#]*)?$', a)
+            if m: added[strip(b)] = (m.group(1), urllib.parse.unquote(m.group(2)), (m.group(3) or '').lstrip('#'))
+        elif act == 'move':
+            a, b = strip(a), strip(b)
+            if a in added: added[b] = added.pop(a)
+            elif not a.lower().endswith('.pdf'):
+                for k in [k for k in added if k.startswith(a + '/')]: added[b + k[len(a):]] = added.pop(k)
+        elif act == 'delete': added.pop(strip(a), None)
+    return added
+
+if __name__ == '__main__':
+    index = sys.argv[1]
+    items = load_items(); books, wq_by_item = load_waqfeya()
+    titles = {}
+    if os.path.exists(J('data/archive/titles.jsonl')):
+        for l in open(J('data/archive/titles.jsonl')):
+            d = json.loads(l); titles[d['identifier']] = d.get('title')
+    by_size = defaultdict(list)
+    for i, fs in items.items():
+        for f in fs:
+            if f['name'].lower().endswith('.pdf') and f['size'] > 0: by_size[f['size']].append((i, f['name']))
+    rows = list(csv.reader(open(index), delimiter='\t'))
+    reject = set()   # (path, archive id, file) proven different by scripts/verify_provenance.py
+    vf = J('data/phone/provenance-verified.tsv')
+    if os.path.exists(vf):
+        reject = {(r[0], r[1], r[2]) for r in csv.reader(open(vf), delimiter='\t') if r[3] == 'different'}
+    folder_items = defaultdict(Counter)
+    for p, s in rows:
+        c = by_size.get(int(s), [])
+        if len(c) == 1: folder_items[p.rsplit('/', 1)[0]][c[0][0]] += 1
+    out = csv.writer(open(J('data/phone/provenance.tsv'), 'w'), delimiter='\t')
+    out.writerow(['path', 'size', 'match', 'archive_id', 'orig_name', 'waqfeya_id', 'waqfeya_name', 'waqfeya_author', 'waqfeya_category', 'archive_title'])
+    stats = Counter()
+    sub = {}                                   # fixed copies that took an original's place: match by the original's size
+    if os.path.exists(J('data/phone/substituted.tsv')):
+        sub = {r['path']: int(r['original_size']) for r in csv.DictReader(open(J('data/phone/substituted.tsv'), encoding='utf-8'), delimiter='\t')}
+    added = load_added() if os.path.exists(J('data/changes/changes.tsv')) else {}
+    for p, s in rows:
+        folder = p.rsplit('/', 1)[0]; c = [x for x in by_size.get(int(s), []) if (p, x[0], x[1]) not in reject]
+        via = ''
+        if not c and p in sub:
+            c = [x for x in by_size.get(sub[p], []) if (p, x[0], x[1]) not in reject]; via = 'substituted-'
+        if not c and p in added:                   # (a file added from archive.org whose bytes match no item file: a split volume)
+            i, name, note = added[p]; wid = (wq_by_item.get(i) or [''])[0]; b = books.get(wid, {})
+            stats['added'] += 1; stats['waqfeya' if wid else 'archive-only'] += 1
+            out.writerow([p, s, 'added', i, name + ('#' + note if note else ''), wid, b.get('name', ''), (b.get('author') or {}).get('name', ''),
+                          (b.get('category') or {}).get('name', ''), titles.get(i, '')]); continue
+        if not c: stats['none'] += 1; out.writerow([p, s, 'none'] + [''] * 7); continue
+        if len(c) == 1: pick, kind = c[0], via + 'unique'
+        else:
+            fav = folder_items[folder]
+            pick = max(c, key=lambda x: (fav.get(x[0], 0), sim(folder, (books.get((wq_by_item.get(x[0]) or [''])[0], {}) or {}).get('name', '') or titles.get(x[0], '') or x[1])))
+            kind = via + 'ambiguous-%d' % len(c)
+        wid = (wq_by_item.get(pick[0]) or [''])[0]; b = books.get(wid, {})
+        stats['waqfeya' if wid else 'archive-only'] += 1; stats[kind.replace('substituted-', '').split('-')[0]] += 1; stats['via substitution'] += bool(via)
+        out.writerow([p, s, kind, pick[0], pick[1], wid, b.get('name', ''), (b.get('author') or {}).get('name', ''),
+                      (b.get('category') or {}).get('name', ''), titles.get(pick[0], '')])
+    print(dict(stats), 'of', len(rows))
