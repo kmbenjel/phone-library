@@ -111,3 +111,4 @@ if the plan name is already there, it is done. Only one agent works on the phone
 `apply_plan.py` exits 1 when any move fails (callers stop before the next step) and `fix_at_scale.substitute` skips a
 file whose improved copy is not in `index-now.tsv`. Nothing goes in the repo root. Removed one-offs (2026-10-05) are in git history at commit `0e64d80`.
 
+| `publish_showcase.sh [--push]` | the public showcase repo kmbenjel/phone-library: exports README, AGENTS.md, docs/, scripts/, CI from HEAD to ~/projects/phone-library-public; never data, plans, logs or comments (owner 2026-11-08) |

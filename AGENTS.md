@@ -24,7 +24,7 @@ text of each section is in `docs/agents/` (open the one your task touches):
 |------|-------|
 | Books (source of truth) | phone `Books/<category>/<book folder>/<file>.pdf` |
 | Indexes | laptop `site/00 - الفهرس العام.html` (one file, reports as tabs) + `reports/*.md`; online at https://benjelloun.dev/library (repo `kmbenjel/library`, clone `~/projects/library-site`, updated by `scripts/publish_web.sh` at the end of `refresh.sh`); on the phone `Books/فهارس الويب/` only when the owner asks |
-| Workspace | laptop `~/projects/phone-library/` (git; a post-commit hook pushes to the private `kmbenjel/phone-library`; `site/` not tracked) |
+| Workspace | laptop `~/projects/phone-library/` (git; a post-commit hook pushes to the PRIVATE `kmbenjel/phone-library-work`; `site/` not tracked). The PUBLIC `kmbenjel/phone-library` is a showcase only (code, rules, README, screenshots): `scripts/publish_showcase.sh --push`, never data/plans/logs/comments (owner 2026-11-08) |
 | Work log / state | `WORKLOG.md`, `HANDOFF.md` |
 | Every move/rename ever applied | `data/changes/changes.tsv` (time, action, from, to, reason, plan) |
 | Plans | `plans/NNN-name.tsv` |
