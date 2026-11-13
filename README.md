@@ -9,7 +9,7 @@
 
 532 reversible plans · 97,925 logged changes · 474,268 scanned pages set straight by computer vision
 
-[**Open the index → benjelloun.dev/library**](https://benjelloun.dev/library)
+[**Open the index → benjelloun.dev/library**](https://benjelloun.dev/library) · [The story → benjelloun.dev/library/story](https://benjelloun.dev/library/story)
 
 [![CI](https://img.shields.io/github/actions/workflow/status/kmbenjel/phone-library/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/kmbenjel/phone-library/actions/workflows/ci.yml)
 
