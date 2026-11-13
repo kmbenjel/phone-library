@@ -1,228 +1,121 @@
-# Phone Library
-
 <div align="center">
 
-**Large-Scale Autonomous Digital Library & Computer-Vision Document Processing Pipeline**
+# A Library in a Pocket · خِزانةٌ في الجيب
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![CI](https://img.shields.io/github/actions/workflow/status/kmbenjel/phone-library/ci.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI%20Pipeline)](https://github.com/kmbenjel/phone-library/actions/workflows/ci.yml)
-[![Computer Vision](https://img.shields.io/badge/Computer%20Vision-PyMuPDF%20%7C%20Pillow-ff69b4?style=for-the-badge)](https://pymupdf.readthedocs.io/)
-[![Corpus](https://img.shields.io/badge/Corpus-16%2C700%2B%20Volumes-orange?style=for-the-badge)](https://benjelloun.dev/library)
-[![Storage](https://img.shields.io/badge/Storage-174%2B%20GB%20Android%20FTP-green?style=for-the-badge&logo=android&logoColor=white)](https://benjelloun.dev/library)
-[![Catalog](https://img.shields.io/badge/Reconciliation-Shamela%20%7C%20Waqfeya%20%7C%20Archive-8A2BE2?style=for-the-badge)](https://benjelloun.dev/library)
+<img src="docs/showcase/readme-hero.gif" width="720" alt="A file name turning from 03_44057.pdf into its full name: title, author, editor, publisher, city">
 
-[**🌐 Live Catalog & Web Index (benjelloun.dev/library)**](https://benjelloun.dev/library)
+**16,757 Arabic heritage PDFs (175 GB) on one Android phone — named, ordered in forty sections, and searchable.**
+<!-- TAGLINE-PENDING: the owner is choosing a new tagline; the former one was "Every book under its right name". -->
+
+532 reversible plans · 97,925 logged changes · 474,268 scanned pages set straight by computer vision
+
+[**Open the index → benjelloun.dev/library**](https://benjelloun.dev/library)
+
+[![CI](https://img.shields.io/github/actions/workflow/status/kmbenjel/phone-library/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/kmbenjel/phone-library/actions/workflows/ci.yml)
 
 </div>
 
 ---
 
-## 📌 Executive Summary
+## What this is
 
-**Phone Library** is a production-grade autonomous curation and document-processing pipeline designed to manage, verify, normalize, and optimize a massive collection of classical Arabic and Islamic heritage PDF volumes (**16,700+ volumes, 174+ GB** across 6,100+ titles).
+A phone holding thousands of unordered PDFs — names like `03_44057.pdf` or `01 - الحيوان_alt.pdf` — became a catalogued library of classical Arabic books: 16,757 files in the forty sections of al-Maktaba al-Shamela, each named on one rule — *title · author · editor · publisher · city* — from the evidence of its own title page.
 
-The system solves a unique hardware-architecture challenge: **the primary digital collection lives on an Android smartphone's internal storage**, while all compute-heavy computer vision, OCR analysis, deduplication, catalog cross-referencing, and web indexing run autonomously on a **Linux workstation** communicating with the device over high-speed local FTP.
+The books live on the phone. This repository holds the means: the written rules the AI agents work under (`AGENTS.md` and `docs/agents/`) and the 151 small tools in `scripts/` that inventory the phone, apply plans, prove duplicates, compose names, crop pages and build the public index.
 
-Every file alteration, rename, crop, or edition upgrade is strictly governed by deterministic batch plans (`plans/NNN-*.tsv`), audited in an append-only transactional log (`data/changes/changes.tsv`), and verified through automated regression suites and browser-based human-in-the-loop review interfaces.
+The method, in one sentence: **rules before code, a plan for every change, evidence for every name, and a human with the last word.**
 
----
+## The numbers
 
-## 🏗️ System Architecture & Data Flow
+| | The first night | Today |
+|---|---|---|
+| PDF files | 9,469 | **16,757** |
+| Size | 99.3 GB | **175 GB** |
+| Sections | 29 folders, no system | **40** (the Shamela classification) |
+| Books in the catalogue | 2,754 book folders | **6,016** books · 6,160 titles |
 
-```mermaid
-flowchart TB
-    subgraph StorageLayer ["📱 Physical Storage Layer (Android Phone)"]
-        PhoneStorage["Internal Storage: Books/<category>/<book>/<volume>.pdf\n(Source of Truth: 16,700+ Volumes / 174+ GB)"]
-        FTPServer["Android FTP Server (High-Speed Local WiFi Transport)"]
-        PhoneStorage <--> FTPServer
-    end
+| | |
+|---|---|
+| Logged changes | 97,925 ledger lines: moves and renames, additions, proven duplicates removed, crops |
+| Plans | 532, each reversible with the same tool that applied it |
+| Pages set straight | 474,268 scanned pages, losslessly |
+| Human review | 1,109 remarks from the owner on web review pages |
+| Indexed | 1,202 editors · 3,817 books by their author's year of death · 53 canonical didactic poems · manuscripts and the libraries that hold them · 422 multi-edition works |
 
-    subgraph Transport ["🔌 Secure Transport & Synchronization"]
-        SyncEngine["scripts/phone_host.py & local_sync_plan.py\n(Credential Isolation, Chunked Transfer, Retry Loop)"]
-        FTPServer <-->|Encrypted / Local Transport| SyncEngine
-    end
+## Four horizons
 
-    subgraph ProcessingCore ["💻 Linux Processing Engine (Workstation)"]
-        direction TB
+**IT.** Two AI agents from two companies work under one written file (`AGENTS.md`) and the same rules. Every change is a three-column plan (from, to, why) applied by one tool and undone by the same tool; everything applied lands in an append-only ledger. Duplicates are proven byte for byte before anything is removed. Page cleanup is computer vision that never touches an image: the crop and the rotation are written into the PDF as a frame and a transform, so they can be undone. A regression bench runs on every change to the algorithm; heavy jobs run on 32-core cloud machines while the laptop keeps the phone's link.
 
-        subgraph IngestionAudit ["1. Verification & Integrity"]
-            MagicCheck["check_magic.py & check_pdf_tail.py\n(Corrupted File & EOF Detection)"]
-            DedupEngine["dup_check.py & same_scan.py\n(Exact & Perceptual Hash Deduplication)"]
-        end
+**Culture.** The forty Shamela sections as the shelf order; names read from title pages, with the catalogues as references; indexes of editors, of authors by year of death, of didactic poems and their commentaries, of manuscripts and the libraries that hold them, and of works held in several editions.
 
-        subgraph CatalogReconciliation ["2. Tri-Corpus Reconciliation"]
-            ShamelaDB[("Local Shamela SQLite\n(~/.local/share/shamela/)")]
-            WaqfeyaDB[("Waqfeya Database\n(books.jsonl + details.jsonl)")]
-            ArchiveAPI[("Internet Archive API\n(items.jsonl + files.jsonl)")]
-            
-            Compare["compare_shamela.py & compare_waqfeya.py\n(Edition Matching, Missing Volume Detection)"]
-            ShamelaDB --> Compare
-            WaqfeyaDB --> Compare
-            ArchiveAPI --> Compare
-        end
+**Web publishing.** The index is one static page with tabs, rebuilt from the names after every edit and published to GitHub Pages at [benjelloun.dev/library](https://benjelloun.dev/library). No account, no app, readable on the phone that holds the books.
 
-        subgraph CVPipeline ["3. Computer Vision Auto-Crop Engine"]
-            BookCrop["book_crop.py (200 KB Specialized Heuristics)\n- Two-Page Spread Splitting\n- Dynamic Margin & Gutter Detection\n- Footnote Line & Heading Isolation\n- Skew Correction & Edge Despeckling"]
-            CropRegress["crop_regress.py & crop_minitest.py\n(Multi-Century Typographic Regression Suite)"]
-            BookCrop --> CropRegress
-        end
+**Contribution.** The holdings are reconciled with al-Maktaba al-Shamela, al-Maktaba al-Waqfeya and the Internet Archive by edition and exact file size. To suggest a name, an edition or a section, open an issue with the book's title page (a photo is enough): a name changes on evidence, and the ledger records why.
 
-        subgraph Governance ["4. Planning & Governance Engine"]
-            BatchPlans["Deterministic Plans\n(plans/NNN-name.tsv)"]
-            ChangeLog[("Transactional Ledger\n(data/changes/changes.tsv)")]
-            ReviewServer["review_server.py (Port 8765)\nInteractive Human-in-the-Loop Approval"]
-            
-            BatchPlans --> ReviewServer
-            ReviewServer -->|Approved| ChangeLog
-        end
-    end
+## Screenshots
 
-    subgraph Publishing ["🌐 Web & Index Distribution"]
-        SiteBuilder["build_site.py\n(Responsive Static Catalog Generator)"]
-        WebRepo["kmbenjel/library (GitHub Pages)\nbenjelloun.dev/library"]
-        PhoneIndexes["Books/فهارس الويب/\n(Local Offline HTML/JSON Indexes on Phone)"]
-        
-        ChangeLog --> SiteBuilder
-        SiteBuilder --> WebRepo
-        SiteBuilder --> PhoneIndexes
-    end
-
-    SyncEngine <--> IngestionAudit
-    IngestionAudit --> CatalogReconciliation
-    CatalogReconciliation --> BatchPlans
-    BatchPlans --> CVPipeline
-    CVPipeline --> ChangeLog
-    ChangeLog --> SyncEngine
-```
-
----
-
-## 🔬 Computer Vision Auto-Crop Pipeline (`book_crop.py`)
-
-Classical Arabic typography presents severe challenges for generic document croppers: varying margins across centuries, non-standard commentary and footnote dividers, dual-column glosses, and irregular scanning gutters.
-
-`scripts/book_crop.py` implements a bespoke multi-stage computer vision algorithm:
-
-```mermaid
-stateDiagram-v2
-    [*] --> IngestPage: Render Vector/Raster Page (PyMuPDF)
-    IngestPage --> AnalyzeSpread: Detect Page Spread Aspect Ratio
-    
-    state AnalyzeSpread {
-        [*] --> SinglePage: Ratio < Threshold
-        [*] --> SplitSpread: Ratio >= Threshold (Two-page scan)
-        SplitSpread --> SplittingGutter: Locate Spine / Center Crease
-        SplittingGutter --> SeparatePages: Yield Left & Right Pages
-    }
-
-    AnalyzeSpread --> Binarize: Adaptive Thresholding & Edge Density
-    
-    state Binarize {
-        [*] --> TextDensityMap: Horizontal & Vertical Histograms
-        TextDensityMap --> DetectHeader: Filter Running Folio / Section Titles
-        TextDensityMap --> DetectFootnote: Locate Horizontal Rules & Tahqiq Separators
-        DetectFootnote --> BoundingBox: Calculate Tight Ink Bounding Box
-    }
-
-    Binarize --> SafetyPaddings: Apply Golden Ratio Padding & Symmetric Margins
-    SafetyPaddings --> RegressionCheck: Test Against Historic Layouts
-    RegressionCheck --> OutputPDF: Lossless Stream Write / Non-Destructive Crop
-    OutputPDF --> [*]
-```
-
-### Key CV Capabilities:
-1. **Spread Splitting**: Automatically differentiates between single-page scans and open book two-page spreads, isolating the physical gutter without truncating inward margins.
-2. **Footnote & Separator Boundary Detection**: Preserves microscopic diacritics and tiny editorial footnote markers often discarded by conventional white-space trimmers.
-3. **Typography-Aware Regression Matrix**: Tested against historical editions ranging from Bulaq (19th c.), Matba'at al-Sa'ada, Dar al-Kutub al-Ilmiyya, Dar al-Ma'arif, to modern academic editions.
-
----
-
-## 📊 Tri-Corpus Reconciliation Engine
-
-The pipeline guarantees that the collection contains the most complete, verified, and highest-fidelity scan of any book:
-
-```mermaid
-flowchart LR
-    A["Collection Books (8,500+)"] --> M["Fuzzy Matching & Normalization Engine\n(Arabic Text Normalizer & Hijri Century Math)"]
-    
-    subgraph Corpora ["Authoritative Corpora"]
-        S["Shamela Database\n(Digital Master DB)"]
-        W["Waqfeya Catalog\n(Investigator & Publisher Metadata)"]
-        IA["Internet Archive\n(High-Res PDF Scans & File Hashes)"]
-    end
-
-    S --> M
-    W --> M
-    IA --> M
-
-    M --> O1["🔍 Identify Missing Volumes in Multi-Volume Sets"]
-    M --> O2["⚡ Detect Superior Color / Uncut Editions"]
-    M --> O3["🏷️ Standardize Exact Publisher & Investigator Names"]
-    M --> O4["🔗 Link Digital Texts to High-Resolution Physical Scans"]
-```
-
----
-
-## 🛡️ Engineering Safeguards & Resource Governance
-
-- **Systemd Resource Governors**: Compute-heavy jobs run under dedicated user units with explicit memory boundaries (`MemoryMax=2.5G`), ensuring background cropping never locks or starves workstation development.
-- **Append-Only Transactional Ledger**: Every move, rename, join, or crop records `timestamp`, `action`, `source_path`, `dest_path`, `reason`, and `plan_id` in `data/changes/changes.tsv`.
-- **Zero Credential Exposure**: FTP credentials and authentication tokens reside exclusively in local runtime environments outside Git tracking.
-- **Human-in-the-Loop Web Gate**: High-impact plan batches generate HTML review pages (`scripts/review_server.py`) with side-by-side thumbnail comparisons before commits are executed.
-
----
-
-## 📂 Repository Layout
-
-```
-phone-library/
-├── scripts/
-│   ├── book_crop.py         # 200 KB Computer vision cropping engine
-│   ├── crop_regress.py      # Automated visual regression test runner
-│   ├── compare_shamela.py   # Local Shamela SQLite database cross-referencer
-│   ├── compare_waqfeya.py   # Waqfeya metadata & volume completeness checker
-│   ├── build_catalog.py     # Unified library catalog compiler
-│   ├── build_site.py        # Static responsive web reader and search generator
-│   ├── review_server.py     # Local HTTP review server (port 8765)
-│   ├── phone_host.py        # Android FTP connectivity and transport socket
-│   └── publish_web.sh       # Auto-deployment script for GitHub Pages
-├── data/
-│   ├── changes/changes.tsv  # Append-only transactional ledger of all actions
-│   ├── shamela/             # Shamela master database exports
-│   ├── waqfeya/             # Waqfeya JSONL catalogs and volume details
-│   └── catalog.json         # Complete compiled library index
-├── plans/                   # Historical TSV execution plans (370+ batches)
-├── AGENTS.md                # Autonomous AI agent guidelines & domain rules
-├── HANDOFF.md               # Continuous state handoff across multi-model sessions
-└── README.md                # This documentation
-```
-
----
-
-## 📸 Intelligent Cropping, Web Index & Mobile Reader Showcase
-
-<div align="center">
-
-| 📖 Before & After Computer-Vision Cropping | 🌐 Live Web & Mobile Catalog (`benjelloun.dev/library`) |
+| Before and after a lossless crop | The public index |
 |:---:|:---:|
-| ![Before and After CV Cropping](./docs/showcase/cv-crop-before-after.png) <br> *Per-page bounding-box detection (`scripts/book_crop.py` + `crop_regress.py`): strips dark scanner borders while preserving marginalia, footnotes, and header seals with 100% lossless text retention.* | ![Live Web Catalog and Reader](./docs/showcase/web-catalog-reader.png) <br> *Static bilingual index (`scripts/build_site.py`) indexing 16,743 PDF volumes (174+ GB) across 6,162 titles and 39 classical disciplines with instant client-side filtering and mobile reader links.* |
+| ![Before and after computer-vision cropping](docs/showcase/cv-crop-before-after.png) <br> *One frame per book, centred on every page; margins and footnotes kept; the images untouched.* | ![The public index](docs/showcase/web-catalog-reader.png) <br> *The main index: search by title, author, editor or publisher; the forty sections as chips.* |
 
-</div>
-
-<br>
-
-<div align="center">
-
-| 🔍 Interactive Plan Review & Crop Verification Dashboard | 🏛️ Multi-Catalog Reconciliation & Android FTP Sync |
+| The human in the loop | Reconciliation with the sources |
 |:---:|:---:|
-| ![Interactive Review Dashboard](./docs/showcase/review-dashboard.png) <br> *Human-in-the-loop visual approval interface (`scripts/review_server.py`) displaying side-by-side title/cover inspection, page-count verification, and transactional `plans/NNN-*.tsv` batch governance before atomic execution.* | ![Shamela Reconciliation and Android Sync](./docs/showcase/shamela-reconciliation.png) <br> *Cross-referencing engine matching mobile PDF holdings against Al-Maktaba Al-Shamela (8,598 books), Waqfeya, and Archive.org metadata, synchronized directly with Android internal storage over local FTP.* |
+| ![The review page](docs/showcase/review-dashboard.png) <br> *Before \| after pages with a remark box; one remark ("make the black frame the standard for tilt") became a rule that re-cropped 1,111 books in a day.* | ![Shamela reconciliation](docs/showcase/shamela-reconciliation.png) <br> *8,598 Shamela books reconciled section by section; 2,999 books here that Shamela does not have.* |
+
+## The method in brief
+
+1. **Inventory** the phone as it is; change nothing yet.
+2. **Write the rules** (`AGENTS.md`): a name comes from evidence; every change goes in a plan that can be undone; nothing is deleted unless proven identical byte for byte (same size, then 64 KB samples at five points, then a full checksum on the phone).
+3. **Plans and a ledger**: a plan file (from · to · why) → `scripts/apply_plan.py` → an append-only change log.
+4. **Names by reading**: `<title> - <author> - ت <editor> - <publisher> <city>`, read from the title page and composed by `scripts/name_compose.py`.
+5. **Verification**: duplicates proven, editions told apart from re-scans, holdings reconciled with Shamela, Waqfeya and archive.org by edition and exact file size.
+6. **Pages**: `scripts/book_crop.py` finds the text frame, levels the tilt, splits spreads — losslessly — and `crop_regress.py` checks every change against editions from Būlāq to today.
+7. **Index**: `scripts/refresh.sh` rebuilds the catalogue and the site; `publish_web.sh` publishes it.
+8. **Review loop**: the owner reads before/after pages and writes remarks; a remark becomes a rule, and the rule re-runs.
+
+## Repository map
+
+```
+AGENTS.md        the rules every agent reads first
+docs/agents/     the long form of each rule: naming, deletion, sources, concurrency, scripts
+scripts/         151 small tools: apply_plan.py, fetch_queue.py, name_compose.py, dup_check.py, book_crop.py, refresh.sh …
+docs/showcase/   screenshots used here
+.github/         CI
+```
+
+The books, the plans, the change log and the reference catalogues stay in the private working copy; the public index is built from them.
+
+## If this is useful to you — a star helps others find it
+
+A star on GitHub costs nothing and tells people that the rules and tools here are worth a look. If you have never used GitHub:
+
+1. Open [github.com/signup](https://github.com/signup) and create a free account (an e-mail address is enough).
+2. Come back to this page: [github.com/kmbenjel/phone-library](https://github.com/kmbenjel/phone-library).
+3. Click **☆ Star** at the top right of the page. That is all — nothing is downloaded and nothing is installed.
+4. To hear when the indexes grow, click **Watch → Custom → Releases**.
+
+The same rules work for a single shelf — or an entire library. Your own library: what would it look like?
+
+---
+
+<div dir="rtl" align="right">
+
+## بالعربية
+
+**خِزانةٌ في الجيب** — <span dir="ltr">16,757</span> ملف تراث عربي (<span dir="ltr">175 GB</span>) على هاتف واحد، مسمّاة ومرتّبة في أقسام الشاملة الأربعين، ويُبحث فيها.
+
+هاتفٌ فيه آلاف الملفات بلا ترتيب صار مكتبة مفهرسة: اسم كل كتاب على قاعدة واحدة — العنوان، فالمؤلف، فالمحقق، فالناشر والمدينة — ودليله صفحة العنوان. الوسائل: قواعد مكتوبة يعمل تحتها وكلاء ذكاء اصطناعي، وخطة لكل تغيير يُتراجع عنها، وسجلّ لا يُمحى منه شيء، وإثبات التكرار بايتًا بايتًا، ومقابلة بالشاملة والوقفية وأرشيف الإنترنت، ورؤية حاسوبية تقوّم الصفحات وتقصّها بلا فقد على حواسيب سحابية، وصفحة مراجعة يقرّر فيها صاحب المكتبة.
+
+الفهرس: [benjelloun.dev/library](https://benjelloun.dev/library) — بلا حساب ولا تطبيق: المؤلفون بسنة الوفاة، والمحققون، والمنظومات وشروحها، والمخطوطات وخزائنها، والكتب متعددة الطبعات.
+
+القواعد نفسها تصلح لرفّ واحد… أو لخزانة كاملة. مكتبتك أنت… كيف ستبدو؟
 
 </div>
 
 ---
 
-## 📄 License & Credits
+## Licence and credits
 
-**License.** The code (`scripts/`) is under the [MIT License](LICENSE). The documentation (`docs/`, `AGENTS.md`) and the catalog indexes published at [benjelloun.dev/library](https://benjelloun.dev/library) ([kmbenjel/library](https://github.com/kmbenjel/library)) are under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): reuse them freely, with credit. The books themselves are not in this repository and are not covered by these licences.
+The code (`scripts/`) is under the MIT License; the documentation (`docs/`, `AGENTS.md`) and the indexes at [benjelloun.dev/library](https://benjelloun.dev/library) are under CC BY 4.0. The books themselves are not in this repository.
 
-Built and orchestrated by [Khalid Benjelloun](https://benjelloun.dev) with [Google Antigravity](https://github.com/google) and multi-agent workflows. Web index accessible at [benjelloun.dev/library](https://benjelloun.dev/library).
+Built by [Khalid Benjelloun](https://benjelloun.dev) with two AI agents — Claude (Anthropic) and Antigravity (Google) — working under `AGENTS.md`. The reference catalogues are al-Maktaba al-Shamela, al-Maktaba al-Waqfeya and the Internet Archive: references, never substitutes for the title page. Fonts in the identity: Amiri, IBM Plex Sans Arabic, Kawkab Mono, Readex Pro.

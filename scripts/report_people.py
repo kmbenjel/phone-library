@@ -22,6 +22,11 @@ def load():
         for i in r['phone_book_ids'].split():
             if r['death'].isdigit() and int(r['death']) < 1500:
                 death.setdefault(i, int(r['death'])); sh_author.setdefault(i, r['author'])
+    import author_death                                  # no matched work: the author's year (scripts/author_death.py)
+    AD = author_death.load()
+    for b in cat['books']:
+        d = author_death.death_of(AD, b)
+        if d: death.setdefault(str(b['id']), d)
     return [b for b in cat['books'] if b['cat'] not in SKIP], death, sh_author
 
 
@@ -69,7 +74,7 @@ def report_authors(B, death, sh_author):
     pre700 = sum(len(v) for (c, a), v in by.items() if c and c <= 7)
     R.kpis([('المؤلفون', len(by)), ('الكتب المعروفة سنة وفاة مؤلفها أو قرنه', known), ('كتب من توفي قبل 700 هـ', pre700),
             ('كتب بلا معلومة وفاة', sum(len(v) for (c, a), v in by.items() if not c))])
-    R.note('سنة الوفاة من الشاملة إذا طابق الكتابُ كتابًا فيها، وإلا القرن من سجل الوقفية. المؤلفون بلا معلومة في آخر الصفحة.')
+    R.note('سنة الوفاة من الشاملة إذا طابق الكتابُ كتابًا فيها، أو من كتاب آخر للمؤلف نفسه، أو من جدول مؤلفي الشاملة إذا اتفق الاسم والقرن؛ وإلا القرن من سجل الوقفية. المؤلفون بلا معلومة في آخر الصفحة.')
     R.table(['القرن', 'المؤلفون', 'الكتب', 'الحجم'],
             [[f'القرن {CENT[c - 1]}' if c and c <= 15 else 'غير معروف', len(cents[c]), sum(len(v) for _, _, v in cents[c]),
               gb(sum(b['bytes'] for _, _, v in cents[c] for _, b in v))] for c in sorted(cents, key=lambda c: c or 99)], numeric=(1, 2))

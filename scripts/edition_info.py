@@ -10,7 +10,8 @@ Evidence is accepted only when it describes the phone's OWN edition:
     editor, or (no editor named on either side) the publisher matches;
   * title / imprint pages read by tesseract (data/editions/imprint-ocr.jsonl, scripts/imprint_ocr.py) — only a year
     printed next to «الطبعة» or the imprint line, read cleanly;
-  * death year: Shamela's author record of the matched work.
+  * death year: Shamela's author record of the matched work, else author_death.py's table (the same author's year on
+    another phone book, or Shamela's author table when name and Waqfeya century agree).
 Writes data/editions/edition-info.json (by catalog folder key «cat/folder») and data/editions/edition-review.tsv.
 Usage: python3 scripts/edition_info.py"""
 import csv, json, os, re, sqlite3, sys, collections
@@ -18,6 +19,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 J = lambda p: os.path.join(ROOT, p)
 sys.path.insert(0, J('scripts'))
 from textnorm import norm
+import author_death
 
 AR = str.maketrans('٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹', '01234567890123456789')
 STOP = set(norm(w) for w in '''بن ابن أبو ابو أبي ابي عبد الله محمد أحمد احمد علي الشيخ الدكتور د الأستاذ الاستاذ تحقيق ت ط
@@ -156,6 +158,7 @@ def sheet_key(key, file):
 
 def main():
     cat = json.load(open(J('data/catalog.json'), encoding='utf-8'))
+    AD = author_death.load()
     wq = {}
     for fn in ('data/waqfeya/details.jsonl', 'data/waqfeya/details2.jsonl'):
         for l in open(J(fn), encoding='utf-8'):
@@ -250,6 +253,7 @@ def main():
             put('edition_no', o.get('edition_no'), 'صفحة العنوان')
         if p_ed: put('editor', p_ed, 'اسم المجلد')
         if p_pub: put('publisher', p_pub, 'اسم المجلد')
+        put('death', author_death.death_of(AD, b), 'الشاملة (المؤلف)')   # no matched work: the author's year (author_death.py)
         if info: out[key] = {k: v for k, v in info.items()}
         for k in info: stats['has ' + k] += 1
     os.makedirs(J('data/editions'), exist_ok=True)
