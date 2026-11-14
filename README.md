@@ -5,7 +5,6 @@
 <img src="docs/showcase/readme-hero.gif" width="720" alt="A file name turning from 03_44057.pdf into its full name: title, author, editor, publisher, city">
 
 **16,757 Arabic heritage PDFs (175 GB) on one Android phone — named, ordered in forty sections, and searchable.**
-<!-- TAGLINE-PENDING: the owner is choosing a new tagline; the former one was "Every book under its right name". -->
 
 532 reversible plans · 97,925 logged changes · 474,268 scanned pages set straight by computer vision
 
@@ -85,6 +84,22 @@ docs/showcase/   screenshots used here
 
 The books, the plans, the change log and the reference catalogues stay in the private working copy; the public index is built from them.
 
+## Reusable Open-Source Tools (**Warraq · ورّاق**)
+
+Seven standalone, reusable open-source packages and datasets grew directly out of building `phone-library`, documented in Arabic (with English companions) at [**warraq.benjelloun.dev**](https://warraq.benjelloun.dev):
+
+| Tool | Role extracted from `phone-library` |
+|---|---|
+| [**`safha`** (صفحة)](https://github.com/kmbenjel/safha) | Lossless margin-aware cropping, deskewing, and spread splitting for scanned PDFs without re-encoding page images. |
+| [**`planfs`** (خطة الملفات)](https://github.com/kmbenjel/planfs) | Terraform-style dry-run tables for local & `rclone` file moves/renames/deletes with append-only SQLite ledger and one-command undo. |
+| [**`arabic-bib`** (الببليوغرافيا العربية)](https://github.com/kmbenjel/arabic-bib) | Arabic bibliographic normalization, death-year & Hijri date parsing, search folding, and filename composition. |
+| [**`turath-match`** (مطابقة التراث)](https://github.com/kmbenjel/turath-match) | Evidence-based reconciliation against Shamela, Waqfeya, Archive.org, and custom CSVs with byte-level duplicate proof. |
+| [**`turath-catalog`** (فهرس التراث)](https://github.com/kmbenjel/turath-catalog) | Open heritage bibliographic metadata dataset (works, editions, authors, editors — CC BY 4.0) in CSV & Parquet. |
+| [**`pocketshelf`** (رفّ الجيب)](https://github.com/kmbenjel/pocketshelf) | Compiles any folder of PDFs/EPUBs into a self-contained offline mobile HTML catalogue (`benjelloun.dev/pocketshelf/`). |
+| [**`agent-workbench`** (منضدة الوكيل)](https://github.com/kmbenjel/agent-workbench) | Human-in-the-loop review pages, memory governor, and resumable download queue for long AI-agent jobs. |
+
+Paired on mobile with [**`workstation-discord-bridge`**](https://github.com/kmbenjel/workstation-discord-bridge) ([Arabic docs](https://bridge.benjelloun.dev)) for live pipeline supervision (`!status`, `!crop`) from a phone.
+
 ## If this is useful to you — a star helps others find it
 
 A star on GitHub costs nothing and tells people that the rules and tools here are worth a look. If you have never used GitHub:
@@ -107,6 +122,8 @@ The same rules work for a single shelf — or an entire library. Your own librar
 هاتفٌ فيه آلاف الملفات بلا ترتيب صار مكتبة مفهرسة: اسم كل كتاب على قاعدة واحدة — العنوان، فالمؤلف، فالمحقق، فالناشر والمدينة — ودليله صفحة العنوان. الوسائل: قواعد مكتوبة يعمل تحتها وكلاء ذكاء اصطناعي، وخطة لكل تغيير يُتراجع عنها، وسجلّ لا يُمحى منه شيء، وإثبات التكرار بايتًا بايتًا، ومقابلة بالشاملة والوقفية وأرشيف الإنترنت، ورؤية حاسوبية تقوّم الصفحات وتقصّها بلا فقد على حواسيب سحابية، وصفحة مراجعة يقرّر فيها صاحب المكتبة.
 
 الفهرس: [benjelloun.dev/library](https://benjelloun.dev/library) — بلا حساب ولا تطبيق: المؤلفون بسنة الوفاة، والمحققون، والمنظومات وشروحها، والمخطوطات وخزائنها، والكتب متعددة الطبعات.
+
+أُخرجت من هذا المشروع سبع أدوات مستقلة مفتوحة المصدر موثّقة بالعربية في بوابة [**ورّاق (`warraq.benjelloun.dev`)**](https://warraq.benjelloun.dev) (`safha`، و`planfs`، و`arabic-bib`، و`turath-match`، و`turath-catalog`، و`pocketshelf`، و`agent-workbench`)، وتُتابع مهامها عبر الهاتف باستخدام [**جسر ديسكورد لمحطة العمل (`bridge.benjelloun.dev`)**](https://bridge.benjelloun.dev).
 
 القواعد نفسها تصلح لرفّ واحد… أو لخزانة كاملة. مكتبتك أنت… كيف ستبدو؟
 
